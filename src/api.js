@@ -448,14 +448,51 @@ export async function testSmtpApi() {
 }
 
 // ───── YouTube ─────
-export async function getYouTubeVideosApi() {
-  const res = await globalThis.fetch(`${API_BASE}/youtube`, { credentials: 'include' });
-  return handleResponse(res);
+// Module-level cache: backend already caches in MongoDB for 10 min,
+// but the frontend pulls it on every page mount. Short client cache + in-flight de-dup.
+const YT_VIDEOS_TTL = 5 * 60 * 1000;
+const YT_LIVE_TTL = 90 * 1000;
+let ytVideosCache = { ts: 0, data: null, inflight: null };
+let ytLiveCache = { ts: 0, data: null, inflight: null };
+
+export async function getYouTubeVideosApi({ force = false } = {}) {
+  const now = Date.now();
+  if (!force && ytVideosCache.data && now - ytVideosCache.ts < YT_VIDEOS_TTL) {
+    return ytVideosCache.data;
+  }
+  if (ytVideosCache.inflight) return ytVideosCache.inflight;
+  ytVideosCache.inflight = (async () => {
+    try {
+      const res = await globalThis.fetch(`${API_BASE}/youtube`, { credentials: 'include' });
+      const data = await handleResponse(res);
+      ytVideosCache = { ts: Date.now(), data, inflight: null };
+      return data;
+    } catch (err) {
+      ytVideosCache.inflight = null;
+      throw err;
+    }
+  })();
+  return ytVideosCache.inflight;
 }
 
-export async function getYouTubeLiveApi() {
-  const res = await globalThis.fetch(`${API_BASE}/youtube?action=live`, { credentials: 'include' });
-  return handleResponse(res);
+export async function getYouTubeLiveApi({ force = false } = {}) {
+  const now = Date.now();
+  if (!force && ytLiveCache.data && now - ytLiveCache.ts < YT_LIVE_TTL) {
+    return ytLiveCache.data;
+  }
+  if (ytLiveCache.inflight) return ytLiveCache.inflight;
+  ytLiveCache.inflight = (async () => {
+    try {
+      const res = await globalThis.fetch(`${API_BASE}/youtube?action=live`, { credentials: 'include' });
+      const data = await handleResponse(res);
+      ytLiveCache = { ts: Date.now(), data, inflight: null };
+      return data;
+    } catch (err) {
+      ytLiveCache.inflight = null;
+      throw err;
+    }
+  })();
+  return ytLiveCache.inflight;
 }
 
 // ───── Partners ─────
@@ -475,6 +512,37 @@ export async function postCommentApi({ postSlug, author, body, parentId }) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ postSlug, author, body, parentId }),
+  });
+  return handleResponse(res);
+}
+
+export async function getAllCommentsForModerationApi(slug) {
+  const res = await fetch(`${API_BASE}/comments?slug=${encodeURIComponent(slug)}&action=all`, {
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+}
+
+export async function getAdminCommentsApi(filter = 'all') {
+  const res = await fetch(`${API_BASE}/comments?action=admin&filter=${encodeURIComponent(filter)}`, {
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+}
+
+export async function setCommentApprovalApi(id, approved) {
+  const res = await fetch(`${API_BASE}/comments?id=${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ approved }),
+  });
+  return handleResponse(res);
+}
+
+export async function deleteCommentApi(id) {
+  const res = await fetch(`${API_BASE}/comments?id=${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
   });
   return handleResponse(res);
 }

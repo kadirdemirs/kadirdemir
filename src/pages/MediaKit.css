@@ -1,0 +1,402 @@
+.kd-mediakit {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 110px 24px 80px;
+  color: var(--white, #f5f7fb);
+}
+
+.kd-mediakit-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.kd-mediakit-back {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+
+.kd-mediakit-back:hover { color: #fff; }
+
+.kd-mediakit-actions {
+  display: inline-flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.kd-mediakit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.kd-mediakit-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.kd-mediakit-btn-primary {
+  background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+  border-color: transparent;
+  color: #001712;
+  font-weight: 700;
+}
+
+.kd-mediakit-btn-primary:hover {
+  background: linear-gradient(135deg, #5eead4, #2dd4bf);
+}
+
+.kd-mediakit-hero {
+  margin: 8px 0 40px;
+}
+
+.kd-mediakit-pill {
+  display: inline-flex;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary, #2dd4bf);
+  background: rgba(45, 212, 191, 0.08);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.kd-mediakit-hero h1 {
+  font-family: var(--font-display, inherit);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.1;
+  margin: 0 0 16px;
+}
+
+.kd-mediakit-accent {
+  color: var(--primary, #2dd4bf);
+}
+
+.kd-mediakit-hero p {
+  max-width: 65ch;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.kd-mediakit-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.kd-mediakit-stat-card {
+  padding: 22px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.kd-mediakit-stat-icon {
+  display: inline-flex;
+  margin-bottom: 14px;
+}
+
+.kd-mediakit-stat-value {
+  font-family: var(--font-display, inherit);
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.kd-mediakit-stat-label {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.kd-mediakit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.kd-mediakit-card {
+  padding: 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.kd-mediakit-card header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.kd-mediakit-card header h2 {
+  font-size: 1.02rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.kd-mediakit-bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kd-mediakit-bars li {
+  display: grid;
+  grid-template-columns: 60px 1fr 42px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.kd-mediakit-bar-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.kd-mediakit-bar-track {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.kd-mediakit-bar-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #2dd4bf, #818cf8);
+}
+
+.kd-mediakit-bar-value {
+  font-size: 0.82rem;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.kd-mediakit-regions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kd-mediakit-regions li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+}
+
+.kd-mediakit-regions li:last-child { border-bottom: 0; }
+
+.kd-mediakit-region-name {
+  flex: 1;
+  font-size: 0.92rem;
+}
+
+.kd-mediakit-region-share {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-variant-numeric: tabular-nums;
+}
+
+.kd-mediakit-kpis {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.kd-mediakit-kpis li {
+  padding: 8px 0;
+  color: rgba(255, 255, 255, 0.75);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+}
+
+.kd-mediakit-kpis li:last-child { border-bottom: 0; }
+.kd-mediakit-kpis strong { color: #fff; }
+
+.kd-mediakit-tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.kd-mediakit-tags li {
+  padding: 6px 12px;
+  background: rgba(45, 212, 191, 0.08);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  font-size: 0.82rem;
+}
+
+.kd-mediakit-formats {
+  margin-bottom: 40px;
+}
+
+.kd-mediakit-formats h2,
+.kd-mediakit-principles h2 {
+  font-family: var(--font-display, inherit);
+  font-size: 1.5rem;
+  margin: 0 0 18px;
+}
+
+.kd-mediakit-formats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.kd-mediakit-format {
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.kd-mediakit-format h3 {
+  font-size: 1rem;
+  margin: 0 0 6px;
+}
+
+.kd-mediakit-format p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.55;
+}
+
+.kd-mediakit-principles ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.kd-mediakit-principles li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.kd-mediakit-principles li svg {
+  color: var(--primary, #2dd4bf);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.kd-mediakit-note {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 12px;
+}
+
+.kd-mediakit-note a {
+  color: var(--primary, #2dd4bf);
+  text-decoration: underline;
+}
+
+.kd-mediakit-cta {
+  margin-top: 48px;
+  padding: 28px;
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.08), rgba(120, 80, 200, 0.08));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kd-mediakit-cta h2 {
+  font-family: var(--font-display, inherit);
+  font-size: 1.6rem;
+  margin: 0 0 4px;
+}
+
+.kd-mediakit-cta p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.kd-mediakit-cta-actions {
+  display: inline-flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.kd-mediakit-footer {
+  margin-top: 40px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 720px) {
+  .kd-mediakit-cta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body.kd-mediakit-body * {
+    visibility: hidden;
+  }
+  body.kd-mediakit-body .kd-mediakit, body.kd-mediakit-body .kd-mediakit * {
+    visibility: visible;
+  }
+  body.kd-mediakit-body .kd-mediakit {
+    position: absolute;
+    inset: 0;
+    padding: 24px;
+    background: #ffffff;
+    color: #0c0a0e;
+  }
+  body.kd-mediakit-body .kd-mediakit-toolbar,
+  body.kd-mediakit-body .kd-mediakit-actions,
+  body.kd-mediakit-body .kd-mediakit-cta-actions {
+    display: none !important;
+  }
+  body.kd-mediakit-body .kd-mediakit-card,
+  body.kd-mediakit-body .kd-mediakit-stat-card,
+  body.kd-mediakit-body .kd-mediakit-format,
+  body.kd-mediakit-body .kd-mediakit-cta {
+    background: #f7f7f9;
+    color: #0c0a0e;
+    border: 1px solid #e0e0e5;
+  }
+  body.kd-mediakit-body .kd-mediakit-accent,
+  body.kd-mediakit-body .kd-mediakit-pill,
+  body.kd-mediakit-body .kd-mediakit-note a {
+    color: #0d8a72;
+  }
+}

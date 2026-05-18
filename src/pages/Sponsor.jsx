@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { HiOutlineSparkles, HiOutlineCheck } from 'react-icons/hi'
+import { Link } from 'react-router-dom'
+import { HiOutlineSparkles, HiOutlineCheck, HiOutlineDocumentText, HiOutlineArrowRight } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { submitSponsorApi } from '../api'
+import { BreadcrumbSchema } from '../components/StructuredData'
 
 const CAMPAIGN_TYPES = [
   { value: 'video', label: { tr: 'Tek video sponsorluğu', en: 'Single video sponsorship' } },
@@ -98,11 +100,46 @@ export default function Sponsor() {
 
   return (
     <div className="kd-blog">
+      <BreadcrumbSchema
+        items={[
+          { name: lang === 'en' ? 'Home' : 'Ana Sayfa', path: '/' },
+          { name: lang === 'en' ? 'Sponsor' : 'Sponsor', path: '/sponsor' },
+        ]}
+      />
       <header className="kd-blog-head">
         <span className="kd-blog-pill"><HiOutlineSparkles size={14} /> Sponsor</span>
         <h1>{t('head1')}<span className="kd-accent">{t('headHi')}</span></h1>
         <p>{t('sub')}</p>
       </header>
+
+      <Link
+        to="/medya-kit"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 14,
+          margin: '20px 0 12px',
+          padding: '16px 20px',
+          borderRadius: 14,
+          background: 'linear-gradient(135deg, rgba(45, 212, 191, 0.08), rgba(120, 80, 200, 0.08))',
+          border: '1px solid rgba(45, 212, 191, 0.22)',
+          textDecoration: 'none',
+          color: 'inherit',
+        }}
+      >
+        <HiOutlineDocumentText size={22} style={{ color: 'var(--primary, #2dd4bf)', flexShrink: 0 }} />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 600, marginBottom: 2 }}>
+            {lang === 'en' ? 'Read the media kit first' : 'Önce medya kitini incele'}
+          </div>
+          <div style={{ fontSize: '0.86rem', color: 'rgba(255,255,255,0.65)' }}>
+            {lang === 'en'
+              ? 'Audience demographics, reach, collab formats and working principles.'
+              : 'Hedef kitle, erişim rakamları, kampanya formatları ve çalışma prensiplerimiz.'}
+          </div>
+        </div>
+        <HiOutlineArrowRight size={18} style={{ color: 'var(--primary, #2dd4bf)' }} />
+      </Link>
 
       <form
         onSubmit={onSubmit}

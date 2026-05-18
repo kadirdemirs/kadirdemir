@@ -3,6 +3,7 @@ import { HiOutlineDownload, HiOutlineX } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
 
 const DISMISS_KEY = 'kd_install_dismissed_at'
+const INSTALLED_KEY = 'kd_install_done'
 const DISMISS_TTL = 1000 * 60 * 60 * 24 * 14 // 14 gün
 
 export default function InstallPrompt() {
@@ -11,21 +12,35 @@ export default function InstallPrompt() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
+    if (localStorage.getItem(INSTALLED_KEY) === '1') return
     const dismissedAt = Number(localStorage.getItem(DISMISS_KEY) || 0)
     if (Date.now() - dismissedAt < DISMISS_TTL) return
 
     const isStandalone =
       window.matchMedia?.('(display-mode: standalone)').matches ||
       window.navigator.standalone === true
-    if (isStandalone) return
+    if (isStandalone) {
+      localStorage.setItem(INSTALLED_KEY, '1')
+      return
+    }
 
-    const handler = (e) => {
+    const promptHandler = (e) => {
       e.preventDefault()
       setEvent(e)
-      setTimeout(() => setVisible(true), 4000)
+      const showTimer = setTimeout(() => setVisible(true), 4000)
+      return () => clearTimeout(showTimer)
     }
-    window.addEventListener('beforeinstallprompt', handler)
-    return () => window.removeEventListener('beforeinstallprompt', handler)
+    const installedHandler = () => {
+      localStorage.setItem(INSTALLED_KEY, '1')
+      setVisible(false)
+      setEvent(null)
+    }
+    window.addEventListener('beforeinstallprompt', promptHandler)
+    window.addEventListener('appinstalled', installedHandler)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', promptHandler)
+      window.removeEventListener('appinstalled', installedHandler)
+    }
   }, [])
 
   if (!visible || !event) return null
@@ -38,7 +53,13 @@ export default function InstallPrompt() {
   const install = async () => {
     try {
       event.prompt()
-      await event.userChoice
+      const choice = await event.userChoice
+      if (choice?.outcome === 'accepted') {
+        localStorage.setItem(INSTALLED_KEY, '1')
+        setVisible(false)
+        setEvent(null)
+        return
+      }
     } catch { /* swallow */ }
     dismiss()
   }

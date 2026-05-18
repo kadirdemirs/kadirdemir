@@ -65,7 +65,7 @@
 
 .admin-dashboard,
 .admin-login-container {
-  font-family: var(--font);
+  font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -181,7 +181,7 @@
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-size: 0.92rem;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   transition: var(--transition);
 }
 
@@ -254,7 +254,7 @@
   border-radius: var(--radius-md);
   font-size: 0.88rem;
   font-weight: 600;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   cursor: pointer;
   transition: var(--transition);
   border: 1px solid transparent;
@@ -820,7 +820,7 @@
   background: none;
   color: var(--text-secondary);
   font-size: 0.78rem;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -891,7 +891,7 @@
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-size: 0.88rem;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   transition: var(--transition);
   color-scheme: inherit;
   -webkit-appearance: none;
@@ -1031,7 +1031,7 @@
   color: var(--text-secondary);
   font-size: 0.82rem;
   font-weight: 500;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   cursor: pointer;
   transition: var(--transition);
   white-space: nowrap;
@@ -1104,7 +1104,7 @@
   color: var(--text-secondary);
   font-size: 0.85rem;
   font-weight: 500;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   cursor: pointer;
   transition: var(--transition);
   text-align: left;
@@ -1590,7 +1590,7 @@
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-size: 0.88rem;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   transition: var(--transition);
 }
 
@@ -1631,7 +1631,7 @@
   color: var(--text-tertiary);
   font-size: 0.8rem;
   font-weight: 600;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   cursor: pointer;
   transition: var(--transition);
   display: flex;
@@ -1652,7 +1652,7 @@
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-size: 0.85rem;
-  font-family: var(--font);
+  font-family: var(--font-primary);
   width: 220px;
   transition: var(--transition);
 }

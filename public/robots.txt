@@ -5,4 +5,15 @@ Disallow: /admin
 Disallow: /admin/
 Disallow: /api/
 
+# AI crawler stance — allow indexing but disallow training scraping by default.
+# Remove / tweak these as needed.
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
 Sitemap: https://kadirdemir-nu.vercel.app/sitemap.xml

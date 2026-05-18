@@ -41,21 +41,28 @@ export default function BlogDetail() {
   const { slug } = useParams()
   const { lang, t } = useLanguage()
   const [allPosts, setAllPosts] = useState(staticBlogPosts)
+  const [fetchStatus, setFetchStatus] = useState('loading') // loading | ready | error
   const articleRef = useRef(null)
 
   useEffect(() => {
+    let cancelled = false
+    setFetchStatus('loading')
     getBlogsApi()
       .then(data => {
-        if (!Array.isArray(data) || !data.length) return
-        setAllPosts(prev => {
-          const slugMap = new Map(data.map(p => [p.slug, p]))
-          const merged = prev.map(p => slugMap.get(p.slug) || p)
-          const existingSlugs = new Set(prev.map(p => p.slug))
-          const newPosts = data.filter(p => !existingSlugs.has(p.slug))
-          return [...merged, ...newPosts]
-        })
+        if (cancelled) return
+        if (Array.isArray(data) && data.length) {
+          setAllPosts(prev => {
+            const slugMap = new Map(data.map(p => [p.slug, p]))
+            const merged = prev.map(p => slugMap.get(p.slug) || p)
+            const existingSlugs = new Set(prev.map(p => p.slug))
+            const newPosts = data.filter(p => !existingSlugs.has(p.slug))
+            return [...newPosts, ...merged]
+          })
+        }
+        setFetchStatus('ready')
       })
-      .catch(() => {})
+      .catch(() => { if (!cancelled) setFetchStatus('error') })
+    return () => { cancelled = true }
   }, [slug])
 
   const post = allPosts.find((p) => p.slug === slug)
@@ -134,7 +141,14 @@ export default function BlogDetail() {
     }
   }, [post, slug, title, excerpt])
 
-  // Only redirect after both static + API data have been checked
+  // Wait for the fetch to settle before deciding the slug doesn't exist.
+  if (!post && fetchStatus === 'loading') {
+    return (
+      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.5)' }}>
+        <span>{lang === 'en' ? 'Loading…' : 'Yükleniyor…'}</span>
+      </div>
+    )
+  }
   if (!post) return <Navigate to="/blog" replace />
 
   const postUrl = `https://kadirdemir-nu.vercel.app/blog/${slug}`

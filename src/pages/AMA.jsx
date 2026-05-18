@@ -3,6 +3,7 @@ import { HiOutlineQuestionMarkCircle, HiOutlineChatAlt2, HiOutlineCheck, HiOutli
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { getAMAApi, askAMAApi } from '../api'
+import { BreadcrumbSchema } from '../components/StructuredData'
 
 function relative(date, lang) {
   if (!date) return ''
@@ -82,6 +83,12 @@ export default function AMA() {
 
   return (
     <div className="kd-blog">
+      <BreadcrumbSchema
+        items={[
+          { name: lang === 'en' ? 'Home' : 'Ana Sayfa', path: '/' },
+          { name: t('pill'), path: '/sor' },
+        ]}
+      />
       <header className="kd-blog-head">
         <span className="kd-blog-pill"><HiOutlineQuestionMarkCircle size={14} /> {t('pill')}</span>
         <h1>{t('head1')}<span className="kd-accent">{t('headHi')}</span></h1>

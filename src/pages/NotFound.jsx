@@ -8,42 +8,54 @@ import PageTransition from '../components/PageTransition'
 import CatcherGame from '../components/CatcherGame'
 import './NotFound.css'
 
-const populerSayfalar = [
-  { yol: '/hizmetler', etiket: '📋 Hizmetler' },
-  { yol: '/paketler', etiket: '💰 Paketler' },
-  { yol: '/blog', etiket: '📝 Blog' },
-  { yol: '/partnerler', etiket: '🤝 Partnerler' },
-  { yol: '/referanslar', etiket: '⭐ Referanslar' },
-  { yol: '/sss', etiket: '❓ SSS' },
-  { yol: '/iletisim', etiket: '✉️ İletişim' },
-  { yol: '/roi-hesaplayici', etiket: '📊 ROI Hesaplayıcı' },
+const popularPages = [
+  { path: '/', tr: 'Ana Sayfa', en: 'Home', emoji: '🏠' },
+  { path: '/videolar', tr: 'Videolar', en: 'Videos', emoji: '🎬' },
+  { path: '/blog', tr: 'Blog', en: 'Blog', emoji: '📝' },
+  { path: '/hakkimda', tr: 'Hakkımda', en: 'About', emoji: '👋' },
+  { path: '/setup', tr: 'Setup', en: 'Setup', emoji: '🖥️' },
+  { path: '/iletisim', tr: 'İletişim', en: 'Contact', emoji: '✉️' },
+  { path: '/sponsor', tr: 'Sponsorluk', en: 'Sponsor', emoji: '🤝' },
+  { path: '/sor', tr: 'Sor Bana', en: 'Ask Me', emoji: '❓' },
 ]
+
+function routeFromQuery(query) {
+  const q = query.toLowerCase()
+  if (/(blog|yazı|yazi|article|post)/.test(q)) return '/blog'
+  if (/(video|izle|watch|youtube)/.test(q)) return '/videolar'
+  if (/(setup|donanım|donanim|equipment|kurulum)/.test(q)) return '/setup'
+  if (/(hakk|about|kim)/.test(q)) return '/hakkimda'
+  if (/(iletiş|iletis|contact|mail)/.test(q)) return '/iletisim'
+  if (/(sponsor|işbirliği|isbirligi|brand)/.test(q)) return '/sponsor'
+  if (/(sor|ama|ask|soru)/.test(q)) return '/sor'
+  if (/(partner|sponsor)/.test(q)) return '/partnerler'
+  return null
+}
 
 export default function NotFound() {
   const { lang } = useLanguage()
   const navigate = useNavigate()
-  const [arama, setArama] = useState('')
+  const [query, setQuery] = useState('')
 
   useSEO({
-    title: lang === 'tr' ? 'Sayfa Bulunamadı | Kadir Demir' : 'Page Not Found | Kadir Demir',
-    description: lang === 'tr' ? 'Aradığınız sayfa bulunamadı.' : 'The page you are looking for was not found.',
+    title: lang === 'tr' ? 'Sayfa Bulunamadı' : 'Page Not Found',
+    description: lang === 'tr'
+      ? 'Aradığın sayfa bulunamadı. Popüler sayfalardan veya arama kutusundan devam et.'
+      : 'The page you were looking for could not be found. Try the popular pages or the search box.',
     path: '/404',
     noindex: true,
   })
 
-  const handleArama = (e) => {
+  const onSearch = (e) => {
     e.preventDefault()
-    const sorgu = arama.trim().toLowerCase()
-    if (!sorgu) return
-    if (sorgu.includes('blog')) navigate('/blog')
-    else if (sorgu.includes('hizmet') || sorgu.includes('servis')) navigate('/hizmetler')
-    else if (sorgu.includes('paket') || sorgu.includes('fiyat')) navigate('/paketler')
-    else if (sorgu.includes('iletisim') || sorgu.includes('iletişim') || sorgu.includes('contact')) navigate('/iletisim')
-    else if (sorgu.includes('partner') || sorgu.includes('referans')) navigate('/partnerler')
-    else if (sorgu.includes('ekip') || sorgu.includes('team')) navigate('/ekip')
-    else if (sorgu.includes('kariyer') || sorgu.includes('iş')) navigate('/kariyer')
-    else if (sorgu.includes('sss') || sorgu.includes('soru')) navigate('/sss')
-    else navigate('/iletisim')
+    const target = query.trim()
+    if (!target) return
+    const route = routeFromQuery(target)
+    if (route) {
+      navigate(route)
+    } else {
+      navigate(`/blog?q=${encodeURIComponent(target)}`)
+    }
   }
 
   return (
@@ -65,7 +77,7 @@ export default function NotFound() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            {lang === 'tr' ? 'Sayfa Bulunamadı' : 'Page Not Found'}
+            {lang === 'tr' ? 'Sayfa bulunamadı' : 'Page not found'}
           </motion.h1>
           <motion.p
             initial={{ y: 20, opacity: 0 }}
@@ -73,25 +85,31 @@ export default function NotFound() {
             transition={{ delay: 0.3 }}
           >
             {lang === 'tr'
-              ? 'Aradığınız sayfa mevcut değil veya taşınmış olabilir.'
-              : 'The page you are looking for does not exist or may have been moved.'}
+              ? 'Aradığın sayfa burada değil — taşınmış, silinmiş ya da yanlış bir bağlantıdan gelmiş olabilirsin. Aşağıdan başka bir sayfaya geçebilirsin.'
+              : 'The page you were looking for is not here — it may have moved, been removed, or the link might be wrong. Try one of the options below.'}
           </motion.p>
 
           <motion.form
             className="notfound-arama"
-            onSubmit={handleArama}
+            onSubmit={onSearch}
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.35 }}
+            role="search"
           >
+            <label htmlFor="notfound-search" className="visually-hidden">
+              {lang === 'tr' ? 'Sitede ara' : 'Search the site'}
+            </label>
             <input
-              type="text"
-              placeholder={lang === 'tr' ? 'Ne arıyordunuz? (blog, hizmetler, paketler...)' : 'What were you looking for?'}
-              value={arama}
-              onChange={(e) => setArama(e.target.value)}
+              id="notfound-search"
+              type="search"
+              placeholder={lang === 'tr' ? 'Ne arıyordun? (blog, video, setup…)' : 'What were you looking for?'}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="notfound-arama-input"
+              autoComplete="off"
             />
-            <button type="submit" className="notfound-arama-btn">
+            <button type="submit" className="notfound-arama-btn" aria-label={lang === 'tr' ? 'Ara' : 'Search'}>
               <HiOutlineSearch size={18} />
             </button>
           </motion.form>
@@ -104,10 +122,10 @@ export default function NotFound() {
           >
             <Link to="/" className="btn btn-primary">
               <HiOutlineHome size={18} />
-              {lang === 'tr' ? 'Anasayfa' : 'Home'}
+              {lang === 'tr' ? 'Ana Sayfa' : 'Home'}
             </Link>
             <Link to="/iletisim" className="btn btn-outline">
-              {lang === 'tr' ? 'İletişim' : 'Contact'}
+              {lang === 'tr' ? 'İletişime geç' : 'Get in touch'}
               <HiOutlineArrowRight size={16} />
             </Link>
           </motion.div>
@@ -119,12 +137,13 @@ export default function NotFound() {
             transition={{ delay: 0.5 }}
           >
             <p className="notfound-populer-baslik">
-              {lang === 'tr' ? 'Popüler Sayfalar' : 'Popular Pages'}
+              {lang === 'tr' ? 'Popüler sayfalar' : 'Popular pages'}
             </p>
             <div className="notfound-populer-grid">
-              {populerSayfalar.map((s) => (
-                <Link key={s.yol} to={s.yol} className="notfound-populer-link">
-                  {s.etiket}
+              {popularPages.map((page) => (
+                <Link key={page.path} to={page.path} className="notfound-populer-link">
+                  <span aria-hidden="true">{page.emoji}</span>{' '}
+                  {lang === 'tr' ? page.tr : page.en}
                 </Link>
               ))}
             </div>
@@ -137,7 +156,7 @@ export default function NotFound() {
             style={{ marginTop: 48 }}
           >
             <p className="notfound-populer-baslik" style={{ textAlign: 'center' }}>
-              {lang === 'tr' ? 'Canın sıkıldıysa mini oyun 🎮' : 'A little mini game while you wait 🎮'}
+              {lang === 'tr' ? 'Canın sıkıldıysa mini oyun 🎮' : 'A little mini game while you’re here 🎮'}
             </p>
             <CatcherGame />
           </motion.div>

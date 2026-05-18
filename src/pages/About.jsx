@@ -4,6 +4,7 @@ import {
   HiOutlineMail,
 } from 'react-icons/hi'
 import { FaYoutube, FaInstagram } from 'react-icons/fa'
+import ResponsivePortrait from '../components/ResponsivePortrait'
 import './About.css'
 
 export default function About() {
@@ -27,6 +28,11 @@ export default function About() {
           <span className="kd-about-tag">
             <HiOutlineCamera size={14} /> STÜDYO
           </span>
+          <ResponsivePortrait
+            alt="Kadir Demir — stüdyoda portre"
+            className="kd-about-img"
+            sizes="(max-width: 820px) 100vw, 520px"
+          />
         </div>
         <div className="kd-about-text">
           <h2>
@@ -68,7 +74,13 @@ export default function About() {
             ilginç hâle getirmek, izleyiciye değer katacak bir an yaratmak istiyorum.
           </p>
         </div>
-        <div className="kd-about-media kd-media-frame" />
+        <div className="kd-about-media kd-media-frame">
+          <ResponsivePortrait
+            alt="Kadir Demir — kayıt arası"
+            className="kd-about-img kd-about-img-alt"
+            sizes="(max-width: 820px) 100vw, 520px"
+          />
+        </div>
       </section>
 
       <section className="kd-about-cta">

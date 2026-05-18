@@ -16,11 +16,12 @@
   --black-lighter: #0f1419;
   --dark-gray: #161b22;
   --gray: #1f2937;
-  --gray-light: #6b7280;
-  --gray-lighter: #9ca3af;
+  /* WCAG-tuned grays: on #050709 background — gray-light ≈ 5.4:1 (AA), gray-lighter ≈ 7.0:1 (AAA) */
+  --gray-light: #94a3b8;
+  --gray-lighter: #cbd5e1;
   --white: #FFFFFF;
   --white-dim: #E5E7EB;
-  --text-secondary: #94a3b8;
+  --text-secondary: #b6c2d6;
   --bg-primary: #050709;
 
   /* Gradients */

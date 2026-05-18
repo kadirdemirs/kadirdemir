@@ -25,10 +25,27 @@ export default async function handler(req, res) {
   const action = req.query?.action;
 
   if (req.method === 'GET') {
+    // Admin: list across slugs (optionally filter by approval state)
+    if (action === 'admin') {
+      const session = requireAuth(req);
+      if (!session) return res.status(401).json({ error: 'Unauthorized' });
+      const filterParam = (req.query?.filter || 'all').toString();
+      const query = filterParam === 'pending'
+        ? { approved: false }
+        : filterParam === 'approved'
+          ? { approved: true }
+          : {};
+      const all = await col.find(query).sort({ createdAt: -1 }).limit(500).toArray();
+      return res.status(200).json(all.map((c) => ({
+        ...c,
+        _id: String(c._id),
+      })));
+    }
+
     const slug = req.query?.slug;
     if (!slug) return res.status(400).json({ error: 'slug required' });
 
-    // admin: list all incl. pending
+    // admin: list all incl. pending for one slug
     if (action === 'all') {
       const session = requireAuth(req);
       if (!session) return res.status(401).json({ error: 'Unauthorized' });
@@ -55,12 +72,14 @@ export default async function handler(req, res) {
     if (!parse.success) return res.status(400).json({ error: 'Geçersiz yorum' });
 
     const data = parse.data;
+    // Moderation mode: when COMMENTS_MODERATION=on, new comments are hidden until approved.
+    const moderationOn = String(process.env.COMMENTS_MODERATION || '').toLowerCase() === 'on';
     const doc = {
       postSlug: data.postSlug,
       author: stripHtml(data.author, 60),
       body: stripHtml(data.body, 1500),
       parentId: data.parentId || null,
-      approved: true, // default auto-approve; switch to false to require moderation
+      approved: !moderationOn,
       visitor: visitorKey(req),
       createdAt: new Date(),
     };
@@ -72,6 +91,8 @@ export default async function handler(req, res) {
       body: doc.body,
       parentId: doc.parentId,
       createdAt: doc.createdAt,
+      approved: doc.approved,
+      pending: !doc.approved,
     });
   }
 

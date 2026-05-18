@@ -166,11 +166,17 @@ export default function Contact() {
           </div>
 
           <div className="kd-field kd-field-textarea">
+            <label htmlFor="kd-message" className="visually-hidden">Mesajın</label>
             <textarea
+              id="kd-message"
               value={form.message}
               onChange={handle('message')}
               placeholder="Mesajını buraya yaz..."
               rows={6}
+              required
+              minLength={10}
+              maxLength={4000}
+              aria-required="true"
             />
           </div>
 

@@ -5,6 +5,7 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { getPartnersApi } from '../api'
 import { SkeletonGrid } from '../components/Skeleton'
+import { BreadcrumbSchema } from '../components/StructuredData'
 
 const TIER_LABEL = {
   gold:    { tr: 'Gold Sponsor', en: 'Gold Sponsor' },
@@ -54,6 +55,12 @@ export default function Partners() {
 
   return (
     <div className="kd-blog">
+      <BreadcrumbSchema
+        items={[
+          { name: lang === 'en' ? 'Home' : 'Ana Sayfa', path: '/' },
+          { name: t('pill'), path: '/partnerler' },
+        ]}
+      />
       <header className="kd-blog-head">
         <span className="kd-blog-pill"><HiOutlineSparkles size={14} /> {t('pill')}</span>
         <h1>{t('head1')}<span className="kd-accent">{t('headHi')}</span></h1>

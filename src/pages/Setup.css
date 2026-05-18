@@ -103,6 +103,16 @@
   transform: translateY(-2px);
 }
 
+.kd-setup-card[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.kd-setup-card[aria-disabled="true"]:hover {
+  transform: none;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
 .kd-setup-icon {
   display: inline-flex;
   align-items: center;

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import {
   HiOutlineSearch,
   HiOutlineDocumentText,
@@ -24,11 +24,21 @@ function pickField(post, base, lang) {
 
 export default function Blog() {
   const { lang } = useLanguage()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [posts, setPosts] = useState(staticBlogPosts)
   const [loading, setLoading] = useState(true)
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(searchParams.get('q') || '')
   const [activeTag, setActiveTag] = useState('all')
   const [showAll, setShowAll] = useState(false)
+
+  useEffect(() => {
+    const current = searchParams.get('q') || ''
+    if (query && query !== current) {
+      setSearchParams({ q: query }, { replace: true })
+    } else if (!query && current) {
+      setSearchParams({}, { replace: true })
+    }
+  }, [query, searchParams, setSearchParams])
 
   useSEO({
     title: lang === 'en' ? 'Blog | Kadir Demir' : 'Blog | Kadir Demir',

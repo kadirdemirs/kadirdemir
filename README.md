@@ -4,7 +4,7 @@ YouTuber içerik üreticisi için React 19 + Vite 8 + Express + MongoDB üzerine
 
 ## Özellikler
 
-- **Frontend:** React 19, Vite 8, React Router 7, Framer Motion, Three.js
+- **Frontend:** React 19, Vite 8, React Router 7, Framer Motion, responsive image pipeline (`vite-imagetools` + `sharp`)
 - **Backend:** Express 5, MongoDB Atlas, JWT auth (httpOnly cookie + CSRF)
 - **PWA:** Service Worker, manifest, offline page, install shortcuts
 - **SEO:** JSON-LD (Person, FAQ, Video), dinamik sitemap, OG tags

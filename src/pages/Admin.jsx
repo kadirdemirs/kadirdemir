@@ -6,6 +6,7 @@ import {
   HiOutlinePlus, HiOutlineSave, HiOutlineEye, HiOutlineEyeOff,
   HiOutlineX, HiOutlineMenuAlt3, HiOutlineRefresh, HiOutlineChartBar,
   HiOutlineBell, HiOutlinePhotograph, HiOutlineKey, HiOutlineDatabase,
+  HiOutlineChatAlt2, HiOutlineCheck,
 } from 'react-icons/hi'
 import {
   loginApi, logoutApi, changePasswordApi,
@@ -20,6 +21,7 @@ import {
   getRemindersApi, createReminderApi, updateReminderApi, deleteReminderApi,
   getMediaApi, uploadMediaApi, bulkDeleteMediaApi,
   getBackupSummaryApi, createBackupApi,
+  getAdminCommentsApi, setCommentApprovalApi, deleteCommentApi,
 } from '../api'
 import './Admin.css'
 
@@ -398,6 +400,148 @@ function BlogEditor({ post, onSave, onCancel }) {
 }
 
 // ───── NEWSLETTER ─────
+function CommentsSection({ showToast }) {
+  const [comments, setComments] = useState([])
+  const [filter, setFilter] = useState('pending')
+  const [loading, setLoading] = useState(true)
+
+  const load = useCallback((f = filter) => {
+    setLoading(true)
+    getAdminCommentsApi(f)
+      .then((d) => Array.isArray(d) && setComments(d))
+      .catch((e) => showToast(e.message || 'Yüklenemedi', 'error'))
+      .finally(() => setLoading(false))
+  }, [filter, showToast])
+
+  useEffect(() => { load(filter) }, [filter, load])
+
+  const approve = async (id) => {
+    try {
+      await setCommentApprovalApi(id, true)
+      showToast('Yorum onaylandı', 'success')
+      load(filter)
+    } catch (e) { showToast(e.message, 'error') }
+  }
+
+  const unapprove = async (id) => {
+    try {
+      await setCommentApprovalApi(id, false)
+      showToast('Yorum gizlendi', 'success')
+      load(filter)
+    } catch (e) { showToast(e.message, 'error') }
+  }
+
+  const remove = async (id) => {
+    if (!confirm('Yorumu silmek istediğine emin misin?')) return
+    try {
+      await deleteCommentApi(id)
+      showToast('Yorum silindi', 'success')
+      load(filter)
+    } catch (e) { showToast(e.message, 'error') }
+  }
+
+  const pendingCount = comments.filter((c) => c.approved === false).length
+
+  return (
+    <div>
+      <div className="admin-page-header">
+        <div>
+          <h1>Yorumlar</h1>
+          <p>
+            {comments.length} yorum
+            {filter === 'pending' && pendingCount > 0 ? ` · ${pendingCount} onay bekliyor` : ''}
+          </p>
+        </div>
+        <div style={{ display: 'inline-flex', gap: 8 }}>
+          <button
+            className={`btn ${filter === 'pending' ? 'btn-primary' : 'btn-outline'}`}
+            onClick={() => setFilter('pending')}
+          >
+            Onay bekleyenler
+          </button>
+          <button
+            className={`btn ${filter === 'approved' ? 'btn-primary' : 'btn-outline'}`}
+            onClick={() => setFilter('approved')}
+          >
+            Onaylananlar
+          </button>
+          <button
+            className={`btn ${filter === 'all' ? 'btn-primary' : 'btn-outline'}`}
+            onClick={() => setFilter('all')}
+          >
+            Tümü
+          </button>
+        </div>
+      </div>
+
+      {loading && <p style={{ color: 'var(--gray-light)' }}>Yükleniyor…</p>}
+
+      {!loading && comments.length === 0 && (
+        <p style={{ color: 'var(--gray-light)' }}>
+          {filter === 'pending'
+            ? 'Onay bekleyen yorum yok.'
+            : filter === 'approved'
+              ? 'Henüz onaylanmış yorum yok.'
+              : 'Hiç yorum yok.'}
+        </p>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {comments.map((c) => (
+          <article
+            key={c._id}
+            style={{
+              padding: 16,
+              borderRadius: 12,
+              background: 'rgba(255,255,255,0.025)',
+              border: `1px solid ${c.approved === false ? 'rgba(251, 191, 36, 0.3)' : 'rgba(255,255,255,0.06)'}`,
+            }}
+          >
+            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 8, fontSize: '0.84rem' }}>
+              <div>
+                <strong>{c.author}</strong>{' '}
+                <span style={{ color: 'var(--gray-light)' }}>
+                  · /blog/{c.postSlug} · {new Date(c.createdAt).toLocaleString('tr-TR')}
+                </span>
+              </div>
+              <span
+                style={{
+                  padding: '2px 10px',
+                  borderRadius: 999,
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  background: c.approved ? 'rgba(52, 211, 153, 0.12)' : 'rgba(251, 191, 36, 0.12)',
+                  color: c.approved ? '#34d399' : '#fbbf24',
+                  border: `1px solid ${c.approved ? 'rgba(52, 211, 153, 0.3)' : 'rgba(251, 191, 36, 0.3)'}`,
+                }}
+              >
+                {c.approved ? 'Onaylı' : 'Beklemede'}
+              </span>
+            </header>
+            <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.55, margin: '0 0 12px', color: 'var(--gray-lighter)' }}>
+              {c.body}
+            </p>
+            <div style={{ display: 'inline-flex', gap: 8 }}>
+              {c.approved === false ? (
+                <button className="btn btn-primary" onClick={() => approve(c._id)}>
+                  <HiOutlineCheck size={16} /> Onayla
+                </button>
+              ) : (
+                <button className="btn btn-outline" onClick={() => unapprove(c._id)}>
+                  <HiOutlineEyeOff size={16} /> Gizle
+                </button>
+              )}
+              <button className="btn btn-outline" style={{ color: '#f87171', borderColor: 'rgba(248, 113, 113, 0.4)' }} onClick={() => remove(c._id)}>
+                <HiOutlineTrash size={16} /> Sil
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function NewsletterSection({ showToast }) {
   const [subscribers, setSubscribers] = useState([])
   const [subject, setSubject] = useState('')
@@ -864,6 +1008,7 @@ const TABS = [
   { id: 'analytics', label: 'Analitik', icon: HiOutlineChartBar },
   { id: 'messages', label: 'Mesajlar', icon: HiOutlineMail },
   { id: 'blog', label: 'Blog', icon: HiOutlineNewspaper },
+  { id: 'comments', label: 'Yorumlar', icon: HiOutlineChatAlt2 },
   { id: 'newsletter', label: 'Newsletter', icon: HiOutlineMail },
   { id: 'media', label: 'Medya', icon: HiOutlinePhotograph },
   { id: 'reminders', label: 'Hatırlatıcılar', icon: HiOutlineBell },
@@ -923,6 +1068,7 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
       case 'analytics': return <AnalyticsSection />
       case 'messages': return <MessagesSection showToast={showToast} onCountChange={setUnreadCount} />
       case 'blog': return <BlogSection showToast={showToast} />
+      case 'comments': return <CommentsSection showToast={showToast} />
       case 'newsletter': return <NewsletterSection showToast={showToast} />
       case 'media': return <MediaSection showToast={showToast} />
       case 'reminders': return <RemindersSection showToast={showToast} />

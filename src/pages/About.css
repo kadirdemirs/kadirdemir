@@ -62,6 +62,33 @@
   background: linear-gradient(135deg, #141416 0%, #0a0a0c 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 18px;
+  overflow: hidden;
+}
+
+.kd-about-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kd-about-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.05);
+  transition: transform 0.7s ease;
+}
+
+.kd-about-media:hover .kd-about-img img {
+  transform: scale(1.03);
+}
+
+.kd-about-img-alt img {
+  object-position: 50% 25%;
+  filter: saturate(0.95) contrast(1.06);
 }
 
 .kd-about-tag {

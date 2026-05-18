@@ -27,6 +27,7 @@ export default function Comments({ postSlug }) {
   const [body, setBody] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+  const [pendingNotice, setPendingNotice] = useState(false)
 
   useEffect(() => {
     setAuthor(localStorage.getItem(NAME_STORAGE) || '')
@@ -48,16 +49,29 @@ export default function Comments({ postSlug }) {
     body:     { tr: 'Yorumun', en: 'Your comment' },
     send:     { tr: 'Yorum gönder', en: 'Post comment' },
     sending:  { tr: 'Gönderiliyor...', en: 'Posting...' },
+    pending:  {
+      tr: 'Teşekkürler! Yorumun moderasyon onayından sonra burada görünecek.',
+      en: 'Thanks! Your comment will appear here after moderation.',
+    },
+    rules:    {
+      tr: 'Saygılı dil kullan, kişisel saldırı veya spam bağlantı yok. Ekran isminin gerçek olmasına gerek yok.',
+      en: 'Be respectful — no personal attacks or spam links. Display name does not have to be real.',
+    },
   }[k]?.[lang] || k)
 
   const onSubmit = async (e) => {
     e.preventDefault()
     setError(null)
+    setPendingNotice(false)
     setSubmitting(true)
     try {
       const created = await postCommentApi({ postSlug, author: author.trim(), body: body.trim() })
       localStorage.setItem(NAME_STORAGE, author.trim())
-      setList((arr) => [...arr, created])
+      if (created?.pending) {
+        setPendingNotice(true)
+      } else {
+        setList((arr) => [...arr, created])
+      }
       setBody('')
     } catch (err) {
       setError(err.message || 'Hata')
@@ -90,21 +104,36 @@ export default function Comments({ postSlug }) {
       </header>
 
       <form onSubmit={onSubmit} style={{ display: 'grid', gap: 10, marginBottom: 22 }}>
+        <label htmlFor="kd-comment-name" style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>
+          {t('name')}
+        </label>
         <input
-          style={{ ...inputStyle, maxWidth: 280 }}
+          id="kd-comment-name"
+          style={{ ...inputStyle, maxWidth: 280, marginTop: -4 }}
           placeholder={t('name')}
           required minLength={1} maxLength={60}
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
+          autoComplete="nickname"
         />
+        <label htmlFor="kd-comment-body" style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>
+          {t('body')}
+        </label>
         <textarea
-          style={{ ...inputStyle, minHeight: 90, resize: 'vertical' }}
+          id="kd-comment-body"
+          style={{ ...inputStyle, minHeight: 90, resize: 'vertical', marginTop: -4 }}
           placeholder={t('body')}
           required minLength={2} maxLength={1500}
           value={body}
           onChange={(e) => setBody(e.target.value)}
         />
-        {error && <div style={{ color: '#f87171', fontSize: '0.82rem' }}>{error}</div>}
+        <small style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.76rem' }}>{t('rules')}</small>
+        {error && <div role="alert" style={{ color: '#f87171', fontSize: '0.82rem' }}>{error}</div>}
+        {pendingNotice && (
+          <div role="status" style={{ color: '#34d399', fontSize: '0.86rem', background: 'rgba(52, 211, 153, 0.08)', border: '1px solid rgba(52, 211, 153, 0.2)', padding: '10px 12px', borderRadius: 10 }}>
+            {t('pending')}
+          </div>
+        )}
         <button
           type="submit"
           disabled={submitting}

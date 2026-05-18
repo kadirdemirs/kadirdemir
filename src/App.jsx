@@ -29,6 +29,7 @@ const CerezPolitikasi = lazy(() => import('./pages/CerezPolitikasi'))
 const Partners = lazy(() => import('./pages/Partners'))
 const Sponsor = lazy(() => import('./pages/Sponsor'))
 const AMA = lazy(() => import('./pages/AMA'))
+const MediaKit = lazy(() => import('./pages/MediaKit'))
 const Admin = lazy(() => import('./pages/Admin'))
 
 function PageLoader() {
@@ -68,10 +69,41 @@ function ProtectedAdminRoute() {
   )
 }
 
+function useHeavyFxEnabled() {
+  const [enabled, setEnabled] = useState(() => {
+    if (typeof window === 'undefined') return true
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    const coarse = window.matchMedia?.('(pointer: coarse)').matches
+    const narrow = window.matchMedia?.('(max-width: 820px)').matches
+    return !(reduced || (coarse && narrow))
+  })
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const queries = [
+      '(prefers-reduced-motion: reduce)',
+      '(pointer: coarse)',
+      '(max-width: 820px)',
+    ].map((q) => window.matchMedia(q))
+    const evaluate = () => {
+      const reduced = queries[0].matches
+      const coarse = queries[1].matches
+      const narrow = queries[2].matches
+      setEnabled(!(reduced || (coarse && narrow)))
+    }
+    queries.forEach((q) => q.addEventListener?.('change', evaluate))
+    evaluate()
+    return () => queries.forEach((q) => q.removeEventListener?.('change', evaluate))
+  }, [])
+
+  return enabled
+}
+
 function App() {
   const location = useLocation()
   const isAdmin = location.pathname === '/admin'
   const prevPath = useRef(null)
+  const heavyFx = useHeavyFxEnabled()
 
   useEffect(() => {
     if (isAdmin) return
@@ -114,9 +146,9 @@ function App() {
       <ScrollToTop />
       {!isAdmin && <LiveBanner />}
       {!isAdmin && <AuroraBackground />}
-      {!isAdmin && <ParticlesField />}
-      {!isAdmin && <GrainOverlay />}
-      {!isAdmin && <CursorSpotlight />}
+      {!isAdmin && heavyFx && <ParticlesField />}
+      {!isAdmin && heavyFx && <GrainOverlay />}
+      {!isAdmin && heavyFx && <CursorSpotlight />}
       {!isAdmin && <Navbar />}
       <main id="main-content">
         <Routes location={location} key={location.pathname}>
@@ -133,6 +165,7 @@ function App() {
           <Route path="/cerez-politikasi" element={<LazyRoute><CerezPolitikasi /></LazyRoute>} />
           <Route path="/partnerler" element={<LazyRoute><Partners /></LazyRoute>} />
           <Route path="/sponsor" element={<LazyRoute><Sponsor /></LazyRoute>} />
+          <Route path="/medya-kit" element={<LazyRoute><MediaKit /></LazyRoute>} />
           <Route path="/sor" element={<LazyRoute><AMA /></LazyRoute>} />
           <Route path="/admin" element={<ProtectedAdminRoute />} />
           <Route path="*" element={<NotFound />} />

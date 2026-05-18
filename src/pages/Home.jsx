@@ -23,7 +23,10 @@ import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../componen
 import CountUp from '../components/CountUp'
 import MagneticButton from '../components/MagneticButton'
 import PollWidget from '../components/PollWidget'
-import { getYouTubeVideosApi } from '../api'
+import NewsletterForm from '../components/NewsletterForm'
+import ResponsivePortrait from '../components/ResponsivePortrait'
+import { SkeletonGrid } from '../components/Skeleton'
+import { getYouTubeVideosApi, getBlogsApi } from '../api'
 import './Home.css'
 
 function parseStat(value) {
@@ -61,26 +64,9 @@ function parseDuration(iso) {
   return h > 0 ? `${h}:${pad(min)}:${pad(s)}` : `${min}:${pad(s)}`
 }
 
-const fallbackArticles = [
-  {
-    id: 1,
-    title: 'Stüdyo Kurulumum: 2026 Versiyonu',
-    sub: 'Bu yıl tamamen yenilediğim çekim odamı ve neden bu donanımları seçtiğimi anlatıyorum.',
-    tag: 'SETUP',
-  },
-  {
-    id: 2,
-    title: 'İçerik Üretiminde 10 Yıl: Geriye Bakış',
-    sub: 'İlk videodan bugüne neyi farklı yapardım — ve kanal büyütmek için en kritik 5 ders.',
-    tag: 'GÜNLÜK',
-  },
-  {
-    id: 3,
-    title: 'Sponsorlukları Nasıl Seçiyorum?',
-    sub: 'Marka iş birliklerinde dikkat ettiğim kriterler, hayır dediğim teklifler ve neden.',
-    tag: 'İŞ',
-  },
-]
+function formatBlogTag(category) {
+  return String(category || 'YAZI').toUpperCase().slice(0, 14)
+}
 
 const faqs = [
   {
@@ -112,26 +98,27 @@ const faqs = [
 function FAQItem({ faq }) {
   const [open, setOpen] = useState(false)
   return (
-    <button
-      type="button"
+    <details
       className={`kd-faq-item ${open ? 'open' : ''}`}
-      onClick={() => setOpen((v) => !v)}
-      aria-expanded={open}
+      open={open}
+      onToggle={(e) => setOpen(e.currentTarget.open)}
     >
-      <div className="kd-faq-q">
+      <summary className="kd-faq-q">
         <span>{faq.q}</span>
-        <HiOutlineChevronDown size={20} />
-      </div>
+        <HiOutlineChevronDown size={20} aria-hidden="true" />
+      </summary>
       <div className="kd-faq-a-wrap">
         <div className="kd-faq-a">{faq.a}</div>
       </div>
-    </button>
+    </details>
   )
 }
 
 export default function Home() {
   const { settings } = useSiteSettings()
   const [videos, setVideos] = useState([])
+  const [videosLoading, setVideosLoading] = useState(true)
+  const [blogs, setBlogs] = useState([])
 
   useSEO({
     title: settings.seoTitle || 'Kadir Demir | YouTube İçerik Üreticisi',
@@ -144,6 +131,13 @@ export default function Home() {
     getYouTubeVideosApi()
       .then((res) => { if (res?.videos) setVideos(res.videos) })
       .catch(() => { /* ignore — use fallback */ })
+      .finally(() => setVideosLoading(false))
+    getBlogsApi()
+      .then((res) => {
+        const list = Array.isArray(res?.blogs) ? res.blogs : Array.isArray(res?.data) ? res.data : []
+        setBlogs(list.filter((b) => !b?.draft).slice(0, 3))
+      })
+      .catch(() => { /* ignore — section hidden if empty */ })
   }, [])
 
   const subscribeUrl = `${settings.youtube || 'https://youtube.com/@kadirdemir'}?sub_confirmation=1`
@@ -303,7 +297,11 @@ export default function Home() {
         <div className="kd-split-media">
           <div className="kd-media-frame kd-media-stack">
             <div className="kd-media-tag">Story</div>
-            <div className="kd-media-skeleton" />
+            <ResponsivePortrait
+              alt="Kadir Demir — stüdyo portresi"
+              className="kd-media-img"
+              sizes="(max-width: 820px) 100vw, 480px"
+            />
           </div>
         </div>
       </motion.section>
@@ -313,7 +311,11 @@ export default function Home() {
         <div className="kd-split-media">
           <div className="kd-media-frame kd-media-stack kd-media-secondary">
             <div className="kd-media-tag">Behind the scenes</div>
-            <div className="kd-media-skeleton" />
+            <ResponsivePortrait
+              alt="Kadir Demir — kayıt sırasında"
+              className="kd-media-img kd-media-img-alt"
+              sizes="(max-width: 820px) 100vw, 480px"
+            />
           </div>
         </div>
         <div className="kd-split-text">
@@ -350,7 +352,7 @@ export default function Home() {
               <img
                 className="kd-featured-img"
                 src={featuredVideo.thumbnail || `https://i.ytimg.com/vi/${featuredVideo.youtubeId}/maxresdefault.jpg`}
-                alt={featuredVideo.title}
+                alt={`${featuredVideo.title} — öne çıkan YouTube videosu küçük resmi`}
                 loading="lazy"
                 onError={(e) => { e.currentTarget.style.display = 'none' }}
               />
@@ -383,7 +385,7 @@ export default function Home() {
       )}
 
       {/* ===== RECENT VIDEOS ===== */}
-      {recentVideos.length > 0 && (
+      {(videosLoading || recentVideos.length > 0) && (
         <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
           <div className="kd-section-head kd-row">
             <div>
@@ -394,6 +396,9 @@ export default function Home() {
               Tümünü gör <HiOutlineArrowRight />
             </Link>
           </div>
+          {videosLoading && recentVideos.length === 0 && (
+            <SkeletonGrid count={4} kind="video" />
+          )}
           <div className="kd-video-grid">
             {recentVideos.map((v) => (
               <a
@@ -406,7 +411,7 @@ export default function Home() {
                 <div className="kd-video-thumb">
                   <img
                     src={v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                    alt={v.title}
+                    alt={`${v.title} — YouTube videosu`}
                     loading="lazy"
                     onError={(e) => { e.currentTarget.style.display = 'none' }}
                   />
@@ -455,29 +460,12 @@ export default function Home() {
                 <div className="kd-video-thumb">
                   <img
                     src={v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                    alt={v.title}
+                    alt={`${v.title} — YouTube videosu`}
                     loading="lazy"
                     onError={(e) => { e.currentTarget.style.display = 'none' }}
                   />
                   <div className="kd-video-shade" />
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: 12,
-                      left: 12,
-                      background: 'linear-gradient(135deg, #f97316, #dc2626)',
-                      color: '#fff',
-                      padding: '4px 10px',
-                      borderRadius: 999,
-                      fontSize: '0.7rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.06em',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 4,
-                      boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4)',
-                    }}
-                  >
+                  <span className="kd-rank-badge">
                     <HiOutlineFire /> #{idx + 1}
                   </span>
                   {parseDuration(v.duration) && (
@@ -503,34 +491,44 @@ export default function Home() {
       </motion.section>
 
       {/* ===== ARTICLES ===== */}
-      <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-        <div className="kd-section-head kd-row">
-          <div>
-            <span className="kd-eyebrow">Blog</span>
-            <h2>Son makaleler</h2>
-            <p>Blogumdaki son yazılar — düşüncelerim, ipuçları, perde arkası.</p>
-          </div>
-          <Link to="/blog" className="kd-section-link kd-link-arrow">
-            Tümünü gör <HiOutlineArrowRight />
-          </Link>
-        </div>
-        <div className="kd-article-grid">
-          {fallbackArticles.map((a) => (
-            <Link key={a.id} to="/blog" className="kd-article-card">
-              <div className="kd-article-thumb">
-                <span className="kd-article-tag">{a.tag}</span>
-                <span className="kd-thumb-mono">K</span>
-              </div>
-              <div className="kd-article-info">
-                <h4>{a.title}</h4>
-                <p>{a.sub}</p>
-                <span className="kd-link-arrow kd-link-arrow-sm">
-                  Yazıyı oku <HiOutlineArrowRight />
-                </span>
-              </div>
+      {blogs.length > 0 && (
+        <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
+          <div className="kd-section-head kd-row">
+            <div>
+              <span className="kd-eyebrow">Blog</span>
+              <h2>Son makaleler</h2>
+              <p>Blogumdaki son yazılar — düşüncelerim, ipuçları, perde arkası.</p>
+            </div>
+            <Link to="/blog" className="kd-section-link kd-link-arrow">
+              Tümünü gör <HiOutlineArrowRight />
             </Link>
-          ))}
-        </div>
+          </div>
+          <div className="kd-article-grid">
+            {blogs.map((b) => (
+              <Link key={b._id || b.slug} to={`/blog/${b.slug}`} className="kd-article-card">
+                <div
+                  className="kd-article-thumb"
+                  style={b.coverImage ? { backgroundImage: `url(${b.coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+                >
+                  <span className="kd-article-tag">{formatBlogTag(b.category)}</span>
+                  {!b.coverImage && <span className="kd-thumb-mono">K</span>}
+                </div>
+                <div className="kd-article-info">
+                  <h4>{b.title}</h4>
+                  <p>{b.excerpt || b.summary || ''}</p>
+                  <span className="kd-link-arrow kd-link-arrow-sm">
+                    Yazıyı oku <HiOutlineArrowRight />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </motion.section>
+      )}
+
+      {/* ===== NEWSLETTER ===== */}
+      <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
+        <NewsletterForm />
       </motion.section>
 
       {/* ===== INSTAGRAM ===== */}

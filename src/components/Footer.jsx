@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaYoutube, FaInstagram, FaTiktok, FaTwitch } from 'react-icons/fa6'
 import { FaXTwitter, FaLinkedinIn, FaDiscord, FaWhatsapp, FaPatreon } from 'react-icons/fa6'
 import { SiKofi, SiBuymeacoffee } from 'react-icons/si'
 import { HiOutlineArrowRight, HiOutlineEnvelope, HiOutlineHeart } from 'react-icons/hi2'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
-import { subscribeNewsletterApi } from '../api'
+import { useNewsletterSubscribe } from '../hooks/useNewsletterSubscribe'
 import './Footer.css'
 
 const pageLinks = [
@@ -49,31 +48,14 @@ function buildSocials(settings) {
 
 export default function Footer() {
   const { settings } = useSiteSettings()
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState(null)
-  const [submitting, setSubmitting] = useState(false)
+  const { email, setEmail, status, submitting, submit } = useNewsletterSubscribe()
 
   const socials = buildSocials(settings)
   const supportLinks = buildSupportLinks(settings)
   const brandName = settings.businessName || 'Kadir Demir'
   const description = settings.description || "YouTube'da oyun, vlog ve eğlence içerikleri üreten bir creator. İstanbul'dan, sevdiğim işi yapıyorum."
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!email.trim()) return
-    setSubmitting(true)
-    setStatus(null)
-    try {
-      await subscribeNewsletterApi(email.trim())
-      setStatus({ type: 'success', text: 'Teşekkürler! Listeye eklendin.' })
-      setEmail('')
-    } catch (err) {
-      setStatus({ type: 'error', text: err.message || 'Bir hata oluştu, tekrar dene.' })
-    } finally {
-      setSubmitting(false)
-      setTimeout(() => setStatus(null), 5000)
-    }
-  }
+  const handleSubmit = submit
 
   return (
     <footer className="footer">

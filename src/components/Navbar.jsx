@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { HiMenuAlt3, HiX, HiOutlineSun, HiOutlineMoon, HiOutlineGlobeAlt, HiOutlineUserCircle, HiOutlineLogout, HiOutlineCog } from 'react-icons/hi'
@@ -27,12 +27,42 @@ export default function Navbar() {
   const { lang, toggleLang } = useLanguage()
   const [user, setUser] = useState(null)
   const [showUserMenu, setShowUserMenu] = useState(false)
+  const userMenuButtonRef = useRef(null)
+  const userMenuRef = useRef(null)
 
   useEffect(() => {
     getSessionApi()
       .then((d) => { if (d?.authenticated) setUser(d.user) })
       .catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (!showUserMenu) return
+
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        setShowUserMenu(false)
+        userMenuButtonRef.current?.focus()
+      }
+    }
+    const handleClick = (e) => {
+      if (
+        userMenuRef.current && !userMenuRef.current.contains(e.target) &&
+        userMenuButtonRef.current && !userMenuButtonRef.current.contains(e.target)
+      ) {
+        setShowUserMenu(false)
+      }
+    }
+    document.addEventListener('keydown', handleKey)
+    document.addEventListener('mousedown', handleClick)
+    // Focus first focusable item in the menu
+    const firstFocusable = userMenuRef.current?.querySelector('a, button')
+    firstFocusable?.focus()
+    return () => {
+      document.removeEventListener('keydown', handleKey)
+      document.removeEventListener('mousedown', handleClick)
+    }
+  }, [showUserMenu])
 
   const handleLogout = async () => {
     try { await logoutApi() } catch { /* ignore */ }
@@ -107,12 +137,14 @@ export default function Navbar() {
           {user && (
             <div style={{ position: 'relative' }}>
               <button
+                ref={userMenuButtonRef}
                 type="button"
                 className="navbar-icon-btn"
                 onClick={() => setShowUserMenu((v) => !v)}
-                aria-label="Hesap"
+                aria-label={lang === 'en' ? 'Account menu' : 'Hesap menüsü'}
                 aria-haspopup="menu"
                 aria-expanded={showUserMenu}
+                aria-controls="navbar-user-menu"
                 style={{ paddingRight: 12 }}
               >
                 <HiOutlineUserCircle size={18} />
@@ -121,40 +153,42 @@ export default function Navbar() {
                 </span>
               </button>
               {showUserMenu && (
-                <>
-                  <div onClick={() => setShowUserMenu(false)} style={{ position: 'fixed', inset: 0, zIndex: 998 }} />
-                  <div
-                    role="menu"
-                    style={{
-                      position: 'absolute',
-                      top: 'calc(100% + 8px)',
-                      right: 0,
-                      minWidth: 200,
-                      zIndex: 999,
-                      background: 'rgba(20, 20, 24, 0.96)',
-                      backdropFilter: 'blur(20px)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: 12,
-                      padding: 6,
-                      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
-                    }}
+                <div
+                  id="navbar-user-menu"
+                  ref={userMenuRef}
+                  role="menu"
+                  aria-label={lang === 'en' ? 'Account menu' : 'Hesap menüsü'}
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    right: 0,
+                    minWidth: 200,
+                    zIndex: 999,
+                    background: 'rgba(20, 20, 24, 0.96)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 12,
+                    padding: 6,
+                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
+                  }}
+                >
+                  <Link
+                    to="/admin"
+                    role="menuitem"
+                    onClick={() => setShowUserMenu(false)}
+                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, color: '#fff', textDecoration: 'none', fontSize: '0.88rem' }}
                   >
-                    <Link
-                      to="/admin"
-                      onClick={() => setShowUserMenu(false)}
-                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, color: '#fff', textDecoration: 'none', fontSize: '0.88rem' }}
-                    >
-                      <HiOutlineCog size={16} /> {lang === 'en' ? 'Admin Panel' : 'Admin Paneli'}
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, color: '#f87171', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '0.88rem', fontFamily: 'inherit', textAlign: 'left' }}
-                    >
-                      <HiOutlineLogout size={16} /> {lang === 'en' ? 'Logout' : 'Çıkış yap'}
-                    </button>
-                  </div>
-                </>
+                    <HiOutlineCog size={16} /> {lang === 'en' ? 'Admin Panel' : 'Admin Paneli'}
+                  </Link>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={handleLogout}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, color: '#f87171', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '0.88rem', fontFamily: 'inherit', textAlign: 'left' }}
+                  >
+                    <HiOutlineLogout size={16} /> {lang === 'en' ? 'Logout' : 'Çıkış yap'}
+                  </button>
+                </div>
               )}
             </div>
           )}
@@ -170,6 +204,15 @@ export default function Navbar() {
         </div>
 
         <div className="navbar-mobile-right">
+          <button
+            type="button"
+            className="navbar-icon-btn"
+            onClick={toggleLang}
+            aria-label={lang === 'tr' ? 'Switch to English' : 'Türkçeye geç'}
+          >
+            <HiOutlineGlobeAlt size={18} />
+            <span className="navbar-icon-btn-label">{lang === 'tr' ? 'EN' : 'TR'}</span>
+          </button>
           <button
             type="button"
             className="navbar-icon-btn"

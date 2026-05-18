@@ -39,6 +39,48 @@ export const DEFAULT_SITE_SETTINGS = {
 
   // Instagram manual grid (admin can paste post links)
   instagramPosts: [],
+
+  // Media Kit (editable from admin → site settings)
+  mediaKitAudience: [
+    { label: '18–24', value: 38 },
+    { label: '25–34', value: 34 },
+    { label: '35–44', value: 16 },
+    { label: '13–17', value: 9 },
+    { label: '45+', value: 3 },
+  ],
+  mediaKitRegions: [
+    { name: 'Türkiye', flag: '🇹🇷', share: '72%' },
+    { name: 'Almanya', flag: '🇩🇪', share: '8%' },
+    { name: 'Hollanda', flag: '🇳🇱', share: '4%' },
+    { name: 'Azerbaycan', flag: '🇦🇿', share: '3%' },
+    { name: 'Diğer', flag: '🌍', share: '13%' },
+  ],
+  mediaKitKpis: [
+    { label: 'Ortalama etkileşim oranı', value: '%6.4' },
+    { label: 'Long-form ilk 48 saat izlenme', value: '180–250K' },
+    { label: 'İzleyici tamamlama oranı', value: '%72' },
+    { label: 'Aylık benzersiz erişim', value: '1.4M+' },
+  ],
+  mediaKitFormats: [
+    { title: 'Entegrasyon (60–90 sn)', desc: 'Video içinde organik anlatım, hikâyeye yedirilmiş ürün/marka kullanımı.' },
+    { title: 'Dedicated Video', desc: 'Tek başına markaya/ürüne odaklanan komple bir video.' },
+    { title: 'Shorts Serisi', desc: '3-5 kısa video ile yüksek erişim ve hızlı sosyal yayılma.' },
+    { title: 'Canlı Yayın Sponsorluğu', desc: 'Twitch / YouTube canlı yayınında banner + söz konusu marka anısı.' },
+    { title: 'Uzun Soluklu İş Birliği', desc: '3-6 ay süreli, sezon temalı, çoklu format paketi.' },
+    { title: 'Etkinlik / Lansman', desc: 'Ürün lansmanı veya etkinlik için özel içerik + sosyal medya kapsamı.' },
+  ],
+  mediaKitPrinciples: [
+    'Yalnızca gerçekten kullanacağım ya da denediğim ürünlerle çalışırım.',
+    'İçeriği ben yazar, ben kurgularım — markalar onay sürecinde feedback verebilir.',
+    'Sponsorlu içeriği mevzuata uygun etiketle açıkça belirtirim.',
+    'Tek seferlik kampanyalarda ödeme %50 başlangıçta, %50 yayın sonrası kesilir.',
+  ],
+  mediaKitContentThemes: ['Oyun', 'Vlog', 'Eğlence', 'Teknoloji & setup', 'Yaşam tarzı', 'Topluluk etkinlikleri'],
+  mediaKitDataSourceNote: 'YouTube Studio + Meta Insights, son 90 gün ortalama.',
+
+  // Setup equipment (editable from admin → site settings)
+  setupPC: [],
+  setupEquipment: [],
 }
 
 const SiteSettingsContext = createContext({
