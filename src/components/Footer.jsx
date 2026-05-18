@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaYoutube, FaInstagram, FaTiktok, FaTwitch } from 'react-icons/fa6'
-import { FaXTwitter, FaLinkedinIn, FaDiscord, FaWhatsapp } from 'react-icons/fa6'
-import { HiOutlineArrowRight, HiOutlineEnvelope } from 'react-icons/hi2'
+import { FaXTwitter, FaLinkedinIn, FaDiscord, FaWhatsapp, FaPatreon } from 'react-icons/fa6'
+import { SiKofi, SiBuymeacoffee } from 'react-icons/si'
+import { HiOutlineArrowRight, HiOutlineEnvelope, HiOutlineHeart } from 'react-icons/hi2'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { subscribeNewsletterApi } from '../api'
 import './Footer.css'
@@ -14,7 +15,18 @@ const pageLinks = [
   { name: 'Setup', path: '/setup' },
   { name: 'Hakkımda', path: '/hakkimda' },
   { name: 'İletişim', path: '/iletisim' },
+  { name: 'Partnerler', path: '/partnerler' },
+  { name: 'Sponsor', path: '/sponsor' },
 ]
+
+function buildSupportLinks(settings) {
+  const list = []
+  if (settings.patreon) list.push({ icon: FaPatreon, name: 'Patreon', url: settings.patreon, color: '#ff424d' })
+  if (settings.kofi) list.push({ icon: SiKofi, name: 'Ko-fi', url: settings.kofi, color: '#ff5e5b' })
+  if (settings.buymeacoffee) list.push({ icon: SiBuymeacoffee, name: 'Buy Me a Coffee', url: settings.buymeacoffee, color: '#ffdd00' })
+  if (settings.youtubeMembership) list.push({ icon: FaYoutube, name: 'YouTube Member', url: settings.youtubeMembership, color: '#ff0000' })
+  return list
+}
 
 const legalLinks = [
   { name: 'KVKK', path: '/kvkk' },
@@ -42,6 +54,7 @@ export default function Footer() {
   const [submitting, setSubmitting] = useState(false)
 
   const socials = buildSocials(settings)
+  const supportLinks = buildSupportLinks(settings)
   const brandName = settings.businessName || 'Kadir Demir'
   const description = settings.description || "YouTube'da oyun, vlog ve eğlence içerikleri üreten bir creator. İstanbul'dan, sevdiğim işi yapıyorum."
 
@@ -154,6 +167,63 @@ export default function Footer() {
             )}
           </div>
         </div>
+
+        {supportLinks.length > 0 && (
+          <div
+            style={{
+              marginTop: 24,
+              padding: '20px 24px',
+              background: 'linear-gradient(135deg, rgba(255, 66, 77, 0.06), rgba(255, 221, 0, 0.06))',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: 16,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 16,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <span
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 12,
+                  background: 'linear-gradient(135deg, #ec4899, #f97316)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#fff',
+                }}
+              >
+                <HiOutlineHeart size={20} />
+              </span>
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--white, #fff)', fontSize: '0.95rem' }}>
+                  İçeriklere destek ol
+                </div>
+                <div style={{ color: 'var(--gray-light, #94a3b8)', fontSize: '0.82rem' }}>
+                  Bağışın yeni ekipman ve daha iyi içerik demek.
+                </div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {supportLinks.map((s) => (
+                <a
+                  key={s.name}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social"
+                  title={s.name}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 999, background: 'rgba(255,255,255,0.04)', textDecoration: 'none', color: 'var(--white, #fff)', fontSize: '0.82rem', fontWeight: 600 }}
+                >
+                  <s.icon size={14} color={s.color} /> {s.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} {brandName} — Tüm hakları saklıdır.</p>

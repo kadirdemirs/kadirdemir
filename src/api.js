@@ -453,6 +453,72 @@ export async function getYouTubeVideosApi() {
   return handleResponse(res);
 }
 
+export async function getYouTubeLiveApi() {
+  const res = await globalThis.fetch(`${API_BASE}/youtube?action=live`, { credentials: 'include' });
+  return handleResponse(res);
+}
+
+// ───── Partners ─────
+export async function getPartnersApi() {
+  const res = await globalThis.fetch(`${API_BASE}/partners`);
+  return handleResponse(res);
+}
+
+// ───── Blog Comments ─────
+export async function getCommentsApi(slug) {
+  const res = await globalThis.fetch(`${API_BASE}/comments?slug=${encodeURIComponent(slug)}`);
+  return handleResponse(res);
+}
+
+export async function postCommentApi({ postSlug, author, body, parentId }) {
+  const res = await globalThis.fetch(`${API_BASE}/comments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ postSlug, author, body, parentId }),
+  });
+  return handleResponse(res);
+}
+
+// ───── AMA ─────
+export async function getAMAApi() {
+  const res = await globalThis.fetch(`${API_BASE}/ama`);
+  return handleResponse(res);
+}
+
+export async function askAMAApi(question, author) {
+  const res = await globalThis.fetch(`${API_BASE}/ama?action=ask`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question, author: author || '' }),
+  });
+  return handleResponse(res);
+}
+
+// ───── Polls ─────
+export async function getActivePollApi() {
+  const res = await globalThis.fetch(`${API_BASE}/polls?action=active`, { credentials: 'include' });
+  return handleResponse(res);
+}
+
+export async function votePollApi(pollId, optionIndex) {
+  const res = await globalThis.fetch(`${API_BASE}/polls?action=vote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pollId, optionIndex }),
+  });
+  return handleResponse(res);
+}
+
+// ───── Sponsor ─────
+export async function submitSponsorApi(data) {
+  const res = await globalThis.fetch(`${API_BASE}/sponsor`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(res);
+}
+
 export async function refreshYouTubeVideosApi() {
   const res = await fetch(`${API_BASE}/youtube?action=refresh`, {
     method: 'POST',

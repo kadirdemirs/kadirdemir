@@ -1,61 +1,124 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   HiOutlineSearch,
   HiOutlineDocumentText,
   HiOutlineSparkles,
   HiOutlineChevronDown,
+  HiOutlineClock,
 } from 'react-icons/hi'
+import { useLanguage } from '../i18n/LanguageContext'
+import { useSEO } from '../hooks/useSEO'
+import { blogPosts as staticBlogPosts } from '../data/content'
+import { getBlogsApi } from '../api'
+import { getBlogImage } from '../utils/blogImage'
+import { BreadcrumbSchema, BlogListSchema } from '../components/StructuredData'
 import './Blog.css'
-
-const allArticles = [
-  { id: 1, slug: 'test2test2test2', title: 'test2test2test2', sub: 'vtest2test2test3', tag: 'test', featured: true },
-  { id: 2, slug: 'test2test2', title: 'test2test2', sub: '5453453', tag: 'test', featured: true },
-  { id: 3, slug: 'test24574574', title: 'test24574574', sub: '6546456', tag: 'test' },
-  { id: 4, slug: 'test24535', title: 'test24535', sub: 'test2', tag: 'test' },
-  { id: 5, slug: 'test2234', title: 'test2234', sub: '54', tag: 'test' },
-  { id: 6, slug: 'test2214', title: 'test2214', sub: 'test2', tag: 'test' },
-  { id: 7, slug: 'test253', title: 'test253', sub: '7', tag: 'test' },
-  { id: 8, slug: 'test27', title: 'test27', sub: 'test2', tag: 'test' },
-  { id: 9, slug: 'test25', title: 'test25', sub: 'test2', tag: 'test' },
-  { id: 10, slug: 'test23', title: 'test23', sub: 'test2', tag: 'test' },
-  { id: 11, slug: 'test2', title: 'test2', sub: '2', tag: 'test' },
-]
 
 const PAGE_SIZE = 9
 
+function pickField(post, base, lang) {
+  const camel = base + (lang === 'en' ? 'En' : 'Tr')
+  return post[camel] || post[base] || ''
+}
+
 export default function Blog() {
+  const { lang } = useLanguage()
+  const [posts, setPosts] = useState(staticBlogPosts)
+  const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState('all')
   const [showAll, setShowAll] = useState(false)
 
+  useSEO({
+    title: lang === 'en' ? 'Blog | Kadir Demir' : 'Blog | Kadir Demir',
+    description:
+      lang === 'en'
+        ? 'Articles, notes and behind-the-scenes from Kadir Demir.'
+        : 'Kadir Demir\'in yazıları, notları ve kulis gözlemleri.',
+  })
+
+  useEffect(() => {
+    let cancelled = false
+    getBlogsApi()
+      .then((data) => {
+        if (cancelled || !Array.isArray(data) || !data.length) return
+        setPosts((prev) => {
+          const bySlug = new Map(data.map((p) => [p.slug, p]))
+          const merged = prev.map((p) => bySlug.get(p.slug) || p)
+          const existingSlugs = new Set(prev.map((p) => p.slug))
+          const newOnes = data.filter((p) => !existingSlugs.has(p.slug))
+          return [...newOnes, ...merged]
+        })
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [])
+
+  const tagCounts = useMemo(() => {
+    const counts = new Map()
+    for (const p of posts) {
+      const cat = lang === 'en' ? (p.categoryEn || p.category) : (p.category || p.categoryEn)
+      if (!cat) continue
+      counts.set(cat, (counts.get(cat) || 0) + 1)
+    }
+    return Array.from(counts.entries()).sort((a, b) => b[1] - a[1])
+  }, [posts, lang])
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return allArticles.filter((a) => {
-      const matchTag = activeTag === 'all' || a.tag === activeTag
+    return posts.filter((p) => {
+      const cat = lang === 'en' ? (p.categoryEn || p.category) : (p.category || p.categoryEn)
+      const title = pickField(p, 'title', lang)
+      const excerpt = pickField(p, 'excerpt', lang)
+      const matchTag = activeTag === 'all' || cat === activeTag
       const matchQ =
         !q ||
-        a.title.toLowerCase().includes(q) ||
-        a.sub.toLowerCase().includes(q)
+        title.toLowerCase().includes(q) ||
+        excerpt.toLowerCase().includes(q) ||
+        (cat || '').toLowerCase().includes(q)
       return matchTag && matchQ
     })
-  }, [query, activeTag])
+  }, [posts, query, activeTag, lang])
 
-  const featured = filtered.filter((a) => a.featured)
-  const others = filtered.filter((a) => !a.featured)
+  const featured = filtered.slice(0, 2)
+  const others = filtered.slice(2)
   const visibleOthers = showAll ? others : others.slice(0, PAGE_SIZE)
+
+  const t = (k) => {
+    const dict = {
+      pill:      { tr: 'Blog', en: 'Blog' },
+      heading1:  { tr: 'Yazdığım ', en: 'Everything ' },
+      headingHi: { tr: 'her şey', en: 'I write' },
+      sub:       { tr: 'Gözlemler, denemeler, kulis notları.', en: 'Notes, drafts, behind-the-scenes.' },
+      count:     { tr: 'makale', en: 'articles' },
+      search:    { tr: 'Makaleler içinde ara...', en: 'Search articles...' },
+      all:       { tr: 'Tümü', en: 'All' },
+      featured:  { tr: 'ÖNE ÇIKAN', en: 'FEATURED' },
+      otherTitle:{ tr: 'DİĞER MAKALELER', en: 'OTHER ARTICLES' },
+      more:      { tr: 'Daha fazla görüntüle', en: 'Show more' },
+      less:      { tr: 'Daha az göster', en: 'Show less' },
+      empty:     { tr: 'Aradığın kritere uygun makale bulunamadı.', en: 'No articles match your filters.' },
+      readTime:  { tr: 'dk okuma', en: 'min read' },
+      loading:   { tr: 'Yükleniyor...', en: 'Loading...' },
+    }
+    return dict[k]?.[lang] || dict[k]?.tr || k
+  }
 
   return (
     <div className="kd-blog">
+      <BreadcrumbSchema items={[{ name: lang === 'en' ? 'Home' : 'Ana Sayfa', path: '/' }, { name: 'Blog', path: '/blog' }]} />
+      <BlogListSchema posts={posts} lang={lang} />
       <header className="kd-blog-head">
         <span className="kd-blog-pill">
-          <HiOutlineDocumentText size={14} /> Blog
+          <HiOutlineDocumentText size={14} /> {t('pill')}
         </span>
         <h1>
-          Yazdığım <span className="kd-accent">her şey</span>
+          {t('heading1')}<span className="kd-accent">{t('headingHi')}</span>
         </h1>
         <p>
-          Gözlemler, denemeler, kulis notları. {allArticles.length} makale
+          {t('sub')} {posts.length} {t('count')}
         </p>
       </header>
 
@@ -63,7 +126,7 @@ export default function Blog() {
         <HiOutlineSearch size={18} />
         <input
           type="search"
-          placeholder="Makaleler içinde ara..."
+          placeholder={t('search')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -75,34 +138,52 @@ export default function Blog() {
           className={`kd-chip ${activeTag === 'all' ? 'active' : ''}`}
           onClick={() => setActiveTag('all')}
         >
-          Tümü <span className="kd-chip-count">{allArticles.length}</span>
+          {t('all')} <span className="kd-chip-count">{posts.length}</span>
         </button>
-        <button
-          type="button"
-          className={`kd-chip ${activeTag === 'test' ? 'active' : ''}`}
-          onClick={() => setActiveTag('test')}
-        >
-          test <span className="kd-chip-count">{allArticles.filter((a) => a.tag === 'test').length}</span>
-        </button>
+        {tagCounts.map(([tag, count]) => (
+          <button
+            key={tag}
+            type="button"
+            className={`kd-chip ${activeTag === tag ? 'active' : ''}`}
+            onClick={() => setActiveTag(tag)}
+          >
+            {tag} <span className="kd-chip-count">{count}</span>
+          </button>
+        ))}
       </div>
 
       {featured.length > 0 && (
         <section className="kd-blog-section">
           <div className="kd-blog-section-title">
-            <HiOutlineSparkles size={16} /> ÖNE ÇIKAN
+            <HiOutlineSparkles size={16} /> {t('featured')}
           </div>
           <div className="kd-blog-featured-grid">
-            {featured.map((a) => (
-              <Link key={a.id} to={`/blog/${a.slug}`} className="kd-blog-card kd-blog-card-lg">
-                <div className="kd-blog-thumb">
-                  <span className="kd-thumb-mono">B</span>
-                </div>
-                <div className="kd-blog-info">
-                  <h3>{a.title}</h3>
-                  <p>{a.sub}</p>
-                </div>
-              </Link>
-            ))}
+            {featured.map((a) => {
+              const cat = lang === 'en' ? (a.categoryEn || a.category) : (a.category || a.categoryEn)
+              const title = pickField(a, 'title', lang)
+              const excerpt = pickField(a, 'excerpt', lang)
+              const img = a.image || getBlogImage(cat)
+              return (
+                <Link key={a.slug || a.id} to={`/blog/${a.slug}`} className="kd-blog-card kd-blog-card-lg">
+                  <div
+                    className="kd-blog-thumb"
+                    style={img ? { backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+                  >
+                    {!img && <span className="kd-thumb-mono">B</span>}
+                  </div>
+                  <div className="kd-blog-info">
+                    {cat && <span className="kd-blog-meta-cat">{cat}</span>}
+                    <h3>{title}</h3>
+                    <p>{excerpt}</p>
+                    {a.readTime && (
+                      <span className="kd-blog-meta-time">
+                        <HiOutlineClock size={12} /> {a.readTime} {t('readTime')}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </section>
       )}
@@ -110,20 +191,35 @@ export default function Blog() {
       {others.length > 0 && (
         <section className="kd-blog-section">
           <div className="kd-blog-section-title kd-blog-section-title-muted">
-            DİĞER MAKALELER
+            {t('otherTitle')}
           </div>
           <div className="kd-blog-grid">
-            {visibleOthers.map((a) => (
-              <Link key={a.id} to={`/blog/${a.slug}`} className="kd-blog-card">
-                <div className="kd-blog-thumb">
-                  <span className="kd-thumb-mono">B</span>
-                </div>
-                <div className="kd-blog-info">
-                  <h4>{a.title}</h4>
-                  <p>{a.sub}</p>
-                </div>
-              </Link>
-            ))}
+            {visibleOthers.map((a) => {
+              const cat = lang === 'en' ? (a.categoryEn || a.category) : (a.category || a.categoryEn)
+              const title = pickField(a, 'title', lang)
+              const excerpt = pickField(a, 'excerpt', lang)
+              const img = a.image || getBlogImage(cat)
+              return (
+                <Link key={a.slug || a.id} to={`/blog/${a.slug}`} className="kd-blog-card">
+                  <div
+                    className="kd-blog-thumb"
+                    style={img ? { backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+                  >
+                    {!img && <span className="kd-thumb-mono">B</span>}
+                  </div>
+                  <div className="kd-blog-info">
+                    {cat && <span className="kd-blog-meta-cat">{cat}</span>}
+                    <h4>{title}</h4>
+                    <p>{excerpt}</p>
+                    {a.readTime && (
+                      <span className="kd-blog-meta-time">
+                        <HiOutlineClock size={12} /> {a.readTime} {t('readTime')}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
           </div>
 
           {others.length > PAGE_SIZE && (
@@ -133,7 +229,7 @@ export default function Blog() {
                 className="kd-blog-more-btn"
                 onClick={() => setShowAll((v) => !v)}
               >
-                {showAll ? 'Daha az göster' : 'Daha fazla görüntüle'}
+                {showAll ? t('less') : t('more')}
                 <HiOutlineChevronDown
                   size={16}
                   style={{ transform: showAll ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
@@ -144,9 +240,9 @@ export default function Blog() {
         </section>
       )}
 
-      {filtered.length === 0 && (
+      {!loading && filtered.length === 0 && (
         <div className="kd-blog-empty">
-          <p>Aradığın kritere uygun makale bulunamadı.</p>
+          <p>{t('empty')}</p>
         </div>
       )}
     </div>

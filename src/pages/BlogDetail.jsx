@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { HiOutlineClock, HiOutlineArrowLeft, HiOutlineArrowRight, HiOutlineShare } from 'react-icons/hi'
@@ -14,6 +14,8 @@ import { analytics } from '../utils/analytics'
 import PageTransition from '../components/PageTransition'
 import { FadeIn } from '../components/Animations'
 import PageBgAnimation from '../components/PageBgAnimation'
+import ReadingProgress from '../components/ReadingProgress'
+import Comments from '../components/Comments'
 import './Blog.css'
 
 const BLOG_SANITIZE_CONFIG = {
@@ -28,10 +30,18 @@ const BLOG_SANITIZE_CONFIG = {
   FORBID_ATTR: ['style', 'onerror', 'onload', 'onclick'],
 }
 
+function estimateReadTime(html) {
+  if (!html) return 1
+  const text = html.replace(/<[^>]+>/g, ' ')
+  const words = text.split(/\s+/).filter(Boolean).length
+  return Math.max(1, Math.round(words / 200))
+}
+
 export default function BlogDetail() {
   const { slug } = useParams()
   const { lang, t } = useLanguage()
   const [allPosts, setAllPosts] = useState(staticBlogPosts)
+  const articleRef = useRef(null)
 
   useEffect(() => {
     getBlogsApi()
@@ -55,11 +65,18 @@ export default function BlogDetail() {
   const content = post ? (lang === 'tr' ? post.contentTr : post.contentEn) : ''
   const category = post ? (lang === 'tr' ? post.category : post.categoryEn) : ''
 
+  const ogImageParams = new URLSearchParams({
+    title: title || 'Kadir Demir',
+    subtitle: (excerpt || '').slice(0, 80),
+    ...(category ? { tag: category } : {}),
+  }).toString()
+
   useSEO({
     title: title || 'Blog | Kadir Demir',
     description: excerpt || '',
     path: `/blog/${slug}`,
     type: 'article',
+    image: `https://kadirdemir-nu.vercel.app/api/og?${ogImageParams}`,
   })
 
   useEffect(() => {
@@ -128,6 +145,7 @@ export default function BlogDetail() {
 
   return (
     <PageTransition>
+      <ReadingProgress targetRef={articleRef} />
       {/* Hero */}
       <section className="blog-hero">
         <PageBgAnimation type="blog" />
@@ -146,7 +164,7 @@ export default function BlogDetail() {
               <span className="blog-date">{post.date}</span>
               <span className="blog-read">
                 <HiOutlineClock size={14} />
-                {post.readTime} {t('blog.min')}
+                {post.readTime || estimateReadTime(content)} {t('blog.min')}
               </span>
             </div>
           </FadeIn>
@@ -186,7 +204,7 @@ export default function BlogDetail() {
 
             {/* Article body */}
             <FadeIn delay={0.1}>
-              <div className="blog-detail-content glass-card">
+              <div ref={articleRef} className="blog-detail-content glass-card">
                 {content ? (
                   <div className="blog-body" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content, BLOG_SANITIZE_CONFIG) }} />
                 ) : excerpt ? (
@@ -219,6 +237,11 @@ export default function BlogDetail() {
               </div>
             </FadeIn>
           </div>
+
+          {/* Comments */}
+          <FadeIn delay={0.18}>
+            <Comments postSlug={slug} />
+          </FadeIn>
 
           {/* Lead CTA */}
           <FadeIn delay={0.2}>

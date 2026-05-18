@@ -161,6 +161,55 @@ export function VideoSchema({ videos }) {
   return null
 }
 
+// WebSite schema with SearchAction — enables Google sitelink searchbox
+export function WebSiteSchema() {
+  useEffect(() => {
+    const url = baseUrl()
+    injectSchema('schema-website', {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Kadir Demir',
+      alternateName: 'kadirdemir',
+      url,
+      inLanguage: ['tr-TR', 'en-US'],
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${url}/blog?q={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    })
+    return () => removeSchema('schema-website')
+  }, [])
+  return null
+}
+
+// ItemList — for blog/listing pages (helps Google's "Article carousel")
+export function BlogListSchema({ posts, lang = 'tr' }) {
+  useEffect(() => {
+    if (!posts || posts.length === 0) return
+    const url = baseUrl()
+    const items = posts.slice(0, 20).map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${url}/blog/${p.slug}`,
+      name: lang === 'en' ? (p.titleEn || p.titleTr) : (p.titleTr || p.titleEn),
+    }))
+    injectSchema('schema-blog-list', {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: lang === 'en' ? 'Blog posts' : 'Blog yazıları',
+      itemListOrder: 'https://schema.org/ItemListOrderDescending',
+      numberOfItems: posts.length,
+      itemListElement: items,
+    })
+    return () => removeSchema('schema-blog-list')
+  }, [posts, lang])
+  return null
+}
+
 // Backwards-compat alias (some pages still import OrganizationSchema)
 export function OrganizationSchema(props) {
   return <PersonSchema {...props} />

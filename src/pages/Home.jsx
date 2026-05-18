@@ -14,13 +14,15 @@ import {
   HiOutlineVideoCamera,
   HiOutlineChevronDown,
   HiOutlineSparkles,
+  HiOutlineFire,
 } from 'react-icons/hi2'
 import { useEffect, useState } from 'react'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useSEO } from '../hooks/useSEO'
-import { PersonSchema, FAQSchema, VideoSchema } from '../components/StructuredData'
+import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/CountUp'
 import MagneticButton from '../components/MagneticButton'
+import PollWidget from '../components/PollWidget'
 import { getYouTubeVideosApi } from '../api'
 import './Home.css'
 
@@ -155,6 +157,10 @@ export default function Home() {
 
   const featuredVideo = videos[0]
   const recentVideos = videos.slice(1, 5)
+  const topViewedVideos = [...videos]
+    .filter((v) => Number(v.views) > 0)
+    .sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))
+    .slice(0, 3)
 
   const socialFollows = [
     settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: `${settings.statsYoutubeSubs || ''} Abone`.trim(), url: settings.youtube, color: '#ff0033' },
@@ -177,6 +183,7 @@ export default function Home() {
   return (
     <div className="kd-home">
       <PersonSchema socials={settings} />
+      <WebSiteSchema />
       <FAQSchema items={faqs} />
       {videos.length > 0 && <VideoSchema videos={videos.slice(0, 8)} />}
 
@@ -420,6 +427,80 @@ export default function Home() {
           </div>
         </motion.section>
       )}
+
+      {/* ===== TOP VIEWED ===== */}
+      {topViewedVideos.length > 0 && (
+        <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
+          <div className="kd-section-head kd-row">
+            <div>
+              <span className="kd-eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <HiOutlineFire /> En çok izlenenler
+              </span>
+              <h2>İzleyici favorileri</h2>
+              <p>Tüm zamanların en yüksek izlenmesi olan videolar.</p>
+            </div>
+            <Link to="/videolar" className="kd-section-link kd-link-arrow">
+              Tümünü gör <HiOutlineArrowRight />
+            </Link>
+          </div>
+          <div className="kd-video-grid">
+            {topViewedVideos.map((v, idx) => (
+              <a
+                key={v.youtubeId}
+                href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="kd-video-card"
+              >
+                <div className="kd-video-thumb">
+                  <img
+                    src={v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
+                    alt={v.title}
+                    loading="lazy"
+                    onError={(e) => { e.currentTarget.style.display = 'none' }}
+                  />
+                  <div className="kd-video-shade" />
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: 12,
+                      left: 12,
+                      background: 'linear-gradient(135deg, #f97316, #dc2626)',
+                      color: '#fff',
+                      padding: '4px 10px',
+                      borderRadius: 999,
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.06em',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 4,
+                      boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4)',
+                    }}
+                  >
+                    <HiOutlineFire /> #{idx + 1}
+                  </span>
+                  {parseDuration(v.duration) && (
+                    <span className="kd-video-duration">{parseDuration(v.duration)}</span>
+                  )}
+                  <span className="kd-video-hover-play">
+                    <HiOutlinePlay size={22} />
+                  </span>
+                </div>
+                <div className="kd-video-meta">
+                  <h4 className="kd-video-title">{v.title}</h4>
+                  {v.views && <div className="kd-video-views">{formatViews(v.views)} izlenme</div>}
+                </div>
+              </a>
+            ))}
+          </div>
+        </motion.section>
+      )}
+
+      {/* ===== POLL ===== */}
+      <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
+        <PollWidget />
+      </motion.section>
 
       {/* ===== ARTICLES ===== */}
       <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>

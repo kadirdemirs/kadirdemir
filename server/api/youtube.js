@@ -111,6 +111,58 @@ export default async function handler(req, res) {
   const action = req.query?.action;
   const db = await getDb();
 
+  // GET /api/youtube?action=live — public live-broadcast probe, cached aggressively
+  if (req.method === 'GET' && action === 'live') {
+    try {
+      const apiKey = process.env.YOUTUBE_API_KEY;
+      if (!apiKey) return res.status(200).json({ live: false });
+
+      const LIVE_CACHE_KEY = 'youtube-live-status';
+      const cached = await db.collection('content').findOne({ section: LIVE_CACHE_KEY });
+      const FIVE_MIN = 5 * 60 * 1000;
+      if (cached && cached.fetchedAt && Date.now() - cached.fetchedAt < FIVE_MIN) {
+        return res.status(200).json(cached.data || { live: false });
+      }
+
+      const channelId = await resolveChannelId(apiKey, db);
+      if (!channelId) {
+        const empty = { live: false };
+        await db.collection('content').updateOne(
+          { section: LIVE_CACHE_KEY },
+          { $set: { section: LIVE_CACHE_KEY, data: empty, fetchedAt: Date.now() } },
+          { upsert: true }
+        );
+        return res.status(200).json(empty);
+      }
+
+      const r = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&eventType=live&type=video&maxResults=1&key=${apiKey}`
+      );
+      if (!r.ok) return res.status(200).json({ live: false });
+      const j = await r.json();
+      const item = j.items?.[0];
+      const payload = item
+        ? {
+            live: true,
+            videoId: item.id?.videoId,
+            title: item.snippet?.title,
+            thumbnail: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url,
+            startedAt: item.snippet?.publishedAt,
+          }
+        : { live: false };
+
+      await db.collection('content').updateOne(
+        { section: LIVE_CACHE_KEY },
+        { $set: { section: LIVE_CACHE_KEY, data: payload, fetchedAt: Date.now() } },
+        { upsert: true }
+      );
+
+      return res.status(200).json(payload);
+    } catch (e) {
+      return res.status(200).json({ live: false, error: e.message });
+    }
+  }
+
   // POST /api/youtube?action=refresh (admin)
   if (req.method === 'POST' && action === 'refresh') {
     const session = requireAuth(req);

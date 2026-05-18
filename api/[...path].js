@@ -1,33 +1,47 @@
+import ama from '../server/api/ama.js'
 import auth from '../server/api/auth.js'
 import blog from '../server/api/blog.js'
 import calendarInvite from '../server/api/calendar-invite.js'
+import comments from '../server/api/comments.js'
 import contact from '../server/api/contact.js'
 import content from '../server/api/content.js'
 import media from '../server/api/media.js'
 import messages from '../server/api/messages.js'
 import notifications from '../server/api/notifications.js'
+import og from '../server/api/og.js'
 import ops from '../server/api/ops.js'
+import partners from '../server/api/partners.js'
+import polls from '../server/api/polls.js'
 import reminders from '../server/api/reminders.js'
+import rss from '../server/api/rss.js'
 import seed from '../server/api/seed.js'
 import sitemap from '../server/api/sitemap.js'
+import sponsor from '../server/api/sponsor.js'
 import users from '../server/api/users.js'
 import youtube from '../server/api/youtube.js'
 import { validateCsrf } from '../server/api/_lib/csrf.js'
 import { validateQuery } from '../server/api/_lib/validation.js'
 
 const handlers = {
+  ama,
   auth,
   blog,
   'calendar-invite': calendarInvite,
+  comments,
   contact,
   content,
   media,
   messages,
   notifications,
+  og,
   ops,
+  partners,
+  polls,
   reminders,
+  rss,
   seed,
   sitemap,
+  sponsor,
   users,
   youtube,
 }
@@ -70,6 +84,10 @@ function isPublicPost(req) {
   const action = req.query?.action
   if (route === 'auth' && (!action || action === 'login')) return true
   if (route === 'contact' && (!action || PUBLIC_ACTIONS.has(action))) return true
+  if (route === 'sponsor') return true
+  if (route === 'polls' && action === 'vote') return true
+  if (route === 'ama' && action === 'ask') return true
+  if (route === 'comments') return true
   return false
 }
 

@@ -6,11 +6,15 @@ import {
   HiOutlineCalendar,
   HiOutlineChevronDown,
   HiOutlinePlay,
+  HiOutlineFire,
+  HiOutlineX,
+  HiOutlineExternalLink,
 } from 'react-icons/hi'
 import { getYouTubeVideosApi } from '../api'
 import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema, VideoSchema } from '../components/StructuredData'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { SkeletonGrid } from '../components/Skeleton'
 import './Videolar.css'
 
 function formatViews(n) {
@@ -41,6 +45,7 @@ export default function Videolar() {
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState('newest')
   const [visibleCount, setVisibleCount] = useState(12)
+  const [activeVideo, setActiveVideo] = useState(null)
 
   useSEO({
     title: 'Tüm Videolar',
@@ -59,12 +64,26 @@ export default function Videolar() {
     const q = query.trim().toLowerCase()
     const arr = videos.filter((v) => !q || (v.title || '').toLowerCase().includes(q))
     arr.sort((a, b) => {
+      if (sort === 'popular') {
+        return (Number(b.views) || 0) - (Number(a.views) || 0)
+      }
       const da = new Date(a.publishedAt || 0).getTime()
       const db = new Date(b.publishedAt || 0).getTime()
       return sort === 'newest' ? db - da : da - db
     })
     return arr
   }, [query, sort, videos])
+
+  useEffect(() => {
+    if (!activeVideo) return
+    const onKey = (e) => { if (e.key === 'Escape') setActiveVideo(null) }
+    document.body.style.overflow = 'hidden'
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [activeVideo])
 
   const visible = filtered.slice(0, visibleCount)
 
@@ -111,6 +130,13 @@ export default function Videolar() {
           </button>
           <button
             type="button"
+            className={`kd-sort-btn ${sort === 'popular' ? 'active' : ''}`}
+            onClick={() => setSort('popular')}
+          >
+            <HiOutlineFire size={16} /> En Çok İzlenen
+          </button>
+          <button
+            type="button"
             className={`kd-sort-btn ${sort === 'oldest' ? 'active' : ''}`}
             onClick={() => setSort('oldest')}
           >
@@ -119,7 +145,7 @@ export default function Videolar() {
         </div>
       </div>
 
-      {loading && <div className="kd-videos-empty"><p>Yükleniyor...</p></div>}
+      {loading && <SkeletonGrid count={9} kind="video" />}
 
       {!loading && videos.length === 0 && (
         <div className="kd-videos-empty">
@@ -135,17 +161,16 @@ export default function Videolar() {
       {!loading && videos.length > 0 && (
         <div className="kd-videos-grid">
           {visible.map((v, idx) => (
-            <a
+            <button
               key={v.youtubeId || idx}
-              href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              type="button"
+              onClick={() => setActiveVideo(v)}
               className="kd-video-tile-link"
-              style={{ textDecoration: 'none', color: 'inherit' }}
+              style={{ textAlign: 'left', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', color: 'inherit' }}
             >
               <article className="kd-video-tile">
                 <div className="kd-video-tile-thumb" style={{ backgroundImage: `url(${v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                  {idx === 0 && <span className="kd-video-badge">YENİ</span>}
+                  {idx === 0 && sort === 'newest' && <span className="kd-video-badge">YENİ</span>}
                   {parseDuration(v.duration) && (
                     <span className="kd-video-duration-tile">{parseDuration(v.duration)}</span>
                   )}
@@ -154,8 +179,94 @@ export default function Videolar() {
                 <h4 className="kd-video-tile-title">{v.title}</h4>
                 {v.views && <div className="kd-video-tile-meta">{formatViews(v.views)} izlenme</div>}
               </article>
-            </a>
+            </button>
           ))}
+        </div>
+      )}
+
+      {activeVideo && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setActiveVideo(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9500,
+            background: 'rgba(0,0,0,0.85)',
+            backdropFilter: 'blur(12px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 16,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: 960,
+              background: '#0a0a0e',
+              borderRadius: 16,
+              overflow: 'hidden',
+              boxShadow: '0 30px 80px rgba(0,0,0,0.6)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
+          >
+            <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#000' }}>
+              <iframe
+                src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0`}
+                title={activeVideo.title || 'Video'}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                style={{ width: '100%', height: '100%', border: 0, display: 'block' }}
+              />
+              <button
+                type="button"
+                onClick={() => setActiveVideo(null)}
+                aria-label="Kapat"
+                style={{
+                  position: 'absolute',
+                  top: 12,
+                  right: 12,
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  background: 'rgba(0,0,0,0.7)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 2,
+                }}
+              >
+                <HiOutlineX size={20} />
+              </button>
+            </div>
+            <div style={{ padding: '14px 20px 18px', display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between' }}>
+              <h3 style={{ color: '#fff', margin: 0, fontSize: '1.05rem', flex: '1 1 60%' }}>{activeVideo.title}</h3>
+              <a
+                href={`https://www.youtube.com/watch?v=${activeVideo.youtubeId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  color: '#94a3b8',
+                  textDecoration: 'none',
+                  fontSize: '0.85rem',
+                  padding: '8px 14px',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 999,
+                }}
+              >
+                <FaYoutube size={14} /> YouTube'da aç <HiOutlineExternalLink size={12} />
+              </a>
+            </div>
+          </div>
         </div>
       )}
 

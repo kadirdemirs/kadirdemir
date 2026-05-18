@@ -10,6 +10,8 @@ import AuroraBackground from './components/AuroraBackground'
 import ParticlesField from './components/ParticlesField'
 import CursorSpotlight from './components/CursorSpotlight'
 import ErrorBoundary from './components/ErrorBoundary'
+import InstallPrompt from './components/InstallPrompt'
+import LiveBanner from './components/LiveBanner'
 
 // Core pages — direct import for instant first render
 import Home from './pages/Home'
@@ -24,6 +26,9 @@ import NotFound from './pages/NotFound'
 const KVKK = lazy(() => import('./pages/KVKK'))
 const Gizlilik = lazy(() => import('./pages/Gizlilik'))
 const CerezPolitikasi = lazy(() => import('./pages/CerezPolitikasi'))
+const Partners = lazy(() => import('./pages/Partners'))
+const Sponsor = lazy(() => import('./pages/Sponsor'))
+const AMA = lazy(() => import('./pages/AMA'))
 const Admin = lazy(() => import('./pages/Admin'))
 
 function PageLoader() {
@@ -107,6 +112,7 @@ function App() {
       <ErrorTracker />
       <a href="#main-content" className="skip-to-content">İçeriğe geç</a>
       <ScrollToTop />
+      {!isAdmin && <LiveBanner />}
       {!isAdmin && <AuroraBackground />}
       {!isAdmin && <ParticlesField />}
       {!isAdmin && <GrainOverlay />}
@@ -125,11 +131,15 @@ function App() {
           <Route path="/kvkk" element={<LazyRoute><KVKK /></LazyRoute>} />
           <Route path="/gizlilik" element={<LazyRoute><Gizlilik /></LazyRoute>} />
           <Route path="/cerez-politikasi" element={<LazyRoute><CerezPolitikasi /></LazyRoute>} />
+          <Route path="/partnerler" element={<LazyRoute><Partners /></LazyRoute>} />
+          <Route path="/sponsor" element={<LazyRoute><Sponsor /></LazyRoute>} />
+          <Route path="/sor" element={<LazyRoute><AMA /></LazyRoute>} />
           <Route path="/admin" element={<ProtectedAdminRoute />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       {!isAdmin && <Footer />}
+      {!isAdmin && <InstallPrompt />}
     </>
   )
 }

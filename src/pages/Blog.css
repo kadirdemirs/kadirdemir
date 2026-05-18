@@ -186,6 +186,33 @@
 .kd-blog-info p {
   color: var(--gray-light);
   font-size: 0.85rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kd-blog-meta-cat {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary, #2dd4bf);
+  margin-bottom: 6px;
+}
+
+.kd-blog-meta-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: var(--gray-light);
+  margin-top: 10px;
+}
+
+[data-theme="light"] .kd-blog-meta-time {
+  color: #6b6157;
 }
 
 .kd-blog-more {
