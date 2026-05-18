@@ -1,0 +1,47 @@
+{
+  "name": "Kadir Demir",
+  "short_name": "Kadir Demir",
+  "description": "İstanbul'dan yayın yapan YouTube içerik üreticisi. Oyun, vlog ve eğlence videoları.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050709",
+  "theme_color": "#050709",
+  "lang": "tr",
+  "categories": ["entertainment", "lifestyle"],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Son Videolar",
+      "short_name": "Videolar",
+      "url": "/videolar",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Blog",
+      "short_name": "Blog",
+      "url": "/blog",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "İletişim",
+      "short_name": "İletişim",
+      "url": "/iletisim",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }]
+    }
+  ]
+}
