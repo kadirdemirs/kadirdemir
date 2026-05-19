@@ -1,0 +1,160 @@
+.kd-cmdk-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 96px 16px 16px;
+}
+
+.kd-cmdk {
+  width: min(640px, 100%);
+  background: rgba(15, 17, 22, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.kd-cmdk-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.kd-cmdk-header input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: #fff;
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 4px 0;
+}
+
+.kd-cmdk-header input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.kd-cmdk kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.kd-cmdk-close {
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.kd-cmdk-close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.kd-cmdk-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  max-height: 52vh;
+  overflow-y: auto;
+}
+
+.kd-cmdk-item a,
+.kd-cmdk-item button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.94rem;
+  transition: background 0.12s ease;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.kd-cmdk-item.is-active a,
+.kd-cmdk-item.is-active button {
+  background: rgba(45, 212, 191, 0.12);
+}
+
+.kd-cmdk-icon {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--primary, #2dd4bf);
+  flex-shrink: 0;
+}
+
+.kd-cmdk-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kd-cmdk-kind {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+
+.kd-cmdk-empty {
+  padding: 18px 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.kd-cmdk-footer {
+  display: flex;
+  gap: 16px;
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.kd-cmdk-footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 540px) {
+  .kd-cmdk-overlay { padding-top: 56px; }
+  .kd-cmdk-footer { display: none; }
+}

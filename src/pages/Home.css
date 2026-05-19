@@ -64,6 +64,70 @@
   background: radial-gradient(circle, rgba(120, 80, 200, 0.32) 0%, transparent 70%);
 }
 
+/* WebGL prism layer — sits below the orbs, very subtle */
+.kd-hero-prism {
+  position: absolute;
+  inset: -10% -5% 20% -5%;
+  z-index: -1;
+  opacity: 0.42;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(0.5px);
+}
+
+@media (max-width: 820px) {
+  .kd-hero-prism { opacity: 0.32; inset: -5% -10% 30% -10%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kd-hero-prism { display: none; }
+}
+
+/* Animated gradient name in hero */
+.kd-hero-name {
+  display: inline-flex !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: inherit;
+  letter-spacing: inherit;
+  cursor: inherit !important;
+}
+
+.kd-hero-name .text-content {
+  display: inline-block;
+  font-weight: 700;
+}
+
+/* StarBorder hero CTA */
+.kd-hero-star-cta {
+  text-decoration: none;
+  border-radius: 999px !important;
+  overflow: hidden;
+}
+
+.kd-hero-star-cta .inner-content {
+  padding: 0 !important;
+  border: 1px solid rgba(45, 212, 191, 0.4) !important;
+  background: var(--primary, #2dd4bf) !important;
+  color: #061011 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 8px 28px rgba(45, 212, 191, 0.35);
+}
+
+.kd-hero-star-cta-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #061011;
+  white-space: nowrap;
+}
+
 .kd-hero-badge {
   display: inline-flex;
   align-items: center;

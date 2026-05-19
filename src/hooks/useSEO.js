@@ -76,7 +76,20 @@ export function useSEO({
     }
 
     const canonicalUrl = `${baseUrl}${path}`
-    const ogImage = image || `${baseUrl}/logo.png`
+    // If no explicit image was passed, generate a per-page OG via the /api/og endpoint.
+    // The route renders a Satoshi-based card with the given title + subtitle.
+    let ogImage = image
+    if (!ogImage) {
+      if (title) {
+        const params = new URLSearchParams({
+          title: String(title).slice(0, 120),
+          subtitle: String(description || '').slice(0, 140),
+        })
+        ogImage = `${baseUrl}/api/og?${params.toString()}`
+      } else {
+        ogImage = `${baseUrl}/logo.png`
+      }
+    }
 
     document.title = fullTitle
 

@@ -5,6 +5,7 @@ import {
 } from 'react-icons/hi'
 import { FaYoutube, FaInstagram } from 'react-icons/fa'
 import ResponsivePortrait from '../components/ResponsivePortrait'
+import Reveal from '../components/Reveal'
 import './About.css'
 
 export default function About() {
@@ -23,7 +24,7 @@ export default function About() {
         </p>
       </section>
 
-      <section className="kd-about-split">
+      <Reveal as="section" className="kd-about-split">
         <div className="kd-about-media kd-media-frame">
           <span className="kd-about-tag">
             <HiOutlineCamera size={14} /> STÜDYO
@@ -55,9 +56,9 @@ export default function About() {
             sayfa onlar için, ve henüz tanışmadığım sen için.
           </p>
         </div>
-      </section>
+      </Reveal>
 
-      <section className="kd-about-split kd-about-split-reverse">
+      <Reveal as="section" className="kd-about-split kd-about-split-reverse">
         <div className="kd-about-text">
           <h2>
             İçerik üretmek, benim
@@ -81,9 +82,9 @@ export default function About() {
             sizes="(max-width: 820px) 100vw, 520px"
           />
         </div>
-      </section>
+      </Reveal>
 
-      <section className="kd-about-cta">
+      <Reveal as="section" className="kd-about-cta">
         <div>
           <h3>
             Yolculuğa <span className="kd-accent">birlikte</span> devam edelim.
@@ -103,7 +104,7 @@ export default function About() {
             <FaYoutube /> YouTube'da abone ol
           </a>
           <a
-            href="https://instagram.com/kadirdemir"
+            href="https://instagram.com/kadirardademirrr"
             target="_blank"
             rel="noopener noreferrer"
             className="kd-cta-link"
@@ -114,7 +115,7 @@ export default function About() {
             <HiOutlineMail /> Doğrudan yaz
           </a>
         </div>
-      </section>
+      </Reveal>
     </div>
   )
 }

@@ -15,6 +15,7 @@ import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema, VideoSchema } from '../components/StructuredData'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { SkeletonGrid } from '../components/Skeleton'
+import CircularGallery from '../components/reactbits/CircularGallery'
 import './Videolar.css'
 
 function formatViews(n) {
@@ -87,6 +88,17 @@ export default function Videolar() {
 
   const visible = filtered.slice(0, visibleCount)
 
+  const galleryItems = useMemo(() => {
+    return [...videos]
+      .filter((v) => v.youtubeId)
+      .sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))
+      .slice(0, 10)
+      .map((v) => ({
+        image: v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`,
+        text: (v.title || '').slice(0, 40),
+      }))
+  }, [videos])
+
   return (
     <div className="kd-videos">
       <BreadcrumbSchema items={[{ name: 'Ana Sayfa', path: '/' }, { name: 'Videolar', path: '/videolar' }]} />
@@ -109,6 +121,19 @@ export default function Videolar() {
           </div>
         </div>
       </header>
+
+      {galleryItems.length >= 3 && (
+        <section className="kd-videos-gallery" aria-label="Öne çıkan videolar galerisi">
+          <CircularGallery
+            items={galleryItems}
+            bend={2}
+            textColor="#ffffff"
+            borderRadius={0.05}
+            scrollEase={0.04}
+            scrollSpeed={2}
+          />
+        </section>
+      )}
 
       <div className="kd-videos-toolbar">
         <div className="kd-videos-search">

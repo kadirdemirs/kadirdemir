@@ -26,6 +26,9 @@ import PollWidget from '../components/PollWidget'
 import NewsletterForm from '../components/NewsletterForm'
 import ResponsivePortrait from '../components/ResponsivePortrait'
 import { SkeletonGrid } from '../components/Skeleton'
+import Prism from '../components/reactbits/Prism'
+import GradientText from '../components/reactbits/GradientText'
+import StarBorder from '../components/reactbits/StarBorder'
 import { getYouTubeVideosApi, getBlogsApi } from '../api'
 import './Home.css'
 
@@ -186,6 +189,21 @@ export default function Home() {
         <div className="kd-hero-bg" aria-hidden="true">
           <span className="kd-hero-orb kd-hero-orb-1" />
           <span className="kd-hero-orb kd-hero-orb-2" />
+          <div className="kd-hero-prism">
+            <Prism
+              animationType="rotate"
+              timeScale={0.35}
+              height={3.5}
+              baseWidth={5.5}
+              scale={3.2}
+              hueShift={0.15}
+              colorFrequency={0.8}
+              noise={0.18}
+              glow={0.9}
+              bloom={0.9}
+              suspendWhenOffscreen
+            />
+          </div>
         </div>
 
         <motion.span
@@ -204,7 +222,15 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          Selam, ben <span className="kd-accent">{settings.businessName || 'Kadir Demir'}</span>
+          Selam, ben{' '}
+          <GradientText
+            className="kd-hero-name"
+            colors={['#2dd4bf', '#22d3ee', '#818cf8', '#22d3ee', '#2dd4bf']}
+            animationSpeed={6}
+            yoyo={false}
+          >
+            {settings.businessName || 'Kadir Demir'}
+          </GradientText>
           <br />
           ve hikâye anlatmayı seviyorum.
         </motion.h1>
@@ -223,17 +249,21 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <MagneticButton
+          <StarBorder
             as="a"
             href={subscribeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="kd-btn kd-btn-primary"
-            strength={0.22}
+            color="#2dd4bf"
+            speed="5s"
+            thickness={2}
+            className="kd-hero-star-cta"
           >
-            <FaYoutube size={18} />
-            <span>Kanalıma abone ol</span>
-          </MagneticButton>
+            <span className="kd-hero-star-cta-inner">
+              <FaYoutube size={18} />
+              <span>Kanalıma abone ol</span>
+            </span>
+          </StarBorder>
           <MagneticButton as={Link} to="/videolar" className="kd-btn kd-btn-ghost" strength={0.22}>
             <HiOutlinePlay size={18} />
             <span>Videoları izle</span>

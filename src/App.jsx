@@ -1,5 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
+import PageTransition from './components/PageTransition'
 import { trackPageviewApi, heartbeatApi, getSessionApi } from './api'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -12,6 +14,7 @@ import CursorSpotlight from './components/CursorSpotlight'
 import ErrorBoundary from './components/ErrorBoundary'
 import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
+import CommandPalette from './components/CommandPalette'
 
 // Core pages — direct import for instant first render
 import Home from './pages/Home'
@@ -151,28 +154,31 @@ function App() {
       {!isAdmin && heavyFx && <CursorSpotlight />}
       {!isAdmin && <Navbar />}
       <main id="main-content">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/hakkimda" element={<About />} />
-          <Route path="/hakkimizda" element={<Navigate to="/hakkimda" replace />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogDetail />} />
-          <Route path="/videolar" element={<Videolar />} />
-          <Route path="/setup" element={<Setup />} />
-          <Route path="/iletisim" element={<Contact />} />
-          <Route path="/kvkk" element={<LazyRoute><KVKK /></LazyRoute>} />
-          <Route path="/gizlilik" element={<LazyRoute><Gizlilik /></LazyRoute>} />
-          <Route path="/cerez-politikasi" element={<LazyRoute><CerezPolitikasi /></LazyRoute>} />
-          <Route path="/partnerler" element={<LazyRoute><Partners /></LazyRoute>} />
-          <Route path="/sponsor" element={<LazyRoute><Sponsor /></LazyRoute>} />
-          <Route path="/medya-kit" element={<LazyRoute><MediaKit /></LazyRoute>} />
-          <Route path="/sor" element={<LazyRoute><AMA /></LazyRoute>} />
-          <Route path="/admin" element={<ProtectedAdminRoute />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AnimatePresence mode="wait" initial={false}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+            <Route path="/hakkimda" element={<PageTransition><About /></PageTransition>} />
+            <Route path="/hakkimizda" element={<Navigate to="/hakkimda" replace />} />
+            <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
+            <Route path="/blog/:slug" element={<PageTransition><BlogDetail /></PageTransition>} />
+            <Route path="/videolar" element={<PageTransition><Videolar /></PageTransition>} />
+            <Route path="/setup" element={<PageTransition><Setup /></PageTransition>} />
+            <Route path="/iletisim" element={<PageTransition><Contact /></PageTransition>} />
+            <Route path="/kvkk" element={<LazyRoute><PageTransition><KVKK /></PageTransition></LazyRoute>} />
+            <Route path="/gizlilik" element={<LazyRoute><PageTransition><Gizlilik /></PageTransition></LazyRoute>} />
+            <Route path="/cerez-politikasi" element={<LazyRoute><PageTransition><CerezPolitikasi /></PageTransition></LazyRoute>} />
+            <Route path="/partnerler" element={<LazyRoute><PageTransition><Partners /></PageTransition></LazyRoute>} />
+            <Route path="/sponsor" element={<LazyRoute><PageTransition><Sponsor /></PageTransition></LazyRoute>} />
+            <Route path="/medya-kit" element={<LazyRoute><PageTransition><MediaKit /></PageTransition></LazyRoute>} />
+            <Route path="/sor" element={<LazyRoute><PageTransition><AMA /></PageTransition></LazyRoute>} />
+            <Route path="/admin" element={<ProtectedAdminRoute />} />
+            <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+          </Routes>
+        </AnimatePresence>
       </main>
       {!isAdmin && <Footer />}
       {!isAdmin && <InstallPrompt />}
+      {!isAdmin && <CommandPalette />}
     </>
   )
 }

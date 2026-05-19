@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { HiOutlineClock, HiOutlineArrowLeft, HiOutlineArrowRight, HiOutlineShare } from 'react-icons/hi'
-import { FaLinkedinIn } from 'react-icons/fa6'
+import { HiOutlineClock, HiOutlineArrowLeft, HiOutlineArrowRight, HiOutlineShare, HiOutlineLink, HiOutlineCheck, HiOutlineEye } from 'react-icons/hi'
+import { FaLinkedinIn, FaXTwitter } from 'react-icons/fa6'
 import { FaWhatsapp } from 'react-icons/fa'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { blogPosts as staticBlogPosts } from '../data/content'
-import { getBlogsApi } from '../api'
+import { getBlogsApi, getPostViewsApi } from '../api'
 import { getBlogImage, getBlogFallback } from '../utils/blogImage'
 import DOMPurify from 'dompurify'
 import { analytics } from '../utils/analytics'
@@ -42,7 +42,16 @@ export default function BlogDetail() {
   const { lang, t } = useLanguage()
   const [allPosts, setAllPosts] = useState(staticBlogPosts)
   const [fetchStatus, setFetchStatus] = useState('loading') // loading | ready | error
+  const [copyOk, setCopyOk] = useState(false)
+  const [views, setViews] = useState(null)
   const articleRef = useRef(null)
+
+  useEffect(() => {
+    if (!slug) return
+    let cancelled = false
+    getPostViewsApi(slug).then((v) => { if (!cancelled) setViews(v) })
+    return () => { cancelled = true }
+  }, [slug])
 
   useEffect(() => {
     let cancelled = false
@@ -92,13 +101,21 @@ export default function BlogDetail() {
 
   useEffect(() => {
     if (!post) return
+    const isoOrNull = (value) => {
+      if (!value) return null
+      const d = new Date(value)
+      return Number.isNaN(d.getTime()) ? null : d.toISOString()
+    }
+    const published = isoOrNull(post.date || post.publishedAt || post.createdAt)
+    const modified = isoOrNull(post.updatedAt || post.modifiedAt) || published
     const schema = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: title,
       description: excerpt,
-      datePublished: post.date,
-      author: { '@type': 'Organization', name: 'Kadir Demir', url: 'https://kadirdemir-nu.vercel.app' },
+      ...(published ? { datePublished: published } : {}),
+      ...(modified ? { dateModified: modified } : {}),
+      author: { '@type': 'Person', name: 'Kadir Demir', url: 'https://kadirdemir-nu.vercel.app' },
       publisher: {
         '@type': 'Organization',
         name: 'Kadir Demir',
@@ -106,7 +123,8 @@ export default function BlogDetail() {
       },
       url: `https://kadirdemir-nu.vercel.app/blog/${slug}`,
       mainEntityOfPage: { '@type': 'WebPage', '@id': `https://kadirdemir-nu.vercel.app/blog/${slug}` },
-      ...(post.image && post.image.startsWith('http') ? { image: post.image } : {}),
+      inLanguage: lang === 'en' ? 'en-US' : 'tr-TR',
+      ...(post.coverImage && /^https?:\/\//.test(post.coverImage) ? { image: post.coverImage } : (post.image && /^https?:\/\//.test(post.image) ? { image: post.image } : {})),
     }
     const el = document.getElementById('jsonld-article')
     if (el) { el.textContent = JSON.stringify(schema) } else {
@@ -139,7 +157,7 @@ export default function BlogDetail() {
       document.getElementById('jsonld-article')?.remove()
       document.getElementById('jsonld-breadcrumb')?.remove()
     }
-  }, [post, slug, title, excerpt])
+  }, [post, slug, title, excerpt, lang])
 
   // Wait for the fetch to settle before deciding the slug doesn't exist.
   if (!post && fetchStatus === 'loading') {
@@ -180,6 +198,13 @@ export default function BlogDetail() {
                 <HiOutlineClock size={14} />
                 {post.readTime || estimateReadTime(content)} {t('blog.min')}
               </span>
+              {Number.isFinite(views) && views > 0 && (
+                <span className="blog-read" aria-label={lang === 'en' ? 'Page views' : 'Görüntülenme'}>
+                  <HiOutlineEye size={14} />
+                  {views.toLocaleString(lang === 'en' ? 'en-US' : 'tr-TR')}{' '}
+                  {lang === 'en' ? 'views' : 'görüntülenme'}
+                </span>
+              )}
             </div>
           </FadeIn>
           <FadeIn delay={0.1}>
@@ -241,12 +266,61 @@ export default function BlogDetail() {
                   <span>{lang === 'tr' ? 'Bu yazıyı paylaş' : 'Share this post'}</span>
                 </div>
                 <div className="blog-share-buttons">
-                  <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="blog-share-btn" aria-label="Share on LinkedIn">
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="blog-share-btn"
+                    aria-label="X (Twitter)'ta paylaş"
+                  >
+                    <FaXTwitter size={16} />
+                  </a>
+                  <a
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="blog-share-btn"
+                    aria-label="LinkedIn'de paylaş"
+                  >
                     <FaLinkedinIn size={16} />
                   </a>
-                  <a href={`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="blog-share-btn" aria-label="Share on WhatsApp">
+                  <a
+                    href={`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="blog-share-btn"
+                    aria-label="WhatsApp'ta paylaş"
+                  >
                     <FaWhatsapp size={16} />
                   </a>
+                  <button
+                    type="button"
+                    className="blog-share-btn"
+                    aria-label={lang === 'tr' ? 'Bağlantıyı kopyala' : 'Copy link'}
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(postUrl)
+                        setCopyOk(true)
+                        setTimeout(() => setCopyOk(false), 1800)
+                      } catch { /* ignore */ }
+                    }}
+                  >
+                    {copyOk ? <HiOutlineCheck size={16} /> : <HiOutlineLink size={16} />}
+                  </button>
+                  {typeof navigator !== 'undefined' && navigator.share && (
+                    <button
+                      type="button"
+                      className="blog-share-btn"
+                      aria-label={lang === 'tr' ? 'Sistem paylaşımı' : 'System share'}
+                      onClick={async () => {
+                        try {
+                          await navigator.share({ title, text: excerpt || title, url: postUrl })
+                        } catch { /* user dismissed */ }
+                      }}
+                    >
+                      <HiOutlineShare size={16} />
+                    </button>
+                  )}
                 </div>
               </div>
             </FadeIn>

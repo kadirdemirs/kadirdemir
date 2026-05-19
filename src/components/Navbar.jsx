@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { HiMenuAlt3, HiX, HiOutlineSun, HiOutlineMoon, HiOutlineGlobeAlt, HiOutlineUserCircle, HiOutlineLogout, HiOutlineCog } from 'react-icons/hi'
+import { HiMenuAlt3, HiX, HiOutlineSun, HiOutlineMoon, HiOutlineGlobeAlt, HiOutlineUserCircle, HiOutlineLogout, HiOutlineCog, HiOutlineSearch } from 'react-icons/hi'
 import { FaYoutube } from 'react-icons/fa'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useTheme } from '../i18n/ThemeContext'
@@ -115,6 +115,18 @@ export default function Navbar() {
         </div>
 
         <div className="navbar-right">
+          <button
+            type="button"
+            className="navbar-icon-btn navbar-search-trigger"
+            onClick={() => {
+              window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))
+            }}
+            aria-label={lang === 'tr' ? 'Sitede ara (Ctrl+K)' : 'Search the site (Ctrl+K)'}
+            title="Ctrl+K"
+          >
+            <HiOutlineSearch size={18} />
+            <span className="navbar-icon-btn-label">⌘K</span>
+          </button>
           <button
             type="button"
             className="navbar-icon-btn"

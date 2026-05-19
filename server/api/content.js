@@ -65,6 +65,26 @@ export default async function handler(req, res) {
     }
   }
 
+  // ── Per-post view count (GET /api/content?action=post-views&slug=...) — public ──
+  if (action === 'post-views' && req.method === 'GET') {
+    try {
+      const slug = String(req.query?.slug || '').slice(0, 200);
+      if (!slug || !/^[\w-]+$/.test(slug)) return res.status(400).json({ error: 'slug required' });
+      const db = await getDb();
+      const path = `/blog/${slug}`;
+      const agg = await db.collection('pageviews').aggregate([
+        { $match: { path } },
+        { $group: { _id: '$path', total: { $sum: '$count' } } },
+      ]).toArray();
+      const total = agg[0]?.total || 0;
+      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
+      return res.status(200).json({ slug, views: total });
+    } catch (err) {
+      console.error('Post-views error:', err);
+      return res.status(500).json({ error: 'Sunucu hatası' });
+    }
+  }
+
   // ── Active visitors count (GET /api/content?action=active-visitors) — public ──
   // Counts sessions seen in the last 2 minutes. No auth: safe public metric.
   if (action === 'active-visitors' && req.method === 'GET') {

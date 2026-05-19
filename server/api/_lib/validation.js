@@ -7,11 +7,12 @@ const querySchema = z.record(
 );
 
 const allowedActions = new Set([
-  'active-visitors', 'activity', 'ai-usage', 'analytics', 'analyzer-lead',
-  'apply', 'change-password', 'check', 'csrf', 'file', 'ga4', 'heartbeat',
-  'login', 'logout', 'newsletter', 'notes', 'pageview', 'reply',
-  'send-invite', 'send-newsletter', 'sitemap', 'smtp-test', 'submit',
-  'subscribers', 'session', 'unsubscribe',
+  'active-visitors', 'activity', 'ai-usage', 'admin', 'all', 'analytics',
+  'analyzer-lead', 'apply', 'ask', 'change-password', 'check', 'confirm',
+  'csrf', 'file', 'ga4', 'heartbeat', 'live', 'login', 'logout',
+  'newsletter', 'notes', 'pageview', 'post-views', 'refresh', 'reply',
+  'send-invite', 'send-newsletter', 'sitemap', 'smtp-test', 'submit', 'subscribers',
+  'session', 'unsubscribe', 'vote',
 ]);
 
 const allowedResources = new Set([

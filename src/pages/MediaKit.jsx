@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   HiOutlineDownload,
@@ -14,6 +14,7 @@ import { FaYoutube, FaInstagram, FaTiktok, FaTwitch } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema } from '../components/StructuredData'
+import ScrollStack, { ScrollStackItem } from '../components/reactbits/ScrollStack'
 import './MediaKit.css'
 
 // Defaults moved to useSiteSettings → admin can override every list below.
@@ -38,6 +39,18 @@ export default function MediaKit() {
   useEffect(() => {
     document.body.classList.add('kd-mediakit-body')
     return () => document.body.classList.remove('kd-mediakit-body')
+  }, [])
+
+  const [reduceMotion, setReduceMotion] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false
+  })
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const onChange = () => setReduceMotion(mq.matches)
+    mq.addEventListener?.('change', onChange)
+    return () => mq.removeEventListener?.('change', onChange)
   }, [])
 
   const stats = [
@@ -171,14 +184,34 @@ export default function MediaKit() {
 
       <section className="kd-mediakit-formats">
         <h2>İş birliği formatları</h2>
-        <div className="kd-mediakit-formats-grid">
-          {collabFormats.map((f) => (
-            <div key={f.title} className="kd-mediakit-format">
-              <h3>{f.title}</h3>
-              <p>{f.desc}</p>
-            </div>
-          ))}
-        </div>
+        {reduceMotion ? (
+          <div className="kd-mediakit-formats-grid">
+            {collabFormats.map((f) => (
+              <div key={f.title} className="kd-mediakit-format">
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="kd-mediakit-stack-wrap">
+            <ScrollStack
+              itemDistance={60}
+              itemStackDistance={20}
+              stackPosition="22%"
+              scaleEndPosition="12%"
+              baseScale={0.88}
+              itemScale={0.025}
+            >
+              {collabFormats.map((f) => (
+                <ScrollStackItem key={f.title} itemClassName="kd-mediakit-stack-card">
+                  <h3>{f.title}</h3>
+                  <p>{f.desc}</p>
+                </ScrollStackItem>
+              ))}
+            </ScrollStack>
+          </div>
+        )}
         <p className="kd-mediakit-note">
           Bütçe aralığı kampanya formatına ve süresine göre değişir. Konuşmaya{' '}
           <Link to="/sponsor">sponsor formundan</Link> başlayabilirsin.

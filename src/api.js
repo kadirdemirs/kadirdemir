@@ -414,6 +414,15 @@ export async function heartbeatApi(sessionId, path) {
   } catch { /* non-critical */ }
 }
 
+export async function getPostViewsApi(slug) {
+  try {
+    const res = await globalThis.fetch(`${API_BASE}/content?action=post-views&slug=${encodeURIComponent(slug)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return typeof data?.views === 'number' ? data.views : null;
+  } catch { return null; }
+}
+
 export async function getActiveVisitorsApi() {
   try {
     const res = await fetch(`${API_BASE}/content?action=active-visitors`);

@@ -24,6 +24,7 @@ import {
 import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema } from '../components/StructuredData'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import Reveal from '../components/Reveal'
 import './Setup.css'
 
 // Default items used until the admin overrides them in site settings.
@@ -166,7 +167,7 @@ export default function Setup() {
         </p>
       </header>
 
-      <section className="kd-setup-section">
+      <Reveal as="section" className="kd-setup-section">
         <div className="kd-setup-section-title">
           <span className="kd-setup-number">01</span>
           <span className="kd-setup-section-icon">
@@ -179,9 +180,9 @@ export default function Setup() {
             <SetupItem key={`pc-${item.kind || idx}`} item={item} />
           ))}
         </div>
-      </section>
+      </Reveal>
 
-      <section className="kd-setup-section">
+      <Reveal as="section" className="kd-setup-section">
         <div className="kd-setup-section-title">
           <span className="kd-setup-number">02</span>
           <span className="kd-setup-section-icon">
@@ -194,7 +195,7 @@ export default function Setup() {
             <SetupItem key={`eq-${item.kind || idx}`} item={item} />
           ))}
         </div>
-      </section>
+      </Reveal>
     </div>
   )
 }
