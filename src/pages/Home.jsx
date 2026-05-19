@@ -21,14 +21,12 @@ import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/CountUp'
-import MagneticButton from '../components/MagneticButton'
 import PollWidget from '../components/PollWidget'
 import NewsletterForm from '../components/NewsletterForm'
 import ResponsivePortrait from '../components/ResponsivePortrait'
 import { SkeletonGrid } from '../components/Skeleton'
-import Prism from '../components/reactbits/Prism'
+import GlassButton from '../components/GlassButton'
 import GradientText from '../components/reactbits/GradientText'
-import StarBorder from '../components/reactbits/StarBorder'
 import { getYouTubeVideosApi, getBlogsApi } from '../api'
 import './Home.css'
 
@@ -189,21 +187,6 @@ export default function Home() {
         <div className="kd-hero-bg" aria-hidden="true">
           <span className="kd-hero-orb kd-hero-orb-1" />
           <span className="kd-hero-orb kd-hero-orb-2" />
-          <div className="kd-hero-prism">
-            <Prism
-              animationType="rotate"
-              timeScale={0.35}
-              height={3.5}
-              baseWidth={5.5}
-              scale={3.2}
-              hueShift={0.15}
-              colorFrequency={0.8}
-              noise={0.18}
-              glow={0.9}
-              bloom={0.9}
-              suspendWhenOffscreen
-            />
-          </div>
         </div>
 
         <motion.span
@@ -249,25 +232,26 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <StarBorder
+          <GlassButton
             as="a"
+            variant="primary"
+            size="lg"
             href={subscribeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            color="#2dd4bf"
-            speed="5s"
-            thickness={2}
-            className="kd-hero-star-cta"
+            icon={<FaYoutube size={18} />}
           >
-            <span className="kd-hero-star-cta-inner">
-              <FaYoutube size={18} />
-              <span>Kanalıma abone ol</span>
-            </span>
-          </StarBorder>
-          <MagneticButton as={Link} to="/videolar" className="kd-btn kd-btn-ghost" strength={0.22}>
-            <HiOutlinePlay size={18} />
-            <span>Videoları izle</span>
-          </MagneticButton>
+            Kanalıma abone ol
+          </GlassButton>
+          <GlassButton
+            as={Link}
+            to="/videolar"
+            variant="secondary"
+            size="lg"
+            icon={<HiOutlinePlay size={18} />}
+          >
+            Videoları izle
+          </GlassButton>
         </motion.div>
 
         {stats.length > 0 && (
@@ -658,10 +642,15 @@ export default function Home() {
             <h2>Hadi tanışalım.</h2>
             <p>İş birliği, sponsorluk veya sadece selam vermek için bir mesajını bekliyorum.</p>
           </div>
-          <Link to="/iletisim" className="kd-btn kd-btn-primary">
-            <span>İletişime geç</span>
-            <HiOutlineArrowRight size={18} />
-          </Link>
+          <GlassButton
+            as={Link}
+            to="/iletisim"
+            variant="primary"
+            size="md"
+            iconRight={<HiOutlineArrowRight size={18} />}
+          >
+            İletişime geç
+          </GlassButton>
         </div>
       </motion.section>
     </div>

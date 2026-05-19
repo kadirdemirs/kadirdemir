@@ -1,63 +1,152 @@
 /* ==========================================
-   KADIR DEMIR - GLOBAL STYLES (turquoise/black)
+   KADIR DEMIR — Liquid Glass Design System
+   Sade. Şık. Tek aksan. Düşük süs.
    ========================================== */
 
 :root {
-  /* Colors - Kadir Demir (turquoise on black) */
-  --primary: #2dd4bf;
-  --primary-dark: #14b8a6;
-  --primary-light: #5eead4;
-  --primary-deep: #0d9488;
-  --primary-glow: #67e8f9;
-  --accent-cyan: #22d3ee;
-  --accent-mint: #6ee7b7;
-  --black: #050709;
-  --black-light: #0a0d12;
-  --black-lighter: #0f1419;
-  --dark-gray: #161b22;
-  --gray: #1f2937;
-  /* WCAG-tuned grays: on #050709 background — gray-light ≈ 5.4:1 (AA), gray-lighter ≈ 7.0:1 (AAA) */
-  --gray-light: #94a3b8;
-  --gray-lighter: #cbd5e1;
-  --white: #FFFFFF;
-  --white-dim: #E5E7EB;
-  --text-secondary: #b6c2d6;
-  --bg-primary: #050709;
+  /* ─── Brand accent (used sparingly) ─── */
+  --primary: #5eead4;
+  --primary-dark: #2dd4bf;
+  --primary-light: #99f6e4;
+  --primary-deep: #14b8a6;
+  --primary-glow: #5eead4;
+  --accent-cyan: #5eead4;
+  --accent-mint: #5eead4;
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #2dd4bf 0%, #22d3ee 100%);
-  --gradient-dark: linear-gradient(180deg, #050709 0%, #0a0d12 100%);
-  --gradient-card: linear-gradient(145deg, rgba(45,212,191,0.06) 0%, rgba(34,211,238,0) 100%);
-  --gradient-glow: radial-gradient(circle at center, rgba(45,212,191,0.18) 0%, transparent 70%);
-  --gradient-aurora: linear-gradient(135deg, #14b8a6 0%, #22d3ee 35%, #2dd4bf 70%, #0d9488 100%);
+  /* ─── Surface (Linear / Vercel style dark) ─── */
+  --bg-0: #08090c;        /* base canvas */
+  --bg-1: #0c0d11;        /* slight raise */
+  --bg-2: #11131a;        /* card behind glass */
+  --black: #08090c;
+  --black-light: #0c0d11;
+  --black-lighter: #11131a;
+  --dark-gray: #14161e;
+  --gray: #1c1f2a;
+  --bg-primary: #08090c;
+  --bg-secondary: rgba(255, 255, 255, 0.035);
+  --card-bg: rgba(255, 255, 255, 0.04);
 
-  /* Typography */
-  --font-display: 'Clash Display', 'Outfit', 'Space Grotesk', sans-serif;
-  --font-primary: 'Satoshi', 'Graphik', 'Outfit', 'Space Grotesk', sans-serif;
-  --font-secondary: 'Satoshi', 'Graphik', 'Plus Jakarta Sans', 'Inter', sans-serif;
+  /* ─── Text scale ─── */
+  --text-primary: #f5f5f7;
+  --text-secondary: #b9bdc7;
+  --text-tertiary: #8a8f9b;
+  --gray-light: #b9bdc7;
+  --gray-lighter: #d4d7df;
+  --white: #f5f5f7;
+  --white-dim: #d4d7df;
 
-  /* Spacing */
+  /* ─── Liquid glass core tokens ─── */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-strong: rgba(255, 255, 255, 0.08);
+  --glass-bg-soft: rgba(255, 255, 255, 0.025);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border-strong: rgba(255, 255, 255, 0.18);
+  --glass-highlight: rgba(255, 255, 255, 0.14);
+  --glass-blur: 22px;
+  --glass-blur-strong: 32px;
+  --glass-saturation: 140%;
+
+  /* Composed shadow used by all glass surfaces */
+  --glass-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset,
+    0 10px 30px -12px rgba(0, 0, 0, 0.55),
+    0 2px 8px -4px rgba(0, 0, 0, 0.4);
+  --glass-shadow-hover:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.35) inset,
+    0 18px 44px -14px rgba(0, 0, 0, 0.6),
+    0 4px 12px -4px rgba(0, 0, 0, 0.45);
+
+  /* ─── Gradients ─── */
+  --gradient-primary: linear-gradient(135deg, #5eead4 0%, #99f6e4 100%);
+  --gradient-dark: linear-gradient(180deg, #08090c 0%, #0c0d11 100%);
+  --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  --gradient-glow: radial-gradient(circle at center, rgba(94,234,212,0.15) 0%, transparent 70%);
+  --gradient-aurora: linear-gradient(135deg, #5eead4 0%, #99f6e4 50%, #5eead4 100%);
+
+  /* ─── Typography ─── */
+  --font-display: 'Clash Display', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-primary: 'Satoshi', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-secondary: 'Satoshi', 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* ─── Layout ─── */
   --section-padding: 100px 0;
   --container-width: 1200px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
 
-  /* Transitions */
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
+  /* ─── Transitions ─── */
+  --transition-fast: 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-normal: 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-slow: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Borders */
-  --border-color: rgba(45, 212, 191, 0.15);
-  --border-color-hover: rgba(45, 212, 191, 0.40);
-  --border: rgba(45, 212, 191, 0.15);
+  /* ─── Borders ─── */
+  --border-color: rgba(255, 255, 255, 0.10);
+  --border-color-hover: rgba(255, 255, 255, 0.22);
+  --border: rgba(255, 255, 255, 0.10);
 
-  /* Semantic tokens used across tool/form pages */
-  --text-primary: #ffffff;
-  --bg-secondary: rgba(255, 255, 255, 0.04);
-  --card-bg: rgba(255, 255, 255, 0.025);
+  /* ─── Shadows (legacy / per-component) ─── */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-glow: 0 0 30px rgba(94, 234, 212, 0.10);
+  --shadow-glow-strong: 0 0 60px rgba(94, 234, 212, 0.18);
+}
 
-  /* Shadows */
-  --shadow-glow: 0 0 30px rgba(45, 212, 191, 0.15);
-  --shadow-glow-strong: 0 0 60px rgba(34, 211, 238, 0.28);
+/* ─── Reusable liquid glass utility ───
+   Use directly: <div class="glass"> … </div>
+   Or compose: .my-thing { @apply glass; } (we don't use tailwind, so just include
+   styles via this class.) */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+  position: relative;
+  isolation: isolate;
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      var(--glass-highlight) 0%,
+      transparent 35%,
+      transparent 65%,
+      rgba(255, 255, 255, 0.04) 100%);
+  opacity: 0.7;
+  mix-blend-mode: overlay;
+  z-index: -1;
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturation));
+  border: 1px solid var(--glass-border-strong);
+}
+
+.glass-soft {
+  background: var(--glass-bg-soft);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid var(--glass-border);
+}
+
+/* Disable backdrop-filter on browsers/devices that struggle with it
+   (heuristic: pointer:coarse + max-width); fall back to a solid-ish surface. */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass, .glass-strong, .glass-soft {
+    background: rgba(20, 22, 30, 0.85);
+  }
 }
 
 /* Skip to content — accessibility */
@@ -250,86 +339,79 @@ input, textarea {
   line-height: 1.7;
 }
 
-/* Buttons */
+/* Legacy buttons — re-skinned to liquid glass to match GlassButton. */
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 14px 32px;
-  border-radius: 12px;
-  font-size: 0.95rem;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  font-size: 0.92rem;
   font-weight: 600;
-  transition: var(--transition-normal);
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  transition:
+    transform var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
   position: relative;
-  overflow: hidden;
 }
 
 .btn-primary {
-  background: linear-gradient(90deg, #f5e058 0%, #eac321 50%, #d4b820 100%);
-  color: #0a0a0a;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.78));
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #0a0b0f;
   box-shadow:
-    0 0 8px rgba(234, 195, 33, 0.35),
-    0 0 16px rgba(234, 195, 33, 0.22);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 10px 28px -8px rgba(0, 0, 0, 0.55);
 }
-
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: -30%;
-  width: 45%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-  transform: skewX(-18deg);
-  opacity: 0;
-  transition: right 0.6s ease, opacity 0.2s ease;
-  pointer-events: none;
-}
-
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 0 14px rgba(234, 195, 33, 0.7),
-    0 0 28px rgba(234, 195, 33, 0.45);
-  filter: brightness(1.05);
-}
-
-.btn-primary:hover::after {
-  right: 110%;
-  opacity: 1;
+  background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0.86));
+  transform: translateY(-1px);
 }
 
 .btn-outline {
-  background: transparent;
-  color: var(--white);
-  border: 1px solid var(--border-color);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  box-shadow: var(--glass-shadow);
 }
-
 .btn-outline:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  transform: translateY(-2px);
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+  transform: translateY(-1px);
 }
 
-/* Cards */
+/* Liquid glass card — primary surface used across pages. */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   padding: 32px;
-  transition: var(--transition-normal);
+  box-shadow: var(--glass-shadow);
+  transition:
+    transform var(--transition-normal),
+    background var(--transition-normal),
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
   transform: translateZ(0);
-  will-change: transform;
 }
 
 .glass-card:hover {
-  border-color: var(--border-color-hover);
-  background: rgba(255, 255, 255, 0.06);
-  transform: translateY(-4px) translateZ(0);
-  box-shadow: var(--shadow-glow);
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+  transform: translateY(-2px) translateZ(0);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card { background: rgba(20, 22, 30, 0.85); }
 }
 
 /* Package price note */
@@ -862,118 +944,41 @@ input, textarea {
 }
 
 /* ────────────────────────────────────────────────
-   Global micro-interaction layer
+   Liquid-glass interaction primitives
+   Kept intentionally minimal: lift on hover, arrow nudge on links.
+   No sheen sweep, no glow ring — those caused button overload.
    ──────────────────────────────────────────────── */
 
-/* Soft float-up on hover for clickable cards */
 .kd-hover-lift {
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal),
+    border-color var(--transition-normal);
 }
 .kd-hover-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px -16px rgba(45, 212, 191, 0.35);
-  border-color: rgba(45, 212, 191, 0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-hover);
+  border-color: var(--border-color-hover);
 }
 
-/* Animated glow ring on focus + hover (for icon-only buttons) */
-.kd-hover-glow {
-  position: relative;
-  transition: transform 0.2s ease;
-}
-.kd-hover-glow::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(45, 212, 191, 0.6), rgba(120, 80, 200, 0.5));
-  filter: blur(12px);
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.25s ease;
-}
-.kd-hover-glow:hover::after,
-.kd-hover-glow:focus-visible::after {
-  opacity: 1;
-}
-
-/* Sheen sweep on primary CTAs */
-.kd-btn-primary,
-.kd-cta-link,
-.btn-primary,
-.kd-mediakit-btn-primary {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.kd-btn-primary::before,
-.kd-cta-link::before,
-.btn-primary::before,
-.kd-mediakit-btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.35) 50%, transparent 60%);
-  transform: translateX(-120%);
-  transition: transform 0.7s ease;
-  pointer-events: none;
-}
-.kd-btn-primary:hover::before,
-.kd-cta-link:hover::before,
-.btn-primary:hover::before,
-.kd-mediakit-btn-primary:hover::before {
-  transform: translateX(120%);
-}
-
-/* Underline grow for inline arrow links */
+/* Inline arrow nudge for "Read more →" style links */
 .kd-link-arrow {
-  position: relative;
-  transition: color 0.2s ease;
+  transition: color var(--transition-fast);
 }
 .kd-link-arrow svg {
-  transition: transform 0.25s ease;
+  transition: transform var(--transition-fast);
 }
 .kd-link-arrow:hover svg {
   transform: translateX(4px);
 }
 
-/* Animated gradient underline for section headings */
-.kd-heading-underline {
-  position: relative;
-  display: inline-block;
-  padding-bottom: 6px;
-}
-.kd-heading-underline::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 2px;
-  width: 100%;
-  background: linear-gradient(90deg, var(--primary), transparent);
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 0.6s ease;
-}
-.kd-heading-underline.in-view::after,
-.kd-section:hover .kd-heading-underline::after {
-  transform: scaleX(1);
-}
-
-/* Skeleton + entrance fallback */
 @media (prefers-reduced-motion: reduce) {
   .kd-hover-lift,
-  .kd-hover-glow,
-  .kd-btn-primary,
+  .kd-link-arrow,
   .kd-link-arrow svg {
     transition: none !important;
   }
   .kd-hover-lift:hover {
     transform: none !important;
-  }
-  .kd-btn-primary::before,
-  .kd-cta-link::before,
-  .btn-primary::before,
-  .kd-mediakit-btn-primary::before {
-    display: none;
   }
 }

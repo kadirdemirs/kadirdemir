@@ -1,0 +1,153 @@
+/* ── GlassButton — single liquid-glass button system ── */
+
+.gbtn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    color var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gbtn:focus-visible {
+  outline: 2px solid rgba(94, 234, 212, 0.65);
+  outline-offset: 3px;
+}
+
+.gbtn:disabled,
+.gbtn[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Highlight overlay shared by all variants */
+.gbtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 28%,
+    transparent 60%);
+  opacity: 0.8;
+  z-index: -1;
+  transition: opacity var(--transition-fast);
+}
+
+.gbtn:hover::before {
+  opacity: 1;
+}
+
+/* ── Sizes ── */
+.gbtn-sm { padding: 8px 16px;  font-size: 0.82rem; }
+.gbtn-md { padding: 12px 22px; font-size: 0.92rem; }
+.gbtn-lg { padding: 14px 28px; font-size: 1rem; }
+
+.gbtn-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.gbtn-icon-right { margin-left: 2px; }
+.gbtn-label { display: inline-block; }
+
+/* ── Variant: secondary (default) — soft glass ── */
+.gbtn-secondary {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  box-shadow: var(--glass-shadow);
+}
+.gbtn-secondary:hover {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow-hover);
+  transform: translateY(-1px);
+}
+.gbtn-secondary:active {
+  transform: translateY(0);
+  background: var(--glass-bg);
+}
+
+/* ── Variant: primary — brighter "frosted snow" glass with brand sheen ── */
+.gbtn-primary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.78));
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #0a0b0f;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.06) inset,
+    0 10px 28px -8px rgba(0, 0, 0, 0.55),
+    0 4px 10px -2px rgba(0, 0, 0, 0.3);
+}
+.gbtn-primary::before {
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 50%);
+}
+.gbtn-primary:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.86));
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.08) inset,
+    0 14px 36px -10px rgba(0, 0, 0, 0.6),
+    0 6px 14px -2px rgba(0, 0, 0, 0.35);
+}
+.gbtn-primary:active {
+  transform: translateY(0);
+}
+
+/* ── Variant: ghost — invisible until hover ── */
+.gbtn-ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.gbtn-ghost::before { display: none; }
+.gbtn-ghost:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Disable hover translate on touch devices to avoid sticky :hover */
+@media (hover: none) {
+  .gbtn:hover { transform: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gbtn,
+  .gbtn::before { transition: none !important; }
+  .gbtn:hover { transform: none !important; }
+}
+
+/* Backdrop-filter fallback */
+@supports not (backdrop-filter: blur(1px)) {
+  .gbtn-secondary,
+  .gbtn-ghost {
+    background: rgba(20, 22, 30, 0.85);
+  }
+}
