@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { HiOutlineSparkles, HiOutlineCheck } from 'react-icons/hi'
 import { getActivePollApi, votePollApi } from '../api'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -68,7 +68,7 @@ export default function PollWidget() {
             fontSize: '0.7rem',
             fontWeight: 700,
             letterSpacing: '0.1em',
-            color: '#2dd4bf',
+            color: '#f59e0b',
             padding: '4px 10px',
             background: 'rgba(45, 212, 191, 0.12)',
             borderRadius: 999,
@@ -154,7 +154,7 @@ export default function PollWidget() {
         <p style={{ marginTop: 12, color: '#f87171', fontSize: '0.82rem' }}>{error}</p>
       )}
       {poll.voted && (
-        <p style={{ marginTop: 14, color: '#2dd4bf', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <p style={{ marginTop: 14, color: '#f59e0b', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <HiOutlineCheck size={14} /> {t('voted')}
         </p>
       )}

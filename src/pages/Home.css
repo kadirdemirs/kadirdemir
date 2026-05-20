@@ -1,7 +1,7 @@
-.kd-home {
-  max-width: 1180px;
+﻿.kd-home {
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 110px 24px 60px;
+  padding: 120px 32px 80px;
   color: var(--white);
   position: relative;
 }
@@ -55,7 +55,7 @@
   height: 520px;
   top: -120px;
   left: -120px;
-  background: radial-gradient(circle, rgba(45, 212, 191, 0.45) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, transparent 70%);
 }
 
 .kd-hero-orb-2 {
@@ -63,7 +63,7 @@
   height: 460px;
   top: 60px;
   right: -100px;
-  background: radial-gradient(circle, rgba(120, 80, 200, 0.32) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.25) 0%, transparent 70%);
 }
 
 /* Animated gradient name in hero */
@@ -116,20 +116,20 @@
 
 .kd-hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-size: clamp(2.6rem, 7vw, 5rem);
   font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  margin-bottom: 22px;
-  max-width: 820px;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin-bottom: 28px;
+  max-width: 940px;
   margin-inline: auto;
 }
 
 .kd-hero-sub {
   max-width: 640px;
-  margin: 0 auto 32px;
-  color: var(--gray-lighter);
-  font-size: 1.02rem;
+  margin: 0 auto 40px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
   line-height: 1.7;
 }
 
@@ -888,7 +888,7 @@
 }
 
 .kd-follow-card {
-  --social-color: #2dd4bf;
+  --social-color: #f59e0b;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -1125,4 +1125,49 @@
   .kd-video-grid { grid-template-columns: 1fr; }
   .kd-section { padding: 56px 0; }
   .kd-cta-card { padding: 30px 24px; flex-direction: column; align-items: flex-start; }
+}
+
+/* ====================== SCROLL VELOCITY STRIP ====================== */
+.kd-velocity-strip {
+  padding: 60px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin: 60px 0 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.kd-velocity-strip::before,
+.kd-velocity-strip::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.kd-velocity-strip::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg-0), transparent);
+}
+
+.kd-velocity-strip::after {
+  right: 0;
+  background: linear-gradient(-90deg, var(--bg-0), transparent);
+}
+
+.kd-velocity-strip .scroll-velocity-text {
+  background: linear-gradient(180deg, var(--text-primary) 0%, var(--text-tertiary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kd-velocity-strip .scroll-velocity-text:nth-of-type(2n) {
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-deep) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

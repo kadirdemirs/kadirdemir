@@ -12,9 +12,10 @@ import ErrorBoundary from './components/ErrorBoundary'
 import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
 import CommandPalette from './components/CommandPalette'
-import ColorBends from './components/reactbits/ColorBends'
+import Aurora from './components/reactbits/Aurora'
+import ClickSpark from './components/reactbits/ClickSpark'
 
-const COLOR_BENDS_PALETTE = ['#5eead4', '#8a5cff', '#ff5c7a']
+const AURORA_COLORS = ['#f59e0b', '#fb923c', '#b45309']
 
 // Core pages — direct import for instant first render
 import Home from './pages/Home'
@@ -117,25 +118,12 @@ function App() {
       <a href="#main-content" className="skip-to-content">İçeriğe geç</a>
       <ScrollToTop />
       {!isAdmin && (
-        <div
-          aria-hidden="true"
-          className="kd-color-bends-bg"
-        >
-          <ColorBends
-            colors={COLOR_BENDS_PALETTE}
-            rotation={120}
-            autoRotate={2}
-            speed={0.1}
-            scale={1.8}
-            frequency={0.8}
-            warpStrength={0.6}
-            mouseInfluence={0}
-            parallax={0}
-            noise={0.05}
-            iterations={1}
-            intensity={0.6}
-            bandWidth={7}
-            transparent
+        <div aria-hidden="true" className="kd-aurora-bg">
+          <Aurora
+            colorStops={AURORA_COLORS}
+            amplitude={0.9}
+            blend={0.55}
+            speed={0.7}
           />
         </div>
       )}
@@ -168,6 +156,7 @@ function App() {
       {!isAdmin && <Footer />}
       {!isAdmin && <InstallPrompt />}
       {!isAdmin && <CommandPalette />}
+      {!isAdmin && <ClickSpark sparkColor="#f59e0b" sparkCount={10} sparkRadius={22} duration={520} />}
     </>
   )
 }

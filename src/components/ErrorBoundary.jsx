@@ -1,4 +1,4 @@
-import { Component } from 'react'
+﻿import { Component } from 'react'
 
 export default class ErrorBoundary extends Component {
   state = { hasError: false }
@@ -24,7 +24,7 @@ export default class ErrorBoundary extends Component {
           <button
             onClick={() => { this.setState({ hasError: false }); window.location.reload() }}
             style={{
-              padding: '12px 28px', background: '#eac321', color: '#000',
+              padding: '12px 28px', background: '#f59e0b', color: '#000',
               border: 'none', borderRadius: '8px', fontWeight: 600,
               cursor: 'pointer', fontSize: '1rem',
             }}

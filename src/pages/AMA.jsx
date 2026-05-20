@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { HiOutlineQuestionMarkCircle, HiOutlineChatAlt2, HiOutlineCheck, HiOutlineUser } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
@@ -97,7 +97,7 @@ export default function AMA() {
 
       {status.state === 'success' ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '32px 24px', borderRadius: 16, marginTop: 16 }}>
-          <span style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg, #2dd4bf, #818cf8)', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+          <span style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg, #f59e0b, #fb923c)', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
             <HiOutlineCheck size={26} color="#fff" />
           </span>
           <h3 style={{ fontSize: '1.25rem', marginBottom: 6 }}>{t('successT')}</h3>
@@ -137,7 +137,7 @@ export default function AMA() {
             style={{
               justifySelf: 'start',
               padding: '12px 22px',
-              background: 'linear-gradient(135deg, #2dd4bf, #818cf8)',
+              background: 'linear-gradient(135deg, #f59e0b, #fb923c)',
               color: '#fff',
               border: 'none',
               borderRadius: 999,
@@ -180,14 +180,14 @@ export default function AMA() {
               </p>
               <div
                 style={{
-                  borderLeft: '3px solid #2dd4bf',
+                  borderLeft: '3px solid #f59e0b',
                   paddingLeft: 14,
                   background: 'rgba(45, 212, 191, 0.04)',
                   borderRadius: 4,
                   padding: '12px 14px',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.74rem', fontWeight: 700, color: '#2dd4bf', letterSpacing: '0.1em', marginBottom: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.74rem', fontWeight: 700, color: '#f59e0b', letterSpacing: '0.1em', marginBottom: 6 }}>
                   <HiOutlineChatAlt2 size={14} /> {lang === 'en' ? 'KADIR' : 'KADIR'}
                 </div>
                 <p style={{ color: 'var(--gray-lighter, #cbd5e1)', lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import './CatcherGame.css'
 
 const W = 420
@@ -117,7 +117,7 @@ export default function CatcherGame() {
       s.items.forEach((it) => {
         if (it.kind === 'coin') {
           ctx.beginPath()
-          ctx.fillStyle = '#eac321'
+          ctx.fillStyle = '#f59e0b'
           ctx.shadowColor = 'rgba(234,195,33,0.6)'
           ctx.shadowBlur = 12
           ctx.arc(it.x, it.y, ITEM_R, 0, Math.PI * 2)

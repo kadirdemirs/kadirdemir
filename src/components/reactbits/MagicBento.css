@@ -1,0 +1,96 @@
+.magic-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--bento-cols, 3), minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.magic-bento-cell {
+  position: relative;
+  grid-column: span var(--cell-span, 1);
+  border-radius: var(--radius-lg);
+  background: var(--bg-1);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color var(--transition-normal), transform var(--transition-normal);
+  --mx: -100px;
+  --my: -100px;
+}
+
+.magic-bento-cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      560px circle at var(--mx) var(--my),
+      rgba(var(--glow-rgb, 245, 158, 11), 0.13) 0%,
+      transparent 55%
+    );
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.magic-bento-cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      300px circle at var(--mx) var(--my),
+      rgba(var(--glow-rgb, 245, 158, 11), 0.35) 0%,
+      transparent 70%
+    );
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+.magic-bento-cell:hover {
+  border-color: rgba(var(--glow-rgb, 245, 158, 11), 0.4);
+  transform: translateY(-3px);
+}
+
+.magic-bento-cell:hover::before,
+.magic-bento-cell:hover::after {
+  opacity: 1;
+}
+
+.magic-bento-cell-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .magic-bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .magic-bento-cell {
+    grid-column: span min(var(--cell-span, 1), 2);
+  }
+}
+
+@media (max-width: 560px) {
+  .magic-bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .magic-bento-cell {
+    grid-column: span 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magic-bento-cell,
+  .magic-bento-cell::before,
+  .magic-bento-cell::after {
+    transition: none;
+  }
+}

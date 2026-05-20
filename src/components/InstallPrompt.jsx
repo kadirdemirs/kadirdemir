@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { HiOutlineDownload, HiOutlineX } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
 
@@ -103,7 +103,7 @@ export default function InstallPrompt() {
           width: 40,
           height: 40,
           borderRadius: 12,
-          background: 'linear-gradient(135deg, #2dd4bf 0%, #818cf8 100%)',
+          background: 'linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)',
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -125,7 +125,7 @@ export default function InstallPrompt() {
             type="button"
             onClick={install}
             style={{
-              background: 'linear-gradient(135deg, #2dd4bf, #818cf8)',
+              background: 'linear-gradient(135deg, #f59e0b, #fb923c)',
               border: 'none',
               color: '#fff',
               padding: '8px 16px',

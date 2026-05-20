@@ -27,7 +27,7 @@ import ResponsivePortrait from '../components/ResponsivePortrait'
 import { SkeletonGrid } from '../components/Skeleton'
 import GlassButton from '../components/GlassButton'
 import GradientText from '../components/reactbits/GradientText'
-import ScrollFloat from '../components/reactbits/ScrollFloat'
+import ScrollVelocity from '../components/reactbits/ScrollVelocity'
 import { getYouTubeVideosApi, getBlogsApi } from '../api'
 import './Home.css'
 
@@ -209,7 +209,7 @@ export default function Home() {
           Selam, ben{' '}
           <GradientText
             className="kd-hero-name"
-            colors={['#2dd4bf', '#22d3ee', '#818cf8', '#22d3ee', '#2dd4bf']}
+            colors={['#fbbf24', '#f59e0b', '#fb923c', '#f59e0b', '#fbbf24']}
             animationSpeed={6}
             yoyo={false}
           >
@@ -626,13 +626,7 @@ export default function Home() {
       <motion.section className="kd-section kd-faq" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
         <div className="kd-section-head kd-section-head-center">
           <span className="kd-eyebrow">SSS</span>
-          <ScrollFloat
-            animationDuration={1}
-            ease="back.inOut(2)"
-            stagger={0.03}
-          >
-            Sıkça Sorulanlar
-          </ScrollFloat>
+          <h2>Sıkça Sorulanlar</h2>
           <p>Aklındaki sorunun cevabı burada yoksa iletişim sayfasından bana yaz.</p>
         </div>
         <div className="kd-faq-grid">
@@ -641,6 +635,14 @@ export default function Home() {
           ))}
         </div>
       </motion.section>
+
+      {/* ===== SCROLL VELOCITY MARQUEE ===== */}
+      <section className="kd-velocity-strip" aria-hidden="true">
+        <ScrollVelocity
+          texts={['Kadir Demir • İçerik • Hikâye • İstanbul •', 'Vlog • Oyun • Eğlence • Macera •']}
+          velocity={60}
+        />
+      </section>
 
       {/* ===== CTA STRIP ===== */}
       <motion.section className="kd-section kd-cta" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>

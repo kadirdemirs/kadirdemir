@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 
 export default function ReadingProgress({ targetRef }) {
   const [progress, setProgress] = useState(0)
@@ -47,7 +47,7 @@ export default function ReadingProgress({ targetRef }) {
         style={{
           height: '100%',
           width: `${progress}%`,
-          background: 'linear-gradient(90deg, #2dd4bf 0%, #818cf8 100%)',
+          background: 'linear-gradient(90deg, #f59e0b 0%, #fb923c 100%)',
           boxShadow: '0 0 12px rgba(45, 212, 191, 0.6)',
           transition: 'width 0.08s linear',
         }}

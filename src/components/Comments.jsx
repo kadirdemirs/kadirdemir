@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { HiOutlineChatAlt2, HiOutlineUserCircle } from 'react-icons/hi'
 import { getCommentsApi, postCommentApi } from '../api'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -139,7 +139,7 @@ export default function Comments({ postSlug }) {
           disabled={submitting}
           style={{
             justifySelf: 'start',
-            background: 'linear-gradient(135deg, #2dd4bf, #818cf8)',
+            background: 'linear-gradient(135deg, #f59e0b, #fb923c)',
             color: '#fff',
             border: 'none',
             padding: '10px 22px',

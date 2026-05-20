@@ -1,4 +1,4 @@
-/* ==========================================
+﻿/* ==========================================
    KADE ADMIN — Premium Design System v2
    ========================================== */
 
@@ -14,7 +14,7 @@
   --text-secondary: #5C5753;
   --text-tertiary: #9E9994;
   --accent: #0d9488;
-  --accent-light: #2dd4bf;
+  --accent-light: #f59e0b;
   --accent-alpha: rgba(13, 148, 136, 0.08);
   --accent-glow: rgba(13, 148, 136, 0.25);
   --border: rgba(0, 0, 0, 0.07);
@@ -45,8 +45,8 @@
   --text-primary: #F0EDE8;
   --text-secondary: #A8A49E;
   --text-tertiary: #6B6760;
-  --accent: #2dd4bf;
-  --accent-light: #5eead4;
+  --accent: #f59e0b;
+  --accent-light: #fbbf24;
   --accent-alpha: rgba(45, 212, 191, 0.10);
   --accent-glow: rgba(45, 212, 191, 0.20);
   --border: rgba(255, 255, 255, 0.06);
@@ -270,7 +270,7 @@
 
 .admin-dashboard .btn-primary:hover,
 .admin-login-container .btn-primary:hover {
-  background: #b89a18;
+  background: #b45309;
   box-shadow: var(--shadow-glow);
   transform: translateY(-1px);
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HiOutlineSparkles, HiOutlineCheck, HiOutlineDocumentText, HiOutlineArrowRight } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -75,7 +75,7 @@ export default function Sponsor() {
     return (
       <div className="kd-blog" style={{ minHeight: '70vh', display: 'flex', alignItems: 'center' }}>
         <div className="glass-card" style={{ textAlign: 'center', padding: '48px 32px', borderRadius: 24, maxWidth: 480, margin: '0 auto' }}>
-          <span style={{ display: 'inline-flex', width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg, #2dd4bf, #818cf8)', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+          <span style={{ display: 'inline-flex', width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg, #f59e0b, #fb923c)', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
             <HiOutlineCheck size={32} color="#fff" />
           </span>
           <h2 style={{ fontSize: '1.6rem', marginBottom: 8 }}>{t('successT')}</h2>
@@ -127,7 +127,7 @@ export default function Sponsor() {
           color: 'inherit',
         }}
       >
-        <HiOutlineDocumentText size={22} style={{ color: 'var(--primary, #2dd4bf)', flexShrink: 0 }} />
+        <HiOutlineDocumentText size={22} style={{ color: 'var(--primary, #f59e0b)', flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 600, marginBottom: 2 }}>
             {lang === 'en' ? 'Read the media kit first' : 'Önce medya kitini incele'}
@@ -138,7 +138,7 @@ export default function Sponsor() {
               : 'Hedef kitle, erişim rakamları, kampanya formatları ve çalışma prensiplerimiz.'}
           </div>
         </div>
-        <HiOutlineArrowRight size={18} style={{ color: 'var(--primary, #2dd4bf)' }} />
+        <HiOutlineArrowRight size={18} style={{ color: 'var(--primary, #f59e0b)' }} />
       </Link>
 
       <form
@@ -212,7 +212,7 @@ export default function Sponsor() {
           disabled={status.state === 'sending'}
           style={{
             padding: '14px 24px',
-            background: 'linear-gradient(135deg, #2dd4bf, #818cf8)',
+            background: 'linear-gradient(135deg, #f59e0b, #fb923c)',
             color: '#fff',
             border: 'none',
             borderRadius: 999,

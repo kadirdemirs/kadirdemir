@@ -1,0 +1,30 @@
+.scroll-velocity-parallax {
+  overflow: hidden;
+  width: 100%;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+.scroll-velocity-scroller {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  width: max-content;
+  will-change: transform;
+}
+
+.scroll-velocity-text {
+  flex-shrink: 0;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  padding-right: 32px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-velocity-scroller { animation: none !important; }
+}

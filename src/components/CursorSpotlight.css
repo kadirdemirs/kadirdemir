@@ -1,4 +1,4 @@
-.cursor-dot,
+﻿.cursor-dot,
 .cursor-ring,
 .cursor-glow {
   position: fixed;
@@ -12,7 +12,7 @@
 .cursor-dot {
   width: 6px;
   height: 6px;
-  background: var(--primary, #2dd4bf);
+  background: var(--primary, #f59e0b);
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(45, 212, 191, 0.6);
   transition: width 0.2s, height 0.2s, opacity 0.2s;

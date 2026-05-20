@@ -1,4 +1,4 @@
-/* =============================================
+﻿/* =============================================
    PAGE BACKGROUND ANIMATIONS
    Each page gets its own subtle animated bg
    ============================================= */
@@ -74,7 +74,7 @@
 /* ---- 3. SPARKLE (Packages) ---- */
 .bg-sparkle {
   font-size: 1.1rem;
-  color: #eac321;
+  color: #f59e0b;
   animation: anim-sparkle var(--dur, 8s) var(--delay, 0s) ease-in-out infinite;
 }
 

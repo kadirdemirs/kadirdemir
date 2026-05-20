@@ -1,4 +1,4 @@
-.kd-mediakit {
+﻿.kd-mediakit {
   max-width: 1100px;
   margin: 0 auto;
   padding: 110px 24px 80px;
@@ -51,14 +51,14 @@
 }
 
 .kd-mediakit-btn-primary {
-  background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+  background: linear-gradient(135deg, #f59e0b, #b45309);
   border-color: transparent;
   color: #001712;
   font-weight: 700;
 }
 
 .kd-mediakit-btn-primary:hover {
-  background: linear-gradient(135deg, #5eead4, #2dd4bf);
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
 }
 
 .kd-mediakit-hero {
@@ -70,7 +70,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--primary, #2dd4bf);
+  color: var(--primary, #f59e0b);
   background: rgba(45, 212, 191, 0.08);
   border: 1px solid rgba(45, 212, 191, 0.2);
   padding: 5px 12px;
@@ -86,7 +86,7 @@
 }
 
 .kd-mediakit-accent {
-  color: var(--primary, #2dd4bf);
+  color: var(--primary, #f59e0b);
 }
 
 .kd-mediakit-hero p {
@@ -194,7 +194,7 @@
 .kd-mediakit-bar-fill {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #2dd4bf, #818cf8);
+  background: linear-gradient(90deg, #f59e0b, #fb923c);
 }
 
 .kd-mediakit-bar-value {
@@ -377,7 +377,7 @@
 }
 
 .kd-mediakit-principles li svg {
-  color: var(--primary, #2dd4bf);
+  color: var(--primary, #f59e0b);
   flex-shrink: 0;
   margin-top: 3px;
 }
@@ -389,7 +389,7 @@
 }
 
 .kd-mediakit-note a {
-  color: var(--primary, #2dd4bf);
+  color: var(--primary, #f59e0b);
   text-decoration: underline;
 }
 

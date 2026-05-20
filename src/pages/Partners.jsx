@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HiOutlineSparkles, HiOutlineExternalLink, HiOutlineMail } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -18,7 +18,7 @@ const TIER_STYLE = {
   gold:    { background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', color: '#1c1917' },
   silver:  { background: 'linear-gradient(135deg, #d1d5db, #9ca3af)', color: '#1c1917' },
   bronze:  { background: 'linear-gradient(135deg, #fb923c, #c2410c)', color: '#fff' },
-  partner: { background: 'linear-gradient(135deg, #2dd4bf, #818cf8)', color: '#fff' },
+  partner: { background: 'linear-gradient(135deg, #f59e0b, #fb923c)', color: '#fff' },
 }
 
 export default function Partners() {
@@ -121,7 +121,7 @@ export default function Partners() {
                   <h4 style={{ marginBottom: 4 }}>{p.name}</h4>
                   {p.description && <p>{p.description}</p>}
                   {p.url && (
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 10, fontSize: '0.78rem', color: 'var(--primary, #2dd4bf)' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 10, fontSize: '0.78rem', color: 'var(--primary, #f59e0b)' }}>
                       {t('visit')} <HiOutlineExternalLink size={12} />
                     </span>
                   )}
@@ -152,7 +152,7 @@ export default function Partners() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            background: 'linear-gradient(135deg, #2dd4bf, #818cf8)',
+            background: 'linear-gradient(135deg, #f59e0b, #fb923c)',
             color: '#fff',
             padding: '12px 22px',
             borderRadius: 999,
