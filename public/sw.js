@@ -1,4 +1,4 @@
-const CACHE = 'kd-v3-2026'
+const CACHE = 'kd-v4-2026-amber-redesign'
 const OFFLINE_URL = '/offline.html'
 
 self.addEventListener('install', (e) => {

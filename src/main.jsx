@@ -26,9 +26,20 @@ if (GA_ID && typeof window !== 'undefined') {
 }
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => { /* ignore */ })
-  })
+  if (import.meta.env.PROD) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => { /* ignore */ })
+    })
+  } else {
+    // Dev mode: unregister any previously installed SW + clear caches
+    // so HMR shows fresh code instead of cached production builds.
+    navigator.serviceWorker.getRegistrations().then((regs) => {
+      regs.forEach((r) => r.unregister())
+    }).catch(() => {})
+    if (window.caches) {
+      caches.keys().then((keys) => keys.forEach((k) => caches.delete(k))).catch(() => {})
+    }
+  }
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(

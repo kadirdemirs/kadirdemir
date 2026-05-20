@@ -7,7 +7,6 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import ErrorTracker from './components/ErrorTracker'
-import AuroraBackground from './components/AuroraBackground'
 import ErrorBoundary from './components/ErrorBoundary'
 import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
@@ -128,7 +127,6 @@ function App() {
         </div>
       )}
       {!isAdmin && <LiveBanner />}
-      {!isAdmin && <AuroraBackground />}
       {!isAdmin && <Navbar />}
       <main id="main-content">
         <AnimatePresence mode="wait" initial={false}>
