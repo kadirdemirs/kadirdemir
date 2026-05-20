@@ -12,6 +12,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
 import CommandPalette from './components/CommandPalette'
+import GradualBlur from './components/reactbits/GradualBlur'
 
 // Core pages — direct import for instant first render
 import Home from './pages/Home'
@@ -142,6 +143,52 @@ function App() {
       {!isAdmin && <Footer />}
       {!isAdmin && <InstallPrompt />}
       {!isAdmin && <CommandPalette />}
+      {!isAdmin && (
+        <>
+          <GradualBlur
+            target="page"
+            position="top"
+            height="5rem"
+            strength={2}
+            divCount={6}
+            curve="bezier"
+            exponential
+            opacity={1}
+            zIndex={90}
+          />
+          <GradualBlur
+            target="page"
+            position="bottom"
+            height="5rem"
+            strength={2}
+            divCount={6}
+            curve="bezier"
+            exponential
+            opacity={1}
+            zIndex={90}
+          />
+          <GradualBlur
+            target="page"
+            position="left"
+            height="3rem"
+            strength={1.2}
+            divCount={4}
+            curve="bezier"
+            opacity={0.85}
+            zIndex={89}
+          />
+          <GradualBlur
+            target="page"
+            position="right"
+            height="3rem"
+            strength={1.2}
+            divCount={4}
+            curve="bezier"
+            opacity={0.85}
+            zIndex={89}
+          />
+        </>
+      )}
     </>
   )
 }
