@@ -95,7 +95,10 @@ export default function Aurora({
 }) {
   const containerRef = useRef(null)
   const propsRef = useRef({ colorStops, amplitude, blend, speed })
-  propsRef.current = { colorStops, amplitude, blend, speed }
+
+  useEffect(() => {
+    propsRef.current = { colorStops, amplitude, blend, speed }
+  })
 
   useEffect(() => {
     const ctn = containerRef.current

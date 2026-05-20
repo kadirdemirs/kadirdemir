@@ -14,19 +14,18 @@ import {
   HiOutlineVideoCamera,
   HiOutlineChevronDown,
   HiOutlineSparkles,
-  HiOutlineFire,
 } from 'react-icons/hi2'
 import { useEffect, useState } from 'react'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/CountUp'
-import PollWidget from '../components/PollWidget'
 import NewsletterForm from '../components/NewsletterForm'
 import ResponsivePortrait from '../components/ResponsivePortrait'
 import { SkeletonGrid } from '../components/Skeleton'
-import GlassButton from '../components/GlassButton'
-import GradientText from '../components/reactbits/GradientText'
+import BlurText from '../components/reactbits/BlurText'
+import MagicBento from '../components/reactbits/MagicBento'
+import SpotlightCard from '../components/reactbits/SpotlightCard'
 import ScrollVelocity from '../components/reactbits/ScrollVelocity'
 import { getYouTubeVideosApi, getBlogsApi } from '../api'
 import './Home.css'
@@ -38,11 +37,6 @@ function parseStat(value) {
   const num = parseFloat(m[1].replace(',', '.'))
   if (!Number.isFinite(num)) return null
   return { num, suffix: (m[2] || '') + (m[3] || '') }
-}
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 }
 
 function formatViews(n) {
@@ -66,51 +60,25 @@ function parseDuration(iso) {
   return h > 0 ? `${h}:${pad(min)}:${pad(s)}` : `${min}:${pad(s)}`
 }
 
-function formatBlogTag(category) {
-  return String(category || 'YAZI').toUpperCase().slice(0, 14)
-}
-
 const faqs = [
-  {
-    q: 'Yeni videoları ne sıklıkla yüklüyorsun?',
-    a: 'Haftada 2-3 yeni video yüklemeye gayret ediyorum. YouTube’da zile basarsan bildirimleri kaçırmazsın.',
-  },
-  {
-    q: 'Sponsorluklara açık mısın?',
-    a: 'Markalarla uzun vadeli ve doğru kitleye hitap eden iş birliklerine açığım. İş birliği e-posta adresimden ulaşabilirsiniz.',
-  },
-  {
-    q: 'Hangi günler video yayınlıyorsun?',
-    a: 'Genellikle Salı, Perşembe ve Cumartesi yayın günlerim. Bazen sürpriz içerikler de paylaşıyorum.',
-  },
-  {
-    q: 'Video önerimi nereden iletebilirim?',
-    a: 'Instagram DM, YouTube yorumları veya iletişim sayfasındaki form üzerinden bana ulaşabilirsin — hepsini okumaya gayret ediyorum.',
-  },
-  {
-    q: 'Kullandığın ekipmanlar neler?',
-    a: 'Tüm setup’ımın detayını Setup sayfasından inceleyebilirsin: kamera, mikrofon, ışık, bilgisayar — hepsi orada.',
-  },
-  {
-    q: 'Etkinliklerde nasıl bulunabilirim?',
-    a: 'Etkinlik ve buluşma takvimimi Instagram üzerinden duyuruyorum. Yakın zamanda bir meet-up planlanıyor.',
-  },
+  { q: 'Yeni videoları ne sıklıkla yüklüyorsun?', a: 'Haftada 2-3 yeni video yüklemeye gayret ediyorum. YouTube’da zile basarsan bildirimleri kaçırmazsın.' },
+  { q: 'Sponsorluklara açık mısın?', a: 'Markalarla uzun vadeli ve doğru kitleye hitap eden iş birliklerine açığım. İş birliği e-posta adresimden ulaşabilirsiniz.' },
+  { q: 'Hangi günler video yayınlıyorsun?', a: 'Genellikle Salı, Perşembe ve Cumartesi yayın günlerim. Bazen sürpriz içerikler de paylaşıyorum.' },
+  { q: 'Video önerimi nereden iletebilirim?', a: 'Instagram DM, YouTube yorumları veya iletişim sayfasındaki form üzerinden bana ulaşabilirsin.' },
+  { q: 'Kullandığın ekipmanlar neler?', a: 'Tüm setup’ımın detayını Setup sayfasından inceleyebilirsin: kamera, mikrofon, ışık, bilgisayar.' },
+  { q: 'Etkinliklerde nasıl bulunabilirim?', a: 'Etkinlik ve buluşma takvimimi Instagram üzerinden duyuruyorum. Yakın zamanda bir meet-up planlanıyor.' },
 ]
 
 function FAQItem({ faq }) {
   const [open, setOpen] = useState(false)
   return (
-    <details
-      className={`kd-faq-item ${open ? 'open' : ''}`}
-      open={open}
-      onToggle={(e) => setOpen(e.currentTarget.open)}
-    >
-      <summary className="kd-faq-q">
+    <details className={`hm-faq-item ${open ? 'open' : ''}`} open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
+      <summary className="hm-faq-q">
         <span>{faq.q}</span>
         <HiOutlineChevronDown size={20} aria-hidden="true" />
       </summary>
-      <div className="kd-faq-a-wrap">
-        <div className="kd-faq-a">{faq.a}</div>
+      <div className="hm-faq-a-wrap">
+        <div className="hm-faq-a">{faq.a}</div>
       </div>
     </details>
   )
@@ -132,14 +100,14 @@ export default function Home() {
   useEffect(() => {
     getYouTubeVideosApi()
       .then((res) => { if (res?.videos) setVideos(res.videos) })
-      .catch(() => { /* ignore — use fallback */ })
+      .catch(() => {})
       .finally(() => setVideosLoading(false))
     getBlogsApi()
       .then((res) => {
         const list = Array.isArray(res?.blogs) ? res.blogs : Array.isArray(res?.data) ? res.data : []
         setBlogs(list.filter((b) => !b?.draft).slice(0, 3))
       })
-      .catch(() => { /* ignore — section hidden if empty */ })
+      .catch(() => {})
   }, [])
 
   const subscribeUrl = `${settings.youtube || 'https://youtube.com/@kadirdemir'}?sub_confirmation=1`
@@ -159,11 +127,11 @@ export default function Home() {
     .slice(0, 3)
 
   const socialFollows = [
-    settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: `${settings.statsYoutubeSubs || ''} Abone`.trim(), url: settings.youtube, color: '#ff0033' },
-    settings.instagram && { icon: FaInstagram, name: 'Instagram', meta: `${settings.statsInstagramFollowers || ''} Takipçi`.trim(), url: settings.instagram, color: '#e1306c' },
-    settings.tiktok && { icon: FaTiktok, name: 'TikTok', meta: 'Yeni içerikler', url: settings.tiktok, color: '#ffffff' },
-    settings.twitch && { icon: FaTwitch, name: 'Twitch', meta: 'Canlı yayınlar', url: settings.twitch, color: '#9146ff' },
-    settings.twitter && { icon: FaXTwitter, name: 'X', meta: 'Anlık düşünceler', url: settings.twitter, color: '#ffffff' },
+    settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: `${settings.statsYoutubeSubs || ''} Abone`.trim(), url: settings.youtube },
+    settings.instagram && { icon: FaInstagram, name: 'Instagram', meta: `${settings.statsInstagramFollowers || ''} Takipçi`.trim(), url: settings.instagram },
+    settings.tiktok && { icon: FaTiktok, name: 'TikTok', meta: 'Kısa videolar', url: settings.tiktok },
+    settings.twitch && { icon: FaTwitch, name: 'Twitch', meta: 'Canlı yayınlar', url: settings.twitch },
+    settings.twitter && { icon: FaXTwitter, name: 'X', meta: 'Anlık düşünceler', url: settings.twitter },
   ].filter(Boolean)
 
   const igPosts = (settings.instagramPosts || []).filter(p => p && p.url)
@@ -176,110 +144,105 @@ export default function Home() {
         { id: 4, caption: 'Ekiple birlikte' },
       ].map(s => ({ ...s, url: settings.instagram }))
 
+  const brandName = settings.businessName || 'Kadir Demir'
+
   return (
-    <div className="kd-home">
+    <div className="hm">
       <PersonSchema socials={settings} />
       <WebSiteSchema />
       <FAQSchema items={faqs} />
       {videos.length > 0 && <VideoSchema videos={videos.slice(0, 8)} />}
 
-      {/* ===== HERO ===== */}
-      <section className="kd-hero">
-        <div className="kd-hero-bg" aria-hidden="true">
-          <span className="kd-hero-orb kd-hero-orb-1" />
-          <span className="kd-hero-orb kd-hero-orb-2" />
+      {/* ═══════════════ HERO ═══════════════ */}
+      <section className="hm-hero">
+        <div className="hm-hero-grid">
+          <div className="hm-hero-left">
+            <motion.span
+              className="hm-eyebrow"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="hm-eyebrow-dot" /> Yeni bölüm yayında
+            </motion.span>
+
+            <h1 className="hm-hero-title">
+              <BlurText
+                text="Selam,"
+                animateBy="words"
+                delay={100}
+                className="hm-hero-line hm-hero-line-1"
+              />
+              <BlurText
+                text={`ben ${brandName}.`}
+                animateBy="words"
+                delay={120}
+                className="hm-hero-line hm-hero-line-2"
+              />
+              <BlurText
+                text="Hikâye anlatmayı seviyorum."
+                animateBy="words"
+                delay={80}
+                className="hm-hero-line hm-hero-line-3"
+              />
+            </h1>
+
+            <motion.p
+              className="hm-hero-sub"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              {settings.description || "İstanbul'dan yayın yapan bir içerik üreticisiyim. Oyun, vlog ve eğlence videolarımla küçük anları büyük anılara çeviriyorum."}
+            </motion.p>
+
+            <motion.div
+              className="hm-hero-cta"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <a href={subscribeUrl} target="_blank" rel="noopener noreferrer" className="hm-btn hm-btn-primary">
+                <FaYoutube size={18} /> Kanalıma abone ol
+              </a>
+              <Link to="/videolar" className="hm-btn hm-btn-ghost">
+                <HiOutlinePlay size={18} /> Videoları izle
+              </Link>
+            </motion.div>
+          </div>
+
+          <motion.div
+            className="hm-hero-right"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="hm-hero-portrait">
+              <ResponsivePortrait alt={`${brandName} portresi`} className="hm-hero-portrait-img" sizes="(max-width: 820px) 100vw, 520px" />
+              <div className="hm-hero-portrait-tag">
+                <HiOutlineSparkles size={14} />
+                <span>Stüdyodan</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
-
-        <motion.span
-          className="kd-hero-badge"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="kd-hero-badge-dot" />
-          Yeni bölüm yayında
-        </motion.span>
-
-        <motion.h1
-          className="kd-hero-title"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        >
-          Selam, ben{' '}
-          <GradientText
-            className="kd-hero-name"
-            colors={['#fbbf24', '#f59e0b', '#fb923c', '#f59e0b', '#fbbf24']}
-            animationSpeed={6}
-            yoyo={false}
-          >
-            {settings.businessName || 'Kadir Demir'}
-          </GradientText>
-          <br />
-          ve hikâye anlatmayı seviyorum.
-        </motion.h1>
-        <motion.p
-          className="kd-hero-sub"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.25 }}
-        >
-          {settings.description || "İstanbul'dan yayın yapan bir içerik üreticisiyim. Oyun, vlog ve eğlence videolarımla küçük anları büyük anılara çeviriyorum — sen de bu yolculuğa katılmaya ne dersin?"}
-        </motion.p>
-
-        <motion.div
-          className="kd-hero-cta"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <GlassButton
-            as="a"
-            variant="primary"
-            size="lg"
-            href={subscribeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            icon={<FaYoutube size={18} />}
-          >
-            Kanalıma abone ol
-          </GlassButton>
-          <GlassButton
-            as={Link}
-            to="/videolar"
-            variant="secondary"
-            size="lg"
-            icon={<HiOutlinePlay size={18} />}
-          >
-            Videoları izle
-          </GlassButton>
-        </motion.div>
 
         {stats.length > 0 && (
           <motion.div
-            className="kd-stats"
-            initial={{ opacity: 0, y: 20 }}
+            className="hm-stats"
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.55 }}
+            transition={{ duration: 0.8, delay: 1 }}
           >
             {stats.map((s) => {
               const parsed = parseStat(s.value)
               return (
-                <div key={s.label} className="kd-stat">
-                  <span className="kd-stat-icon">
-                    <s.icon size={18} />
+                <div key={s.label} className="hm-stat">
+                  <span className="hm-stat-icon"><s.icon size={18} /></span>
+                  <span className="hm-stat-value">
+                    {parsed ? <><CountUp end={parsed.num} duration={2.5} />{parsed.suffix}</> : s.value}
                   </span>
-                  <div className="kd-stat-value">
-                    {parsed ? (
-                      <CountUp
-                        to={parsed.num}
-                        decimals={parsed.num % 1 === 0 ? 0 : 2}
-                        suffix={parsed.suffix}
-                        duration={1800}
-                      />
-                    ) : s.value}
-                  </div>
-                  <div className="kd-stat-label">{s.label}</div>
+                  <span className="hm-stat-label">{s.label}</span>
                 </div>
               )
             })}
@@ -287,381 +250,291 @@ export default function Home() {
         )}
       </section>
 
-      {/* ===== ABOUT SPLIT 1 ===== */}
-      <motion.section className="kd-section kd-split" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-        <div className="kd-split-text">
-          <span className="kd-eyebrow">Hakkımda</span>
-          <h2>
-            İçerik üretmek, benim
-            <br />
-            #1 <span className="kd-accent">tutkum</span>.
-          </h2>
-          <p>
-            Çocukluğumdan beri kameranın hem önünde hem arkasında olmayı seviyorum. İlk
-            videomu yıllar önce yükledim ve o günden bugüne izleyicilerimle birlikte
-            büyüyen, evrilen bir kanal kurdum.
-          </p>
-          <p>
-            Her video benim için yeni bir hikâye anlatma fırsatı. Sıradan bir günü ilginç
-            kılmak, izleyiciye gerçekten değer katacak bir an yaratmak istiyorum.
-          </p>
-          <Link to="/hakkimda" className="kd-section-link kd-link-arrow">
-            Hikayemin devamı <HiOutlineArrowRight />
-          </Link>
+      {/* ═══════════════ ABOUT BENTO ═══════════════ */}
+      <section className="hm-section">
+        <div className="hm-section-head">
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Hakkımda</span>
+          <h2 className="hm-h2">İçerik üretmek<br />benim <span className="hm-accent">#1 tutkum</span>.</h2>
         </div>
-        <div className="kd-split-media">
-          <div className="kd-media-frame kd-media-stack">
-            <div className="kd-media-tag">Story</div>
-            <ResponsivePortrait
-              alt="Kadir Demir — stüdyo portresi"
-              className="kd-media-img"
-              sizes="(max-width: 820px) 100vw, 480px"
-            />
-          </div>
-        </div>
-      </motion.section>
 
-      {/* ===== ABOUT SPLIT 2 ===== */}
-      <motion.section className="kd-section kd-split kd-split-reverse" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-        <div className="kd-split-media">
-          <div className="kd-media-frame kd-media-stack kd-media-secondary">
-            <div className="kd-media-tag">Behind the scenes</div>
-            <ResponsivePortrait
-              alt="Kadir Demir — kayıt sırasında"
-              className="kd-media-img kd-media-img-alt"
-              sizes="(max-width: 820px) 100vw, 480px"
-            />
-          </div>
-        </div>
-        <div className="kd-split-text">
-          <span className="kd-eyebrow">Yolculuk</span>
-          <h2>
-            Yıllar boyunca <span className="kd-accent">{settings.statsTotalVideos || '3.8K'}</span>
-            <br />
-            video ürettim.
-          </h2>
-          <p>
-            Bu yolculuk küçük bir kameradan başladı. Bugün ise tam donanımlı bir stüdyoda,
-            ekibimle birlikte çekiyor, kurguluyor ve severek üretmeye devam ediyorum.
-          </p>
-          <p>
-            Sayılardan daha önemlisi: Her videonun arkasında binlerce izleyiciyle
-            kurduğum bağ. İşte bu bağ, beni her gün yeniden kameranın karşısına çekiyor.
-          </p>
-          <Link to="/setup" className="kd-section-link kd-link-arrow">
-            Setup’ımı incele <HiOutlineArrowRight />
-          </Link>
-        </div>
-      </motion.section>
-
-      {/* ===== FEATURED VIDEO ===== */}
-      {featuredVideo && (
-        <motion.section className="kd-section kd-featured" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-          <div className="kd-section-head">
-            <span className="kd-eyebrow"><HiOutlineSparkles /> Öne çıkan</span>
-            <h2>Bu hafta öne çıkan video</h2>
-            <p>Kanalımdaki en güncel ve en çok konuşulan içerik</p>
-          </div>
-          <div className="kd-featured-card">
-            <div className="kd-featured-thumb">
-              <img
-                className="kd-featured-img"
-                src={featuredVideo.thumbnail || `https://i.ytimg.com/vi/${featuredVideo.youtubeId}/maxresdefault.jpg`}
-                alt={`${featuredVideo.title} — öne çıkan YouTube videosu küçük resmi`}
-                loading="lazy"
-                onError={(e) => { e.currentTarget.style.display = 'none' }}
-              />
-              <div className="kd-featured-shade" />
-              <span className="kd-featured-overlay-top">YENİ BÖLÜM</span>
-              <a
-                className="kd-play-btn"
-                href={`https://www.youtube.com/watch?v=${featuredVideo.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Videoyu oynat"
-              >
-                <HiOutlinePlay size={28} />
-              </a>
-            </div>
-            <div className="kd-featured-info">
-              <span className="kd-pill">Öne Çıkan</span>
-              <h3>{featuredVideo.title}</h3>
-              <a
-                href={`https://www.youtube.com/watch?v=${featuredVideo.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="kd-section-link kd-link-arrow"
-              >
-                Şimdi izle <HiOutlineArrowRight />
-              </a>
-            </div>
-          </div>
-        </motion.section>
-      )}
-
-      {/* ===== RECENT VIDEOS ===== */}
-      {(videosLoading || recentVideos.length > 0) && (
-        <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-          <div className="kd-section-head kd-row">
-            <div>
-              <span className="kd-eyebrow">Yeni içerikler</span>
-              <h2>Son videolar</h2>
-            </div>
-            <Link to="/videolar" className="kd-section-link kd-link-arrow">
-              Tümünü gör <HiOutlineArrowRight />
-            </Link>
-          </div>
-          {videosLoading && recentVideos.length === 0 && (
-            <SkeletonGrid count={4} kind="video" />
-          )}
-          <div className="kd-video-grid">
-            {recentVideos.map((v) => (
-              <a
-                key={v.youtubeId}
-                href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="kd-video-card"
-              >
-                <div className="kd-video-thumb">
-                  <img
-                    src={v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                    alt={`${v.title} — YouTube videosu`}
-                    loading="lazy"
-                    onError={(e) => { e.currentTarget.style.display = 'none' }}
-                  />
-                  <div className="kd-video-shade" />
-                  {parseDuration(v.duration) && (
-                    <span className="kd-video-duration">{parseDuration(v.duration)}</span>
-                  )}
-                  <span className="kd-video-hover-play">
-                    <HiOutlinePlay size={22} />
-                  </span>
-                </div>
-                <div className="kd-video-meta">
-                  <h4 className="kd-video-title">{v.title}</h4>
-                  {v.views && <div className="kd-video-views">{formatViews(v.views)} izlenme</div>}
-                </div>
-              </a>
-            ))}
-          </div>
-        </motion.section>
-      )}
-
-      {/* ===== TOP VIEWED ===== */}
-      {topViewedVideos.length > 0 && (
-        <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-          <div className="kd-section-head kd-row">
-            <div>
-              <span className="kd-eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                <HiOutlineFire /> En çok izlenenler
-              </span>
-              <h2>İzleyici favorileri</h2>
-              <p>Tüm zamanların en yüksek izlenmesi olan videolar.</p>
-            </div>
-            <Link to="/videolar" className="kd-section-link kd-link-arrow">
-              Tümünü gör <HiOutlineArrowRight />
-            </Link>
-          </div>
-          <div className="kd-video-grid">
-            {topViewedVideos.map((v, idx) => (
-              <a
-                key={v.youtubeId}
-                href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="kd-video-card"
-              >
-                <div className="kd-video-thumb">
-                  <img
-                    src={v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                    alt={`${v.title} — YouTube videosu`}
-                    loading="lazy"
-                    onError={(e) => { e.currentTarget.style.display = 'none' }}
-                  />
-                  <div className="kd-video-shade" />
-                  <span className="kd-rank-badge">
-                    <HiOutlineFire /> #{idx + 1}
-                  </span>
-                  {parseDuration(v.duration) && (
-                    <span className="kd-video-duration">{parseDuration(v.duration)}</span>
-                  )}
-                  <span className="kd-video-hover-play">
-                    <HiOutlinePlay size={22} />
-                  </span>
-                </div>
-                <div className="kd-video-meta">
-                  <h4 className="kd-video-title">{v.title}</h4>
-                  {v.views && <div className="kd-video-views">{formatViews(v.views)} izlenme</div>}
-                </div>
-              </a>
-            ))}
-          </div>
-        </motion.section>
-      )}
-
-      {/* ===== POLL ===== */}
-      <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-        <PollWidget />
-      </motion.section>
-
-      {/* ===== ARTICLES ===== */}
-      {blogs.length > 0 && (
-        <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-          <div className="kd-section-head kd-row">
-            <div>
-              <span className="kd-eyebrow">Blog</span>
-              <h2>Son makaleler</h2>
-              <p>Blogumdaki son yazılar — düşüncelerim, ipuçları, perde arkası.</p>
-            </div>
-            <Link to="/blog" className="kd-section-link kd-link-arrow">
-              Tümünü gör <HiOutlineArrowRight />
-            </Link>
-          </div>
-          <div className="kd-article-grid">
-            {blogs.map((b) => (
-              <Link key={b._id || b.slug} to={`/blog/${b.slug}`} className="kd-article-card">
-                <div
-                  className="kd-article-thumb"
-                  style={b.coverImage ? { backgroundImage: `url(${b.coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
-                >
-                  <span className="kd-article-tag">{formatBlogTag(b.category)}</span>
-                  {!b.coverImage && <span className="kd-thumb-mono">K</span>}
-                </div>
-                <div className="kd-article-info">
-                  <h4>{b.title}</h4>
-                  <p>{b.excerpt || b.summary || ''}</p>
-                  <span className="kd-link-arrow kd-link-arrow-sm">
-                    Yazıyı oku <HiOutlineArrowRight />
-                  </span>
-                </div>
+        <MagicBento columns={4} className="hm-about-bento">
+          <MagicBento.Cell span={2} className="hm-bento-large">
+            <div className="hm-bento-padded">
+              <span className="hm-bento-eyebrow">Story</span>
+              <h3 className="hm-bento-title">Kameranın hem önünde hem arkasında.</h3>
+              <p className="hm-bento-text">
+                Çocukluğumdan beri kameranın hem önünde hem arkasında olmayı seviyorum. İlk videomu yıllar önce yükledim ve o günden bu yana izleyicilerimle birlikte büyüyen, evrilen bir kanal kurdum.
+              </p>
+              <Link to="/hakkimda" className="hm-bento-link">
+                Hikayemin devamı <HiOutlineArrowRight />
               </Link>
-            ))}
-          </div>
-        </motion.section>
-      )}
-
-      {/* ===== NEWSLETTER ===== */}
-      <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-        <NewsletterForm />
-      </motion.section>
-
-      {/* ===== INSTAGRAM ===== */}
-      {settings.instagram && (
-        <motion.section className="kd-section" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-          <div className="kd-section-head kd-row">
-            <div>
-              <span className="kd-eyebrow">Sosyal</span>
-              <h2>Instagram</h2>
-              <p>Son paylaşımlarım — fotoğraf, reels ve story arşivi.</p>
             </div>
-            <a
-              href={settings.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="kd-section-link kd-link-arrow"
-            >
-              Profilime git <HiOutlineArrowRight />
-            </a>
+          </MagicBento.Cell>
+
+          <MagicBento.Cell className="hm-bento-stat">
+            <div className="hm-bento-padded hm-bento-stat-inner">
+              <span className="hm-bento-eyebrow">Yıl</span>
+              <span className="hm-bento-bignum">{settings.statsActiveYears || '5+'}</span>
+              <p className="hm-bento-meta">aktif içerik üretimi</p>
+            </div>
+          </MagicBento.Cell>
+
+          <MagicBento.Cell className="hm-bento-stat">
+            <div className="hm-bento-padded hm-bento-stat-inner">
+              <span className="hm-bento-eyebrow">Video</span>
+              <span className="hm-bento-bignum">{settings.statsTotalVideos || '380+'}</span>
+              <p className="hm-bento-meta">yayında olan üretim</p>
+            </div>
+          </MagicBento.Cell>
+
+          <MagicBento.Cell span={2} className="hm-bento-quote">
+            <div className="hm-bento-padded">
+              <span className="hm-bento-eyebrow">Felsefe</span>
+              <p className="hm-bento-quote-text">
+                "Her video, sıradan bir günü ilginç kılmak için yeni bir hikâye anlatma fırsatı."
+              </p>
+              <span className="hm-bento-quote-author">— {brandName}</span>
+            </div>
+          </MagicBento.Cell>
+
+          <MagicBento.Cell span={2} className="hm-bento-image">
+            <ResponsivePortrait alt="Behind the scenes" className="hm-bento-img" sizes="(max-width: 820px) 100vw, 480px" />
+            <div className="hm-bento-image-tag">Behind the scenes</div>
+          </MagicBento.Cell>
+        </MagicBento>
+      </section>
+
+      {/* ═══════════════ FEATURED VIDEO ═══════════════ */}
+      {featuredVideo && (
+        <section className="hm-section">
+          <div className="hm-section-head">
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Bu hafta</span>
+            <h2 className="hm-h2">Öne çıkan bölüm</h2>
           </div>
-          <div className="kd-ig-grid">
-            {instagramShots.map((shot, i) => (
-              <a
-                key={shot.id || shot.url || i}
-                href={shot.url || settings.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="kd-ig-card"
-                aria-label={shot.caption || `Instagram paylaşımı ${i + 1}`}
-                style={shot.thumbnail ? { backgroundImage: `url(${shot.thumbnail})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
-              >
-                {!shot.thumbnail && (
-                  <>
-                    <span className="kd-ig-icon">
-                      <FaInstagram size={22} />
-                    </span>
-                    <span className="kd-ig-caption">{shot.caption || 'Instagram'}</span>
-                  </>
+          <a
+            href={`https://www.youtube.com/watch?v=${featuredVideo.youtubeId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hm-featured"
+          >
+            <div className="hm-featured-thumb">
+              {featuredVideo.thumbnail && (
+                <img src={featuredVideo.thumbnail} alt={featuredVideo.title} loading="lazy" />
+              )}
+              <div className="hm-featured-shade" />
+              <div className="hm-featured-play"><HiOutlinePlay size={48} /></div>
+              {featuredVideo.duration && (
+                <span className="hm-featured-duration">{parseDuration(featuredVideo.duration)}</span>
+              )}
+            </div>
+            <div className="hm-featured-meta">
+              <span className="hm-featured-eyebrow">{featuredVideo.publishedAt ? new Date(featuredVideo.publishedAt).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long' }) : 'Yeni'}</span>
+              <h3 className="hm-featured-title">{featuredVideo.title}</h3>
+              {featuredVideo.views && (
+                <span className="hm-featured-views"><HiOutlineEye size={16} /> {formatViews(featuredVideo.views)} izlenme</span>
+              )}
+            </div>
+          </a>
+        </section>
+      )}
+
+      {/* ═══════════════ LATEST VIDEOS ═══════════════ */}
+      <section className="hm-section">
+        <div className="hm-section-head hm-section-head-row">
+          <div>
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Arşiv</span>
+            <h2 className="hm-h2">Son videolar</h2>
+          </div>
+          <Link to="/videolar" className="hm-section-link">
+            Tümünü gör <HiOutlineArrowRight />
+          </Link>
+        </div>
+
+        {videosLoading ? (
+          <SkeletonGrid count={4} columns={4} />
+        ) : recentVideos.length > 0 ? (
+          <div className="hm-video-grid">
+            {recentVideos.map((v) => (
+              <SpotlightCard key={v.youtubeId} className="hm-video-card">
+                <a href={`https://www.youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noopener noreferrer" className="hm-video-card-link">
+                  <div className="hm-video-thumb">
+                    {v.thumbnail && <img src={v.thumbnail} alt={v.title} loading="lazy" />}
+                    <div className="hm-video-play"><HiOutlinePlay size={24} /></div>
+                    {v.duration && <span className="hm-video-duration">{parseDuration(v.duration)}</span>}
+                  </div>
+                  <div className="hm-video-info">
+                    <h4 className="hm-video-title">{v.title}</h4>
+                    <div className="hm-video-meta">
+                      {v.views && <span><HiOutlineEye size={14} /> {formatViews(v.views)}</span>}
+                    </div>
+                  </div>
+                </a>
+              </SpotlightCard>
+            ))}
+          </div>
+        ) : null}
+      </section>
+
+      {/* ═══════════════ TOP VIEWED ═══════════════ */}
+      {topViewedVideos.length > 0 && (
+        <section className="hm-section">
+          <div className="hm-section-head">
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Favoriler</span>
+            <h2 className="hm-h2">İzleyici favorileri</h2>
+          </div>
+          <div className="hm-top-grid">
+            {topViewedVideos.map((v, i) => (
+              <SpotlightCard key={v.youtubeId} className="hm-top-card">
+                <a href={`https://www.youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noopener noreferrer" className="hm-top-card-link">
+                  <span className="hm-top-rank">{String(i + 1).padStart(2, '0')}</span>
+                  <div className="hm-top-thumb">
+                    {v.thumbnail && <img src={v.thumbnail} alt={v.title} loading="lazy" />}
+                  </div>
+                  <div className="hm-top-info">
+                    <h4>{v.title}</h4>
+                    <span className="hm-top-views"><HiOutlineEye size={14} /> {formatViews(v.views)} izlenme</span>
+                  </div>
+                </a>
+              </SpotlightCard>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════ LATEST BLOG ═══════════════ */}
+      {blogs.length > 0 && (
+        <section className="hm-section">
+          <div className="hm-section-head hm-section-head-row">
+            <div>
+              <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Yazılar</span>
+              <h2 className="hm-h2">Son makaleler</h2>
+            </div>
+            <Link to="/blog" className="hm-section-link">
+              Tüm yazılar <HiOutlineArrowRight />
+            </Link>
+          </div>
+          <div className="hm-blog-grid">
+            {blogs.map((b) => (
+              <SpotlightCard key={b._id || b.slug} className="hm-blog-card">
+                <Link to={`/blog/${b.slug}`} className="hm-blog-card-link">
+                  {b.cover && (
+                    <div className="hm-blog-cover">
+                      <img src={b.cover} alt={b.title} loading="lazy" />
+                    </div>
+                  )}
+                  <div className="hm-blog-info">
+                    <span className="hm-blog-tag">{(b.category || 'YAZI').toUpperCase().slice(0, 14)}</span>
+                    <h4 className="hm-blog-title">{b.title}</h4>
+                    {b.excerpt && <p className="hm-blog-excerpt">{b.excerpt.slice(0, 120)}...</p>}
+                    <span className="hm-blog-link">Devamını oku <HiOutlineArrowRight /></span>
+                  </div>
+                </Link>
+              </SpotlightCard>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════ INSTAGRAM ═══════════════ */}
+      {instagramShots.length > 0 && (
+        <section className="hm-section">
+          <div className="hm-section-head hm-section-head-row">
+            <div>
+              <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Karelet</span>
+              <h2 className="hm-h2">Instagram</h2>
+            </div>
+            {settings.instagram && (
+              <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="hm-section-link">
+                Profili gör <HiOutlineArrowRight />
+              </a>
+            )}
+          </div>
+          <div className="hm-ig-grid">
+            {instagramShots.map((p) => (
+              <a key={p.id || p.url} href={p.url} target="_blank" rel="noopener noreferrer" className="hm-ig-card">
+                {p.image ? (
+                  <img src={p.image} alt={p.caption || 'Instagram'} loading="lazy" />
+                ) : (
+                  <div className="hm-ig-placeholder"><FaInstagram size={24} /></div>
                 )}
-                {shot.thumbnail && <span className="kd-ig-icon kd-ig-icon-overlay"><FaInstagram size={22} /></span>}
-              </a>
-            ))}
-          </div>
-        </motion.section>
-      )}
-
-      {/* ===== FOLLOW ===== */}
-      {socialFollows.length > 0 && (
-        <motion.section className="kd-section kd-follow" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-          <div className="kd-section-head kd-section-head-center">
-            <span className="kd-eyebrow">Birlikte takılalım</span>
-            <h2>Beni takip et</h2>
-            <p>YouTube’un yanı sıra diğer platformlarda da paylaşımlar yapıyorum.</p>
-          </div>
-          <div className="kd-follow-grid">
-            {socialFollows.map((s) => (
-              <a
-                key={s.name}
-                href={s.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="kd-follow-card"
-                style={{ '--social-color': s.color }}
-              >
-                <span className="kd-follow-icon">
-                  <s.icon size={20} />
-                </span>
-                <div className="kd-follow-info">
-                  <div className="kd-follow-name">{s.name}</div>
-                  <div className="kd-follow-meta">{s.meta}</div>
+                <div className="hm-ig-overlay">
+                  <FaInstagram size={22} />
+                  {p.caption && <span>{p.caption}</span>}
                 </div>
-                <HiOutlineArrowRight className="kd-follow-arrow" />
               </a>
             ))}
           </div>
-        </motion.section>
+        </section>
       )}
 
-      {/* ===== FAQ ===== */}
-      <motion.section className="kd-section kd-faq" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-        <div className="kd-section-head kd-section-head-center">
-          <span className="kd-eyebrow">SSS</span>
-          <h2>Sıkça Sorulanlar</h2>
-          <p>Aklındaki sorunun cevabı burada yoksa iletişim sayfasından bana yaz.</p>
-        </div>
-        <div className="kd-faq-grid">
-          {faqs.map((f, i) => (
-            <FAQItem key={i} faq={f} />
-          ))}
-        </div>
-      </motion.section>
+      {/* ═══════════════ SOCIAL FOLLOWS ═══════════════ */}
+      {socialFollows.length > 0 && (
+        <section className="hm-section">
+          <div className="hm-section-head">
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Bağlan</span>
+            <h2 className="hm-h2">Beni takip et</h2>
+          </div>
+          <div className="hm-social-grid">
+            {socialFollows.map((s) => (
+              <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="hm-social-card">
+                <span className="hm-social-icon"><s.icon size={22} /></span>
+                <div className="hm-social-info">
+                  <span className="hm-social-name">{s.name}</span>
+                  {s.meta && <span className="hm-social-meta">{s.meta}</span>}
+                </div>
+                <HiOutlineArrowRight className="hm-social-arrow" />
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* ===== SCROLL VELOCITY MARQUEE ===== */}
-      <section className="kd-velocity-strip" aria-hidden="true">
+      {/* ═══════════════ NEWSLETTER ═══════════════ */}
+      <section className="hm-section">
+        <div className="hm-newsletter">
+          <div className="hm-newsletter-text">
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Bülten</span>
+            <h2 className="hm-h2">Yeni içeriklerden ilk sen haberdar ol.</h2>
+            <p>E-posta listeme katıl; spam yok, sadece önemli güncellemeler.</p>
+          </div>
+          <NewsletterForm />
+        </div>
+      </section>
+
+      {/* ═══════════════ FAQ ═══════════════ */}
+      <section className="hm-section">
+        <div className="hm-section-head hm-section-head-center">
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> SSS</span>
+          <h2 className="hm-h2">Sıkça sorulanlar</h2>
+          <p className="hm-section-sub">Aklındaki sorunun cevabı burada yoksa iletişim sayfasından bana yaz.</p>
+        </div>
+        <div className="hm-faq-list">
+          {faqs.map((f, i) => <FAQItem key={i} faq={f} />)}
+        </div>
+      </section>
+
+      {/* ═══════════════ VELOCITY STRIP ═══════════════ */}
+      <section className="hm-velocity" aria-hidden="true">
         <ScrollVelocity
-          texts={['Kadir Demir • İçerik • Hikâye • İstanbul •', 'Vlog • Oyun • Eğlence • Macera •']}
+          texts={[`${brandName} • Hikâye anlatıcısı • İstanbul •`, 'Vlog • Oyun • Eğlence • Macera •']}
           velocity={60}
         />
       </section>
 
-      {/* ===== CTA STRIP ===== */}
-      <motion.section className="kd-section kd-cta" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-        <div className="kd-cta-card">
-          <div className="kd-cta-text">
-            <h2>Hadi tanışalım.</h2>
-            <p>İş birliği, sponsorluk veya sadece selam vermek için bir mesajını bekliyorum.</p>
+      {/* ═══════════════ CTA ═══════════════ */}
+      <section className="hm-section hm-section-cta">
+        <div className="hm-cta">
+          <div className="hm-cta-glow" />
+          <div className="hm-cta-text">
+            <span className="hm-eyebrow hm-eyebrow-light"><span className="hm-eyebrow-dot" /> Hadi tanışalım</span>
+            <h2 className="hm-h2 hm-cta-title">Bir iş birliği,<br />bir mesaj uzağında.</h2>
+            <p>Sponsorluk, iş birliği veya sadece selam için — her zaman açığım.</p>
           </div>
-          <GlassButton
-            as={Link}
-            to="/iletisim"
-            variant="primary"
-            size="md"
-            iconRight={<HiOutlineArrowRight size={18} />}
-          >
-            İletişime geç
-          </GlassButton>
+          <Link to="/iletisim" className="hm-btn hm-btn-primary hm-btn-lg">
+            İletişime geç <HiOutlineArrowRight />
+          </Link>
         </div>
-      </motion.section>
+      </section>
     </div>
   )
 }

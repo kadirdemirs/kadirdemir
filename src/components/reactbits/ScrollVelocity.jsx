@@ -24,7 +24,7 @@ function VelocityText({
   scrollerClassName = 'scroll-velocity-scroller',
 }) {
   const baseX = useMotionValue(0)
-  const scrollOptions = scrollerRef && scrollerRef.current ? { container: scrollerRef } : {}
+  const scrollOptions = scrollerRef ? { container: scrollerRef } : {}
   const { scrollY } = useScroll(scrollOptions)
   const scrollVelocity = useVelocity(scrollY)
   const smoothVelocity = useSpring(scrollVelocity, { damping, stiffness })
