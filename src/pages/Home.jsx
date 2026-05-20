@@ -27,6 +27,7 @@ import ResponsivePortrait from '../components/ResponsivePortrait'
 import { SkeletonGrid } from '../components/Skeleton'
 import GlassButton from '../components/GlassButton'
 import GradientText from '../components/reactbits/GradientText'
+import ScrollFloat from '../components/reactbits/ScrollFloat'
 import { getYouTubeVideosApi, getBlogsApi } from '../api'
 import './Home.css'
 
@@ -625,7 +626,13 @@ export default function Home() {
       <motion.section className="kd-section kd-faq" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
         <div className="kd-section-head kd-section-head-center">
           <span className="kd-eyebrow">SSS</span>
-          <h2>Sıkça Sorulanlar</h2>
+          <ScrollFloat
+            animationDuration={1}
+            ease="back.inOut(2)"
+            stagger={0.03}
+          >
+            Sıkça Sorulanlar
+          </ScrollFloat>
           <p>Aklındaki sorunun cevabı burada yoksa iletişim sayfasından bana yaz.</p>
         </div>
         <div className="kd-faq-grid">
