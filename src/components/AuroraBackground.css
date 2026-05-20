@@ -9,8 +9,7 @@
   z-index: -1;
   pointer-events: none;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at top, #0c0d11 0%, #08090c 60%, #06070a 100%);
+  background: transparent;
 }
 
 .aurora__orb {

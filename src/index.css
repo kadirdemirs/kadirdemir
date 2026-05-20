@@ -199,9 +199,13 @@ html::-webkit-scrollbar-thumb {
   border-radius: 3px;
 }
 
+html {
+  background-color: var(--bg-primary);
+}
+
 body {
   font-family: var(--font-secondary);
-  background-color: transparent;
+  background-color: var(--bg-primary);
   color: var(--white);
   line-height: 1.6;
   overflow-x: hidden;

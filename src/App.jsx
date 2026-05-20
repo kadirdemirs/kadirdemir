@@ -142,21 +142,21 @@ function App() {
             inset: 0,
             zIndex: -2,
             pointerEvents: 'none',
-            opacity: 0.45,
+            opacity: 0.55,
           }}
         >
           <ColorBends
             colors={COLOR_BENDS_PALETTE}
             rotation={90}
             speed={0.15}
-            scale={1.2}
+            scale={1.4}
             frequency={1}
             warpStrength={1}
-            mouseInfluence={0.4}
-            parallax={0.3}
-            noise={0.1}
+            mouseInfluence={0}
+            parallax={0}
+            noise={0.08}
             iterations={1}
-            intensity={1.2}
+            intensity={1.1}
             bandWidth={6}
             transparent
           />
@@ -212,44 +212,22 @@ function App() {
           <GradualBlur
             target="page"
             position="top"
-            height="5rem"
-            strength={2}
-            divCount={6}
+            height="3.5rem"
+            strength={1.2}
+            divCount={5}
             curve="bezier"
-            exponential
-            opacity={1}
+            opacity={0.9}
             zIndex={90}
           />
           <GradualBlur
             target="page"
             position="bottom"
-            height="5rem"
-            strength={2}
-            divCount={6}
+            height="3.5rem"
+            strength={1.2}
+            divCount={5}
             curve="bezier"
-            exponential
-            opacity={1}
+            opacity={0.9}
             zIndex={90}
-          />
-          <GradualBlur
-            target="page"
-            position="left"
-            height="3rem"
-            strength={1.2}
-            divCount={4}
-            curve="bezier"
-            opacity={0.85}
-            zIndex={89}
-          />
-          <GradualBlur
-            target="page"
-            position="right"
-            height="3rem"
-            strength={1.2}
-            divCount={4}
-            curve="bezier"
-            opacity={0.85}
-            zIndex={89}
           />
         </>
       )}
