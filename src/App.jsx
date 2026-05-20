@@ -12,27 +12,9 @@ import ErrorBoundary from './components/ErrorBoundary'
 import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
 import CommandPalette from './components/CommandPalette'
-import GradualBlur from './components/reactbits/GradualBlur'
 import ColorBends from './components/reactbits/ColorBends'
-import StaggeredMenu from './components/reactbits/StaggeredMenu'
 
-const MENU_ITEMS = [
-  { label: 'Ana Sayfa', ariaLabel: 'Ana sayfaya git', link: '/' },
-  { label: 'Hakkımda', ariaLabel: 'Hakkımda sayfası', link: '/hakkimda' },
-  { label: 'Blog', ariaLabel: 'Blog yazıları', link: '/blog' },
-  { label: 'Videolar', ariaLabel: 'Video arşivi', link: '/videolar' },
-  { label: 'Setup', ariaLabel: 'Çalışma setup\'ı', link: '/setup' },
-  { label: 'İletişim', ariaLabel: 'İletişime geç', link: '/iletisim' }
-]
-
-const SOCIAL_ITEMS = [
-  { label: 'YouTube', link: 'https://youtube.com/@kadirdemir' },
-  { label: 'Instagram', link: 'https://instagram.com/kadirardademirrr' },
-  { label: 'TikTok', link: 'https://tiktok.com/@kadirdemirs' },
-  { label: 'X', link: 'https://x.com/kadirdemir' }
-]
-
-const COLOR_BENDS_PALETTE = ['#ff5c7a', '#8a5cff', '#00ffd1']
+const COLOR_BENDS_PALETTE = ['#5eead4', '#8a5cff', '#ff5c7a']
 
 // Core pages — direct import for instant first render
 import Home from './pages/Home'
@@ -142,22 +124,23 @@ function App() {
             inset: 0,
             zIndex: -2,
             pointerEvents: 'none',
-            opacity: 0.55,
+            opacity: 0.35,
           }}
         >
           <ColorBends
             colors={COLOR_BENDS_PALETTE}
-            rotation={90}
-            speed={0.15}
-            scale={1.4}
-            frequency={1}
-            warpStrength={1}
+            rotation={120}
+            autoRotate={2}
+            speed={0.1}
+            scale={1.8}
+            frequency={0.8}
+            warpStrength={0.6}
             mouseInfluence={0}
             parallax={0}
-            noise={0.08}
+            noise={0.05}
             iterations={1}
-            intensity={1.1}
-            bandWidth={6}
+            intensity={1}
+            bandWidth={7}
             transparent
           />
         </div>
@@ -165,22 +148,6 @@ function App() {
       {!isAdmin && <LiveBanner />}
       {!isAdmin && <AuroraBackground />}
       {!isAdmin && <Navbar />}
-      {!isAdmin && (
-        <StaggeredMenu
-          position="right"
-          isFixed
-          items={MENU_ITEMS}
-          socialItems={SOCIAL_ITEMS}
-          displaySocials
-          displayItemNumbering
-          menuButtonColor="#fff"
-          openMenuButtonColor="#111"
-          changeMenuColorOnOpen
-          colors={['#B497CF', '#5227FF']}
-          logoUrl="/logo.png"
-          accentColor="#ff5c7a"
-        />
-      )}
       <main id="main-content">
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={location} key={location.pathname}>
@@ -207,30 +174,6 @@ function App() {
       {!isAdmin && <Footer />}
       {!isAdmin && <InstallPrompt />}
       {!isAdmin && <CommandPalette />}
-      {!isAdmin && (
-        <>
-          <GradualBlur
-            target="page"
-            position="top"
-            height="3.5rem"
-            strength={1.2}
-            divCount={5}
-            curve="bezier"
-            opacity={0.9}
-            zIndex={90}
-          />
-          <GradualBlur
-            target="page"
-            position="bottom"
-            height="3.5rem"
-            strength={1.2}
-            divCount={5}
-            curve="bezier"
-            opacity={0.9}
-            zIndex={90}
-          />
-        </>
-      )}
     </>
   )
 }
