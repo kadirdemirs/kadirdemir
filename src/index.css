@@ -205,13 +205,21 @@ html {
 
 body {
   font-family: var(--font-secondary);
-  background-color: var(--bg-primary);
+  background-color: transparent;
   color: var(--white);
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   letter-spacing: 0.01em;
+}
+
+/* Site-wide ColorBends background — sits behind everything except <html> canvas */
+.kd-color-bends-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
 body::after {

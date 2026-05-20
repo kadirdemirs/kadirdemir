@@ -119,13 +119,7 @@ function App() {
       {!isAdmin && (
         <div
           aria-hidden="true"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: -2,
-            pointerEvents: 'none',
-            opacity: 0.35,
-          }}
+          className="kd-color-bends-bg"
         >
           <ColorBends
             colors={COLOR_BENDS_PALETTE}
@@ -139,7 +133,7 @@ function App() {
             parallax={0}
             noise={0.05}
             iterations={1}
-            intensity={1}
+            intensity={0.6}
             bandWidth={7}
             transparent
           />
