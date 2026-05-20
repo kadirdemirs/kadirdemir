@@ -73,11 +73,24 @@
   color: var(--text-primary);
 }
 
+.hm-h2-vp .vp {
+  font-family: var(--font-display);
+  font-size: inherit;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.hm-h2-vp .vp-char {
+  font-weight: 600;
+}
+
 .hm-accent {
-  background: linear-gradient(135deg, #fbbf24 0%, #fb923c 100%);
+  background: var(--gradient-cyber);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: hm-gradient-shift 6s ease infinite;
 }
 
 .hm-eyebrow {
@@ -93,12 +106,15 @@
 }
 
 .hm-eyebrow-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: var(--primary);
-  box-shadow: 0 0 12px var(--primary-glow);
-  animation: hm-pulse 2.4s ease-in-out infinite;
+  background: var(--accent-pink);
+  box-shadow:
+    0 0 8px var(--accent-pink),
+    0 0 16px rgba(236, 72, 153, 0.5),
+    0 0 24px rgba(168, 85, 247, 0.3);
+  animation: hm-pulse 1.8s ease-in-out infinite;
 }
 
 .hm-eyebrow-light {
@@ -121,6 +137,17 @@
 .hm-hero {
   padding: 24px 0 80px;
   position: relative;
+  isolation: isolate;
+}
+
+.hm-hero-particles {
+  position: absolute;
+  inset: -40px -40px 40px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.5;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 0%, transparent 75%);
 }
 
 .hm-hero-grid {
@@ -137,11 +164,11 @@
 
 .hm-hero-title {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  margin: 8px 0 32px;
-  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+  margin: 12px 0 36px;
+  font-size: clamp(3.4rem, 11vw, 9rem);
 }
 
 .hm-hero-line {
@@ -150,22 +177,34 @@
 }
 
 .hm-hero-line-1 {
-  color: var(--text-secondary);
-  font-weight: 500;
-  font-size: 0.85em;
+  color: var(--text-tertiary);
+  font-weight: 400;
+  font-size: 0.32em;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.4em;
 }
 
 .hm-hero-line-2 {
   color: var(--text-primary);
+  text-shadow: 0 0 60px rgba(245, 158, 11, 0.18);
 }
 
 .hm-hero-line-3 {
-  background: linear-gradient(180deg, var(--text-tertiary) 0%, var(--primary) 90%);
+  background: var(--gradient-cyber);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 0.85em;
-  font-weight: 500;
+  font-size: 0.82em;
+  font-weight: 700;
+  animation: hm-gradient-shift 8s ease infinite;
+  filter: drop-shadow(0 0 32px rgba(236, 72, 153, 0.25));
+}
+
+@keyframes hm-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .hm-hero-sub {
@@ -260,17 +299,24 @@
 }
 
 .hm-btn-primary {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--bg-0);
-  box-shadow: 0 8px 28px -8px rgba(245, 158, 11, 0.45);
+  background: var(--gradient-cyber);
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  border-color: transparent;
+  color: #fff;
+  box-shadow:
+    0 8px 28px -8px rgba(245, 158, 11, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  transition: all var(--transition-normal), background-position 0.6s ease;
 }
 
 .hm-btn-primary:hover {
-  background: var(--primary-light);
-  border-color: var(--primary-light);
+  background-position: 100% 50%;
   transform: translateY(-2px);
-  box-shadow: 0 14px 36px -10px rgba(245, 158, 11, 0.6);
+  box-shadow:
+    0 14px 36px -10px rgba(236, 72, 153, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 0 40px rgba(168, 85, 247, 0.4);
 }
 
 .hm-btn-ghost {

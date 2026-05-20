@@ -31,10 +31,29 @@
 }
 
 .ft-mega-accent {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #b45309 100%);
+  background: linear-gradient(
+    100deg,
+    #f59e0b 0%,
+    #ec4899 25%,
+    #a855f7 50%,
+    #06b6d4 75%,
+    #f59e0b 100%
+  );
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: ft-iridescent 9s linear infinite;
+  filter: drop-shadow(0 0 40px rgba(236, 72, 153, 0.3));
+}
+
+@keyframes ft-iridescent {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-mega-accent { animation: none; }
 }
 
 .ft-mega-dot {
@@ -80,11 +99,12 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  background: var(--primary);
-  color: var(--bg-0);
+  background: var(--gradient-cyber);
+  color: #fff;
   border-radius: 10px;
   font-size: 0.88rem;
   font-weight: 700;
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.35);
 }
 
 .ft-tagline {

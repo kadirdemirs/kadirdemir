@@ -1,0 +1,17 @@
+.vp {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.vp-char {
+  display: inline-block;
+  font-variation-settings: 'wght' 400;
+  transition: font-variation-settings 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: pre;
+}
+
+@media (pointer: coarse) {
+  .vp-char {
+    transition: none;
+  }
+}

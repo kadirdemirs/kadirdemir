@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+﻿import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import { ObjectId } from 'mongodb';
 import { getDb, isValidObjectId } from './_lib/mongodb.js';
@@ -128,7 +128,7 @@ export default async function handler(req, res) {
             <a href="${unsubLink}" style="color:#888;">Abonelikten çık</a>
           </div>`;
           await transporter.sendMail({
-            from: `"Kade Media" <${process.env.SMTP_USER}>`,
+            from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
             to: sub.email,
             subject: escapeHtml(subject),
             html: safeHtml,
@@ -188,16 +188,16 @@ export default async function handler(req, res) {
       if (transporter) {
         const mailTo = process.env.MAIL_TO || 'thekademedia@gmail.com';
         transporter.sendMail({
-          from: `"Kade Media Website" <${process.env.SMTP_USER}>`,
+          from: `"Kadir Demir Website" <${process.env.SMTP_USER}>`,
           to: mailTo,
           subject: `💼 Kariyer Başvurusu: ${escapeHtml(name)} — ${escapeHtml(position)}`,
           html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#0a0a0a;color:#fff;border-radius:12px;"><h2 style="color:#eac321;">💼 Kariyer Başvurusu</h2><table style="width:100%;border-collapse:collapse;"><tr><td style="color:#888;padding:6px 0;width:120px;">Ad Soyad</td><td style="color:#fff;font-weight:600;">${escapeHtml(name)}</td></tr><tr><td style="color:#888;padding:6px 0;">E-posta</td><td style="color:#eac321;">${escapeHtml(email)}</td></tr><tr><td style="color:#888;padding:6px 0;">Telefon</td><td style="color:#fff;">${escapeHtml(phone || '-')}</td></tr><tr><td style="color:#888;padding:6px 0;">Pozisyon</td><td style="color:#fff;">${escapeHtml(position)}</td></tr></table>${coverLetter ? `<div style="margin-top:16px;padding:14px;background:#1a1a1a;border-radius:8px;border-left:3px solid #eac321;"><p style="color:#ccc;margin:0;line-height:1.6;white-space:pre-wrap;">${escapeHtml(coverLetter)}</p></div>` : ''}</div>`,
         }).catch(() => {});
         transporter.sendMail({
-          from: `"Kade Media" <${process.env.SMTP_USER}>`,
+          from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
           to: email,
-          subject: 'Başvurunuz Alındı — Kade Media',
-          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><h2 style="color:#eac321;">Kade Media</h2><h3>Merhaba ${escapeHtml(name)},</h3><p style="color:#ccc;line-height:1.8;"><strong style="color:#eac321;">${escapeHtml(position)}</strong> pozisyonu için başvurunuz alındı. İnceleme sonrasında sizinle iletişime geçeceğiz.</p><p style="color:#888;font-size:12px;margin-top:24px;">Kade Media | hello@kademedia.com | +90 506 729 34 23</p></div>`,
+          subject: 'Başvurunuz Alındı — Kadir Demir',
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><h2 style="color:#eac321;">Kadir Demir</h2><h3>Merhaba ${escapeHtml(name)},</h3><p style="color:#ccc;line-height:1.8;"><strong style="color:#eac321;">${escapeHtml(position)}</strong> pozisyonu için başvurunuz alındı. İnceleme sonrasında sizinle iletişime geçeceğiz.</p><p style="color:#888;font-size:12px;margin-top:24px;">Kadir Demir | hello@kademedia.com | +90 506 729 34 23</p></div>`,
         }).catch(() => {});
       }
       return res.status(200).json({ message: 'Başvurunuz başarıyla alındı!' });
@@ -254,7 +254,7 @@ export default async function handler(req, res) {
         // Notify thekademedia@gmail.com
         const mailTo = process.env.MAIL_TO || 'thekademedia@gmail.com';
         transporter.sendMail({
-          from: `"Kade Media Website" <${process.env.SMTP_USER}>`,
+          from: `"Kadir Demir Website" <${process.env.SMTP_USER}>`,
           to: mailTo,
           subject: `📊 Yeni Analiz Lead: ${email} — Skor: ${safeScore}/100`,
           html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#0a0a0a;color:#fff;border-radius:12px;"><h2 style="color:#eac321;">📊 Yeni Sosyal Medya Analiz Lead</h2><table style="width:100%;border-collapse:collapse;"><tr><td style="padding:8px 0;color:#888;width:140px;">E-posta</td><td style="padding:8px 0;color:#eac321;font-weight:600;">${escapeHtml(email)}</td></tr><tr><td style="padding:8px 0;color:#888;">Platformlar</td><td style="padding:8px 0;color:#fff;">${escapeHtml(platformList)}</td></tr><tr><td style="padding:8px 0;color:#888;">Skor</td><td style="padding:8px 0;color:${scoreColor};font-weight:700;font-size:1.2em;">${safeScore}/100 — ${scoreLabel}</td></tr></table><table style="width:100%;border-collapse:collapse;margin-top:16px;background:#1a1a1a;border-radius:8px;">${catRows}</table></div>`,
@@ -262,10 +262,10 @@ export default async function handler(req, res) {
 
         // Send report to user
         transporter.sendMail({
-          from: `"Kade Media" <${process.env.SMTP_USER}>`,
+          from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
           to: email,
           subject: `Sosyal Medya Analiz Raporunuz — ${safeScore}/100 Puan`,
-          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;"><h1 style="color:#eac321;margin:0;">Kade Media</h1><p style="color:#888;margin:8px 0 0;">Sosyal Medya Analiz Raporu</p></div><div style="padding:30px 20px;"><div style="text-align:center;margin-bottom:24px;"><div style="display:inline-block;width:100px;height:100px;border-radius:50%;border:3px solid ${scoreColor};line-height:100px;font-size:2rem;font-weight:700;color:${scoreColor};">${safeScore}</div><div style="color:#888;font-size:0.85rem;margin-top:4px;">/100 — ${scoreLabel}</div></div><p style="color:#ccc;line-height:1.8;">Merhaba,</p><p style="color:#ccc;line-height:1.8;">Sosyal medya hesaplarınızın analizini tamamladık. İşte detaylı sonuçlarınız:</p><table style="width:100%;border-collapse:collapse;margin:16px 0;background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;">${catRows}</table><p style="color:#ccc;line-height:1.8;">Hesaplarınızı daha da güçlendirmek için uzman ekibimizle ücretsiz bir görüşme yapabilirsiniz.</p><div style="text-align:center;margin:24px 0;"><a href="https://kademedia.com.tr/iletisim" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">Ücretsiz Danışmanlık Al →</a></div><hr style="border:none;border-top:1px solid #333;margin:24px 0;"/><p style="color:#888;font-size:12px;">Kade Media | Biruni Teknopark, Zeytinburnu/İstanbul<br/>hello@kademedia.com | +90 506 729 34 23</p></div></div>`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;"><h1 style="color:#eac321;margin:0;">Kadir Demir</h1><p style="color:#888;margin:8px 0 0;">Sosyal Medya Analiz Raporu</p></div><div style="padding:30px 20px;"><div style="text-align:center;margin-bottom:24px;"><div style="display:inline-block;width:100px;height:100px;border-radius:50%;border:3px solid ${scoreColor};line-height:100px;font-size:2rem;font-weight:700;color:${scoreColor};">${safeScore}</div><div style="color:#888;font-size:0.85rem;margin-top:4px;">/100 — ${scoreLabel}</div></div><p style="color:#ccc;line-height:1.8;">Merhaba,</p><p style="color:#ccc;line-height:1.8;">Sosyal medya hesaplarınızın analizini tamamladık. İşte detaylı sonuçlarınız:</p><table style="width:100%;border-collapse:collapse;margin:16px 0;background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;">${catRows}</table><p style="color:#ccc;line-height:1.8;">Hesaplarınızı daha da güçlendirmek için uzman ekibimizle ücretsiz bir görüşme yapabilirsiniz.</p><div style="text-align:center;margin:24px 0;"><a href="https://kademedia.com.tr/iletisim" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">Ücretsiz Danışmanlık Al →</a></div><hr style="border:none;border-top:1px solid #333;margin:24px 0;"/><p style="color:#888;font-size:12px;">Kadir Demir | Biruni Teknopark, Zeytinburnu/İstanbul<br/>hello@kademedia.com | +90 506 729 34 23</p></div></div>`,
         }).catch(() => {});
       }
 
@@ -292,7 +292,7 @@ export default async function handler(req, res) {
         { email: email.toLowerCase() },
         { $set: { status: 'unsubscribed', unsubscribedAt: new Date() } }
       );
-      return res.status(200).send('<html><body style="font-family:Arial;text-align:center;padding:60px;background:#0a0a0a;color:#fff"><h2 style="color:#eac321">Aboneliğiniz iptal edildi.</h2><p style="color:#888">Kade Media bülteninden başarıyla çıktınız.</p></body></html>');
+      return res.status(200).send('<html><body style="font-family:Arial;text-align:center;padding:60px;background:#0a0a0a;color:#fff"><h2 style="color:#eac321">Aboneliğiniz iptal edildi.</h2><p style="color:#888">Kadir Demir bülteninden başarıyla çıktınız.</p></body></html>');
     } catch {
       return res.status(500).send('<html><body style="font-family:Arial;text-align:center;padding:60px;background:#0a0a0a;color:#fff"><h2>Bir hata oluştu, lütfen tekrar deneyin.</h2></body></html>');
     }
@@ -379,13 +379,13 @@ export default async function handler(req, res) {
     if (transporter) {
       try {
         await transporter.sendMail({
-          from: `"Kade Media Website" <${process.env.SMTP_USER}>`,
+          from: `"Kadir Demir Website" <${process.env.SMTP_USER}>`,
           to: mailTo,
           subject: `🔔 Yeni Lead: ${escapeHtml(name)} — ${service || 'Genel'}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#0a0a0a;color:#fff;border-radius:12px;">
               <div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;">
-                <h1 style="color:#eac321;margin:0;">⚡ Kade Media</h1>
+                <h1 style="color:#eac321;margin:0;">⚡ Kadir Demir</h1>
                 <p style="color:#888;margin:8px 0 0">Yeni Lead Bildirimi</p>
               </div>
               <div style="padding:30px 20px;">
@@ -413,13 +413,13 @@ export default async function handler(req, res) {
       // Thank you email
       try {
         await transporter.sendMail({
-          from: `"Kade Media" <${process.env.SMTP_USER}>`,
+          from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
           to: email,
-          subject: 'Mesajınız Alındı — Kade Media',
+          subject: 'Mesajınız Alındı — Kadir Demir',
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;">
               <div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;">
-                <h1 style="color:#eac321;margin:0;">Kade Media</h1>
+                <h1 style="color:#eac321;margin:0;">Kadir Demir</h1>
               </div>
               <div style="padding:30px 20px;">
                 <h2 style="color:#fff;">Merhaba ${escapeHtml(name)},</h2>
@@ -429,7 +429,7 @@ export default async function handler(req, res) {
                   <a href="https://wa.me/905067293423" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">WhatsApp'tan Yaz</a>
                 </div>
                 <hr style="border:none;border-top:1px solid #333;margin:24px 0;" />
-                <p style="color:#888;font-size:13px;">Kade Media | Biruni Teknopark, Zeytinburnu/İstanbul<br/>hello@kademedia.com | +90 506 729 34 23</p>
+                <p style="color:#888;font-size:13px;">Kadir Demir | Biruni Teknopark, Zeytinburnu/İstanbul<br/>hello@kademedia.com | +90 506 729 34 23</p>
               </div>
             </div>
           `,

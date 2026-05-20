@@ -49,9 +49,10 @@
   font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  background: var(--primary);
-  color: var(--bg-0);
+  background: var(--gradient-cyber);
+  color: #fff;
   border-radius: 10px;
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.35);
 }
 
 .nv-brand-text {
@@ -99,11 +100,13 @@
   left: 50%;
   bottom: -2px;
   transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: var(--primary);
-  box-shadow: 0 0 8px var(--primary-glow);
+  background: var(--accent-pink);
+  box-shadow:
+    0 0 8px var(--accent-pink),
+    0 0 16px rgba(236, 72, 153, 0.6);
 }
 
 /* ─── Actions ─── */

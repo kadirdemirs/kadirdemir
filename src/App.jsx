@@ -14,7 +14,7 @@ import CommandPalette from './components/CommandPalette'
 import Aurora from './components/reactbits/Aurora'
 import ClickSpark from './components/reactbits/ClickSpark'
 
-const AURORA_COLORS = ['#f59e0b', '#fb923c', '#b45309']
+const AURORA_COLORS = ['#f59e0b', '#ec4899', '#a855f7']
 
 // Core pages — direct import for instant first render
 import Home from './pages/Home'

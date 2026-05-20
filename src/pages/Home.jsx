@@ -27,6 +27,12 @@ import BlurText from '../components/reactbits/BlurText'
 import MagicBento from '../components/reactbits/MagicBento'
 import SpotlightCard from '../components/reactbits/SpotlightCard'
 import ScrollVelocity from '../components/reactbits/ScrollVelocity'
+import TiltedCard from '../components/reactbits/TiltedCard'
+import GlareHover from '../components/reactbits/GlareHover'
+import Particles from '../components/reactbits/Particles'
+import DecryptedText from '../components/reactbits/DecryptedText'
+import Magnet from '../components/reactbits/Magnet'
+import VariableProximity from '../components/reactbits/VariableProximity'
 import { getYouTubeVideosApi, getBlogsApi } from '../api'
 import './Home.css'
 
@@ -155,6 +161,14 @@ export default function Home() {
 
       {/* ═══════════════ HERO ═══════════════ */}
       <section className="hm-hero">
+        <div className="hm-hero-particles" aria-hidden="true">
+          <Particles
+            particleColors={['#f59e0b', '#a855f7', '#ec4899', '#06b6d4']}
+            particleCount={90}
+            particleBaseSize={70}
+            alphaParticles
+          />
+        </div>
         <div className="hm-hero-grid">
           <div className="hm-hero-left">
             <motion.span
@@ -163,7 +177,14 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <span className="hm-eyebrow-dot" /> Yeni bölüm yayında
+              <span className="hm-eyebrow-dot" />{' '}
+              <DecryptedText
+                text="Yeni bölüm yayında"
+                speed={40}
+                sequential
+                revealDirection="start"
+                animateOn="view"
+              />
             </motion.span>
 
             <h1 className="hm-hero-title">
@@ -202,12 +223,16 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              <a href={subscribeUrl} target="_blank" rel="noopener noreferrer" className="hm-btn hm-btn-primary">
-                <FaYoutube size={18} /> Kanalıma abone ol
-              </a>
-              <Link to="/videolar" className="hm-btn hm-btn-ghost">
-                <HiOutlinePlay size={18} /> Videoları izle
-              </Link>
+              <Magnet padding={70} magnetStrength={0.3}>
+                <a href={subscribeUrl} target="_blank" rel="noopener noreferrer" className="hm-btn hm-btn-primary">
+                  <FaYoutube size={18} /> Kanalıma abone ol
+                </a>
+              </Magnet>
+              <Magnet padding={70} magnetStrength={0.3}>
+                <Link to="/videolar" className="hm-btn hm-btn-ghost">
+                  <HiOutlinePlay size={18} /> Videoları izle
+                </Link>
+              </Magnet>
             </motion.div>
           </div>
 
@@ -217,13 +242,15 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="hm-hero-portrait">
-              <ResponsivePortrait alt={`${brandName} portresi`} className="hm-hero-portrait-img" sizes="(max-width: 820px) 100vw, 520px" />
-              <div className="hm-hero-portrait-tag">
-                <HiOutlineSparkles size={14} />
-                <span>Stüdyodan</span>
+            <TiltedCard rotateAmplitude={10} scaleOnHover={1.04} className="hm-hero-tilt">
+              <div className="hm-hero-portrait">
+                <ResponsivePortrait alt={`${brandName} portresi`} className="hm-hero-portrait-img" sizes="(max-width: 820px) 100vw, 520px" />
+                <div className="hm-hero-portrait-tag">
+                  <HiOutlineSparkles size={14} />
+                  <span>Stüdyodan</span>
+                </div>
               </div>
-            </div>
+            </TiltedCard>
           </motion.div>
         </div>
 
@@ -317,16 +344,18 @@ export default function Home() {
             rel="noopener noreferrer"
             className="hm-featured"
           >
-            <div className="hm-featured-thumb">
-              {featuredVideo.thumbnail && (
-                <img src={featuredVideo.thumbnail} alt={featuredVideo.title} loading="lazy" />
-              )}
-              <div className="hm-featured-shade" />
-              <div className="hm-featured-play"><HiOutlinePlay size={48} /></div>
-              {featuredVideo.duration && (
-                <span className="hm-featured-duration">{parseDuration(featuredVideo.duration)}</span>
-              )}
-            </div>
+            <TiltedCard rotateAmplitude={8} scaleOnHover={1.02} className="hm-featured-tilt">
+              <GlareHover className="hm-featured-thumb" glareColor="rgba(245, 158, 11, 0.25)">
+                {featuredVideo.thumbnail && (
+                  <img src={featuredVideo.thumbnail} alt={featuredVideo.title} loading="lazy" />
+                )}
+                <div className="hm-featured-shade" />
+                <div className="hm-featured-play"><HiOutlinePlay size={48} /></div>
+                {featuredVideo.duration && (
+                  <span className="hm-featured-duration">{parseDuration(featuredVideo.duration)}</span>
+                )}
+              </GlareHover>
+            </TiltedCard>
             <div className="hm-featured-meta">
               <span className="hm-featured-eyebrow">{featuredVideo.publishedAt ? new Date(featuredVideo.publishedAt).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long' }) : 'Yeni'}</span>
               <h3 className="hm-featured-title">{featuredVideo.title}</h3>
@@ -472,7 +501,15 @@ export default function Home() {
         <section className="hm-section">
           <div className="hm-section-head">
             <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Bağlan</span>
-            <h2 className="hm-h2">Beni takip et</h2>
+            <h2 className="hm-h2 hm-h2-vp">
+              <VariableProximity
+                label="Beni takip et"
+                fromFontVariationSettings="'wght' 500"
+                toFontVariationSettings="'wght' 900"
+                radius={140}
+                falloff="exponential"
+              />
+            </h2>
           </div>
           <div className="hm-social-grid">
             {socialFollows.map((s) => (
@@ -530,9 +567,11 @@ export default function Home() {
             <h2 className="hm-h2 hm-cta-title">Bir iş birliği,<br />bir mesaj uzağında.</h2>
             <p>Sponsorluk, iş birliği veya sadece selam için — her zaman açığım.</p>
           </div>
-          <Link to="/iletisim" className="hm-btn hm-btn-primary hm-btn-lg">
-            İletişime geç <HiOutlineArrowRight />
-          </Link>
+          <Magnet padding={90} magnetStrength={0.35}>
+            <Link to="/iletisim" className="hm-btn hm-btn-primary hm-btn-lg">
+              İletişime geç <HiOutlineArrowRight />
+            </Link>
+          </Magnet>
         </div>
       </section>
     </div>
