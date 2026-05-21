@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import {
   HiOutlineSun,
   HiOutlineMoon,
@@ -7,16 +8,17 @@ import {
   HiOutlineMenu,
   HiOutlineX,
 } from 'react-icons/hi'
+import { HiArrowUpRight } from 'react-icons/hi2'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useTheme } from '../i18n/ThemeContext'
 import { useLanguage } from '../i18n/LanguageContext'
 import './Navbar.css'
 
 const navLinks = [
-  { name: 'Hakkımda', path: '/hakkimda' },
+  { name: 'Ana Sayfa', path: '/' },
   { name: 'Videolar', path: '/videolar' },
+  { name: 'Hakkımda', path: '/hakkimda' },
   { name: 'Blog', path: '/blog' },
-  { name: 'Setup', path: '/setup' },
   { name: 'İletişim', path: '/iletisim' },
 ]
 
@@ -41,11 +43,16 @@ export default function Navbar() {
   const brandName = settings.businessName || 'Kadir Demir'
 
   return (
-    <nav className={`nv ${scrolled ? 'nv--scrolled' : ''} ${isOpen ? 'nv--open' : ''}`}>
-      <div className="nv-inner">
+    <motion.nav
+      className={`nv ${scrolled ? 'nv--scrolled' : ''} ${isOpen ? 'nv--open' : ''}`}
+      initial={{ y: -30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+    >
+      <div className="nv-pill">
         <Link to="/" className="nv-brand" aria-label={brandName}>
-          <span className="nv-brand-mark">KD</span>
-          <span className="nv-brand-text">{brandName.toLowerCase()}<span className="nv-brand-dot">.</span></span>
+          <span className="nv-brand-text">{brandName.split(' ')[0].toLowerCase()}</span>
+          <span className="nv-brand-dot" />
         </Link>
 
         <div className="nv-links" role="navigation">
@@ -68,11 +75,11 @@ export default function Navbar() {
             title="Ctrl+K"
             onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
           >
-            <HiOutlineSearch size={18} />
+            <HiOutlineSearch size={16} />
           </button>
           <button
             type="button"
-            className="nv-icon"
+            className="nv-icon nv-icon-text-btn"
             aria-label={lang === 'tr' ? 'Switch to English' : 'Türkçeye geç'}
             onClick={toggleLang}
           >
@@ -84,8 +91,14 @@ export default function Navbar() {
             aria-label="Tema değiştir"
             onClick={toggleTheme}
           >
-            {theme === 'dark' ? <HiOutlineSun size={18} /> : <HiOutlineMoon size={18} />}
+            {theme === 'dark' ? <HiOutlineSun size={16} /> : <HiOutlineMoon size={16} />}
           </button>
+
+          <Link to="/iletisim" className="nv-cta">
+            <span>Bana Ulaş</span>
+            <span className="nv-cta-arrow"><HiArrowUpRight size={14} /></span>
+          </Link>
+
           <button
             type="button"
             className="nv-mobile-toggle"
@@ -101,18 +114,21 @@ export default function Navbar() {
       {/* Mobile drawer */}
       <div className="nv-drawer" aria-hidden={!isOpen}>
         <div className="nv-drawer-inner">
-          {navLinks.map((l) => (
+          {navLinks.map((l, i) => (
             <Link
               key={l.path}
               to={l.path}
               className={`nv-drawer-link ${location.pathname === l.path ? 'is-active' : ''}`}
             >
-              <span className="nv-drawer-num">{String(navLinks.indexOf(l) + 1).padStart(2, '0')}</span>
+              <span className="nv-drawer-num">{String(i + 1).padStart(2, '0')}</span>
               {l.name}
             </Link>
           ))}
+          <Link to="/iletisim" className="nv-drawer-cta">
+            Bana Ulaş <HiArrowUpRight size={16} />
+          </Link>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   )
 }

@@ -13,7 +13,6 @@ import {
   HiOutlineEye,
   HiOutlineVideoCamera,
   HiOutlineChevronDown,
-  HiOutlineSparkles,
 } from 'react-icons/hi2'
 import { useEffect, useState } from 'react'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
@@ -22,6 +21,7 @@ import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../componen
 import CountUp from '../components/CountUp'
 import NewsletterForm from '../components/NewsletterForm'
 import ResponsivePortrait from '../components/ResponsivePortrait'
+import HeroComposition from '../components/HeroComposition'
 import { SkeletonGrid } from '../components/Skeleton'
 import BlurText from '../components/reactbits/BlurText'
 import MagicBento from '../components/reactbits/MagicBento'
@@ -66,6 +66,21 @@ function parseDuration(iso) {
   return h > 0 ? `${h}:${pad(min)}:${pad(s)}` : `${min}:${pad(s)}`
 }
 
+// Demo fallback content — API yokken bile dolu görünsün
+const DEMO_VIDEOS = [
+  { youtubeId: 'demo1', title: 'İstanbul sokaklarında 24 saat — vlog #042', thumbnail: '', views: 184000, duration: 'PT12M34S', publishedAt: '2026-05-18' },
+  { youtubeId: 'demo2', title: 'Yeni setup turu — masamda neler değişti?', thumbnail: '', views: 96400, duration: 'PT9M12S', publishedAt: '2026-05-12' },
+  { youtubeId: 'demo3', title: 'Bu oyunu 8 saat üst üste oynadım', thumbnail: '', views: 142500, duration: 'PT14M55S', publishedAt: '2026-05-08' },
+  { youtubeId: 'demo4', title: 'Bir günlük kamera arkası — yeni bölüm', thumbnail: '', views: 78900, duration: 'PT7M48S', publishedAt: '2026-05-03' },
+  { youtubeId: 'demo5', title: 'Topluluk Q&A — sorularınızı yanıtladım', thumbnail: '', views: 312000, duration: 'PT18M20S', publishedAt: '2026-04-26' },
+]
+
+const DEMO_BLOGS = [
+  { slug: 'icerik-uretmenin-mutfagi', title: 'İçerik üretmenin mutfağı: planlama, kurgu, yayın', excerpt: 'Bir videonun arkasında olup biten saatleri ve karar süreçlerini paylaşıyorum.', category: 'Yazı', cover: '' },
+  { slug: 'kamera-onunde-rahat-olmak', title: 'Kameranın önünde rahat olmak nasıl öğrenilir?', excerpt: 'İlk videodan bugüne — kamera korkusunu yenmenin küçük alışkanlıkları.', category: 'Süreç', cover: '' },
+  { slug: 'youtube-algoritmasi-2026', title: '2026 YouTube algoritması: ne değişti?', excerpt: 'Watch time, retention ve CTR üçgeninde son aylarda gözlemlediklerim.', category: 'Strateji', cover: '' },
+]
+
 const faqs = [
   { q: 'Yeni videoları ne sıklıkla yüklüyorsun?', a: 'Haftada 2-3 yeni video yüklemeye gayret ediyorum. YouTube’da zile basarsan bildirimleri kaçırmazsın.' },
   { q: 'Sponsorluklara açık mısın?', a: 'Markalarla uzun vadeli ve doğru kitleye hitap eden iş birliklerine açığım. İş birliği e-posta adresimden ulaşabilirsiniz.' },
@@ -105,15 +120,19 @@ export default function Home() {
 
   useEffect(() => {
     getYouTubeVideosApi()
-      .then((res) => { if (res?.videos) setVideos(res.videos) })
-      .catch(() => {})
+      .then((res) => {
+        if (res?.videos?.length) setVideos(res.videos)
+        else setVideos(DEMO_VIDEOS)
+      })
+      .catch(() => setVideos(DEMO_VIDEOS))
       .finally(() => setVideosLoading(false))
     getBlogsApi()
       .then((res) => {
         const list = Array.isArray(res?.blogs) ? res.blogs : Array.isArray(res?.data) ? res.data : []
-        setBlogs(list.filter((b) => !b?.draft).slice(0, 3))
+        const filtered = list.filter((b) => !b?.draft).slice(0, 3)
+        setBlogs(filtered.length ? filtered : DEMO_BLOGS)
       })
-      .catch(() => {})
+      .catch(() => setBlogs(DEMO_BLOGS))
   }, [])
 
   const subscribeUrl = `${settings.youtube || 'https://youtube.com/@kadirdemir'}?sub_confirmation=1`
@@ -242,14 +261,8 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <TiltedCard rotateAmplitude={10} scaleOnHover={1.04} className="hm-hero-tilt">
-              <div className="hm-hero-portrait">
-                <ResponsivePortrait alt={`${brandName} portresi`} className="hm-hero-portrait-img" sizes="(max-width: 820px) 100vw, 520px" />
-                <div className="hm-hero-portrait-tag">
-                  <HiOutlineSparkles size={14} />
-                  <span>Stüdyodan</span>
-                </div>
-              </div>
+            <TiltedCard rotateAmplitude={8} scaleOnHover={1.03} className="hm-hero-tilt">
+              <HeroComposition brandName={brandName} />
             </TiltedCard>
           </motion.div>
         </div>
@@ -276,6 +289,38 @@ export default function Home() {
           </motion.div>
         )}
       </section>
+
+      {/* ═══════════════ SERVICES MARQUEE ═══════════════ */}
+      <div className="hm-services-marquee" aria-hidden="true">
+        <div className="hm-services-marquee-inner">
+          <div className="hm-services-track">
+            {Array.from({ length: 2 }).map((_, dup) => (
+              <div key={dup} className="hm-services-group">
+                {[
+                  'YOUTUBE',
+                  'VLOG',
+                  'OYUN',
+                  'PODCAST',
+                  'CANLI YAYIN',
+                  'KISA VİDEO',
+                  'BLOG',
+                  'KAMERA ARKASI',
+                  'SPONSORLUK',
+                ].map((label, i) => (
+                  <span key={`${dup}-${i}`} className="hm-services-item">
+                    <span className="hm-services-star" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                        <path d="M12 0c.7 6.3 5.7 11.3 12 12-6.3.7-11.3 5.7-12 12-.7-6.3-5.7-11.3-12-12 6.3-.7 11.3-5.7 12-12Z"/>
+                      </svg>
+                    </span>
+                    <span className="hm-services-label">{label}</span>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* ═══════════════ ABOUT BENTO ═══════════════ */}
       <section className="hm-section">
@@ -345,9 +390,14 @@ export default function Home() {
             className="hm-featured"
           >
             <TiltedCard rotateAmplitude={8} scaleOnHover={1.02} className="hm-featured-tilt">
-              <GlareHover className="hm-featured-thumb" glareColor="rgba(245, 158, 11, 0.25)">
-                {featuredVideo.thumbnail && (
+              <GlareHover className="hm-featured-thumb" glareColor="rgba(225, 29, 46, 0.25)">
+                {featuredVideo.thumbnail ? (
                   <img src={featuredVideo.thumbnail} alt={featuredVideo.title} loading="lazy" />
+                ) : (
+                  <div className="hm-thumb-fallback hm-thumb-fallback--lg" aria-hidden="true">
+                    <span className="hm-thumb-fallback-label">EP · 042</span>
+                    <span className="hm-thumb-fallback-glyph">▶</span>
+                  </div>
                 )}
                 <div className="hm-featured-shade" />
                 <div className="hm-featured-play"><HiOutlinePlay size={48} /></div>
@@ -383,11 +433,17 @@ export default function Home() {
           <SkeletonGrid count={4} columns={4} />
         ) : recentVideos.length > 0 ? (
           <div className="hm-video-grid">
-            {recentVideos.map((v) => (
+            {recentVideos.map((v, idx) => (
               <SpotlightCard key={v.youtubeId} className="hm-video-card">
                 <a href={`https://www.youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noopener noreferrer" className="hm-video-card-link">
                   <div className="hm-video-thumb">
-                    {v.thumbnail && <img src={v.thumbnail} alt={v.title} loading="lazy" />}
+                    {v.thumbnail ? (
+                      <img src={v.thumbnail} alt={v.title} loading="lazy" />
+                    ) : (
+                      <div className="hm-thumb-fallback" aria-hidden="true">
+                        <span className="hm-thumb-fallback-num">{String(idx + 2).padStart(2, '0')}</span>
+                      </div>
+                    )}
                     <div className="hm-video-play"><HiOutlinePlay size={24} /></div>
                     {v.duration && <span className="hm-video-duration">{parseDuration(v.duration)}</span>}
                   </div>
@@ -417,7 +473,13 @@ export default function Home() {
                 <a href={`https://www.youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noopener noreferrer" className="hm-top-card-link">
                   <span className="hm-top-rank">{String(i + 1).padStart(2, '0')}</span>
                   <div className="hm-top-thumb">
-                    {v.thumbnail && <img src={v.thumbnail} alt={v.title} loading="lazy" />}
+                    {v.thumbnail ? (
+                      <img src={v.thumbnail} alt={v.title} loading="lazy" />
+                    ) : (
+                      <div className="hm-thumb-fallback" aria-hidden="true">
+                        <span className="hm-thumb-fallback-num">#{String(i + 1).padStart(2, '0')}</span>
+                      </div>
+                    )}
                   </div>
                   <div className="hm-top-info">
                     <h4>{v.title}</h4>
@@ -443,14 +505,19 @@ export default function Home() {
             </Link>
           </div>
           <div className="hm-blog-grid">
-            {blogs.map((b) => (
+            {blogs.map((b, i) => (
               <SpotlightCard key={b._id || b.slug} className="hm-blog-card">
                 <Link to={`/blog/${b.slug}`} className="hm-blog-card-link">
-                  {b.cover && (
-                    <div className="hm-blog-cover">
+                  <div className="hm-blog-cover">
+                    {b.cover ? (
                       <img src={b.cover} alt={b.title} loading="lazy" />
-                    </div>
-                  )}
+                    ) : (
+                      <div className="hm-thumb-fallback hm-thumb-fallback--blog" aria-hidden="true">
+                        <span className="hm-thumb-fallback-num">0{i + 1}</span>
+                        <span className="hm-thumb-fallback-cat">{(b.category || 'YAZI').toUpperCase()}</span>
+                      </div>
+                    )}
+                  </div>
                   <div className="hm-blog-info">
                     <span className="hm-blog-tag">{(b.category || 'YAZI').toUpperCase().slice(0, 14)}</span>
                     <h4 className="hm-blog-title">{b.title}</h4>

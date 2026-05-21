@@ -1,5 +1,7 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { FaYoutube, FaInstagram, FaTiktok, FaTwitch, FaXTwitter } from 'react-icons/fa6'
+import { HiArrowUpRight } from 'react-icons/hi2'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import './Footer.css'
 
@@ -30,11 +32,67 @@ function buildSocials(s) {
 
 export default function Footer() {
   const { settings } = useSiteSettings()
+  const location = useLocation()
   const brandName = settings.businessName || 'Kadir Demir'
   const socials = buildSocials(settings)
+  const showMegaCta = location.pathname !== '/iletisim'
 
   return (
     <footer className="ft">
+      {showMegaCta && (
+        <motion.section
+          className="ft-cta"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="ft-cta-bg" aria-hidden="true">
+            <span className="ft-cta-blob ft-cta-blob-1" />
+            <span className="ft-cta-blob ft-cta-blob-2" />
+            <span className="ft-cta-noise" />
+            <span className="ft-cta-grid" />
+          </div>
+
+          <div className="ft-cta-rail" aria-hidden="true">
+            <span>İSTANBUL · {new Date().getFullYear()}</span>
+            <span className="ft-cta-rail-sep" />
+            <span>HAZIR MISIN?</span>
+          </div>
+
+          <div className="ft-cta-inner">
+            <div className="ft-cta-text">
+              <span className="ft-cta-eyebrow">
+                <span className="ft-cta-dot" /> İş birliği · iletişim
+              </span>
+              <h2 className="ft-cta-title">
+                <span className="ft-cta-line">Birlikte</span>
+                <span className="ft-cta-line">
+                  <span className="ft-cta-title-accent">hikâye</span> anlatalım.
+                </span>
+              </h2>
+              <p className="ft-cta-sub">
+                Marka iş birliği, sponsorluk veya sadece selam için —
+                kanalıma yakışan her projeye açığım.
+              </p>
+            </div>
+
+            <Link to="/iletisim" className="ft-cta-btn" aria-label="İletişime geç">
+              <span className="ft-cta-btn-ring" aria-hidden="true" />
+              <span className="ft-cta-btn-glyph">
+                <HiArrowUpRight size={36} />
+              </span>
+              <span className="ft-cta-btn-label">
+                <span className="ft-cta-btn-label-top">bana</span>
+                <span className="ft-cta-btn-label-bottom">ulaş</span>
+              </span>
+            </Link>
+          </div>
+
+          <span className="ft-cta-edge" aria-hidden="true" />
+        </motion.section>
+      )}
+
       <div className="ft-mega">
         <span className="ft-mega-text">{brandName.split(' ')[0].toLowerCase()}</span>
         <span className="ft-mega-text ft-mega-accent">{(brandName.split(' ')[1] || '').toLowerCase()}<span className="ft-mega-dot">.</span></span>
