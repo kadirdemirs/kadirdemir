@@ -16,6 +16,9 @@ import { FadeIn } from '../components/Animations'
 import PageBgAnimation from '../components/PageBgAnimation'
 import ReadingProgress from '../components/ReadingProgress'
 import Comments from '../components/Comments'
+import BlogTOC from '../components/BlogTOC'
+import BlogShareDock from '../components/BlogShareDock'
+import BlogAuthorBio from '../components/BlogAuthorBio'
 import './Blog.css'
 
 const BLOG_SANITIZE_CONFIG = {
@@ -221,7 +224,12 @@ export default function BlogDetail() {
       {/* Content */}
       <section className="section">
         <div className="container">
-          <div className="blog-detail-layout">
+          <div className="blog-detail-layout kd-blog-detail-grid">
+            {/* Floating share dock (sol) */}
+            <BlogShareDock title={title} url={postUrl} />
+
+            {/* Ana içerik */}
+            <div className="kd-blog-detail-main">
             {/* Featured image */}
             <FadeIn>
               <div
@@ -327,6 +335,17 @@ export default function BlogDetail() {
                 </div>
               </div>
             </FadeIn>
+
+            {/* Yazar bio kartı */}
+            <FadeIn delay={0.17}>
+              <BlogAuthorBio />
+            </FadeIn>
+            </div>{/* /kd-blog-detail-main */}
+
+            {/* TOC sidebar (sağ, desktop) */}
+            <div className="kd-blog-detail-aside">
+              <BlogTOC articleRef={articleRef} contentVersion={slug} />
+            </div>
           </div>
 
           {/* Comments */}
@@ -340,19 +359,15 @@ export default function BlogDetail() {
               <div className="blog-cta-icon">
                 <HiOutlineArrowRight size={28} />
               </div>
-              <h3>{lang === 'tr' ? 'Markanız İçin Ücretsiz Strateji Analizi' : 'Free Strategy Analysis for Your Brand'}</h3>
-              <p>
-                {lang === 'tr'
-                  ? 'Bu yazıda anlattıklarımızı markanıza nasıl uygulayacağınızı merak ediyorsanız, 30 dakikalık ücretsiz keşif görüşmesiyle somut öneriler alın.'
-                  : 'Wondering how to apply what you read here to your brand? Get concrete recommendations with a free 30-minute discovery call.'}
-              </p>
+              <h3>{t('blog.ctaTitle')}</h3>
+              <p>{t('blog.ctaSub')}</p>
               <div className="blog-cta-actions">
                 <Link to="/iletisim" className="btn btn-primary" onClick={() => analytics.ctaClick('blog-cta', '/iletisim')}>
-                  {lang === 'tr' ? 'Ücretsiz Görüşme Al' : 'Get a Free Consultation'}
+                  {t('common.contact')}
                   <HiOutlineArrowRight size={16} />
                 </Link>
-                <Link to="/hizmetler" className="btn btn-outline" onClick={() => analytics.ctaClick('blog-services', '/hizmetler')}>
-                  {lang === 'tr' ? 'Hizmetleri İncele' : 'View Services'}
+                <Link to="/sponsor" className="btn btn-outline" onClick={() => analytics.ctaClick('blog-sponsor', '/sponsor')}>
+                  {t('sponsor.pill')}
                 </Link>
               </div>
             </div>
@@ -363,7 +378,7 @@ export default function BlogDetail() {
             <FadeIn delay={0.2}>
               <div style={{ marginTop: '64px' }}>
                 <h3 style={{ color: 'var(--white)', marginBottom: '24px', fontSize: '1.3rem' }}>
-                  {lang === 'tr' ? 'Diğer Yazılar' : 'More Posts'}
+                  {t('blog.relatedTitle')}
                 </h3>
                 <div className="blog-grid">
                   {otherPosts.map((p) => (

@@ -259,3 +259,35 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ─────────────────────────────────────────────
+   BLOG DETAIL — 3 sütunlu grid (share / içerik / TOC)
+   ───────────────────────────────────────────── */
+.kd-blog-detail-grid {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 260px;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.kd-blog-detail-main {
+  min-width: 0;
+}
+
+.kd-blog-detail-aside {
+  position: relative;
+  min-width: 0;
+}
+
+@media (max-width: 1080px) {
+  .kd-blog-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .kd-blog-detail-aside { display: none; }
+}
+
+/* Article body içindeki h2/h3'leri TOC ile uyumlu hizala */
+.blog-body h2,
+.blog-body h3 {
+  scroll-margin-top: 96px;
+}
