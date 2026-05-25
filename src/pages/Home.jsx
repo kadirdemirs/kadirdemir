@@ -13,6 +13,10 @@ import {
   HiOutlineEye,
   HiOutlineVideoCamera,
   HiOutlineChevronDown,
+  HiOutlineLightBulb,
+  HiOutlineFilm,
+  HiOutlineScissors,
+  HiOutlineSparkles,
 } from 'react-icons/hi2'
 import { useEffect, useMemo, useState } from 'react'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
@@ -110,6 +114,23 @@ export default function Home() {
   const [videosLoading, setVideosLoading] = useState(true)
   const [blogs, setBlogs] = useState([])
   const [socialStats, setSocialStats] = useState(null)
+  const [parallax, setParallax] = useState({ x: 0, y: 0 })
+
+  // Mouse-tracking parallax (hero section'da)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce) return
+    const fine = window.matchMedia('(pointer: fine)').matches
+    if (!fine) return
+    const onMove = (e) => {
+      const nx = (e.clientX / window.innerWidth - 0.5) * 2  // -1..1
+      const ny = (e.clientY / window.innerHeight - 0.5) * 2
+      setParallax({ x: nx, y: ny })
+    }
+    window.addEventListener('mousemove', onMove, { passive: true })
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [])
 
   const localizedFaqs = useMemo(() => {
     if (lang === 'en') return [
@@ -233,7 +254,23 @@ export default function Home() {
 
       {/* ═══════════════ HERO ═══════════════ */}
       <section className="hm-hero">
-        <div className="hm-hero-particles" aria-hidden="true">
+        {/* Parallax katmanlar — mouse takip eder */}
+        <div className="hm-hero-orbs" aria-hidden="true">
+          <span
+            className="hm-hero-orb hm-hero-orb-1"
+            style={{ transform: `translate3d(${parallax.x * 18}px, ${parallax.y * 18}px, 0)` }}
+          />
+          <span
+            className="hm-hero-orb hm-hero-orb-2"
+            style={{ transform: `translate3d(${parallax.x * -28}px, ${parallax.y * -22}px, 0)` }}
+          />
+          <span
+            className="hm-hero-orb hm-hero-orb-3"
+            style={{ transform: `translate3d(${parallax.x * 14}px, ${parallax.y * -16}px, 0)` }}
+          />
+        </div>
+        <div className="hm-hero-particles" aria-hidden="true"
+          style={{ transform: `translate3d(${parallax.x * 6}px, ${parallax.y * 6}px, 0)` }}>
           <Particles
             particleColors={['#f59e0b', '#a855f7', '#ec4899', '#06b6d4']}
             particleCount={90}
@@ -317,6 +354,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            style={{ transform: `translate3d(${parallax.x * -10}px, ${parallax.y * -8}px, 0)` }}
           >
             <TiltedCard rotateAmplitude={8} scaleOnHover={1.03} className="hm-hero-tilt">
               <HeroComposition brandName={brandName} />
@@ -797,6 +835,105 @@ export default function Home() {
         </div>
         <div className="hm-faq-list">
           {localizedFaqs.map((f, i) => <FAQItem key={`${lang}-${i}`} faq={f} />)}
+        </div>
+      </section>
+
+      {/* ═══════════════ PROCESS TIMELINE ═══════════════ */}
+      <section className="hm-section">
+        <div className="hm-section-head">
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.processEyebrow')}</span>
+          <h2 className="hm-h2">{t('home.processTitle')}</h2>
+          <p className="hm-section-sub">{t('home.processSub')}</p>
+        </div>
+        <ol className="hm-process">
+          {[
+            { icon: HiOutlineLightBulb, title: t('home.process1Title'), desc: t('home.process1Desc'), step: '01' },
+            { icon: HiOutlineFilm, title: t('home.process2Title'), desc: t('home.process2Desc'), step: '02' },
+            { icon: HiOutlineScissors, title: t('home.process3Title'), desc: t('home.process3Desc'), step: '03' },
+            { icon: HiOutlineSparkles, title: t('home.process4Title'), desc: t('home.process4Desc'), step: '04' },
+          ].map((s) => (
+            <li key={s.step} className="hm-process-step">
+              <div className="hm-process-step-num">{s.step}</div>
+              <div className="hm-process-step-icon"><s.icon size={22} /></div>
+              <h3 className="hm-process-step-title">{s.title}</h3>
+              <p className="hm-process-step-desc">{s.desc}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* ═══════════════ MILESTONES ═══════════════ */}
+      {(ytSubs || ytViews || ytVideosCount || igFollowers || ttFollowers) && (
+        <section className="hm-section">
+          <div className="hm-section-head">
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.milestoneEyebrow')}</span>
+            <h2 className="hm-h2">{t('home.milestoneTitle')}</h2>
+            <p className="hm-section-sub">{t('home.milestoneSub')}</p>
+          </div>
+          <div className="hm-milestones">
+            {[
+              ytSubs && { value: ytSubs, label: t('home.statsYoutube'), color: '#FF0000' },
+              ttFollowers && { value: ttFollowers, label: t('home.statsTiktok'), color: '#00F2EA' },
+              igFollowers && { value: igFollowers, label: t('home.statsInstagram'), color: '#E4405F' },
+              ytViews && { value: ytViews, label: t('home.statsViews'), color: '#f59e0b' },
+              ytVideosCount && { value: ytVideosCount, label: t('home.statsVideos'), color: '#a855f7' },
+            ].filter(Boolean).map((m, i) => (
+              <div key={m.label} className="hm-milestone" style={{ '--milestone-color': m.color, animationDelay: `${i * 0.08}s` }}>
+                <span className="hm-milestone-dot" aria-hidden="true" />
+                <span className="hm-milestone-value">{m.value}</span>
+                <span className="hm-milestone-label">{m.label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════ TESTIMONIALS ═══════════════ */}
+      <section className="hm-section">
+        <div className="hm-section-head">
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.testimonialEyebrow')}</span>
+          <h2 className="hm-h2">{t('home.testimonialTitle')}</h2>
+          <p className="hm-section-sub">{t('home.testimonialSub')}</p>
+        </div>
+        <div className="hm-testimonials">
+          {[
+            {
+              quote: lang === 'en'
+                ? "Kadir delivered exactly the energy our launch needed — natural storytelling that didn't feel like an ad."
+                : lang === 'de'
+                ? 'Kadir hat genau die Energie geliefert, die unser Launch brauchte — natürliches Storytelling, das sich nicht wie eine Werbung anfühlte.'
+                : "Kadir, lansmanımızın ihtiyacı olan tam o enerjiyi getirdi — reklam gibi durmayan doğal bir anlatım.",
+              author: lang === 'en' ? 'Marketing Lead, mobile game studio' : lang === 'de' ? 'Marketing-Lead, mobiles Spielestudio' : 'Pazarlama Direktörü, mobil oyun stüdyosu',
+              tag: 'Brand',
+            },
+            {
+              quote: lang === 'en'
+                ? "I've been watching since the 200th video. Each one feels like an evening with a friend."
+                : lang === 'de'
+                ? '200. Video seit ich zuschaue. Jedes Video fühlt sich wie ein Abend mit einem Freund an.'
+                : '200. videodan beri izliyorum. Her bölüm bir arkadaşla geçirilen akşam gibi.',
+              author: lang === 'en' ? 'Long-time viewer' : lang === 'de' ? 'Langjährige Zuschauerin' : 'Uzun süreli izleyici',
+              tag: 'Community',
+            },
+            {
+              quote: lang === 'en'
+                ? "Most professional creator we've worked with this year. Clean brief, clear deadlines, sharp result."
+                : lang === 'de'
+                ? 'Der professionellste Creator, mit dem wir dieses Jahr gearbeitet haben. Klares Briefing, klare Deadlines, scharfes Ergebnis.'
+                : "Bu yıl çalıştığımız en profesyonel içerik üreticisi. Net brief, net deadline, keskin sonuç.",
+              author: lang === 'en' ? 'Influencer manager, agency' : lang === 'de' ? 'Influencer-Manager, Agentur' : 'Influencer yöneticisi, ajans',
+              tag: 'Agency',
+            },
+          ].map((q, i) => (
+            <figure key={i} className="hm-testimonial">
+              <span className="hm-testimonial-quote" aria-hidden="true">"</span>
+              <blockquote className="hm-testimonial-text">{q.quote}</blockquote>
+              <figcaption className="hm-testimonial-foot">
+                <span className="hm-testimonial-author">{q.author}</span>
+                <span className="hm-testimonial-tag">{q.tag}</span>
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 

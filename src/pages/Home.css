@@ -1961,3 +1961,341 @@
   .hm-blog-cover img,
   .hm-ig-card img { transition: none; }
 }
+
+/* ════════════════════════════════════════════
+   PROCESS TIMELINE — 4 step kart dizilimi
+   ════════════════════════════════════════════ */
+.hm-process {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  counter-reset: process;
+}
+
+.hm-process-step {
+  position: relative;
+  padding: 26px 24px 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 60%),
+    rgba(255, 255, 255, 0.018);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+[data-theme="light"] .hm-process-step {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(26, 23, 21, 0.08);
+}
+
+.hm-process-step::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.4), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.hm-process-step:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 158, 11, 0.28);
+  box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.5);
+}
+
+.hm-process-step:hover::before {
+  opacity: 1;
+}
+
+.hm-process-step-num {
+  display: inline-block;
+  font-family: var(--font-display, 'Inter', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--primary, #f59e0b);
+  margin-bottom: 14px;
+}
+
+.hm-process-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 60%),
+    rgba(245, 158, 11, 0.10);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  color: var(--primary, #f59e0b);
+  margin-bottom: 14px;
+}
+
+.hm-process-step-title {
+  margin: 0 0 6px;
+  font-family: var(--font-display, 'Inter', sans-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.hm-process-step-desc {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-secondary, #a3a3a3);
+}
+
+/* ════════════════════════════════════════════
+   MILESTONES — yatay sıralı süslü pill rozetler
+   ════════════════════════════════════════════ */
+.hm-milestones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.hm-milestone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 26px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid color-mix(in srgb, var(--milestone-color, #f59e0b) 18%, transparent);
+  border-radius: 22px;
+  overflow: hidden;
+  animation: hm-milestone-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+[data-theme="light"] .hm-milestone {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.hm-milestone:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 44px -18px color-mix(in srgb, var(--milestone-color, #f59e0b) 60%, transparent);
+}
+
+.hm-milestone::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -10%;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--milestone-color, #f59e0b) 28%, transparent) 0%, transparent 60%);
+  filter: blur(36px);
+  z-index: 0;
+}
+
+.hm-milestone-dot {
+  position: relative;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--milestone-color, #f59e0b);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--milestone-color, #f59e0b) 25%, transparent);
+  margin-bottom: 14px;
+}
+
+.hm-milestone-value {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display, 'Inter', sans-serif);
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text-primary, #fff);
+}
+
+.hm-milestone-label {
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--text-tertiary, #737373);
+}
+
+@keyframes hm-milestone-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-milestone { animation: none; }
+}
+
+/* ════════════════════════════════════════════
+   TESTIMONIALS — alıntı kartları
+   ════════════════════════════════════════════ */
+.hm-testimonials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.hm-testimonial {
+  position: relative;
+  margin: 0;
+  padding: 28px 26px 22px;
+  background: var(--glass-bg, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease;
+}
+
+[data-theme="light"] .hm-testimonial {
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.hm-testimonial:hover {
+  transform: translateY(-3px);
+  border-color: rgba(245, 158, 11, 0.32);
+}
+
+.hm-testimonial-quote {
+  position: absolute;
+  top: 8px;
+  left: 18px;
+  font-family: var(--font-display, 'Inter', sans-serif);
+  font-size: 4rem;
+  color: var(--primary, #f59e0b);
+  opacity: 0.2;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.hm-testimonial-text {
+  margin: 8px 0 18px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-primary, #fafafa);
+  font-style: italic;
+}
+
+.hm-testimonial-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-secondary, #a3a3a3);
+}
+
+.hm-testimonial-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background: var(--accent-alpha, rgba(245, 158, 11, 0.10));
+  border: 1px solid color-mix(in srgb, var(--primary, #f59e0b) 24%, transparent);
+  color: var(--primary, #f59e0b);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ════════════════════════════════════════════
+   HERO V2 — parallax orb katmanları
+   ════════════════════════════════════════════ */
+.hm-hero-orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hm-hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.hm-hero-orb-1 {
+  width: 420px;
+  height: 420px;
+  top: -120px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.40) 0%, transparent 60%);
+}
+
+.hm-hero-orb-2 {
+  width: 520px;
+  height: 520px;
+  top: 20%;
+  right: -200px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.28) 0%, transparent 60%);
+}
+
+.hm-hero-orb-3 {
+  width: 340px;
+  height: 340px;
+  bottom: -120px;
+  left: 30%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.30) 0%, transparent 60%);
+}
+
+[data-theme="light"] .hm-hero-orb-1 {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, transparent 60%);
+}
+[data-theme="light"] .hm-hero-orb-2 {
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.20) 0%, transparent 60%);
+}
+[data-theme="light"] .hm-hero-orb-3 {
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 60%);
+}
+
+.hm-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hm-hero-grid {
+  position: relative;
+  z-index: 2;
+}
+
+.hm-hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.hm-hero-right {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .hm-hero-orb,
+  .hm-hero-particles,
+  .hm-hero-right { transition: none; }
+}
