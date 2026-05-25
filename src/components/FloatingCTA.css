@@ -1,0 +1,98 @@
+.kd-fab-wrap {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 950;
+  pointer-events: none;
+}
+
+.kd-fab {
+  pointer-events: auto;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 50%),
+    var(--accent-red, #e11d2e);
+  border-radius: 999px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 18px 36px -10px var(--accent-red-glow, rgba(225, 29, 46, 0.5));
+  overflow: hidden;
+  transition: gap 0.3s ease, padding 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kd-fab:hover {
+  gap: 8px;
+  padding: 14px 22px 14px 16px;
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 22px 44px -10px var(--accent-red-glow, rgba(225, 29, 46, 0.7));
+}
+
+.kd-fab-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.kd-fab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-width 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+  font-size: 0.88rem;
+}
+
+.kd-fab:hover .kd-fab-label {
+  max-width: 200px;
+  opacity: 1;
+}
+
+.kd-fab-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 2px solid var(--accent-red, #e11d2e);
+  opacity: 0;
+  animation: kd-fab-pulse 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes kd-fab-pulse {
+  0%   { opacity: 0; transform: scale(1); }
+  20%  { opacity: 0.4; }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kd-fab-ring { animation: none; }
+}
+
+/* Mobile — ekrana hâkim olmasın */
+@media (max-width: 720px) {
+  .kd-fab-wrap {
+    right: 14px;
+    bottom: 14px;
+  }
+  .kd-fab,
+  .kd-fab:hover {
+    padding: 13px;
+    gap: 0;
+  }
+  .kd-fab-label {
+    display: none;
+  }
+}

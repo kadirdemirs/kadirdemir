@@ -1,43 +1,60 @@
+/* ─────────────────────────────────────────────
+   SKELETON LOADER — rafine shimmer + sharp shape
+   ───────────────────────────────────────────── */
 .kd-skeleton {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.kd-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.04) 100%
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 60%,
+    transparent 100%
   );
-  background-size: 200% 100%;
-  animation: kd-skeleton-shimmer 1.4s ease-in-out infinite;
+  transform: translateX(-100%);
+  animation: kd-skeleton-shimmer 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 [data-theme="light"] .kd-skeleton {
+  background: rgba(26, 23, 21, 0.06);
+}
+
+[data-theme="light"] .kd-skeleton::after {
   background: linear-gradient(
     90deg,
-    rgba(0, 0, 0, 0.05) 0%,
-    rgba(0, 0, 0, 0.09) 50%,
-    rgba(0, 0, 0, 0.05) 100%
+    transparent 0%,
+    rgba(26, 23, 21, 0.05) 40%,
+    rgba(26, 23, 21, 0.10) 50%,
+    rgba(26, 23, 21, 0.05) 60%,
+    transparent 100%
   );
-  background-size: 200% 100%;
 }
 
 @keyframes kd-skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .kd-skeleton-card {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 14px;
   overflow: hidden;
+  padding: 0;
 }
 
 [data-theme="light"] .kd-skeleton-card {
-  background: rgba(0, 0, 0, 0.02);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(26, 23, 21, 0.08);
 }
 
 .kd-skeleton-grid {
@@ -48,7 +65,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kd-skeleton {
-    animation: none;
-  }
+  .kd-skeleton::after { animation: none; }
 }

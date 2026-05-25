@@ -301,6 +301,13 @@ export const translations = {
       privacyTitle: 'Gizlilik Politikası',
       cookieTitle: 'Çerez Politikası',
     },
+    cookie: {
+      title: 'Çerez kullanıyoruz 🍪',
+      body: 'Daha iyi deneyim için zorunlu çerezler ile sayfa istatistiği toplayan analiz çerezleri kullanıyoruz. Detayları çerez politikasında bulabilirsin.',
+      accept: 'Hepsini kabul et',
+      decline: 'Sadece zorunlu',
+      policy: 'Çerez politikası',
+    },
     theme: {
       light: 'Açık',
       dark: 'Koyu',
@@ -605,6 +612,13 @@ export const translations = {
       privacyTitle: 'Privacy Policy',
       cookieTitle: 'Cookie Policy',
     },
+    cookie: {
+      title: 'We use cookies 🍪',
+      body: 'We use essential cookies and analytics to improve your experience. Details are in our cookie policy.',
+      accept: 'Accept all',
+      decline: 'Essential only',
+      policy: 'Cookie policy',
+    },
     theme: {
       light: 'Light',
       dark: 'Dark',
@@ -908,6 +922,13 @@ export const translations = {
       kvkkTitle: 'Datenschutzhinweis (KVKK)',
       privacyTitle: 'Datenschutzerklärung',
       cookieTitle: 'Cookie-Richtlinie',
+    },
+    cookie: {
+      title: 'Wir nutzen Cookies 🍪',
+      body: 'Wir verwenden notwendige Cookies und Analyse-Tools, um die Erfahrung zu verbessern. Details findest du in unserer Cookie-Richtlinie.',
+      accept: 'Alle akzeptieren',
+      decline: 'Nur notwendige',
+      policy: 'Cookie-Richtlinie',
     },
     theme: {
       light: 'Hell',

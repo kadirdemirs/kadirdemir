@@ -162,11 +162,50 @@
   background: rgba(45, 212, 191, 0.22);
 }
 
+.kd-field-ico {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+.kd-field.is-valid input,
+.kd-field.is-valid textarea {
+  border-color: rgba(52, 211, 153, 0.5);
+  padding-right: 44px;
+}
+
+.kd-field.is-invalid input,
+.kd-field.is-invalid textarea {
+  border-color: rgba(248, 113, 113, 0.55);
+  padding-right: 44px;
+}
+
+.kd-field.is-valid .kd-field-ico {
+  background: rgba(52, 211, 153, 0.18);
+  color: #34d399;
+}
+.kd-field.is-invalid .kd-field-ico {
+  background: rgba(248, 113, 113, 0.18);
+  color: #f87171;
+}
+
 .kd-form-status {
   margin-top: 14px;
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
   font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .kd-form-status.success {

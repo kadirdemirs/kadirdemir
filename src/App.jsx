@@ -13,6 +13,8 @@ import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
 import CommandPalette from './components/CommandPalette'
 import CustomCursor from './components/CustomCursor'
+import CookieBanner from './components/CookieBanner'
+import FloatingCTA from './components/FloatingCTA'
 
 // Heavy WebGL components — lazy load to skip them on initial paint
 const Aurora = lazy(() => import('./components/reactbits/Aurora'))
@@ -169,6 +171,8 @@ function App() {
         </Suspense>
       )}
       {!isAdmin && <CustomCursor />}
+      {!isAdmin && <FloatingCTA />}
+      {!isAdmin && <CookieBanner />}
     </>
   )
 }

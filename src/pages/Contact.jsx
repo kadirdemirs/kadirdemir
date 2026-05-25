@@ -1,12 +1,15 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FaYoutube, FaInstagram } from 'react-icons/fa'
-import { HiOutlineMail, HiOutlinePhone } from 'react-icons/hi'
+import { HiOutlineMail, HiOutlinePhone, HiOutlineCheck, HiOutlineExclamation } from 'react-icons/hi'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useLanguage } from '../i18n/LanguageContext'
 import { sendContactApi } from '../api'
 import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema } from '../components/StructuredData'
 import './Contact.css'
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function Contact() {
   const { settings } = useSiteSettings()
@@ -18,8 +21,17 @@ export default function Contact() {
     subject: '',
     message: '',
   })
+  const [touched, setTouched] = useState({})
   const [status, setStatus] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+
+  const validity = useMemo(() => ({
+    name: form.name.trim().length >= 2,
+    email: EMAIL_RE.test(form.email.trim()),
+    message: form.message.trim().length >= 10,
+  }), [form.name, form.email, form.message])
+
+  const showFieldState = (key) => touched[key] && form[key].length > 0
 
   useSEO({
     title: t('contact.pill'),
@@ -55,6 +67,7 @@ export default function Contact() {
   ].filter(Boolean)
 
   const handle = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
+  const markTouched = (key) => () => setTouched((s) => ({ ...s, [key]: true }))
 
   const submit = async (e) => {
     e.preventDefault()
@@ -118,25 +131,39 @@ export default function Contact() {
 
         <form className="kd-contact-form" onSubmit={submit}>
           <div className="kd-contact-row">
-            <div className="kd-field">
+            <div className={`kd-field ${showFieldState('name') ? (validity.name ? 'is-valid' : 'is-invalid') : ''}`}>
               <input
                 type="text"
                 value={form.name}
                 onChange={handle('name')}
+                onBlur={markTouched('name')}
                 placeholder=" "
                 id="kd-name"
+                aria-invalid={showFieldState('name') && !validity.name}
               />
               <label htmlFor="kd-name">{t('contact.formName')}</label>
+              {showFieldState('name') && (
+                <span className="kd-field-ico" aria-hidden="true">
+                  {validity.name ? <HiOutlineCheck size={16} /> : <HiOutlineExclamation size={16} />}
+                </span>
+              )}
             </div>
-            <div className="kd-field">
+            <div className={`kd-field ${showFieldState('email') ? (validity.email ? 'is-valid' : 'is-invalid') : ''}`}>
               <input
                 type="email"
                 value={form.email}
                 onChange={handle('email')}
+                onBlur={markTouched('email')}
                 placeholder=" "
                 id="kd-email"
+                aria-invalid={showFieldState('email') && !validity.email}
               />
               <label htmlFor="kd-email">{t('contact.formEmail')}</label>
+              {showFieldState('email') && (
+                <span className="kd-field-ico" aria-hidden="true">
+                  {validity.email ? <HiOutlineCheck size={16} /> : <HiOutlineExclamation size={16} />}
+                </span>
+              )}
             </div>
           </div>
 
@@ -182,9 +209,22 @@ export default function Contact() {
             {submitting ? t('contact.submitting') : t('contact.submit')}
           </button>
 
-          {status && (
-            <div className={`kd-form-status ${status.type}`} role="status" aria-live="polite">{status.text}</div>
-          )}
+          <AnimatePresence>
+            {status && (
+              <motion.div
+                className={`kd-form-status ${status.type}`}
+                role="status"
+                aria-live="polite"
+                initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.96 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {status.type === 'success' ? <HiOutlineCheck size={18} /> : <HiOutlineExclamation size={18} />}
+                <span>{status.text}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <p className="kd-contact-note">{t('contact.spamNote')}</p>
         </form>
