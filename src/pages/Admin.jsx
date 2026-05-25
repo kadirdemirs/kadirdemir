@@ -17,6 +17,7 @@ import {
   testSmtpApi,
   getSiteSettingsApi, updateSiteSettingsApi,
   refreshYouTubeVideosApi, getYouTubeVideosApi,
+  getSocialStatsApi, refreshSocialStatsApi,
   getAnalyticsApi, getGA4AnalyticsApi, getActiveVisitorsApi,
   getRemindersApi, createReminderApi, updateReminderApi, deleteReminderApi,
   getMediaApi, uploadMediaApi, bulkDeleteMediaApi,
@@ -243,18 +244,31 @@ function DashboardSection({ stats, onNavigate, settings, ytChannel }) {
 // ───── SOCIAL STATS ─────
 function SocialStatsSection({ settings, ytChannel, ytVideos, showToast }) {
   const [refreshing, setRefreshing] = useState(false)
+  const [live, setLive] = useState(null)
+
+  useEffect(() => {
+    getSocialStatsApi().then(setLive).catch(() => {})
+  }, [])
 
   const handleRefresh = async () => {
     setRefreshing(true)
     try {
-      await refreshYouTubeVideosApi()
-      showToast('YouTube verileri güncellendi — yenileme için sayfayı yenileyin', 'success')
+      const [, data] = await Promise.all([
+        refreshYouTubeVideosApi().catch(() => null),
+        refreshSocialStatsApi(),
+      ])
+      setLive(data)
+      showToast('Sosyal istatistikler güncellendi (YouTube canlı, Instagram/TikTok scrape)', 'success')
     } catch (e) {
       showToast(e.message, 'error')
     } finally {
       setRefreshing(false)
     }
   }
+
+  const liveYt = live?.youtube
+  const liveIg = live?.instagram
+  const liveTt = live?.tiktok
 
   const totalViewsFromVideos = (ytVideos || []).reduce((s, v) => s + (Number(v.views) || 0), 0)
   const totalLikesFromVideos = (ytVideos || []).reduce((s, v) => s + (Number(v.likes) || 0), 0)
@@ -277,26 +291,26 @@ function SocialStatsSection({ settings, ytChannel, ytVideos, showToast }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <span style={{ fontSize: 28 }}>▶️</span>
           <div>
-            <h3 style={{ margin: 0 }}>YouTube — {ytChannel?.title || settings?.youtubeHandle || '@kadirdemir'}</h3>
-            <small style={{ color: 'var(--text-secondary)' }}>
-              {ytChannel ? '✓ Canlı veri' : 'Cache yok — "Yenile" tıklayın'}
+            <h3 style={{ margin: 0 }}>YouTube — {liveYt?.title || ytChannel?.title || settings?.youtubeHandle || '@kadirdemir'}</h3>
+            <small style={{ color: liveYt ? '#34d399' : 'var(--text-secondary)' }}>
+              {liveYt ? '● Canlı (Data API)' : ytChannel ? 'Cache' : 'Veri yok — "Yenile" tıklayın'}
             </small>
           </div>
         </div>
         <div className="admin-stats-grid">
           <div className="admin-stat-card">
             <div className="stat-icon" style={{ background: 'rgba(255,0,0,.15)', color: '#FF0000' }}>👥</div>
-            <div className="stat-number">{ytChannel?.subscriberCount != null ? formatBigNumber(ytChannel.subscriberCount) : (settings?.statsYoutubeSubs || '—')}</div>
+            <div className="stat-number">{liveYt?.followersDisplay || (ytChannel?.subscriberCount != null ? formatBigNumber(ytChannel.subscriberCount) : (settings?.statsYoutubeSubs || '—'))}</div>
             <div className="stat-label">Abone</div>
           </div>
           <div className="admin-stat-card">
             <div className="stat-icon" style={{ background: 'rgba(255,0,0,.15)', color: '#FF0000' }}>👁️</div>
-            <div className="stat-number">{ytChannel?.viewCount != null ? formatBigNumber(ytChannel.viewCount) : (settings?.statsTotalViews || '—')}</div>
+            <div className="stat-number">{liveYt?.viewsDisplay || (ytChannel?.viewCount != null ? formatBigNumber(ytChannel.viewCount) : (settings?.statsTotalViews || '—'))}</div>
             <div className="stat-label">Toplam İzlenme</div>
           </div>
           <div className="admin-stat-card">
             <div className="stat-icon" style={{ background: 'rgba(255,0,0,.15)', color: '#FF0000' }}>🎬</div>
-            <div className="stat-number">{ytChannel?.videoCount != null ? formatBigNumber(ytChannel.videoCount) : (settings?.statsTotalVideos || '—')}</div>
+            <div className="stat-number">{liveYt?.videosDisplay || (ytChannel?.videoCount != null ? formatBigNumber(ytChannel.videoCount) : (settings?.statsTotalVideos || '—'))}</div>
             <div className="stat-label">Video</div>
           </div>
           <div className="admin-stat-card">
@@ -325,20 +339,22 @@ function SocialStatsSection({ settings, ytChannel, ytVideos, showToast }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <span style={{ fontSize: 28 }}>📸</span>
           <div>
-            <h3 style={{ margin: 0 }}>Instagram — {settings?.instagramHandle || '@kadirardademir'}</h3>
-            <small style={{ color: 'var(--text-secondary)' }}>Manuel sayaçlar — Site Ayarları'ndan güncelleyin</small>
+            <h3 style={{ margin: 0 }}>Instagram — @{liveIg?.handle || settings?.instagramHandle?.replace(/^@/, '') || 'kadirardademir'}</h3>
+            <small style={{ color: liveIg ? '#34d399' : 'var(--text-secondary)' }}>
+              {liveIg ? '● Canlı (scrape)' : 'Scrape başarısız — manuel değer gösteriliyor'}
+            </small>
           </div>
           {settings?.instagram && <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ marginLeft: 'auto' }}>Profili Aç</a>}
         </div>
         <div className="admin-stats-grid">
           <div className="admin-stat-card">
             <div className="stat-icon" style={{ background: 'rgba(228,64,95,.15)', color: '#E4405F' }}>👥</div>
-            <div className="stat-number">{settings?.statsInstagramFollowers || '—'}</div>
+            <div className="stat-number">{liveIg?.followersDisplay || settings?.statsInstagramFollowers || '—'}</div>
             <div className="stat-label">Takipçi</div>
           </div>
           <div className="admin-stat-card">
             <div className="stat-icon" style={{ background: 'rgba(228,64,95,.15)', color: '#E4405F' }}>🖼️</div>
-            <div className="stat-number">{settings?.statsInstagramPosts || '—'}</div>
+            <div className="stat-number">{liveIg?.postsDisplay || settings?.statsInstagramPosts || '—'}</div>
             <div className="stat-label">Paylaşım</div>
           </div>
         </div>
@@ -349,22 +365,31 @@ function SocialStatsSection({ settings, ytChannel, ytVideos, showToast }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <span style={{ fontSize: 28 }}>🎵</span>
           <div>
-            <h3 style={{ margin: 0 }}>TikTok — {settings?.tiktokHandle || '@kadirdemirs'}</h3>
-            <small style={{ color: 'var(--text-secondary)' }}>Manuel sayaçlar — Site Ayarları'ndan güncelleyin</small>
+            <h3 style={{ margin: 0 }}>TikTok — @{liveTt?.handle || settings?.tiktokHandle?.replace(/^@/, '') || 'kadirdemirs'}</h3>
+            <small style={{ color: liveTt ? '#34d399' : 'var(--text-secondary)' }}>
+              {liveTt ? '● Canlı (scrape)' : 'Scrape başarısız — manuel değer gösteriliyor'}
+            </small>
           </div>
           {settings?.tiktok && <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ marginLeft: 'auto' }}>Profili Aç</a>}
         </div>
         <div className="admin-stats-grid">
           <div className="admin-stat-card">
             <div className="stat-icon" style={{ background: 'rgba(0,242,234,.15)', color: '#00F2EA' }}>👥</div>
-            <div className="stat-number">{settings?.statsTiktokFollowers || '—'}</div>
+            <div className="stat-number">{liveTt?.followersDisplay || settings?.statsTiktokFollowers || '—'}</div>
             <div className="stat-label">Takipçi</div>
           </div>
           <div className="admin-stat-card">
             <div className="stat-icon" style={{ background: 'rgba(255,0,80,.15)', color: '#FF0050' }}>❤️</div>
-            <div className="stat-number">{settings?.statsTiktokLikes || '—'}</div>
+            <div className="stat-number">{liveTt?.likesDisplay || settings?.statsTiktokLikes || '—'}</div>
             <div className="stat-label">Toplam Beğeni</div>
           </div>
+          {liveTt?.videosDisplay && (
+            <div className="admin-stat-card">
+              <div className="stat-icon" style={{ background: 'rgba(0,242,234,.15)', color: '#00F2EA' }}>🎬</div>
+              <div className="stat-number">{liveTt.videosDisplay}</div>
+              <div className="stat-label">Video</div>
+            </div>
+          )}
         </div>
       </div>
 

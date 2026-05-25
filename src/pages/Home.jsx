@@ -33,7 +33,7 @@ import Particles from '../components/reactbits/Particles'
 import DecryptedText from '../components/reactbits/DecryptedText'
 import Magnet from '../components/reactbits/Magnet'
 import VariableProximity from '../components/reactbits/VariableProximity'
-import { getYouTubeVideosApi, getBlogsApi } from '../api'
+import { getYouTubeVideosApi, getBlogsApi, getSocialStatsApi } from '../api'
 import './Home.css'
 
 function parseStat(value) {
@@ -110,6 +110,7 @@ export default function Home() {
   const [videos, setVideos] = useState([])
   const [videosLoading, setVideosLoading] = useState(true)
   const [blogs, setBlogs] = useState([])
+  const [socialStats, setSocialStats] = useState(null)
 
   useSEO({
     title: settings.seoTitle || 'Kadir Demir | YouTube İçerik Üreticisi',
@@ -133,16 +134,32 @@ export default function Home() {
         setBlogs(filtered.length ? filtered : DEMO_BLOGS)
       })
       .catch(() => setBlogs(DEMO_BLOGS))
+    getSocialStatsApi()
+      .then((data) => setSocialStats(data))
+      .catch(() => { /* fallback to settings */ })
   }, [])
 
   const subscribeUrl = `${settings.youtube || 'https://youtube.com/@kadirdemir'}?sub_confirmation=1`
 
+  // Live stats from APIs (YouTube + scraped IG/TT) — fall back to manual settings
+  const ytLive = socialStats?.youtube
+  const igLive = socialStats?.instagram
+  const ttLive = socialStats?.tiktok
+
+  const ytSubs = ytLive?.followersDisplay || settings.statsYoutubeSubs
+  const ytViews = ytLive?.viewsDisplay || settings.statsTotalViews
+  const ytVideosCount = ytLive?.videosDisplay || settings.statsTotalVideos
+  const igFollowers = igLive?.followersDisplay || settings.statsInstagramFollowers
+  const igPostsCount = igLive?.postsDisplay || settings.statsInstagramPosts
+  const ttFollowers = ttLive?.followersDisplay || settings.statsTiktokFollowers
+  const ttLikes = ttLive?.likesDisplay || settings.statsTiktokLikes
+
   const stats = [
-    { icon: FaYoutube, value: settings.statsYoutubeSubs, label: 'YouTube Abonesi' },
-    { icon: FaInstagram, value: settings.statsInstagramFollowers, label: 'Instagram Takipçi' },
-    { icon: FaTiktok, value: settings.statsTiktokFollowers, label: 'TikTok Takipçi' },
-    { icon: HiOutlineEye, value: settings.statsTotalViews, label: 'Toplam İzlenme' },
-    { icon: HiOutlineVideoCamera, value: settings.statsTotalVideos, label: 'Yayınlanmış Video' },
+    { icon: FaYoutube, value: ytSubs, label: 'YouTube Abonesi' },
+    { icon: FaInstagram, value: igFollowers, label: 'Instagram Takipçi' },
+    { icon: FaTiktok, value: ttFollowers, label: 'TikTok Takipçi' },
+    { icon: HiOutlineEye, value: ytViews, label: 'Toplam İzlenme' },
+    { icon: HiOutlineVideoCamera, value: ytVideosCount, label: 'Yayınlanmış Video' },
   ].filter(s => s.value)
 
   const featuredVideo = videos[0]
@@ -153,9 +170,9 @@ export default function Home() {
     .slice(0, 3)
 
   const socialFollows = [
-    settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: `${settings.statsYoutubeSubs || ''} Abone`.trim(), url: settings.youtube, color: '#FF0000' },
-    settings.instagram && { icon: FaInstagram, name: 'Instagram', meta: `${settings.statsInstagramFollowers || ''} Takipçi`.trim(), url: settings.instagram, color: '#E4405F' },
-    settings.tiktok && { icon: FaTiktok, name: 'TikTok', meta: settings.statsTiktokFollowers ? `${settings.statsTiktokFollowers} Takipçi` : 'Kısa videolar', url: settings.tiktok, color: '#00F2EA' },
+    settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: ytSubs ? `${ytSubs} Abone` : 'Kanalıma katıl', url: settings.youtube, color: '#FF0000' },
+    settings.instagram && { icon: FaInstagram, name: 'Instagram', meta: igFollowers ? `${igFollowers} Takipçi` : 'Anları paylaşıyorum', url: settings.instagram, color: '#E4405F' },
+    settings.tiktok && { icon: FaTiktok, name: 'TikTok', meta: ttFollowers ? `${ttFollowers} Takipçi` : 'Kısa videolar', url: settings.tiktok, color: '#00F2EA' },
     settings.twitch && { icon: FaTwitch, name: 'Twitch', meta: 'Canlı yayınlar', url: settings.twitch, color: '#9146FF' },
     settings.twitter && { icon: FaXTwitter, name: 'X', meta: 'Anlık düşünceler', url: settings.twitter, color: '#ffffff' },
   ].filter(Boolean)
@@ -581,30 +598,30 @@ export default function Home() {
                 <span className="hm-platform-icon"><FaYoutube size={28} /></span>
                 <div>
                   <h3 className="hm-platform-name">YouTube</h3>
-                  <span className="hm-platform-handle">{settings.youtubeHandle || '@kadirdemir'}</span>
+                  <span className="hm-platform-handle">{settings.youtubeHandle || '@kadirdemir'}{ytLive ? ' · canlı' : ''}</span>
                 </div>
               </div>
               <div className="hm-platform-stats">
-                {settings.statsYoutubeSubs && (
+                {ytSubs && (
                   <div className="hm-platform-stat">
                     <span className="hm-platform-stat-num">
-                      {(() => { const p = parseStat(settings.statsYoutubeSubs); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsYoutubeSubs })()}
+                      {(() => { const p = parseStat(ytSubs); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ytSubs })()}
                     </span>
                     <span className="hm-platform-stat-lbl">Abone</span>
                   </div>
                 )}
-                {settings.statsTotalViews && (
+                {ytViews && (
                   <div className="hm-platform-stat">
                     <span className="hm-platform-stat-num">
-                      {(() => { const p = parseStat(settings.statsTotalViews); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsTotalViews })()}
+                      {(() => { const p = parseStat(ytViews); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ytViews })()}
                     </span>
                     <span className="hm-platform-stat-lbl">İzlenme</span>
                   </div>
                 )}
-                {settings.statsTotalVideos && (
+                {ytVideosCount && (
                   <div className="hm-platform-stat">
                     <span className="hm-platform-stat-num">
-                      {(() => { const p = parseStat(settings.statsTotalVideos); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsTotalVideos })()}
+                      {(() => { const p = parseStat(ytVideosCount); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ytVideosCount })()}
                     </span>
                     <span className="hm-platform-stat-lbl">Video</span>
                   </div>
@@ -622,22 +639,22 @@ export default function Home() {
                 <span className="hm-platform-icon"><FaInstagram size={28} /></span>
                 <div>
                   <h3 className="hm-platform-name">Instagram</h3>
-                  <span className="hm-platform-handle">{settings.instagramHandle || '@kadirardademir'}</span>
+                  <span className="hm-platform-handle">{settings.instagramHandle || '@kadirardademir'}{igLive ? ' · canlı' : ''}</span>
                 </div>
               </div>
               <div className="hm-platform-stats">
-                {settings.statsInstagramFollowers && (
+                {igFollowers && (
                   <div className="hm-platform-stat">
                     <span className="hm-platform-stat-num">
-                      {(() => { const p = parseStat(settings.statsInstagramFollowers); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsInstagramFollowers })()}
+                      {(() => { const p = parseStat(igFollowers); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : igFollowers })()}
                     </span>
                     <span className="hm-platform-stat-lbl">Takipçi</span>
                   </div>
                 )}
-                {settings.statsInstagramPosts && (
+                {igPostsCount && (
                   <div className="hm-platform-stat">
                     <span className="hm-platform-stat-num">
-                      {(() => { const p = parseStat(settings.statsInstagramPosts); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsInstagramPosts })()}
+                      {(() => { const p = parseStat(igPostsCount); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : igPostsCount })()}
                     </span>
                     <span className="hm-platform-stat-lbl">Paylaşım</span>
                   </div>
@@ -655,22 +672,22 @@ export default function Home() {
                 <span className="hm-platform-icon"><FaTiktok size={28} /></span>
                 <div>
                   <h3 className="hm-platform-name">TikTok</h3>
-                  <span className="hm-platform-handle">{settings.tiktokHandle || '@kadirdemirs'}</span>
+                  <span className="hm-platform-handle">{settings.tiktokHandle || '@kadirdemirs'}{ttLive ? ' · canlı' : ''}</span>
                 </div>
               </div>
               <div className="hm-platform-stats">
-                {settings.statsTiktokFollowers && (
+                {ttFollowers && (
                   <div className="hm-platform-stat">
                     <span className="hm-platform-stat-num">
-                      {(() => { const p = parseStat(settings.statsTiktokFollowers); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsTiktokFollowers })()}
+                      {(() => { const p = parseStat(ttFollowers); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ttFollowers })()}
                     </span>
                     <span className="hm-platform-stat-lbl">Takipçi</span>
                   </div>
                 )}
-                {settings.statsTiktokLikes && (
+                {ttLikes && (
                   <div className="hm-platform-stat">
                     <span className="hm-platform-stat-num">
-                      {(() => { const p = parseStat(settings.statsTiktokLikes); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsTiktokLikes })()}
+                      {(() => { const p = parseStat(ttLikes); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ttLikes })()}
                     </span>
                     <span className="hm-platform-stat-lbl">Beğeni</span>
                   </div>

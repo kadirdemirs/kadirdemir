@@ -692,6 +692,40 @@ export async function getMediaFileApi(id) {
   return handleResponse(res);
 }
 
+// ───── Social Stats (YouTube/Instagram/TikTok aggregated) ─────
+const SOCIAL_STATS_TTL = 5 * 60 * 1000;
+let socialStatsCache = { ts: 0, data: null, inflight: null };
+
+export async function getSocialStatsApi({ force = false } = {}) {
+  const now = Date.now();
+  if (!force && socialStatsCache.data && now - socialStatsCache.ts < SOCIAL_STATS_TTL) {
+    return socialStatsCache.data;
+  }
+  if (socialStatsCache.inflight) return socialStatsCache.inflight;
+  socialStatsCache.inflight = (async () => {
+    try {
+      const res = await globalThis.fetch(`${API_BASE}/social-stats`, { credentials: 'include' });
+      const data = await handleResponse(res, { reloadOnUnauthorized: false });
+      socialStatsCache = { ts: Date.now(), data, inflight: null };
+      return data;
+    } catch (err) {
+      socialStatsCache.inflight = null;
+      throw err;
+    }
+  })();
+  return socialStatsCache.inflight;
+}
+
+export async function refreshSocialStatsApi() {
+  const res = await fetch(`${API_BASE}/social-stats?action=refresh`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+  const data = await handleResponse(res);
+  socialStatsCache = { ts: Date.now(), data, inflight: null };
+  return data;
+}
+
 // ───── Ops (client error tracking + backup) ─────
 export async function trackClientErrorApi(data) {
   try {

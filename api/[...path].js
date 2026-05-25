@@ -16,6 +16,7 @@ import reminders from '../server/api/reminders.js'
 import rss from '../server/api/rss.js'
 import seed from '../server/api/seed.js'
 import sitemap from '../server/api/sitemap.js'
+import socialStats from '../server/api/social-stats.js'
 import sponsor from '../server/api/sponsor.js'
 import users from '../server/api/users.js'
 import youtube from '../server/api/youtube.js'
@@ -41,6 +42,7 @@ const handlers = {
   rss,
   seed,
   sitemap,
+  'social-stats': socialStats,
   sponsor,
   users,
   youtube,
