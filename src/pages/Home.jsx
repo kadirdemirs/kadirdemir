@@ -140,6 +140,7 @@ export default function Home() {
   const stats = [
     { icon: FaYoutube, value: settings.statsYoutubeSubs, label: 'YouTube Abonesi' },
     { icon: FaInstagram, value: settings.statsInstagramFollowers, label: 'Instagram Takipçi' },
+    { icon: FaTiktok, value: settings.statsTiktokFollowers, label: 'TikTok Takipçi' },
     { icon: HiOutlineEye, value: settings.statsTotalViews, label: 'Toplam İzlenme' },
     { icon: HiOutlineVideoCamera, value: settings.statsTotalVideos, label: 'Yayınlanmış Video' },
   ].filter(s => s.value)
@@ -152,11 +153,11 @@ export default function Home() {
     .slice(0, 3)
 
   const socialFollows = [
-    settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: `${settings.statsYoutubeSubs || ''} Abone`.trim(), url: settings.youtube },
-    settings.instagram && { icon: FaInstagram, name: 'Instagram', meta: `${settings.statsInstagramFollowers || ''} Takipçi`.trim(), url: settings.instagram },
-    settings.tiktok && { icon: FaTiktok, name: 'TikTok', meta: 'Kısa videolar', url: settings.tiktok },
-    settings.twitch && { icon: FaTwitch, name: 'Twitch', meta: 'Canlı yayınlar', url: settings.twitch },
-    settings.twitter && { icon: FaXTwitter, name: 'X', meta: 'Anlık düşünceler', url: settings.twitter },
+    settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: `${settings.statsYoutubeSubs || ''} Abone`.trim(), url: settings.youtube, color: '#FF0000' },
+    settings.instagram && { icon: FaInstagram, name: 'Instagram', meta: `${settings.statsInstagramFollowers || ''} Takipçi`.trim(), url: settings.instagram, color: '#E4405F' },
+    settings.tiktok && { icon: FaTiktok, name: 'TikTok', meta: settings.statsTiktokFollowers ? `${settings.statsTiktokFollowers} Takipçi` : 'Kısa videolar', url: settings.tiktok, color: '#00F2EA' },
+    settings.twitch && { icon: FaTwitch, name: 'Twitch', meta: 'Canlı yayınlar', url: settings.twitch, color: '#9146FF' },
+    settings.twitter && { icon: FaXTwitter, name: 'X', meta: 'Anlık düşünceler', url: settings.twitter, color: '#ffffff' },
   ].filter(Boolean)
 
   const igPosts = (settings.instagramPosts || []).filter(p => p && p.url)
@@ -563,6 +564,124 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══════════════ SOCIAL MEDIA STATS DASHBOARD ═══════════════ */}
+      <section className="hm-section">
+        <div className="hm-section-head">
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Rakamlar</span>
+          <h2 className="hm-h2">Üç platformda<br />tek hikaye.</h2>
+          <p className="hm-section-sub">YouTube'da uzun videolar, Instagram'da anlar, TikTok'ta kısa hikayeler — toplam erişim her gün büyüyor.</p>
+        </div>
+
+        <div className="hm-platform-grid">
+          {/* YouTube */}
+          {settings.youtube && (
+            <a href={settings.youtube} target="_blank" rel="noopener noreferrer" className="hm-platform-card hm-platform-yt">
+              <div className="hm-platform-glow" aria-hidden="true" />
+              <div className="hm-platform-head">
+                <span className="hm-platform-icon"><FaYoutube size={28} /></span>
+                <div>
+                  <h3 className="hm-platform-name">YouTube</h3>
+                  <span className="hm-platform-handle">{settings.youtubeHandle || '@kadirdemir'}</span>
+                </div>
+              </div>
+              <div className="hm-platform-stats">
+                {settings.statsYoutubeSubs && (
+                  <div className="hm-platform-stat">
+                    <span className="hm-platform-stat-num">
+                      {(() => { const p = parseStat(settings.statsYoutubeSubs); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsYoutubeSubs })()}
+                    </span>
+                    <span className="hm-platform-stat-lbl">Abone</span>
+                  </div>
+                )}
+                {settings.statsTotalViews && (
+                  <div className="hm-platform-stat">
+                    <span className="hm-platform-stat-num">
+                      {(() => { const p = parseStat(settings.statsTotalViews); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsTotalViews })()}
+                    </span>
+                    <span className="hm-platform-stat-lbl">İzlenme</span>
+                  </div>
+                )}
+                {settings.statsTotalVideos && (
+                  <div className="hm-platform-stat">
+                    <span className="hm-platform-stat-num">
+                      {(() => { const p = parseStat(settings.statsTotalVideos); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsTotalVideos })()}
+                    </span>
+                    <span className="hm-platform-stat-lbl">Video</span>
+                  </div>
+                )}
+              </div>
+              <span className="hm-platform-cta">Kanala git <HiOutlineArrowRight /></span>
+            </a>
+          )}
+
+          {/* Instagram */}
+          {settings.instagram && (
+            <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="hm-platform-card hm-platform-ig">
+              <div className="hm-platform-glow" aria-hidden="true" />
+              <div className="hm-platform-head">
+                <span className="hm-platform-icon"><FaInstagram size={28} /></span>
+                <div>
+                  <h3 className="hm-platform-name">Instagram</h3>
+                  <span className="hm-platform-handle">{settings.instagramHandle || '@kadirardademir'}</span>
+                </div>
+              </div>
+              <div className="hm-platform-stats">
+                {settings.statsInstagramFollowers && (
+                  <div className="hm-platform-stat">
+                    <span className="hm-platform-stat-num">
+                      {(() => { const p = parseStat(settings.statsInstagramFollowers); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsInstagramFollowers })()}
+                    </span>
+                    <span className="hm-platform-stat-lbl">Takipçi</span>
+                  </div>
+                )}
+                {settings.statsInstagramPosts && (
+                  <div className="hm-platform-stat">
+                    <span className="hm-platform-stat-num">
+                      {(() => { const p = parseStat(settings.statsInstagramPosts); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsInstagramPosts })()}
+                    </span>
+                    <span className="hm-platform-stat-lbl">Paylaşım</span>
+                  </div>
+                )}
+              </div>
+              <span className="hm-platform-cta">Profili gör <HiOutlineArrowRight /></span>
+            </a>
+          )}
+
+          {/* TikTok */}
+          {settings.tiktok && (
+            <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" className="hm-platform-card hm-platform-tt">
+              <div className="hm-platform-glow" aria-hidden="true" />
+              <div className="hm-platform-head">
+                <span className="hm-platform-icon"><FaTiktok size={28} /></span>
+                <div>
+                  <h3 className="hm-platform-name">TikTok</h3>
+                  <span className="hm-platform-handle">{settings.tiktokHandle || '@kadirdemirs'}</span>
+                </div>
+              </div>
+              <div className="hm-platform-stats">
+                {settings.statsTiktokFollowers && (
+                  <div className="hm-platform-stat">
+                    <span className="hm-platform-stat-num">
+                      {(() => { const p = parseStat(settings.statsTiktokFollowers); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsTiktokFollowers })()}
+                    </span>
+                    <span className="hm-platform-stat-lbl">Takipçi</span>
+                  </div>
+                )}
+                {settings.statsTiktokLikes && (
+                  <div className="hm-platform-stat">
+                    <span className="hm-platform-stat-num">
+                      {(() => { const p = parseStat(settings.statsTiktokLikes); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : settings.statsTiktokLikes })()}
+                    </span>
+                    <span className="hm-platform-stat-lbl">Beğeni</span>
+                  </div>
+                )}
+              </div>
+              <span className="hm-platform-cta">TikTok'ta gör <HiOutlineArrowRight /></span>
+            </a>
+          )}
+        </div>
+      </section>
+
       {/* ═══════════════ SOCIAL FOLLOWS ═══════════════ */}
       {socialFollows.length > 0 && (
         <section className="hm-section">
@@ -580,8 +699,15 @@ export default function Home() {
           </div>
           <div className="hm-social-grid">
             {socialFollows.map((s) => (
-              <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="hm-social-card">
-                <span className="hm-social-icon"><s.icon size={22} /></span>
+              <a
+                key={s.name}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hm-social-card"
+                style={{ '--social-color': s.color }}
+              >
+                <span className="hm-social-icon" style={{ color: s.color }}><s.icon size={22} /></span>
                 <div className="hm-social-info">
                   <span className="hm-social-name">{s.name}</span>
                   {s.meta && <span className="hm-social-meta">{s.meta}</span>}

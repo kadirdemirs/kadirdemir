@@ -36,7 +36,7 @@ export function PersonSchema({ socials }) {
     if (sameAs.length === 0) {
       sameAs.push(
         'https://youtube.com/@kadirdemir',
-        'https://instagram.com/kadirardademirrr',
+        'https://instagram.com/kadirardademir',
         'https://tiktok.com/@kadirdemirs',
         'https://twitch.tv/kadirdemir',
         'https://x.com/kadirdemir'

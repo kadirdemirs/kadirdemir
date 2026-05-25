@@ -9,6 +9,7 @@ import {
   HiOutlineX,
 } from 'react-icons/hi'
 import { HiArrowUpRight } from 'react-icons/hi2'
+import { FaYoutube, FaInstagram, FaTiktok } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useTheme } from '../i18n/ThemeContext'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -127,6 +128,23 @@ export default function Navbar() {
           <Link to="/iletisim" className="nv-drawer-cta">
             Bana Ulaş <HiArrowUpRight size={16} />
           </Link>
+          <div className="nv-drawer-socials">
+            {settings.youtube && (
+              <a href={settings.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" style={{ '--social-color': '#FF0000' }}>
+                <FaYoutube size={18} />
+              </a>
+            )}
+            {settings.instagram && (
+              <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" style={{ '--social-color': '#E4405F' }}>
+                <FaInstagram size={18} />
+              </a>
+            )}
+            {settings.tiktok && (
+              <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" style={{ '--social-color': '#00F2EA' }}>
+                <FaTiktok size={18} />
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </motion.nav>

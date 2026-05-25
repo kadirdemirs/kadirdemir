@@ -16,7 +16,7 @@ import {
   getNewsletterSubscribersApi, deleteNewsletterSubscriberApi, sendNewsletterApi,
   testSmtpApi,
   getSiteSettingsApi, updateSiteSettingsApi,
-  refreshYouTubeVideosApi,
+  refreshYouTubeVideosApi, getYouTubeVideosApi,
   getAnalyticsApi, getGA4AnalyticsApi, getActiveVisitorsApi,
   getRemindersApi, createReminderApi, updateReminderApi, deleteReminderApi,
   getMediaApi, uploadMediaApi, bulkDeleteMediaApi,
@@ -100,7 +100,16 @@ function LoginScreen({ onLogin }) {
 }
 
 // ───── DASHBOARD ─────
-function DashboardSection({ stats, onNavigate }) {
+function formatBigNumber(n) {
+  if (n == null || isNaN(Number(n))) return '—'
+  const num = Number(n)
+  if (num >= 1e9) return (num / 1e9).toFixed(1).replace(/\.0$/, '') + 'B'
+  if (num >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
+  if (num >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K'
+  return String(num)
+}
+
+function DashboardSection({ stats, onNavigate, settings, ytChannel }) {
   const [liveVisitors, setLiveVisitors] = useState(null)
 
   useEffect(() => {
@@ -117,18 +126,35 @@ function DashboardSection({ stats, onNavigate }) {
     return () => clearInterval(i)
   }, [])
 
+  const greeting = (() => {
+    const h = new Date().getHours()
+    if (h < 6) return 'İyi geceler'
+    if (h < 12) return 'Günaydın'
+    if (h < 18) return 'İyi günler'
+    return 'İyi akşamlar'
+  })()
+
+  const youtubeSubs = ytChannel?.subscriberCount ?? null
+  const youtubeViews = ytChannel?.viewCount ?? null
+  const youtubeVideos = ytChannel?.videoCount ?? null
+
   return (
     <div>
       <div className="admin-page-header">
         <div>
-          <h1>Gösterge <span>Paneli</span></h1>
-          <p>Hoş geldin — {new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <h1>{greeting}, <span>{settings?.businessName?.split(' ')[0] || 'Kadir'}</span></h1>
+          <p>{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
-        <a href="/" target="_blank" rel="noopener noreferrer" className="btn btn-outline">⚡ Siteyi Görüntüle</a>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <a href="/" target="_blank" rel="noopener noreferrer" className="btn btn-outline">⚡ Siteyi Aç</a>
+          <button className="btn btn-primary" onClick={() => onNavigate('social-stats')}>
+            <HiOutlineChartBar size={16} /> Sosyal İstatistikler
+          </button>
+        </div>
       </div>
 
       <div className="admin-stats-grid">
-        <div className="admin-stat-card">
+        <div className="admin-stat-card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('blog')}>
           <div className="stat-icon" style={{ background: 'rgba(108,99,255,.1)', color: '#6C63FF' }}>📝</div>
           <div className="stat-number">{stats.blogs || 0}</div>
           <div className="stat-label">Blog Yazısı</div>
@@ -150,16 +176,217 @@ function DashboardSection({ stats, onNavigate }) {
         </div>
       </div>
 
+      {/* ── Social Snapshot ── */}
+      <div style={{ marginTop: 24 }}>
+        <h3 style={{ margin: '0 0 12px', fontSize: '.95rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '.08em' }}>Sosyal Medya Anlık</h3>
+        <div className="admin-stats-grid">
+          <div className="admin-stat-card" style={{
+            background: 'linear-gradient(135deg, rgba(255,0,0,0.08), rgba(255,0,0,0.02))',
+            border: '1px solid rgba(255,0,0,0.18)',
+            cursor: 'pointer',
+          }} onClick={() => onNavigate('social-stats')}>
+            <div className="stat-icon" style={{ background: 'rgba(255,0,0,.15)', color: '#FF0000' }}>▶</div>
+            <div className="stat-number">{youtubeSubs != null ? formatBigNumber(youtubeSubs) : (settings?.statsYoutubeSubs || '—')}</div>
+            <div className="stat-label">YouTube Abone {ytChannel ? '(canlı)' : ''}</div>
+          </div>
+          <div className="admin-stat-card" style={{
+            background: 'linear-gradient(135deg, rgba(228,64,95,0.08), rgba(228,64,95,0.02))',
+            border: '1px solid rgba(228,64,95,0.18)',
+            cursor: 'pointer',
+          }} onClick={() => onNavigate('social-stats')}>
+            <div className="stat-icon" style={{ background: 'rgba(228,64,95,.15)', color: '#E4405F' }}>📸</div>
+            <div className="stat-number">{settings?.statsInstagramFollowers || '—'}</div>
+            <div className="stat-label">Instagram Takipçi</div>
+          </div>
+          <div className="admin-stat-card" style={{
+            background: 'linear-gradient(135deg, rgba(0,242,234,0.08), rgba(255,0,80,0.06))',
+            border: '1px solid rgba(0,242,234,0.18)',
+            cursor: 'pointer',
+          }} onClick={() => onNavigate('social-stats')}>
+            <div className="stat-icon" style={{ background: 'rgba(0,242,234,.15)', color: '#00F2EA' }}>🎵</div>
+            <div className="stat-number">{settings?.statsTiktokFollowers || '—'}</div>
+            <div className="stat-label">TikTok Takipçi</div>
+          </div>
+          <div className="admin-stat-card" style={{
+            background: 'linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02))',
+            border: '1px solid rgba(245,158,11,0.18)',
+          }}>
+            <div className="stat-icon" style={{ background: 'rgba(245,158,11,.15)', color: '#f59e0b' }}>👁️</div>
+            <div className="stat-number">{youtubeViews != null ? formatBigNumber(youtubeViews) : (settings?.statsTotalViews || '—')}</div>
+            <div className="stat-label">Toplam İzlenme</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(124,58,237,.15)', color: '#7c3aed' }}>🎬</div>
+            <div className="stat-number">{youtubeVideos != null ? formatBigNumber(youtubeVideos) : (settings?.statsTotalVideos || '—')}</div>
+            <div className="stat-label">Yayınlanmış Video</div>
+          </div>
+        </div>
+      </div>
+
       <div style={{
         display: 'flex', alignItems: 'center', gap: 16,
         padding: '14px 20px', borderRadius: 12, marginTop: 16,
         background: 'rgba(46,204,113,.06)', border: '1px solid rgba(46,204,113,.2)',
       }}>
-        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#2ECC71' }} />
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#2ECC71', boxShadow: '0 0 0 4px rgba(46,204,113,.18)', animation: 'kade-pulse 1.6s ease-in-out infinite' }} />
         <div style={{ flex: 1 }}>
           <span style={{ fontSize: '.82rem', color: 'var(--text-secondary)' }}>Şu an sitede </span>
           <span style={{ fontSize: '1rem', fontWeight: 700, color: '#2ECC71' }}>{liveVisitors ?? '...'}</span>
           <span style={{ fontSize: '.82rem', color: 'var(--text-secondary)' }}> aktif ziyaretçi</span>
+        </div>
+      </div>
+      <style>{`@keyframes kade-pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.35);opacity:.7} }`}</style>
+    </div>
+  )
+}
+
+// ───── SOCIAL STATS ─────
+function SocialStatsSection({ settings, ytChannel, ytVideos, showToast }) {
+  const [refreshing, setRefreshing] = useState(false)
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    try {
+      await refreshYouTubeVideosApi()
+      showToast('YouTube verileri güncellendi — yenileme için sayfayı yenileyin', 'success')
+    } catch (e) {
+      showToast(e.message, 'error')
+    } finally {
+      setRefreshing(false)
+    }
+  }
+
+  const totalViewsFromVideos = (ytVideos || []).reduce((s, v) => s + (Number(v.views) || 0), 0)
+  const totalLikesFromVideos = (ytVideos || []).reduce((s, v) => s + (Number(v.likes) || 0), 0)
+  const topVideo = [...(ytVideos || [])].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))[0]
+
+  return (
+    <div>
+      <div className="admin-page-header">
+        <div>
+          <h1>Sosyal Medya <span>İstatistikleri</span></h1>
+          <p>YouTube canlı verileri + manuel Instagram/TikTok sayaçları</p>
+        </div>
+        <button className="btn btn-primary" onClick={handleRefresh} disabled={refreshing}>
+          <HiOutlineRefresh size={16} /> {refreshing ? 'Yenileniyor…' : 'YouTube Verilerini Yenile'}
+        </button>
+      </div>
+
+      {/* YouTube */}
+      <div className="settings-section" style={{ background: 'linear-gradient(135deg, rgba(255,0,0,0.06), transparent)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <span style={{ fontSize: 28 }}>▶️</span>
+          <div>
+            <h3 style={{ margin: 0 }}>YouTube — {ytChannel?.title || settings?.youtubeHandle || '@kadirdemir'}</h3>
+            <small style={{ color: 'var(--text-secondary)' }}>
+              {ytChannel ? '✓ Canlı veri' : 'Cache yok — "Yenile" tıklayın'}
+            </small>
+          </div>
+        </div>
+        <div className="admin-stats-grid">
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(255,0,0,.15)', color: '#FF0000' }}>👥</div>
+            <div className="stat-number">{ytChannel?.subscriberCount != null ? formatBigNumber(ytChannel.subscriberCount) : (settings?.statsYoutubeSubs || '—')}</div>
+            <div className="stat-label">Abone</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(255,0,0,.15)', color: '#FF0000' }}>👁️</div>
+            <div className="stat-number">{ytChannel?.viewCount != null ? formatBigNumber(ytChannel.viewCount) : (settings?.statsTotalViews || '—')}</div>
+            <div className="stat-label">Toplam İzlenme</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(255,0,0,.15)', color: '#FF0000' }}>🎬</div>
+            <div className="stat-number">{ytChannel?.videoCount != null ? formatBigNumber(ytChannel.videoCount) : (settings?.statsTotalVideos || '—')}</div>
+            <div className="stat-label">Video</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(255,0,0,.15)', color: '#FF0000' }}>👍</div>
+            <div className="stat-number">{totalLikesFromVideos > 0 ? formatBigNumber(totalLikesFromVideos) : '—'}</div>
+            <div className="stat-label">Toplam Beğeni (son {(ytVideos || []).length})</div>
+          </div>
+        </div>
+        {topVideo && (
+          <div style={{ marginTop: 16, padding: 14, borderRadius: 10, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 14, alignItems: 'center' }}>
+            {topVideo.thumbnail && <img src={topVideo.thumbnail} alt="" style={{ width: 120, height: 68, objectFit: 'cover', borderRadius: 8 }} />}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '.08em' }}>En Çok İzlenen Bölüm</div>
+              <div style={{ fontWeight: 600, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{topVideo.title}</div>
+              <div style={{ fontSize: '.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+                {formatBigNumber(topVideo.views)} izlenme · {formatBigNumber(topVideo.likes)} beğeni
+              </div>
+            </div>
+            <a href={`https://www.youtube.com/watch?v=${topVideo.youtubeId}`} target="_blank" rel="noopener noreferrer" className="btn btn-outline">Aç</a>
+          </div>
+        )}
+      </div>
+
+      {/* Instagram */}
+      <div className="settings-section" style={{ background: 'linear-gradient(135deg, rgba(228,64,95,0.06), rgba(131,58,180,0.04))' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <span style={{ fontSize: 28 }}>📸</span>
+          <div>
+            <h3 style={{ margin: 0 }}>Instagram — {settings?.instagramHandle || '@kadirardademir'}</h3>
+            <small style={{ color: 'var(--text-secondary)' }}>Manuel sayaçlar — Site Ayarları'ndan güncelleyin</small>
+          </div>
+          {settings?.instagram && <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ marginLeft: 'auto' }}>Profili Aç</a>}
+        </div>
+        <div className="admin-stats-grid">
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(228,64,95,.15)', color: '#E4405F' }}>👥</div>
+            <div className="stat-number">{settings?.statsInstagramFollowers || '—'}</div>
+            <div className="stat-label">Takipçi</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(228,64,95,.15)', color: '#E4405F' }}>🖼️</div>
+            <div className="stat-number">{settings?.statsInstagramPosts || '—'}</div>
+            <div className="stat-label">Paylaşım</div>
+          </div>
+        </div>
+      </div>
+
+      {/* TikTok */}
+      <div className="settings-section" style={{ background: 'linear-gradient(135deg, rgba(0,242,234,0.05), rgba(255,0,80,0.04))' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <span style={{ fontSize: 28 }}>🎵</span>
+          <div>
+            <h3 style={{ margin: 0 }}>TikTok — {settings?.tiktokHandle || '@kadirdemirs'}</h3>
+            <small style={{ color: 'var(--text-secondary)' }}>Manuel sayaçlar — Site Ayarları'ndan güncelleyin</small>
+          </div>
+          {settings?.tiktok && <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ marginLeft: 'auto' }}>Profili Aç</a>}
+        </div>
+        <div className="admin-stats-grid">
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(0,242,234,.15)', color: '#00F2EA' }}>👥</div>
+            <div className="stat-number">{settings?.statsTiktokFollowers || '—'}</div>
+            <div className="stat-label">Takipçi</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(255,0,80,.15)', color: '#FF0050' }}>❤️</div>
+            <div className="stat-number">{settings?.statsTiktokLikes || '—'}</div>
+            <div className="stat-label">Toplam Beğeni</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Toplam */}
+      <div className="settings-section" style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.08), transparent)', border: '1px solid rgba(245,158,11,.2)' }}>
+        <h3>📈 Genel Toplam</h3>
+        <div className="admin-stats-grid">
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(245,158,11,.15)', color: '#f59e0b' }}>🌐</div>
+            <div className="stat-number">{totalViewsFromVideos > 0 ? formatBigNumber(totalViewsFromVideos) : '—'}</div>
+            <div className="stat-label">Son videoların izlenme</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(245,158,11,.15)', color: '#f59e0b' }}>🎬</div>
+            <div className="stat-number">{(ytVideos || []).length}</div>
+            <div className="stat-label">Cache'deki video</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon" style={{ background: 'rgba(245,158,11,.15)', color: '#f59e0b' }}>📅</div>
+            <div className="stat-number">{settings?.statsActiveYears || '5+'}</div>
+            <div className="stat-label">Aktif yıl</div>
+          </div>
         </div>
       </div>
     </div>
@@ -735,26 +962,36 @@ function SettingsSection({ showToast, onChangePassword }) {
       </div>
 
       <div className="settings-section">
-        <h3>Sosyal Medya</h3>
+        <h3>🌐 Sosyal Medya</h3>
         <div className="form-grid">
-          <label>YouTube URL<input value={s.youtube || ''} onChange={e => upd('youtube', e.target.value)} /></label>
-          <label>YouTube Channel ID<input value={s.youtubeChannelId || ''} onChange={e => upd('youtubeChannelId', e.target.value)} placeholder="UCxxxxxx..." /></label>
-          <label>Instagram URL<input value={s.instagram || ''} onChange={e => upd('instagram', e.target.value)} /></label>
-          <label>TikTok URL<input value={s.tiktok || ''} onChange={e => upd('tiktok', e.target.value)} /></label>
-          <label>Twitch URL<input value={s.twitch || ''} onChange={e => upd('twitch', e.target.value)} /></label>
-          <label>X (Twitter) URL<input value={s.twitter || ''} onChange={e => upd('twitter', e.target.value)} /></label>
-          <label>Discord<input value={s.discord || ''} onChange={e => upd('discord', e.target.value)} /></label>
-          <label>WhatsApp<input value={s.whatsapp || ''} onChange={e => upd('whatsapp', e.target.value)} /></label>
+          <label>▶️ YouTube URL<input value={s.youtube || ''} onChange={e => upd('youtube', e.target.value)} placeholder="https://youtube.com/@kadirdemir" /></label>
+          <label>▶️ YouTube Handle<input value={s.youtubeHandle || ''} onChange={e => upd('youtubeHandle', e.target.value)} placeholder="@kadirdemir" /></label>
+          <label>▶️ YouTube Channel ID<input value={s.youtubeChannelId || ''} onChange={e => upd('youtubeChannelId', e.target.value)} placeholder="UCxxxxxx..." /></label>
+          <label>📸 Instagram URL<input value={s.instagram || ''} onChange={e => upd('instagram', e.target.value)} placeholder="https://instagram.com/kadirardademir" /></label>
+          <label>📸 Instagram Handle<input value={s.instagramHandle || ''} onChange={e => upd('instagramHandle', e.target.value)} placeholder="@kadirardademir" /></label>
+          <label>🎵 TikTok URL<input value={s.tiktok || ''} onChange={e => upd('tiktok', e.target.value)} placeholder="https://tiktok.com/@kadirdemirs" /></label>
+          <label>🎵 TikTok Handle<input value={s.tiktokHandle || ''} onChange={e => upd('tiktokHandle', e.target.value)} placeholder="@kadirdemirs" /></label>
+          <label>🎮 Twitch URL<input value={s.twitch || ''} onChange={e => upd('twitch', e.target.value)} /></label>
+          <label>𝕏 X (Twitter) URL<input value={s.twitter || ''} onChange={e => upd('twitter', e.target.value)} /></label>
+          <label>💬 Discord<input value={s.discord || ''} onChange={e => upd('discord', e.target.value)} /></label>
+          <label>📞 WhatsApp<input value={s.whatsapp || ''} onChange={e => upd('whatsapp', e.target.value)} /></label>
         </div>
       </div>
 
       <div className="settings-section">
-        <h3>İstatistikler (sayaçlar)</h3>
+        <h3>📊 İstatistikler (sayaçlar)</h3>
+        <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '0 0 14px' }}>
+          YouTube verileri "YouTube Yenile" ile otomatik güncellenir. TikTok / Instagram sayıları manuel girilir (örn. 1.8M, 24.5M).
+        </p>
         <div className="form-grid">
-          <label>YouTube Abone<input value={s.statsYoutubeSubs || ''} onChange={e => upd('statsYoutubeSubs', e.target.value)} placeholder="2.4M" /></label>
-          <label>Instagram Takipçi<input value={s.statsInstagramFollowers || ''} onChange={e => upd('statsInstagramFollowers', e.target.value)} /></label>
-          <label>Toplam İzlenme<input value={s.statsTotalViews || ''} onChange={e => upd('statsTotalViews', e.target.value)} /></label>
-          <label>Yayınlanmış Video<input value={s.statsTotalVideos || ''} onChange={e => upd('statsTotalVideos', e.target.value)} /></label>
+          <label>▶️ YouTube Abone<input value={s.statsYoutubeSubs || ''} onChange={e => upd('statsYoutubeSubs', e.target.value)} placeholder="2.4M" /></label>
+          <label>▶️ Toplam İzlenme<input value={s.statsTotalViews || ''} onChange={e => upd('statsTotalViews', e.target.value)} placeholder="1.02B" /></label>
+          <label>▶️ Yayınlanmış Video<input value={s.statsTotalVideos || ''} onChange={e => upd('statsTotalVideos', e.target.value)} placeholder="3.8K" /></label>
+          <label>📸 Instagram Takipçi<input value={s.statsInstagramFollowers || ''} onChange={e => upd('statsInstagramFollowers', e.target.value)} placeholder="3.3M" /></label>
+          <label>📸 Instagram Post<input value={s.statsInstagramPosts || ''} onChange={e => upd('statsInstagramPosts', e.target.value)} placeholder="420" /></label>
+          <label>🎵 TikTok Takipçi<input value={s.statsTiktokFollowers || ''} onChange={e => upd('statsTiktokFollowers', e.target.value)} placeholder="1.8M" /></label>
+          <label>🎵 TikTok Beğeni<input value={s.statsTiktokLikes || ''} onChange={e => upd('statsTiktokLikes', e.target.value)} placeholder="24.5M" /></label>
+          <label>📅 Aktif Yıl<input value={s.statsActiveYears || ''} onChange={e => upd('statsActiveYears', e.target.value)} placeholder="5+" /></label>
         </div>
       </div>
 
@@ -1006,6 +1243,7 @@ function ChangePasswordModal({ onClose, showToast }) {
 const TABS = [
   { id: 'dashboard', label: 'Panel', icon: HiOutlineHome },
   { id: 'analytics', label: 'Analitik', icon: HiOutlineChartBar },
+  { id: 'social-stats', label: 'Sosyal Medya', icon: HiOutlineChartBar },
   { id: 'messages', label: 'Mesajlar', icon: HiOutlineMail },
   { id: 'blog', label: 'Blog', icon: HiOutlineNewspaper },
   { id: 'comments', label: 'Yorumlar', icon: HiOutlineChatAlt2 },
@@ -1028,6 +1266,8 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [pwModal, setPwModal] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [siteSettings, setSiteSettings] = useState({})
+  const [ytData, setYtData] = useState({ channel: null, videos: [] })
 
   const showToast = useCallback((message, type = 'success') => {
     setToast({ message, type })
@@ -1035,10 +1275,12 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
 
   const loadStats = useCallback(async () => {
     try {
-      const [blogs, msgs, subs] = await Promise.all([
+      const [blogs, msgs, subs, ss, yt] = await Promise.all([
         getBlogsApi().catch(() => []),
         getMessagesApi().catch(() => []),
         getNewsletterSubscribersApi().catch(() => []),
+        getSiteSettingsApi().catch(() => null),
+        getYouTubeVideosApi().catch(() => null),
       ])
       setStats({
         blogs: Array.isArray(blogs) ? blogs.length : 0,
@@ -1047,6 +1289,8 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
         subscribers: Array.isArray(subs) ? subs.length : 0,
       })
       setUnreadCount(Array.isArray(msgs) ? msgs.filter(m => !m.read).length : 0)
+      if (ss?.data) setSiteSettings(ss.data)
+      if (yt) setYtData({ channel: yt.channel || null, videos: Array.isArray(yt.videos) ? yt.videos : [] })
     } catch { /* ignore */ }
   }, [])
 
@@ -1064,8 +1308,9 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
 
   const renderTab = () => {
     switch (tab) {
-      case 'dashboard': return <DashboardSection stats={stats} onNavigate={setTab} />
+      case 'dashboard': return <DashboardSection stats={stats} onNavigate={setTab} settings={siteSettings} ytChannel={ytData.channel} />
       case 'analytics': return <AnalyticsSection />
+      case 'social-stats': return <SocialStatsSection settings={siteSettings} ytChannel={ytData.channel} ytVideos={ytData.videos} showToast={showToast} />
       case 'messages': return <MessagesSection showToast={showToast} onCountChange={setUnreadCount} />
       case 'blog': return <BlogSection showToast={showToast} />
       case 'comments': return <CommentsSection showToast={showToast} />

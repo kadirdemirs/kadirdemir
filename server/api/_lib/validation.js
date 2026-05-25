@@ -61,7 +61,7 @@ export function validateQuery(req, res) {
   }
 
   const period = first(query.period);
-  if (period && !['day', 'week', 'month', 'quarter', '30d', '90d'].includes(period)) {
+  if (period && !['today', 'day', 'week', 'month', 'quarter', '30d', '90d'].includes(period)) {
     res.status(400).json({ error: 'Invalid period parameter' });
     return false;
   }

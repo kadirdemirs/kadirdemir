@@ -210,7 +210,7 @@ export default async function handler(req, res) {
 
       // Build date range
       const now = new Date();
-      const days = period === 'quarter' ? 90 : period === 'month' ? 30 : 7;
+      const days = period === 'quarter' ? 90 : period === 'month' ? 30 : period === 'today' || period === 'day' ? 1 : 7;
       const dates = [];
       for (let i = days - 1; i >= 0; i--) {
         const d = new Date(now);
@@ -326,7 +326,7 @@ export default async function handler(req, res) {
       if (!token) return res.status(200).json({ configured: false, error: 'GA4 token alınamadı' });
 
       const period = req.query?.period || 'week';
-      const days = period === 'quarter' ? 90 : period === 'month' ? 30 : 7;
+      const days = period === 'quarter' ? 90 : period === 'month' ? 30 : period === 'today' || period === 'day' ? 1 : 7;
       const startDate = `${days}daysAgo`;
 
       const [dailyReport, pageReport, sourceReport, prevReport, activeReport] = await Promise.all([

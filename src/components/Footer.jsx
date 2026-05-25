@@ -22,11 +22,11 @@ const LEGAL = [
 
 function buildSocials(s) {
   const list = []
-  if (s.youtube) list.push({ icon: FaYoutube, name: 'YouTube', url: s.youtube })
-  if (s.instagram) list.push({ icon: FaInstagram, name: 'Instagram', url: s.instagram })
-  if (s.tiktok) list.push({ icon: FaTiktok, name: 'TikTok', url: s.tiktok })
-  if (s.twitch) list.push({ icon: FaTwitch, name: 'Twitch', url: s.twitch })
-  if (s.twitter) list.push({ icon: FaXTwitter, name: 'X', url: s.twitter })
+  if (s.youtube) list.push({ icon: FaYoutube, name: 'YouTube', url: s.youtube, color: '#FF0000' })
+  if (s.instagram) list.push({ icon: FaInstagram, name: 'Instagram', url: s.instagram, color: '#E4405F' })
+  if (s.tiktok) list.push({ icon: FaTiktok, name: 'TikTok', url: s.tiktok, color: '#00F2EA' })
+  if (s.twitch) list.push({ icon: FaTwitch, name: 'Twitch', url: s.twitch, color: '#9146FF' })
+  if (s.twitter) list.push({ icon: FaXTwitter, name: 'X', url: s.twitter, color: '#ffffff' })
   return list
 }
 
@@ -129,8 +129,14 @@ export default function Footer() {
           <ul className="ft-list">
             {socials.map((s) => (
               <li key={s.name}>
-                <a href={s.url} target="_blank" rel="noopener noreferrer">
-                  {s.name}
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ft-social-link"
+                  style={{ '--social-color': s.color }}
+                >
+                  <s.icon size={14} aria-hidden="true" /> {s.name}
                 </a>
               </li>
             ))}

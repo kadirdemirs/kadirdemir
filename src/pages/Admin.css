@@ -4,6 +4,7 @@
 
 /* ===== THEME TOKENS ===== */
 .admin-dashboard,
+.admin-shell,
 .admin-login-container {
   --bg-primary: #F5F3F0;
   --bg-secondary: #ECEAE6;
@@ -13,16 +14,18 @@
   --text-primary: #1A1715;
   --text-secondary: #5C5753;
   --text-tertiary: #9E9994;
-  --accent: #0d9488;
-  --accent-light: #f59e0b;
-  --accent-alpha: rgba(13, 148, 136, 0.08);
-  --accent-glow: rgba(13, 148, 136, 0.25);
+  --gray-light: #9E9994;
+  --gray-lighter: #5C5753;
+  --accent: #f59e0b;
+  --accent-light: #fbbf24;
+  --accent-alpha: rgba(245, 158, 11, 0.10);
+  --accent-glow: rgba(245, 158, 11, 0.25);
   --border: rgba(0, 0, 0, 0.07);
   --border-strong: rgba(0, 0, 0, 0.12);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
-  --shadow-glow: 0 0 20px rgba(13, 148, 136, 0.15);
+  --shadow-glow: 0 0 20px rgba(245, 158, 11, 0.15);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -36,24 +39,28 @@
 
 /* Dark Mode */
 .admin-dashboard.dark,
+.admin-shell.dark,
 .admin-login-container.dark {
-  --bg-primary: #0F0F12;
-  --bg-secondary: #18181D;
-  --bg-tertiary: #222228;
-  --card-bg: #1C1C22;
-  --card-bg-glass: rgba(28, 28, 34, 0.78);
-  --text-primary: #F0EDE8;
-  --text-secondary: #A8A49E;
-  --text-tertiary: #6B6760;
+  --bg-primary: #0B0B0F;
+  --bg-secondary: #14141A;
+  --bg-tertiary: #1D1D24;
+  --card-bg: #17171D;
+  --card-bg-glass: rgba(23, 23, 29, 0.78);
+  --text-primary: #F2EFEA;
+  --text-secondary: #B3AFA8;
+  --text-tertiary: #7A766F;
+  --gray-light: #7A766F;
+  --gray-lighter: #B3AFA8;
   --accent: #f59e0b;
   --accent-light: #fbbf24;
-  --accent-alpha: rgba(45, 212, 191, 0.10);
-  --accent-glow: rgba(45, 212, 191, 0.20);
-  --border: rgba(255, 255, 255, 0.06);
-  --border-strong: rgba(255, 255, 255, 0.10);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+  --accent-alpha: rgba(245, 158, 11, 0.12);
+  --accent-glow: rgba(245, 158, 11, 0.28);
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.45);
+  --shadow-glow: 0 0 24px rgba(245, 158, 11, 0.20);
   color-scheme: dark;
 }
 

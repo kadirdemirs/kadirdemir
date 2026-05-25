@@ -15,8 +15,8 @@ export const DEFAULT_SITE_SETTINGS = {
   youtube: 'https://youtube.com/@kadirdemir',
   youtubeHandle: '@kadirdemir',
   youtubeChannelId: '',
-  instagram: 'https://instagram.com/kadirardademirrr',
-  instagramHandle: '@kadirardademirrr',
+  instagram: 'https://instagram.com/kadirardademir',
+  instagramHandle: '@kadirardademir',
   tiktok: 'https://tiktok.com/@kadirdemirs',
   tiktokHandle: '@kadirdemirs',
   twitch: 'https://twitch.tv/kadirdemir',
@@ -31,6 +31,10 @@ export const DEFAULT_SITE_SETTINGS = {
   statsInstagramFollowers: '3.3M',
   statsTotalViews: '1.02B',
   statsTotalVideos: '3.8K',
+  statsTiktokFollowers: '1.8M',
+  statsTiktokLikes: '24.5M',
+  statsInstagramPosts: '420',
+  statsActiveYears: '5+',
 
   // SEO
   seoTitle: 'Kadir Demir | YouTube İçerik Üreticisi',

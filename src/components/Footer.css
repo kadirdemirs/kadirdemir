@@ -538,6 +538,24 @@
   transform: translateX(3px);
 }
 
+.ft-list a.ft-social-link {
+  gap: 8px;
+}
+
+.ft-list a.ft-social-link svg {
+  color: var(--text-tertiary);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.ft-list a.ft-social-link:hover {
+  color: var(--social-color, var(--primary));
+}
+
+.ft-list a.ft-social-link:hover svg {
+  color: var(--social-color, var(--primary));
+  transform: scale(1.18) rotate(-6deg);
+}
+
 /* ─── Bottom ─── */
 .ft-bottom {
   margin-top: 64px;

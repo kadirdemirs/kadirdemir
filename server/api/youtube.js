@@ -6,7 +6,7 @@ const CACHE_TTL_MS = 10 * 60 * 1000; // 10 dk
 const MAX_VIDEOS = 12;
 
 async function resolveChannelId(apiKey, db) {
-  const settings = await db.collection('content').findOne({ section: 'site-settings' });
+  const settings = await db.collection('siteContent').findOne({ section: 'site-settings' });
   const data = settings?.data || {};
 
   if (data.youtubeChannelId && /^UC[\w-]{20,}$/.test(data.youtubeChannelId)) {
@@ -30,14 +30,25 @@ async function resolveChannelId(apiKey, db) {
 }
 
 async function fetchYouTubeVideos(apiKey, channelId) {
-  // 1) Kanal "uploads" playlist ID'sini al
+  // 1) Kanal "uploads" playlist ID'sini + istatistikleri al
   const chRes = await fetch(
-    `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${apiKey}`
+    `https://www.googleapis.com/youtube/v3/channels?part=contentDetails,snippet,statistics&id=${channelId}&key=${apiKey}`
   );
   if (!chRes.ok) throw new Error('YouTube channel lookup failed');
   const chData = await chRes.json();
-  const uploadsId = chData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+  const channelItem = chData.items?.[0];
+  const uploadsId = channelItem?.contentDetails?.relatedPlaylists?.uploads;
   if (!uploadsId) throw new Error('No uploads playlist');
+
+  const channelInfo = {
+    id: channelId,
+    title: channelItem?.snippet?.title || '',
+    description: channelItem?.snippet?.description || '',
+    thumbnail: channelItem?.snippet?.thumbnails?.high?.url || channelItem?.snippet?.thumbnails?.default?.url || '',
+    subscriberCount: Number(channelItem?.statistics?.subscriberCount || 0),
+    viewCount: Number(channelItem?.statistics?.viewCount || 0),
+    videoCount: Number(channelItem?.statistics?.videoCount || 0),
+  };
 
   // 2) Playlist'ten son N videoyu al
   const plRes = await fetch(
@@ -55,7 +66,7 @@ async function fetchYouTubeVideos(apiKey, channelId) {
   if (!vRes.ok) throw new Error('YouTube video details failed');
   const vData = await vRes.json();
 
-  return (vData.items || []).map((v) => ({
+  const videos = (vData.items || []).map((v) => ({
     youtubeId: v.id,
     title: v.snippet?.title || '',
     description: (v.snippet?.description || '').slice(0, 500),
@@ -67,41 +78,63 @@ async function fetchYouTubeVideos(apiKey, channelId) {
     duration: v.contentDetails?.duration,
     views: Number(v.statistics?.viewCount || 0),
     likes: Number(v.statistics?.likeCount || 0),
+    comments: Number(v.statistics?.commentCount || 0),
   }));
+
+  return { videos, channel: channelInfo };
 }
 
 async function getCachedOrRefresh(db, force = false) {
-  const cached = await db.collection('content').findOne({ section: 'youtube-cache' });
+  const cached = await db.collection('siteContent').findOne({ section: 'youtube-cache' });
   const now = Date.now();
   const isStale = !cached?.data?.fetchedAt || now - new Date(cached.data.fetchedAt).getTime() > CACHE_TTL_MS;
 
   if (!force && cached?.data?.videos && !isStale) {
-    return { videos: cached.data.videos, cached: true, fetchedAt: cached.data.fetchedAt };
+    return {
+      videos: cached.data.videos,
+      channel: cached.data.channel || null,
+      cached: true,
+      fetchedAt: cached.data.fetchedAt,
+    };
   }
 
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) {
-    // API key yoksa cache varsa onu döndür, yoksa boş
-    return { videos: cached?.data?.videos || [], cached: true, fetchedAt: cached?.data?.fetchedAt, error: 'YOUTUBE_API_KEY missing' };
+    return {
+      videos: cached?.data?.videos || [],
+      channel: cached?.data?.channel || null,
+      cached: true,
+      fetchedAt: cached?.data?.fetchedAt,
+      error: 'YOUTUBE_API_KEY missing',
+    };
   }
 
   const channelId = await resolveChannelId(apiKey, db);
   if (!channelId) {
-    return { videos: cached?.data?.videos || [], cached: true, error: 'Channel ID could not be resolved' };
+    return {
+      videos: cached?.data?.videos || [],
+      channel: cached?.data?.channel || null,
+      cached: true,
+      error: 'Channel ID could not be resolved',
+    };
   }
 
   try {
-    const videos = await fetchYouTubeVideos(apiKey, channelId);
+    const { videos, channel } = await fetchYouTubeVideos(apiKey, channelId);
     const fetchedAt = new Date();
-    await db.collection('content').updateOne(
+    await db.collection('siteContent').updateOne(
       { section: 'youtube-cache' },
-      { $set: { section: 'youtube-cache', data: { videos, fetchedAt, channelId }, updatedAt: fetchedAt } },
+      { $set: { section: 'youtube-cache', data: { videos, channel, fetchedAt, channelId }, updatedAt: fetchedAt } },
       { upsert: true }
     );
-    return { videos, cached: false, fetchedAt };
+    return { videos, channel, cached: false, fetchedAt };
   } catch (e) {
-    // Hata olursa eski cache'i döndür
-    return { videos: cached?.data?.videos || [], cached: true, error: e.message };
+    return {
+      videos: cached?.data?.videos || [],
+      channel: cached?.data?.channel || null,
+      cached: true,
+      error: e.message,
+    };
   }
 }
 
@@ -118,7 +151,7 @@ export default async function handler(req, res) {
       if (!apiKey) return res.status(200).json({ live: false });
 
       const LIVE_CACHE_KEY = 'youtube-live-status';
-      const cached = await db.collection('content').findOne({ section: LIVE_CACHE_KEY });
+      const cached = await db.collection('siteContent').findOne({ section: LIVE_CACHE_KEY });
       const FIVE_MIN = 5 * 60 * 1000;
       if (cached && cached.fetchedAt && Date.now() - cached.fetchedAt < FIVE_MIN) {
         return res.status(200).json(cached.data || { live: false });
@@ -127,7 +160,7 @@ export default async function handler(req, res) {
       const channelId = await resolveChannelId(apiKey, db);
       if (!channelId) {
         const empty = { live: false };
-        await db.collection('content').updateOne(
+        await db.collection('siteContent').updateOne(
           { section: LIVE_CACHE_KEY },
           { $set: { section: LIVE_CACHE_KEY, data: empty, fetchedAt: Date.now() } },
           { upsert: true }
@@ -151,7 +184,7 @@ export default async function handler(req, res) {
           }
         : { live: false };
 
-      await db.collection('content').updateOne(
+      await db.collection('siteContent').updateOne(
         { section: LIVE_CACHE_KEY },
         { $set: { section: LIVE_CACHE_KEY, data: payload, fetchedAt: Date.now() } },
         { upsert: true }

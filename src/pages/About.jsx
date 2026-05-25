@@ -3,12 +3,18 @@ import {
   HiOutlineCamera,
   HiOutlineMail,
 } from 'react-icons/hi'
-import { FaYoutube, FaInstagram } from 'react-icons/fa'
+import { FaYoutube, FaInstagram, FaTiktok } from 'react-icons/fa'
 import ResponsivePortrait from '../components/ResponsivePortrait'
 import Reveal from '../components/Reveal'
+import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import './About.css'
 
 export default function About() {
+  const { settings } = useSiteSettings()
+  const youtubeUrl = settings.youtube || 'https://youtube.com/@kadirdemir'
+  const instagramUrl = settings.instagram || 'https://instagram.com/kadirardademir'
+  const tiktokUrl = settings.tiktok || 'https://tiktok.com/@kadirdemirs'
+  const emailAddr = settings.businessEmail || settings.email || 'hello@kadirdemir.tv'
   return (
     <div className="kd-about">
       <section className="kd-about-hero">
@@ -96,7 +102,7 @@ export default function About() {
         </div>
         <div className="kd-about-cta-actions">
           <a
-            href="https://youtube.com/@kadirdemir"
+            href={youtubeUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="kd-cta-link"
@@ -104,14 +110,22 @@ export default function About() {
             <FaYoutube /> YouTube'da abone ol
           </a>
           <a
-            href="https://instagram.com/kadirardademirrr"
+            href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="kd-cta-link"
           >
             <FaInstagram /> Instagram'da takip et
           </a>
-          <a href="mailto:hello@kadirdemir.tv" className="kd-cta-link">
+          <a
+            href={tiktokUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="kd-cta-link"
+          >
+            <FaTiktok /> TikTok'ta takip et
+          </a>
+          <a href={`mailto:${emailAddr}`} className="kd-cta-link">
             <HiOutlineMail /> Doğrudan yaz
           </a>
         </div>
