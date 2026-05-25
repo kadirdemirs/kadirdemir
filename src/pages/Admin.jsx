@@ -69,7 +69,7 @@ function LoginScreen({ onLogin }) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="admin-logo">kade<span>admin</span></div>
+        <div className="admin-logo">kadir<span>admin</span></div>
         <h2>Yönetici Girişi</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -1356,7 +1356,7 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
       </button>
 
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-logo">kade<span>admin</span></div>
+        <div className="sidebar-logo">kadir<span>admin</span></div>
         <nav>
           {TABS.map(t => (
             <button key={t.id} className={`sidebar-item ${tab === t.id ? 'active' : ''}`}

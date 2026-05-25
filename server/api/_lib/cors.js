@@ -1,5 +1,13 @@
 const LOCAL_ORIGINS = ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:4173'];
-const PRODUCTION_ORIGINS = ['https://www.kademedia.com.tr', 'https://kademedia.com.tr'];
+const PRODUCTION_ORIGINS = [
+  'https://www.kadirdemir.tv',
+  'https://kadirdemir.tv',
+  'https://kadirdemir.vercel.app',
+  'https://kadirdemir-nu.vercel.app',
+  // Legacy — kept until DNS fully migrates
+  'https://www.kademedia.com.tr',
+  'https://kademedia.com.tr',
+];
 
 function isProductionRuntime() {
   return process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';

@@ -322,15 +322,15 @@ const defaultContent = [
   {
     section: 'footer',
     data: {
-      email: 'hello@kademedia.com',
-      phone: '0 506 729 34 23',
-      address: 'Biruni Teknopark, Zeytinburnu/İstanbul',
-      instagram: 'https://instagram.com/kademediacom',
-      twitter: 'https://x.com/kademediacom',
-      youtube: 'https://www.youtube.com/@kademediacom',
-      tiktok: 'https://tiktok.com/@kademediacom',
-      linkedin: 'https://www.linkedin.com/company/kademediaagency',
-      whatsapp: 'https://wa.me/905067293423',
+      email: 'hello@kadirdemir.tv',
+      phone: '',
+      address: 'İstanbul, TR',
+      instagram: 'https://instagram.com/kadirardademir',
+      twitter: 'https://x.com/kadirdemir',
+      youtube: 'https://youtube.com/@kadirdemir',
+      tiktok: 'https://tiktok.com/@kadirdemirs',
+      linkedin: '',
+      whatsapp: '',
     }
   },
 ];

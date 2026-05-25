@@ -388,6 +388,44 @@
     0 10px 26px -8px var(--accent-red-glow);
 }
 
+.nv-drawer-lang {
+  margin-top: 22px;
+  display: inline-flex;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+}
+[data-theme="light"] .nv-drawer-lang {
+  background: rgba(26, 23, 21, 0.04);
+  border-color: rgba(26, 23, 21, 0.08);
+}
+
+.nv-drawer-lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.nv-drawer-lang-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+[data-theme="light"] .nv-drawer-lang-btn:hover { background: rgba(26, 23, 21, 0.05); }
+.nv-drawer-lang-btn.is-active {
+  background: var(--primary);
+  color: #1a1715;
+}
+
 .nv-drawer-socials {
   margin-top: 22px;
   display: inline-flex;
@@ -396,6 +434,7 @@
   padding-top: 22px;
   border-top: 1px dashed rgba(255, 255, 255, 0.08);
 }
+[data-theme="light"] .nv-drawer-socials { border-top-color: rgba(26, 23, 21, 0.08); }
 
 .nv-drawer-socials a {
   display: inline-flex;
@@ -456,4 +495,127 @@
   .nv-cta:hover { transform: none; }
   .nv-cta:hover::before { transition: none; }
   .nv-cta:hover .nv-cta-arrow { transform: rotate(45deg); }
+}
+
+/* ════════════════════════════════════════════
+   LANGUAGE DROPDOWN (3-state TR/EN/DE)
+   ════════════════════════════════════════════ */
+.nv-lang {
+  position: relative;
+}
+
+.nv-lang-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nv-lang-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 180px;
+  padding: 6px;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 0 var(--glass-highlight) inset,
+    0 24px 50px -12px rgba(0, 0, 0, 0.5);
+  list-style: none;
+  z-index: 100;
+  transform-origin: top right;
+}
+
+.nv-lang-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.18s ease;
+}
+
+.nv-lang-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+[data-theme="light"] .nv-lang-option:hover { background: rgba(26, 23, 21, 0.05); }
+
+.nv-lang-option.is-active {
+  background: var(--accent-alpha, rgba(245, 158, 11, 0.12));
+  color: var(--primary);
+}
+
+.nv-lang-flag {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.nv-lang-label {
+  flex: 1;
+}
+
+.nv-lang-short {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+
+.nv-lang-option.is-active .nv-lang-short { color: var(--primary); }
+
+.nv-lang-check {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════════
+   THEME TOGGLE — animated sun/moon swap
+   ════════════════════════════════════════════ */
+.nv-theme-toggle {
+  position: relative;
+  overflow: hidden;
+}
+
+.nv-theme-icon {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.3s ease;
+}
+
+.nv-theme-sun {
+  opacity: 0;
+  transform: translateY(120%) rotate(-90deg);
+}
+.nv-theme-moon {
+  opacity: 1;
+  transform: translateY(0) rotate(0);
+}
+
+.nv-theme-toggle[data-theme-active="light"] .nv-theme-sun {
+  opacity: 1;
+  transform: translateY(0) rotate(0);
+}
+.nv-theme-toggle[data-theme-active="light"] .nv-theme-moon {
+  opacity: 0;
+  transform: translateY(-120%) rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-theme-icon { transition: none; }
 }

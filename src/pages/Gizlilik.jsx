@@ -76,8 +76,8 @@ export default function Gizlilik() {
               <h2>8. İletişim</h2>
               <p>
                 Gizlilik politikamızla ilgili sorularınız için:{' '}
-                <a href="mailto:thekademedia@gmail.com" style={{ color: 'var(--primary)' }}>
-                  thekademedia@gmail.com
+                <a href="mailto:hello@kadirdemir.tv" style={{ color: 'var(--primary)' }}>
+                  hello@kadirdemir.tv
                 </a>
               </p>
             </div>

@@ -3,22 +3,8 @@ import { motion } from 'framer-motion'
 import { FaYoutube, FaInstagram, FaTiktok, FaTwitch, FaXTwitter } from 'react-icons/fa6'
 import { HiArrowUpRight } from 'react-icons/hi2'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { useLanguage } from '../i18n/LanguageContext'
 import './Footer.css'
-
-const NAV = [
-  { name: 'Ana Sayfa', path: '/' },
-  { name: 'Hakkımda', path: '/hakkimda' },
-  { name: 'Videolar', path: '/videolar' },
-  { name: 'Blog', path: '/blog' },
-  { name: 'Setup', path: '/setup' },
-  { name: 'İletişim', path: '/iletisim' },
-]
-
-const LEGAL = [
-  { name: 'KVKK', path: '/kvkk' },
-  { name: 'Gizlilik', path: '/gizlilik' },
-  { name: 'Çerezler', path: '/cerez-politikasi' },
-]
 
 function buildSocials(s) {
   const list = []
@@ -32,10 +18,26 @@ function buildSocials(s) {
 
 export default function Footer() {
   const { settings } = useSiteSettings()
+  const { t } = useLanguage()
   const location = useLocation()
   const brandName = settings.businessName || 'Kadir Demir'
   const socials = buildSocials(settings)
   const showMegaCta = location.pathname !== '/iletisim'
+
+  const NAV = [
+    { name: t('nav.home'), path: '/' },
+    { name: t('nav.about'), path: '/hakkimda' },
+    { name: t('nav.videos'), path: '/videolar' },
+    { name: t('nav.blog'), path: '/blog' },
+    { name: t('nav.setup'), path: '/setup' },
+    { name: t('nav.contact'), path: '/iletisim' },
+  ]
+
+  const LEGAL = [
+    { name: 'KVKK', path: '/kvkk' },
+    { name: t('footer.legal') === 'Yasal' ? 'Gizlilik' : t('footer.legal') === 'Legal' ? 'Privacy' : 'Datenschutz', path: '/gizlilik' },
+    { name: t('footer.legal') === 'Yasal' ? 'Çerezler' : t('footer.legal') === 'Legal' ? 'Cookies' : 'Cookies', path: '/cerez-politikasi' },
+  ]
 
   return (
     <footer className="ft">
@@ -63,28 +65,25 @@ export default function Footer() {
           <div className="ft-cta-inner">
             <div className="ft-cta-text">
               <span className="ft-cta-eyebrow">
-                <span className="ft-cta-dot" /> İş birliği · iletişim
+                <span className="ft-cta-dot" /> {t('footer.ctaEyebrow')}
               </span>
               <h2 className="ft-cta-title">
-                <span className="ft-cta-line">Birlikte</span>
+                <span className="ft-cta-line">{t('footer.ctaTitleA')}</span>
                 <span className="ft-cta-line">
-                  <span className="ft-cta-title-accent">hikâye</span> anlatalım.
+                  <span className="ft-cta-title-accent">{t('footer.ctaTitleB')}</span> {t('footer.ctaTitleC')}
                 </span>
               </h2>
-              <p className="ft-cta-sub">
-                Marka iş birliği, sponsorluk veya sadece selam için —
-                kanalıma yakışan her projeye açığım.
-              </p>
+              <p className="ft-cta-sub">{t('footer.ctaSub')}</p>
             </div>
 
-            <Link to="/iletisim" className="ft-cta-btn" aria-label="İletişime geç">
+            <Link to="/iletisim" className="ft-cta-btn" aria-label={t('common.contact')}>
               <span className="ft-cta-btn-ring" aria-hidden="true" />
               <span className="ft-cta-btn-glyph">
                 <HiArrowUpRight size={36} />
               </span>
               <span className="ft-cta-btn-label">
-                <span className="ft-cta-btn-label-top">bana</span>
-                <span className="ft-cta-btn-label-bottom">ulaş</span>
+                <span className="ft-cta-btn-label-top">{t('footer.ctaButtonTop')}</span>
+                <span className="ft-cta-btn-label-bottom">{t('footer.ctaButtonBottom')}</span>
               </span>
             </Link>
           </div>
@@ -105,8 +104,8 @@ export default function Footer() {
             <span>{brandName}</span>
           </Link>
           <p className="ft-tagline">
-            İstanbul'dan yayın yapan içerik üreticisi.<br />
-            Hikâye anlatmayı seven biri.
+            {t('footer.tagline')}<br />
+            {t('footer.taglineSub')}
           </p>
           {settings.businessEmail && (
             <a href={`mailto:${settings.businessEmail}`} className="ft-email">
@@ -116,7 +115,7 @@ export default function Footer() {
         </div>
 
         <div className="ft-col">
-          <h4 className="ft-col-title">Sayfalar</h4>
+          <h4 className="ft-col-title">{t('footer.pages')}</h4>
           <ul className="ft-list">
             {NAV.map((l) => (
               <li key={l.path}><Link to={l.path}>{l.name}</Link></li>
@@ -125,7 +124,7 @@ export default function Footer() {
         </div>
 
         <div className="ft-col">
-          <h4 className="ft-col-title">Sosyal</h4>
+          <h4 className="ft-col-title">{t('footer.social')}</h4>
           <ul className="ft-list">
             {socials.map((s) => (
               <li key={s.name}>
@@ -144,7 +143,7 @@ export default function Footer() {
         </div>
 
         <div className="ft-col">
-          <h4 className="ft-col-title">Yasal</h4>
+          <h4 className="ft-col-title">{t('footer.legal')}</h4>
           <ul className="ft-list">
             {LEGAL.map((l) => (
               <li key={l.path}><Link to={l.path}>{l.name}</Link></li>
@@ -154,8 +153,8 @@ export default function Footer() {
       </div>
 
       <div className="ft-bottom">
-        <p>© {new Date().getFullYear()} {brandName}.</p>
-        <p className="ft-bottom-meta">Sevgiyle üretildi · İstanbul</p>
+        <p>© {new Date().getFullYear()} {brandName}. {t('footer.copyright')}.</p>
+        <p className="ft-bottom-meta">{t('footer.builtWith')}</p>
       </div>
     </footer>
   )

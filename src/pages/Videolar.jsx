@@ -14,6 +14,7 @@ import { getYouTubeVideosApi } from '../api'
 import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema, VideoSchema } from '../components/StructuredData'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { useLanguage } from '../i18n/LanguageContext'
 import { SkeletonGrid } from '../components/Skeleton'
 import CircularGallery from '../components/reactbits/CircularGallery'
 import './Videolar.css'
@@ -41,6 +42,7 @@ function parseDuration(iso) {
 
 export default function Videolar() {
   const { settings } = useSiteSettings()
+  const { t } = useLanguage()
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
@@ -106,18 +108,18 @@ export default function Videolar() {
 
       <header className="kd-videos-head">
         <span className="kd-videos-pill">
-          <FaYoutube size={14} /> YouTube Kütüphanesi
+          <FaYoutube size={14} /> {t('videos.pill')}
         </span>
         <div className="kd-videos-head-row">
           <div>
             <h1>
-              Tüm <span className="kd-accent">videolar</span>
+              {t('videos.titleA')} <span className="kd-accent">{t('videos.titleB')}</span>
             </h1>
-            <p>{settings.businessName || 'Kadir Demir'} kanalından son içerikler. Aramak, sıralamak ya da göz atmak için kullan.</p>
+            <p>{settings.businessName || 'Kadir Demir'} {t('videos.sub')}</p>
           </div>
           <div className="kd-videos-count">
             <div className="kd-videos-count-num">{videos.length}</div>
-            <div className="kd-videos-count-label">video listeleniyor</div>
+            <div className="kd-videos-count-label">{t('videos.countLabel')}</div>
           </div>
         </div>
       </header>
@@ -140,7 +142,7 @@ export default function Videolar() {
           <HiOutlineSearch size={18} />
           <input
             type="search"
-            placeholder="Video başlığı ara..."
+            placeholder={t('videos.searchPlaceholder')}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -151,21 +153,21 @@ export default function Videolar() {
             className={`kd-sort-btn ${sort === 'newest' ? 'active' : ''}`}
             onClick={() => setSort('newest')}
           >
-            <HiOutlineSparkles size={16} /> En Yeni
+            <HiOutlineSparkles size={16} /> {t('videos.sortNewest')}
           </button>
           <button
             type="button"
             className={`kd-sort-btn ${sort === 'popular' ? 'active' : ''}`}
             onClick={() => setSort('popular')}
           >
-            <HiOutlineFire size={16} /> En Çok İzlenen
+            <HiOutlineFire size={16} /> {t('videos.sortPopular')}
           </button>
           <button
             type="button"
             className={`kd-sort-btn ${sort === 'oldest' ? 'active' : ''}`}
             onClick={() => setSort('oldest')}
           >
-            <HiOutlineCalendar size={16} /> En Eski
+            <HiOutlineCalendar size={16} /> {t('videos.sortOldest')}
           </button>
         </div>
       </div>
@@ -174,10 +176,10 @@ export default function Videolar() {
 
       {!loading && videos.length === 0 && (
         <div className="kd-videos-empty">
-          <p>Henüz video yüklenmedi. Admin panelinden YouTube videolarını senkronize et.</p>
+          <p>{t('videos.empty')}</p>
           {settings.youtube && (
             <a href={settings.youtube} target="_blank" rel="noopener noreferrer" className="kd-sort-btn active" style={{ marginTop: 16 }}>
-              <FaYoutube size={14} /> YouTube'da görüntüle
+              <FaYoutube size={14} /> {t('videos.open')}
             </a>
           )}
         </div>
@@ -195,7 +197,7 @@ export default function Videolar() {
             >
               <article className="kd-video-tile">
                 <div className="kd-video-tile-thumb" style={{ backgroundImage: `url(${v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                  {idx === 0 && sort === 'newest' && <span className="kd-video-badge">YENİ</span>}
+                  {idx === 0 && sort === 'newest' && <span className="kd-video-badge">{t('videos.badgeNew')}</span>}
                   {parseDuration(v.duration) && (
                     <span className="kd-video-duration-tile">{parseDuration(v.duration)}</span>
                   )}
@@ -288,7 +290,7 @@ export default function Videolar() {
                   borderRadius: 999,
                 }}
               >
-                <FaYoutube size={14} /> YouTube'da aç <HiOutlineExternalLink size={12} />
+                <FaYoutube size={14} /> {t('videos.open')} <HiOutlineExternalLink size={12} />
               </a>
             </div>
           </div>
@@ -302,14 +304,14 @@ export default function Videolar() {
             className="kd-videos-more-btn"
             onClick={() => setVisibleCount((c) => c + 12)}
           >
-            Daha fazla görüntüle <HiOutlineChevronDown size={16} />
+            {t('videos.loadMore')} <HiOutlineChevronDown size={16} />
           </button>
         </div>
       )}
 
       {!loading && filtered.length === 0 && videos.length > 0 && (
         <div className="kd-videos-empty">
-          <p>Aradığın videoyu bulamadık.</p>
+          <p>{t('videos.noResults')}</p>
         </div>
       )}
     </div>

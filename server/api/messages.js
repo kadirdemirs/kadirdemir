@@ -67,7 +67,7 @@ export default async function handler(req, res) {
               <p style="color:#ccc;margin:0 0 8px;">Merhaba ${escapeHtml(message.name)},</p>
               <div style="margin:20px 0;padding:16px;background:#1a1a1a;border-radius:8px;border-left:3px solid #eac321;white-space:pre-wrap;line-height:1.7;color:#e0e0e0;">${escapeHtml(replyText)}</div>
               <hr style="border:none;border-top:1px solid #222;margin:24px 0;" />
-              <p style="color:#888;font-size:12px;margin:0;">Kadir Demir | Biruni Teknopark, Zeytinburnu/İstanbul<br/>hello@kademedia.com | +90 506 729 34 23</p>
+              <p style="color:#888;font-size:12px;margin:0;">Kadir Demir · İstanbul<br/>hello@kadirdemir.tv</p>
             </div>
           </div>
         `,

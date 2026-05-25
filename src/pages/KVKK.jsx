@@ -76,7 +76,7 @@ export default function KVKK() {
 
               <h2>7. İletişim</h2>
               <p>
-                Haklarınıza ilişkin taleplerinizi <strong>thekademedia@gmail.com</strong> adresine
+                Haklarınıza ilişkin taleplerinizi <strong>hello@kadirdemir.tv</strong> adresine
                 e-posta göndererek iletebilirsiniz.
               </p>
             </div>

@@ -14,8 +14,9 @@ import {
   HiOutlineVideoCamera,
   HiOutlineChevronDown,
 } from 'react-icons/hi2'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/CountUp'
@@ -107,10 +108,38 @@ function FAQItem({ faq }) {
 
 export default function Home() {
   const { settings } = useSiteSettings()
+  const { t, lang } = useLanguage()
   const [videos, setVideos] = useState([])
   const [videosLoading, setVideosLoading] = useState(true)
   const [blogs, setBlogs] = useState([])
   const [socialStats, setSocialStats] = useState(null)
+
+  const localizedFaqs = useMemo(() => {
+    if (lang === 'en') return [
+      { q: 'How often do you post new videos?', a: 'I aim for 2-3 new videos a week. Hit the bell on YouTube so you don\'t miss anything.' },
+      { q: 'Are you open to sponsorships?', a: 'Yes, especially for long-term partnerships that fit the audience. Reach out via the business email.' },
+      { q: 'What days do you publish?', a: 'Mostly Tuesday, Thursday and Saturday — with the occasional surprise drop.' },
+      { q: 'Where can I send video ideas?', a: 'Instagram DM, YouTube comments or the form on the contact page.' },
+      { q: 'What gear do you use?', a: 'You can see the full setup on the Setup page — camera, mic, lights, computer.' },
+      { q: 'How can I meet you at events?', a: 'I announce events and meet-ups on Instagram. A meet-up is in the works.' },
+    ]
+    if (lang === 'de') return [
+      { q: 'Wie oft erscheinen neue Videos?', a: 'Ich versuche, 2-3 neue Videos pro Woche zu posten. Aktiviere die Glocke auf YouTube, um nichts zu verpassen.' },
+      { q: 'Bist du offen für Sponsoring?', a: 'Ja, vor allem für langfristige Kooperationen, die zur Community passen. Schreib mir geschäftlich.' },
+      { q: 'An welchen Tagen veröffentlichst du?', a: 'Meistens Dienstag, Donnerstag und Samstag — mit gelegentlichen Überraschungen.' },
+      { q: 'Wohin kann ich Video-Ideen senden?', a: 'Instagram-DM, YouTube-Kommentare oder das Formular auf der Kontaktseite.' },
+      { q: 'Welche Ausrüstung nutzt du?', a: 'Das komplette Setup findest du auf der Setup-Seite — Kamera, Mikro, Licht, PC.' },
+      { q: 'Wie kann ich dich auf Events treffen?', a: 'Events kündige ich auf Instagram an. Ein Meet-up ist in Planung.' },
+    ]
+    return [
+      { q: 'Yeni videoları ne sıklıkla yüklüyorsun?', a: 'Haftada 2-3 yeni video yüklemeye gayret ediyorum. YouTube’da zile basarsan bildirimleri kaçırmazsın.' },
+      { q: 'Sponsorluklara açık mısın?', a: 'Markalarla uzun vadeli ve doğru kitleye hitap eden iş birliklerine açığım. İş birliği e-posta adresimden ulaşabilirsiniz.' },
+      { q: 'Hangi günler video yayınlıyorsun?', a: 'Genellikle Salı, Perşembe ve Cumartesi yayın günlerim. Bazen sürpriz içerikler de paylaşıyorum.' },
+      { q: 'Video önerimi nereden iletebilirim?', a: 'Instagram DM, YouTube yorumları veya iletişim sayfasındaki form üzerinden bana ulaşabilirsin.' },
+      { q: 'Kullandığın ekipmanlar neler?', a: 'Tüm setup’ımın detayını Setup sayfasından inceleyebilirsin: kamera, mikrofon, ışık, bilgisayar.' },
+      { q: 'Etkinliklerde nasıl bulunabilirim?', a: 'Etkinlik ve buluşma takvimimi Instagram üzerinden duyuruyorum. Yakın zamanda bir meet-up planlanıyor.' },
+    ]
+  }, [lang])
 
   useSEO({
     title: settings.seoTitle || 'Kadir Demir | YouTube İçerik Üreticisi',
@@ -155,11 +184,11 @@ export default function Home() {
   const ttLikes = ttLive?.likesDisplay || settings.statsTiktokLikes
 
   const stats = [
-    { icon: FaYoutube, value: ytSubs, label: 'YouTube Abonesi' },
-    { icon: FaInstagram, value: igFollowers, label: 'Instagram Takipçi' },
-    { icon: FaTiktok, value: ttFollowers, label: 'TikTok Takipçi' },
-    { icon: HiOutlineEye, value: ytViews, label: 'Toplam İzlenme' },
-    { icon: HiOutlineVideoCamera, value: ytVideosCount, label: 'Yayınlanmış Video' },
+    { icon: FaYoutube, value: ytSubs, label: t('home.statsYoutube') },
+    { icon: FaInstagram, value: igFollowers, label: t('home.statsInstagram') },
+    { icon: FaTiktok, value: ttFollowers, label: t('home.statsTiktok') },
+    { icon: HiOutlineEye, value: ytViews, label: t('home.statsViews') },
+    { icon: HiOutlineVideoCamera, value: ytVideosCount, label: t('home.statsVideos') },
   ].filter(s => s.value)
 
   const featuredVideo = videos[0]
@@ -193,7 +222,7 @@ export default function Home() {
     <div className="hm">
       <PersonSchema socials={settings} />
       <WebSiteSchema />
-      <FAQSchema items={faqs} />
+      <FAQSchema items={localizedFaqs} />
       {videos.length > 0 && <VideoSchema videos={videos.slice(0, 8)} />}
 
       {/* ═══════════════ HERO ═══════════════ */}
@@ -216,7 +245,8 @@ export default function Home() {
             >
               <span className="hm-eyebrow-dot" />{' '}
               <DecryptedText
-                text="Yeni bölüm yayında"
+                key={`epi-${lang}`}
+                text={t('home.eyebrowEpisode')}
                 speed={40}
                 sequential
                 revealDirection="start"
@@ -226,19 +256,22 @@ export default function Home() {
 
             <h1 className="hm-hero-title">
               <BlurText
-                text="Selam,"
+                key={`hi-${lang}`}
+                text={t('home.heroHi')}
                 animateBy="words"
                 delay={100}
                 className="hm-hero-line hm-hero-line-1"
               />
               <BlurText
-                text={`ben ${brandName}.`}
+                key={`iam-${lang}-${brandName}`}
+                text={`${t('home.heroIam')} ${brandName}.`}
                 animateBy="words"
                 delay={120}
                 className="hm-hero-line hm-hero-line-2"
               />
               <BlurText
-                text="Hikâye anlatmayı seviyorum."
+                key={`love-${lang}`}
+                text={t('home.heroLove')}
                 animateBy="words"
                 delay={80}
                 className="hm-hero-line hm-hero-line-3"
@@ -251,7 +284,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              {settings.description || "İstanbul'dan yayın yapan bir içerik üreticisiyim. Oyun, vlog ve eğlence videolarımla küçük anları büyük anılara çeviriyorum."}
+              {settings.description || t('home.heroSubFallback')}
             </motion.p>
 
             <motion.div
@@ -262,12 +295,12 @@ export default function Home() {
             >
               <Magnet padding={70} magnetStrength={0.3}>
                 <a href={subscribeUrl} target="_blank" rel="noopener noreferrer" className="hm-btn hm-btn-primary">
-                  <FaYoutube size={18} /> Kanalıma abone ol
+                  <FaYoutube size={18} /> {t('home.heroSubscribe')}
                 </a>
               </Magnet>
               <Magnet padding={70} magnetStrength={0.3}>
                 <Link to="/videolar" className="hm-btn hm-btn-ghost">
-                  <HiOutlinePlay size={18} /> Videoları izle
+                  <HiOutlinePlay size={18} /> {t('home.heroWatch')}
                 </Link>
               </Magnet>
             </motion.div>
@@ -398,8 +431,8 @@ export default function Home() {
       {featuredVideo && (
         <section className="hm-section">
           <div className="hm-section-head">
-            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Bu hafta</span>
-            <h2 className="hm-h2">Öne çıkan bölüm</h2>
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.featuredEyebrow')}</span>
+            <h2 className="hm-h2">{t('home.featuredTitle')}</h2>
           </div>
           <a
             href={`https://www.youtube.com/watch?v=${featuredVideo.youtubeId}`}
@@ -439,11 +472,11 @@ export default function Home() {
       <section className="hm-section">
         <div className="hm-section-head hm-section-head-row">
           <div>
-            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Arşiv</span>
-            <h2 className="hm-h2">Son videolar</h2>
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.latestEyebrow')}</span>
+            <h2 className="hm-h2">{t('home.latestTitle')}</h2>
           </div>
           <Link to="/videolar" className="hm-section-link">
-            Tümünü gör <HiOutlineArrowRight />
+            {t('home.latestViewAll')} <HiOutlineArrowRight />
           </Link>
         </div>
 
@@ -482,8 +515,8 @@ export default function Home() {
       {topViewedVideos.length > 0 && (
         <section className="hm-section">
           <div className="hm-section-head">
-            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Favoriler</span>
-            <h2 className="hm-h2">İzleyici favorileri</h2>
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.topViewedEyebrow')}</span>
+            <h2 className="hm-h2">{t('home.topViewedTitle')}</h2>
           </div>
           <div className="hm-top-grid">
             {topViewedVideos.map((v, i) => (
@@ -515,11 +548,11 @@ export default function Home() {
         <section className="hm-section">
           <div className="hm-section-head hm-section-head-row">
             <div>
-              <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Yazılar</span>
-              <h2 className="hm-h2">Son makaleler</h2>
+              <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.blogEyebrow')}</span>
+              <h2 className="hm-h2">{t('home.blogTitle')}</h2>
             </div>
             <Link to="/blog" className="hm-section-link">
-              Tüm yazılar <HiOutlineArrowRight />
+              {t('home.blogViewAll')} <HiOutlineArrowRight />
             </Link>
           </div>
           <div className="hm-blog-grid">
@@ -554,12 +587,12 @@ export default function Home() {
         <section className="hm-section">
           <div className="hm-section-head hm-section-head-row">
             <div>
-              <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Karelet</span>
-              <h2 className="hm-h2">Instagram</h2>
+              <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.igEyebrow')}</span>
+              <h2 className="hm-h2">{t('home.igTitle')}</h2>
             </div>
             {settings.instagram && (
               <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="hm-section-link">
-                Profili gör <HiOutlineArrowRight />
+                {t('home.igViewProfile')} <HiOutlineArrowRight />
               </a>
             )}
           </div>
@@ -584,9 +617,9 @@ export default function Home() {
       {/* ═══════════════ SOCIAL MEDIA STATS DASHBOARD ═══════════════ */}
       <section className="hm-section">
         <div className="hm-section-head">
-          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Rakamlar</span>
-          <h2 className="hm-h2">Üç platformda<br />tek hikaye.</h2>
-          <p className="hm-section-sub">YouTube'da uzun videolar, Instagram'da anlar, TikTok'ta kısa hikayeler — toplam erişim her gün büyüyor.</p>
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.platformsEyebrow')}</span>
+          <h2 className="hm-h2">{t('home.platformsTitleA')}<br />{t('home.platformsTitleB')}</h2>
+          <p className="hm-section-sub">{t('home.platformsSub')}</p>
         </div>
 
         <div className="hm-platform-grid">
@@ -598,7 +631,7 @@ export default function Home() {
                 <span className="hm-platform-icon"><FaYoutube size={28} /></span>
                 <div>
                   <h3 className="hm-platform-name">YouTube</h3>
-                  <span className="hm-platform-handle">{settings.youtubeHandle || '@kadirdemir'}{ytLive ? ' · canlı' : ''}</span>
+                  <span className="hm-platform-handle">{settings.youtubeHandle || '@kadirdemir'}{ytLive ? ` ${t('home.platformsLive')}` : ''}</span>
                 </div>
               </div>
               <div className="hm-platform-stats">
@@ -607,7 +640,7 @@ export default function Home() {
                     <span className="hm-platform-stat-num">
                       {(() => { const p = parseStat(ytSubs); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ytSubs })()}
                     </span>
-                    <span className="hm-platform-stat-lbl">Abone</span>
+                    <span className="hm-platform-stat-lbl">{t('home.platformsSub_yt')}</span>
                   </div>
                 )}
                 {ytViews && (
@@ -615,7 +648,7 @@ export default function Home() {
                     <span className="hm-platform-stat-num">
                       {(() => { const p = parseStat(ytViews); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ytViews })()}
                     </span>
-                    <span className="hm-platform-stat-lbl">İzlenme</span>
+                    <span className="hm-platform-stat-lbl">{t('home.platformsSub_views')}</span>
                   </div>
                 )}
                 {ytVideosCount && (
@@ -623,11 +656,11 @@ export default function Home() {
                     <span className="hm-platform-stat-num">
                       {(() => { const p = parseStat(ytVideosCount); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ytVideosCount })()}
                     </span>
-                    <span className="hm-platform-stat-lbl">Video</span>
+                    <span className="hm-platform-stat-lbl">{t('home.platformsSub_videos')}</span>
                   </div>
                 )}
               </div>
-              <span className="hm-platform-cta">Kanala git <HiOutlineArrowRight /></span>
+              <span className="hm-platform-cta">{t('home.platformsCta_yt')} <HiOutlineArrowRight /></span>
             </a>
           )}
 
@@ -639,7 +672,7 @@ export default function Home() {
                 <span className="hm-platform-icon"><FaInstagram size={28} /></span>
                 <div>
                   <h3 className="hm-platform-name">Instagram</h3>
-                  <span className="hm-platform-handle">{settings.instagramHandle || '@kadirardademir'}{igLive ? ' · canlı' : ''}</span>
+                  <span className="hm-platform-handle">{settings.instagramHandle || '@kadirardademir'}{igLive ? ` ${t('home.platformsLive')}` : ''}</span>
                 </div>
               </div>
               <div className="hm-platform-stats">
@@ -648,7 +681,7 @@ export default function Home() {
                     <span className="hm-platform-stat-num">
                       {(() => { const p = parseStat(igFollowers); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : igFollowers })()}
                     </span>
-                    <span className="hm-platform-stat-lbl">Takipçi</span>
+                    <span className="hm-platform-stat-lbl">{t('home.platformsSub_followers')}</span>
                   </div>
                 )}
                 {igPostsCount && (
@@ -656,11 +689,11 @@ export default function Home() {
                     <span className="hm-platform-stat-num">
                       {(() => { const p = parseStat(igPostsCount); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : igPostsCount })()}
                     </span>
-                    <span className="hm-platform-stat-lbl">Paylaşım</span>
+                    <span className="hm-platform-stat-lbl">{t('home.platformsSub_posts')}</span>
                   </div>
                 )}
               </div>
-              <span className="hm-platform-cta">Profili gör <HiOutlineArrowRight /></span>
+              <span className="hm-platform-cta">{t('home.platformsCta_ig')} <HiOutlineArrowRight /></span>
             </a>
           )}
 
@@ -672,7 +705,7 @@ export default function Home() {
                 <span className="hm-platform-icon"><FaTiktok size={28} /></span>
                 <div>
                   <h3 className="hm-platform-name">TikTok</h3>
-                  <span className="hm-platform-handle">{settings.tiktokHandle || '@kadirdemirs'}{ttLive ? ' · canlı' : ''}</span>
+                  <span className="hm-platform-handle">{settings.tiktokHandle || '@kadirdemirs'}{ttLive ? ` ${t('home.platformsLive')}` : ''}</span>
                 </div>
               </div>
               <div className="hm-platform-stats">
@@ -681,7 +714,7 @@ export default function Home() {
                     <span className="hm-platform-stat-num">
                       {(() => { const p = parseStat(ttFollowers); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ttFollowers })()}
                     </span>
-                    <span className="hm-platform-stat-lbl">Takipçi</span>
+                    <span className="hm-platform-stat-lbl">{t('home.platformsSub_followers')}</span>
                   </div>
                 )}
                 {ttLikes && (
@@ -689,11 +722,11 @@ export default function Home() {
                     <span className="hm-platform-stat-num">
                       {(() => { const p = parseStat(ttLikes); return p ? <><CountUp end={p.num} duration={2.2} />{p.suffix}</> : ttLikes })()}
                     </span>
-                    <span className="hm-platform-stat-lbl">Beğeni</span>
+                    <span className="hm-platform-stat-lbl">{t('home.platformsSub_likes')}</span>
                   </div>
                 )}
               </div>
-              <span className="hm-platform-cta">TikTok'ta gör <HiOutlineArrowRight /></span>
+              <span className="hm-platform-cta">{t('home.platformsCta_tt')} <HiOutlineArrowRight /></span>
             </a>
           )}
         </div>
@@ -703,10 +736,11 @@ export default function Home() {
       {socialFollows.length > 0 && (
         <section className="hm-section">
           <div className="hm-section-head">
-            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Bağlan</span>
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.socialEyebrow')}</span>
             <h2 className="hm-h2 hm-h2-vp">
               <VariableProximity
-                label="Beni takip et"
+                key={`vp-${lang}`}
+                label={t('home.socialTitle')}
                 fromFontVariationSettings="'wght' 500"
                 toFontVariationSettings="'wght' 900"
                 radius={140}
@@ -740,9 +774,9 @@ export default function Home() {
       <section className="hm-section">
         <div className="hm-newsletter">
           <div className="hm-newsletter-text">
-            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Bülten</span>
-            <h2 className="hm-h2">Yeni içeriklerden ilk sen haberdar ol.</h2>
-            <p>E-posta listeme katıl; spam yok, sadece önemli güncellemeler.</p>
+            <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.newsletterEyebrow')}</span>
+            <h2 className="hm-h2">{t('home.newsletterTitle')}</h2>
+            <p>{t('home.newsletterSub')}</p>
           </div>
           <NewsletterForm />
         </div>
@@ -751,12 +785,12 @@ export default function Home() {
       {/* ═══════════════ FAQ ═══════════════ */}
       <section className="hm-section">
         <div className="hm-section-head hm-section-head-center">
-          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> SSS</span>
-          <h2 className="hm-h2">Sıkça sorulanlar</h2>
-          <p className="hm-section-sub">Aklındaki sorunun cevabı burada yoksa iletişim sayfasından bana yaz.</p>
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.faqEyebrow')}</span>
+          <h2 className="hm-h2">{t('home.faqTitle')}</h2>
+          <p className="hm-section-sub">{t('home.faqSub')}</p>
         </div>
         <div className="hm-faq-list">
-          {faqs.map((f, i) => <FAQItem key={i} faq={f} />)}
+          {localizedFaqs.map((f, i) => <FAQItem key={`${lang}-${i}`} faq={f} />)}
         </div>
       </section>
 
@@ -773,13 +807,13 @@ export default function Home() {
         <div className="hm-cta">
           <div className="hm-cta-glow" />
           <div className="hm-cta-text">
-            <span className="hm-eyebrow hm-eyebrow-light"><span className="hm-eyebrow-dot" /> Hadi tanışalım</span>
-            <h2 className="hm-h2 hm-cta-title">Bir iş birliği,<br />bir mesaj uzağında.</h2>
-            <p>Sponsorluk, iş birliği veya sadece selam için — her zaman açığım.</p>
+            <span className="hm-eyebrow hm-eyebrow-light"><span className="hm-eyebrow-dot" /> {t('home.ctaEyebrow')}</span>
+            <h2 className="hm-h2 hm-cta-title">{t('home.ctaTitleA')}<br />{t('home.ctaTitleB')}</h2>
+            <p>{t('home.ctaSub')}</p>
           </div>
           <Magnet padding={90} magnetStrength={0.35}>
             <Link to="/iletisim" className="hm-btn hm-btn-primary hm-btn-lg">
-              İletişime geç <HiOutlineArrowRight />
+              {t('home.ctaButton')} <HiOutlineArrowRight />
             </Link>
           </Magnet>
         </div>

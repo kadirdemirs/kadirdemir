@@ -1,27 +1,76 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import { translations } from './translations'
 
 const LanguageContext = createContext()
 
+const LS_KEY = 'kade_lang'
+export const SUPPORTED_LANGS = ['tr', 'en', 'de']
+const LANG_META = {
+  tr: { code: 'tr', label: 'Türkçe', short: 'TR', flag: '🇹🇷' },
+  en: { code: 'en', label: 'English', short: 'EN', flag: '🇬🇧' },
+  de: { code: 'de', label: 'Deutsch', short: 'DE', flag: '🇩🇪' },
+}
+
+function detectInitialLang() {
+  if (typeof window === 'undefined') return 'tr'
+  try {
+    const stored = localStorage.getItem(LS_KEY)
+    if (stored && SUPPORTED_LANGS.includes(stored)) return stored
+  } catch { /* ignore */ }
+  const nav = (navigator?.language || 'tr').slice(0, 2).toLowerCase()
+  return SUPPORTED_LANGS.includes(nav) ? nav : 'tr'
+}
+
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('tr')
+  const [lang, setLangState] = useState(detectInitialLang)
+
+  useEffect(() => {
+    try { localStorage.setItem(LS_KEY, lang) } catch { /* ignore */ }
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('lang', lang)
+    }
+  }, [lang])
+
+  const setLang = useCallback((next) => {
+    if (SUPPORTED_LANGS.includes(next)) setLangState(next)
+  }, [])
 
   const t = useCallback(
-    (key) => {
-      const keys = key.split('.')
+    (key, fallback) => {
+      const parts = String(key).split('.')
       let value = translations[lang]
-      for (const k of keys) {
-        value = value?.[k]
+      for (const k of parts) {
+        if (value == null) break
+        value = value[k]
       }
-      return value || key
+      if (value == null && lang !== 'tr') {
+        let tr = translations.tr
+        for (const k of parts) {
+          if (tr == null) break
+          tr = tr[k]
+        }
+        value = tr
+      }
+      return value ?? fallback ?? key
     },
     [lang]
   )
 
-  const toggleLang = () => setLang((prev) => (prev === 'tr' ? 'en' : 'tr'))
+  // Cycles tr → en → de → tr (used by simple button)
+  const toggleLang = useCallback(() => {
+    setLangState((prev) => {
+      const idx = SUPPORTED_LANGS.indexOf(prev)
+      return SUPPORTED_LANGS[(idx + 1) % SUPPORTED_LANGS.length]
+    })
+  }, [])
+
+  const value = useMemo(
+    () => ({ lang, setLang, toggleLang, t, langs: SUPPORTED_LANGS, meta: LANG_META, currentMeta: LANG_META[lang] }),
+    [lang, setLang, toggleLang, t]
+  )
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, toggleLang, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   )
