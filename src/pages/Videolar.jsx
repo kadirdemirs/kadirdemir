@@ -51,8 +51,8 @@ export default function Videolar() {
   const [activeVideo, setActiveVideo] = useState(null)
 
   useSEO({
-    title: 'Tüm Videolar',
-    description: 'Kadir Demir YouTube kanalındaki tüm videolar — oyun, vlog ve eğlence içerikleri.',
+    title: `${t('videos.titleA')} ${t('videos.titleB')}`,
+    description: `${settings.businessName || 'Kadir Demir'} — ${t('videos.sub')}`,
     path: '/videolar',
   })
 
@@ -103,7 +103,7 @@ export default function Videolar() {
 
   return (
     <div className="kd-videos">
-      <BreadcrumbSchema items={[{ name: 'Ana Sayfa', path: '/' }, { name: 'Videolar', path: '/videolar' }]} />
+      <BreadcrumbSchema items={[{ name: t('nav.home'), path: '/' }, { name: t('nav.videos'), path: '/videolar' }]} />
       {videos.length > 0 && <VideoSchema videos={videos.slice(0, 12)} />}
 
       <header className="kd-videos-head">
@@ -125,7 +125,7 @@ export default function Videolar() {
       </header>
 
       {galleryItems.length >= 3 && (
-        <section className="kd-videos-gallery" aria-label="Öne çıkan videolar galerisi">
+        <section className="kd-videos-gallery" aria-label={`${t('home.topViewedTitle')} — ${t('nav.videos')}`}>
           <CircularGallery
             items={galleryItems}
             bend={2}
@@ -204,7 +204,7 @@ export default function Videolar() {
                   <span className="kd-video-hover-play-tile"><HiOutlinePlay size={28} /></span>
                 </div>
                 <h4 className="kd-video-tile-title">{v.title}</h4>
-                {v.views && <div className="kd-video-tile-meta">{formatViews(v.views)} izlenme</div>}
+                {v.views && <div className="kd-video-tile-meta">{formatViews(v.views)} {t('home.platformsSub_views').toLowerCase()}</div>}
               </article>
             </button>
           ))}
@@ -215,6 +215,7 @@ export default function Videolar() {
         <div
           role="dialog"
           aria-modal="true"
+          aria-labelledby="kd-video-modal-title"
           onClick={() => setActiveVideo(null)}
           style={{
             position: 'fixed',
@@ -251,7 +252,7 @@ export default function Videolar() {
               <button
                 type="button"
                 onClick={() => setActiveVideo(null)}
-                aria-label="Kapat"
+                aria-label={t('common.close')}
                 style={{
                   position: 'absolute',
                   top: 12,
@@ -273,7 +274,7 @@ export default function Videolar() {
               </button>
             </div>
             <div style={{ padding: '14px 20px 18px', display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between' }}>
-              <h3 style={{ color: '#fff', margin: 0, fontSize: '1.05rem', flex: '1 1 60%' }}>{activeVideo.title}</h3>
+              <h3 id="kd-video-modal-title" style={{ color: '#fff', margin: 0, fontSize: '1.05rem', flex: '1 1 60%' }}>{activeVideo.title}</h3>
               <a
                 href={`https://www.youtube.com/watch?v=${activeVideo.youtubeId}`}
                 target="_blank"

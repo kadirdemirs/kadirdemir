@@ -3,8 +3,6 @@ const API_BASE = '/api';
 const CSRF_COOKIE = 'kade_csrf';
 const UNSAFE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
-try { localStorage.removeItem('kade_admin_token'); } catch { /* legacy cleanup */ }
-
 function getCookie(name) {
   const value = document.cookie
     .split(';')
@@ -525,13 +523,6 @@ export async function postCommentApi({ postSlug, author, body, parentId }) {
   return handleResponse(res);
 }
 
-export async function getAllCommentsForModerationApi(slug) {
-  const res = await fetch(`${API_BASE}/comments?slug=${encodeURIComponent(slug)}&action=all`, {
-    headers: getAuthHeaders(),
-  });
-  return handleResponse(res);
-}
-
 export async function getAdminCommentsApi(filter = 'all') {
   const res = await fetch(`${API_BASE}/comments?action=admin&filter=${encodeURIComponent(filter)}`, {
     headers: getAuthHeaders(),
@@ -684,11 +675,6 @@ export async function bulkDeleteMediaApi(ids) {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
-  return handleResponse(res);
-}
-
-export async function getMediaFileApi(id) {
-  const res = await fetch(`${API_BASE}/media?id=${id}&action=file`, { headers: getAuthHeaders() });
   return handleResponse(res);
 }
 

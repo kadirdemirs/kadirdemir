@@ -131,7 +131,7 @@
   top: -8px;
   font-size: 0.72rem;
   color: var(--primary);
-  background: #0c0c0e;
+  background: var(--bg-0);
 }
 
 .kd-field-textarea {

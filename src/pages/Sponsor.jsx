@@ -7,30 +7,32 @@ import { submitSponsorApi } from '../api'
 import { BreadcrumbSchema } from '../components/StructuredData'
 
 const CAMPAIGN_TYPES = [
-  { value: 'video', label: { tr: 'Tek video sponsorluğu', en: 'Single video sponsorship' } },
-  { value: 'shorts', label: { tr: 'YouTube Shorts kampanyası', en: 'YouTube Shorts campaign' } },
-  { value: 'live-stream', label: { tr: 'Canlı yayın sponsorluğu', en: 'Live stream sponsorship' } },
-  { value: 'long-term', label: { tr: 'Uzun soluklu iş birliği', en: 'Long-term partnership' } },
-  { value: 'event', label: { tr: 'Etkinlik / Lansman', en: 'Event / Launch' } },
-  { value: 'product-review', label: { tr: 'Ürün incelemesi', en: 'Product review' } },
-  { value: 'other', label: { tr: 'Diğer', en: 'Other' } },
+  { value: 'video', label: { tr: 'Tek video sponsorluğu', en: 'Single video sponsorship', de: 'Einzelvideo-Sponsoring' } },
+  { value: 'shorts', label: { tr: 'YouTube Shorts kampanyası', en: 'YouTube Shorts campaign', de: 'YouTube-Shorts-Kampagne' } },
+  { value: 'live-stream', label: { tr: 'Canlı yayın sponsorluğu', en: 'Live stream sponsorship', de: 'Livestream-Sponsoring' } },
+  { value: 'long-term', label: { tr: 'Uzun soluklu iş birliği', en: 'Long-term partnership', de: 'Langfristige Kooperation' } },
+  { value: 'event', label: { tr: 'Etkinlik / Lansman', en: 'Event / Launch', de: 'Event / Launch' } },
+  { value: 'product-review', label: { tr: 'Ürün incelemesi', en: 'Product review', de: 'Produkt-Review' } },
+  { value: 'other', label: { tr: 'Diğer', en: 'Other', de: 'Sonstiges' } },
 ]
 
 const BUDGETS = [
-  { value: '<5k', label: { tr: '< 5.000 TL', en: '< 5K TRY' } },
-  { value: '5k-15k', label: { tr: '5.000 - 15.000 TL', en: '5K - 15K TRY' } },
-  { value: '15k-50k', label: { tr: '15.000 - 50.000 TL', en: '15K - 50K TRY' } },
-  { value: '50k-100k', label: { tr: '50.000 - 100.000 TL', en: '50K - 100K TRY' } },
-  { value: '100k+', label: { tr: '100.000 TL+', en: '100K+ TRY' } },
-  { value: 'open', label: { tr: 'Konuşalım', en: 'Let\'s talk' } },
+  { value: '<5k', label: { tr: '< 5.000 TL', en: '< 5K TRY', de: '< 5.000 TRY' } },
+  { value: '5k-15k', label: { tr: '5.000 - 15.000 TL', en: '5K - 15K TRY', de: '5.000 - 15.000 TRY' } },
+  { value: '15k-50k', label: { tr: '15.000 - 50.000 TL', en: '15K - 50K TRY', de: '15.000 - 50.000 TRY' } },
+  { value: '50k-100k', label: { tr: '50.000 - 100.000 TL', en: '50K - 100K TRY', de: '50.000 - 100.000 TRY' } },
+  { value: '100k+', label: { tr: '100.000 TL+', en: '100K+ TRY', de: '100.000 TRY+' } },
+  { value: 'open', label: { tr: 'Konuşalım', en: 'Let\'s talk', de: 'Sprich mit mir' } },
 ]
 
 export default function Sponsor() {
   const { lang } = useLanguage()
   useSEO({
-    title: lang === 'en' ? 'Sponsor Inquiry' : 'Sponsor Başvurusu',
+    title: lang === 'en' ? 'Sponsor Inquiry' : lang === 'de' ? 'Sponsoring-Anfrage' : 'Sponsor Başvurusu',
     description: lang === 'en'
       ? 'Brand collaboration & sponsorship inquiries for Kadir Demir.'
+      : lang === 'de'
+      ? 'Markenkooperationen & Sponsoring-Anfragen für Kadir Demir.'
       : 'Kadir Demir ile marka iş birliği ve sponsorluk başvurusu.',
     path: '/sponsor',
   })
@@ -42,22 +44,22 @@ export default function Sponsor() {
   const [status, setStatus] = useState({ state: 'idle', error: null })
 
   const t = (k) => ({
-    head1:     { tr: 'Birlikte ', en: 'Let\'s build ' },
-    headHi:    { tr: 'bir kampanya kuralım', en: 'a campaign together' },
-    sub:       { tr: 'Marka iş birlikleri, sponsorluk ve özel projeler için 24 saat içinde döneriz.', en: 'Brand collaborations, sponsorships and custom projects — 24h response.' },
-    company:   { tr: 'Marka / Şirket adı', en: 'Brand / Company name' },
-    contact:   { tr: 'İletişim kişisi', en: 'Contact person' },
-    email:     { tr: 'E-posta', en: 'Email' },
-    phone:     { tr: 'Telefon (opsiyonel)', en: 'Phone (optional)' },
-    website:   { tr: 'Web sitesi (opsiyonel)', en: 'Website (optional)' },
-    campaign:  { tr: 'Kampanya tipi', en: 'Campaign type' },
-    budget:    { tr: 'Bütçe aralığı', en: 'Budget range' },
-    deadline:  { tr: 'Hedef tarih (opsiyonel)', en: 'Target date (optional)' },
-    msg:       { tr: 'Mesaj — kısaca brief, hedef kitle, ürün/hizmet', en: 'Briefly — campaign brief, target audience, product/service' },
-    submit:    { tr: 'Başvuruyu gönder', en: 'Submit inquiry' },
-    sending:   { tr: 'Gönderiliyor...', en: 'Sending...' },
-    successT:  { tr: 'Teşekkürler!', en: 'Thank you!' },
-    successM:  { tr: 'Başvurun bize ulaştı. 24 saat içinde dönüş yapacağız.', en: 'Your inquiry was received. We\'ll respond within 24h.' },
+    head1:     { tr: 'Birlikte ', en: 'Let\'s build ', de: 'Lass uns ' },
+    headHi:    { tr: 'bir kampanya kuralım', en: 'a campaign together', de: 'eine Kampagne starten' },
+    sub:       { tr: 'Marka iş birlikleri, sponsorluk ve özel projeler için 24 saat içinde döneriz.', en: 'Brand collaborations, sponsorships and custom projects — 24h response.', de: 'Markenkooperationen, Sponsoring und Sonderprojekte — Antwort innerhalb von 24 Stunden.' },
+    company:   { tr: 'Marka / Şirket adı', en: 'Brand / Company name', de: 'Marke / Firmenname' },
+    contact:   { tr: 'İletişim kişisi', en: 'Contact person', de: 'Ansprechpartner:in' },
+    email:     { tr: 'E-posta', en: 'Email', de: 'E-Mail' },
+    phone:     { tr: 'Telefon (opsiyonel)', en: 'Phone (optional)', de: 'Telefon (optional)' },
+    website:   { tr: 'Web sitesi (opsiyonel)', en: 'Website (optional)', de: 'Website (optional)' },
+    campaign:  { tr: 'Kampanya tipi', en: 'Campaign type', de: 'Kampagnen-Typ' },
+    budget:    { tr: 'Bütçe aralığı', en: 'Budget range', de: 'Budget-Rahmen' },
+    deadline:  { tr: 'Hedef tarih (opsiyonel)', en: 'Target date (optional)', de: 'Zieldatum (optional)' },
+    msg:       { tr: 'Mesaj — kısaca brief, hedef kitle, ürün/hizmet', en: 'Briefly — campaign brief, target audience, product/service', de: 'Kurz — Briefing, Zielgruppe, Produkt/Dienstleistung' },
+    submit:    { tr: 'Başvuruyu gönder', en: 'Submit inquiry', de: 'Anfrage senden' },
+    sending:   { tr: 'Gönderiliyor...', en: 'Sending...', de: 'Wird gesendet...' },
+    successT:  { tr: 'Teşekkürler!', en: 'Thank you!', de: 'Danke!' },
+    successM:  { tr: 'Başvurun bize ulaştı. 24 saat içinde dönüş yapacağız.', en: 'Your inquiry was received. We\'ll respond within 24h.', de: 'Deine Anfrage ist bei uns angekommen. Wir melden uns innerhalb von 24 Stunden.' },
   }[k]?.[lang] || k)
 
   const onSubmit = async (e) => {

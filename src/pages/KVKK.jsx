@@ -1,12 +1,14 @@
 import { useSEO } from '../hooks/useSEO'
 import PageTransition from '../components/PageTransition'
 import { FadeIn } from '../components/Animations'
+import { useLanguage } from '../i18n/LanguageContext'
 import './Legal.css'
 
 export default function KVKK() {
+  const { t } = useLanguage()
   useSEO({
-    title: 'KVKK Aydınlatma Metni | Kadir Demir',
-    description: 'Kadir Demir KVKK kapsamında kişisel verilerin işlenmesine ilişkin aydınlatma metni.',
+    title: t('legal.kvkkTitle'),
+    description: t('legal.kvkkTitle') + ' — Kadir Demir',
     path: '/kvkk',
   })
 

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { FaYoutube, FaInstagram } from 'react-icons/fa'
 import { HiOutlineMail, HiOutlinePhone } from 'react-icons/hi'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { useLanguage } from '../i18n/LanguageContext'
 import { sendContactApi } from '../api'
 import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema } from '../components/StructuredData'
@@ -9,6 +10,7 @@ import './Contact.css'
 
 export default function Contact() {
   const { settings } = useSiteSettings()
+  const { t } = useLanguage()
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -20,8 +22,8 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false)
 
   useSEO({
-    title: 'İletişim',
-    description: `${settings.businessName || 'Kadir Demir'} ile iletişime geç — iş birliği, sponsorluk veya doğrudan mesaj için.`,
+    title: t('contact.pill'),
+    description: `${settings.businessName || 'Kadir Demir'} — ${t('contact.heroSub')}`,
     path: '/iletisim',
   })
 
@@ -29,25 +31,25 @@ export default function Contact() {
     settings.youtube && {
       icon: FaYoutube,
       name: 'YouTube',
-      desc: 'Haftada birkaç yeni video. Oyun, vlog ve eğlence içerikleri.',
+      desc: t('contact.followDescYoutube'),
       url: settings.youtube,
     },
     settings.instagram && {
       icon: FaInstagram,
       name: 'Instagram',
-      desc: "Kamera arkası, story'ler ve günlük hayattan kareler.",
+      desc: t('contact.followDescInstagram'),
       url: settings.instagram,
     },
     settings.email && {
       icon: HiOutlineMail,
-      name: 'E-posta',
-      desc: 'Genel sorular ve fikirler için doğrudan mail atabilirsin.',
+      name: t('contact.email'),
+      desc: t('contact.followDescEmail'),
       url: `mailto:${settings.email}`,
     },
     settings.businessEmail && {
       icon: HiOutlinePhone,
-      name: 'İş birliği',
-      desc: 'Marka iş birlikleri ve sponsorluk teklifleri için.',
+      name: t('contact.business'),
+      desc: t('contact.followDescBusiness'),
       url: `mailto:${settings.businessEmail}`,
     },
   ].filter(Boolean)
@@ -57,7 +59,7 @@ export default function Contact() {
   const submit = async (e) => {
     e.preventDefault()
     if (!form.name || !form.email || !form.message) {
-      setStatus({ type: 'error', text: 'Lütfen ad, e-posta ve mesaj alanlarını doldur.' })
+      setStatus({ type: 'error', text: t('contact.errorRequired') })
       return
     }
     setSubmitting(true)
@@ -67,13 +69,13 @@ export default function Contact() {
         name: form.name,
         email: form.email,
         phone: form.phone,
-        subject: form.subject || 'İletişim formu',
+        subject: form.subject || t('contact.pill'),
         message: form.message,
       })
-      setStatus({ type: 'success', text: 'Mesajın iletildi. En kısa sürede dönüş yapacağım.' })
+      setStatus({ type: 'success', text: t('contact.success') })
       setForm({ name: '', email: '', phone: '', subject: '', message: '' })
     } catch (err) {
-      setStatus({ type: 'error', text: err.message || 'Bir hata oluştu, lütfen tekrar dene.' })
+      setStatus({ type: 'error', text: err.message || t('contact.errorGeneric') })
     } finally {
       setSubmitting(false)
     }
@@ -81,17 +83,13 @@ export default function Contact() {
 
   return (
     <div className="kd-contact">
-      <BreadcrumbSchema items={[{ name: 'Ana Sayfa', path: '/' }, { name: 'İletişim', path: '/iletisim' }]} />
+      <BreadcrumbSchema items={[{ name: t('nav.home'), path: '/' }, { name: t('contact.pill'), path: '/iletisim' }]} />
       <section className="kd-contact-top">
         <div className="kd-contact-left">
           <h1>
-            İletişime <span className="kd-accent">geç</span>
+            {t('contact.heroTitleA')} <span className="kd-accent">{t('contact.heroTitleB')}</span>
           </h1>
-          <p>
-            İş birliği teklifleri, sponsorluk veya bana ulaşmak istediğin başka bir konu
-            olursa formu doldur ya da aşağıdaki bilgilerden ulaş — en kısa sürede dönüş
-            yaparım.
-          </p>
+          <p>{t('contact.heroSub')}</p>
 
           {settings.email && (
             <div className="kd-contact-card">
@@ -99,7 +97,7 @@ export default function Contact() {
                 <HiOutlineMail size={20} />
               </span>
               <div>
-                <div className="kd-contact-card-kind">E-posta</div>
+                <div className="kd-contact-card-kind">{t('contact.email')}</div>
                 <a href={`mailto:${settings.email}`}>{settings.email}</a>
               </div>
             </div>
@@ -111,7 +109,7 @@ export default function Contact() {
                 <HiOutlinePhone size={20} />
               </span>
               <div>
-                <div className="kd-contact-card-kind">İş birliği</div>
+                <div className="kd-contact-card-kind">{t('contact.business')}</div>
                 <a href={`mailto:${settings.businessEmail}`}>{settings.businessEmail}</a>
               </div>
             </div>
@@ -128,7 +126,7 @@ export default function Contact() {
                 placeholder=" "
                 id="kd-name"
               />
-              <label htmlFor="kd-name">Ad Soyad</label>
+              <label htmlFor="kd-name">{t('contact.formName')}</label>
             </div>
             <div className="kd-field">
               <input
@@ -138,7 +136,7 @@ export default function Contact() {
                 placeholder=" "
                 id="kd-email"
               />
-              <label htmlFor="kd-email">E-posta</label>
+              <label htmlFor="kd-email">{t('contact.formEmail')}</label>
             </div>
           </div>
 
@@ -151,7 +149,7 @@ export default function Contact() {
                 placeholder=" "
                 id="kd-phone"
               />
-              <label htmlFor="kd-phone">Telefon (opsiyonel)</label>
+              <label htmlFor="kd-phone">{t('contact.formPhone')}</label>
             </div>
             <div className="kd-field">
               <input
@@ -161,17 +159,17 @@ export default function Contact() {
                 placeholder=" "
                 id="kd-subject"
               />
-              <label htmlFor="kd-subject">Konu</label>
+              <label htmlFor="kd-subject">{t('contact.formSubject')}</label>
             </div>
           </div>
 
           <div className="kd-field kd-field-textarea">
-            <label htmlFor="kd-message" className="visually-hidden">Mesajın</label>
+            <label htmlFor="kd-message" className="visually-hidden">{t('contact.formMessageLabel')}</label>
             <textarea
               id="kd-message"
               value={form.message}
               onChange={handle('message')}
-              placeholder="Mesajını buraya yaz..."
+              placeholder={t('contact.formMessage')}
               rows={6}
               required
               minLength={10}
@@ -181,28 +179,23 @@ export default function Contact() {
           </div>
 
           <button type="submit" className="kd-contact-submit" disabled={submitting}>
-            {submitting ? 'Gönderiliyor...' : 'Mesajı gönder'}
+            {submitting ? t('contact.submitting') : t('contact.submit')}
           </button>
 
           {status && (
-            <div className={`kd-form-status ${status.type}`}>{status.text}</div>
+            <div className={`kd-form-status ${status.type}`} role="status" aria-live="polite">{status.text}</div>
           )}
 
-          <p className="kd-contact-note">
-            Spam koruması için 15 dakikada bir form gönderebilirsin.
-          </p>
+          <p className="kd-contact-note">{t('contact.spamNote')}</p>
         </form>
       </section>
 
       <section className="kd-contact-follow">
         <div className="kd-follow-head">
           <h2>
-            Beni takip <span className="kd-accent">et</span>
+            {t('contact.followTitleA')} <span className="kd-accent">{t('contact.followTitleB')}</span>
           </h2>
-          <p>
-            Sosyal medyada da bulabilirsin. Mesajına en hızlı buralardan dönüş
-            yapıyorum.
-          </p>
+          <p>{t('contact.followSub')}</p>
         </div>
         <div className="kd-follow-cards">
           {followCards.map((c) => (
@@ -218,7 +211,7 @@ export default function Contact() {
               </span>
               <h4>{c.name}</h4>
               <p>{c.desc}</p>
-              <span className="kd-follow-tile-link">Takip et ↗</span>
+              <span className="kd-follow-tile-link">{t('contact.followCta')} ↗</span>
             </a>
           ))}
         </div>

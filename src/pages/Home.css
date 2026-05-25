@@ -1018,9 +1018,9 @@
 .hm-video-thumb {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: #0a0a0a;
+  background: var(--bg-1);
   overflow: hidden;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .hm-video-thumb img {
@@ -1321,8 +1321,8 @@
   aspect-ratio: 1 / 1;
   border-radius: 16px;
   overflow: hidden;
-  background: #0a0a0a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-1);
+  border: 1px solid var(--border-color);
   display: block;
   transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;

@@ -102,3 +102,16 @@
   box-shadow: 0 10px 24px rgba(234, 195, 33, 0.35);
 }
 .cgame__hint { font-size: 11px !important; opacity: 0.6; }
+
+/* ─── Light theme — cream + amber ─── */
+[data-theme="light"] .cg-stage {
+  background: linear-gradient(180deg, #FBF8F3 0%, #EAE3D6 100%);
+}
+[data-theme="light"] .cg-pad {
+  background: rgba(26, 23, 21, 0.08);
+}
+[data-theme="light"] .cgame {
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--text-primary);
+  border-color: rgba(26, 23, 21, 0.10);
+}

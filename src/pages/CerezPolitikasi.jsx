@@ -1,12 +1,14 @@
 import { useSEO } from '../hooks/useSEO'
 import PageTransition from '../components/PageTransition'
 import { FadeIn } from '../components/Animations'
+import { useLanguage } from '../i18n/LanguageContext'
 import './Legal.css'
 
 export default function CerezPolitikasi() {
+  const { t } = useLanguage()
   useSEO({
-    title: 'Çerez Politikası | Kadir Demir',
-    description: 'Kadir Demir çerez politikası. Web sitemizde kullanılan çerezler ve tercihlerinizi nasıl yönetebileceğiniz hakkında bilgi.',
+    title: t('legal.cookieTitle'),
+    description: `${t('legal.cookieTitle')} — Kadir Demir`,
     path: '/cerez-politikasi',
   })
 

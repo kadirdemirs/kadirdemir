@@ -431,3 +431,83 @@
   .hc-glow, .hc-ring, .hc-badge-ring, .hc-wordmark-sub-dot, .hc-meta-dot { animation: none; }
   .hc-bar { animation: none; }
 }
+
+/* ════════════════════════════════════════════
+   LIGHT THEME — kart cream zemin + amber accent
+   ════════════════════════════════════════════ */
+[data-theme="light"] .hc {
+  background: #fff;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 1) inset,
+    0 0 0 1px rgba(26, 23, 21, 0.08),
+    0 30px 80px -28px rgba(45, 35, 20, 0.25),
+    0 0 100px -40px rgba(245, 158, 11, 0.30);
+}
+
+[data-theme="light"] .hc-backdrop {
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 30%, rgba(245, 158, 11, 0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 70% 80%, rgba(236, 72, 153, 0.16) 0%, transparent 65%),
+    linear-gradient(165deg, #FBF8F3 0%, #F4EFE6 50%, #EAE3D6 100%);
+}
+
+[data-theme="light"] .hc-backdrop::before {
+  background-image: radial-gradient(circle at 1px 1px, rgba(26, 23, 21, 0.05) 1px, transparent 1px);
+}
+
+[data-theme="light"] .hc-vignette {
+  background: radial-gradient(ellipse 100% 80% at 50% 100%, rgba(45, 35, 20, 0.18) 0%, transparent 60%);
+}
+
+[data-theme="light"] .hc-noise {
+  opacity: 0.025;
+  mix-blend-mode: multiply;
+}
+
+[data-theme="light"] .hc-ring {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(245, 158, 11, 0.35) 40deg,
+    transparent 80deg,
+    transparent 180deg,
+    rgba(236, 72, 153, 0.30) 220deg,
+    transparent 280deg
+  );
+}
+
+[data-theme="light"] .hc-wordmark {
+  color: #1A1715;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6),
+    0 4px 16px rgba(245, 158, 11, 0.18);
+}
+
+[data-theme="light"] .hc-wordmark-sub-text {
+  color: rgba(26, 23, 21, 0.75);
+}
+
+[data-theme="light"] .hc-meta-strip,
+[data-theme="light"] .hc-chip {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(26, 23, 21, 0.10);
+  color: rgba(26, 23, 21, 0.78);
+}
+
+[data-theme="light"] .hc-bar {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.9) 0%, rgba(245, 158, 11, 0.5) 100%);
+}
+
+[data-theme="light"] .hc-badge-core {
+  background: var(--primary);
+  color: #fff;
+}
+
+[data-theme="light"] .hc-scan {
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+}
+
+[data-theme="light"] .hc-tick {
+  border-color: rgba(26, 23, 21, 0.32);
+}

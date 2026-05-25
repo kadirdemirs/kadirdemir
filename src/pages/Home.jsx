@@ -86,15 +86,7 @@ function parseDuration(iso) {
 }
 
 // Boş state için minimal placeholder yok — gerçek veri gelmezse o blok hiç gösterilmiyor.
-
-const faqs = [
-  { q: 'Yeni videoları ne sıklıkla yüklüyorsun?', a: 'Haftada 2-3 yeni video yüklemeye gayret ediyorum. YouTube’da zile basarsan bildirimleri kaçırmazsın.' },
-  { q: 'Sponsorluklara açık mısın?', a: 'Markalarla uzun vadeli ve doğru kitleye hitap eden iş birliklerine açığım. İş birliği e-posta adresimden ulaşabilirsiniz.' },
-  { q: 'Hangi günler video yayınlıyorsun?', a: 'Genellikle Salı, Perşembe ve Cumartesi yayın günlerim. Bazen sürpriz içerikler de paylaşıyorum.' },
-  { q: 'Video önerimi nereden iletebilirim?', a: 'Instagram DM, YouTube yorumları veya iletişim sayfasındaki form üzerinden bana ulaşabilirsin.' },
-  { q: 'Kullandığın ekipmanlar neler?', a: 'Tüm setup’ımın detayını Setup sayfasından inceleyebilirsin: kamera, mikrofon, ışık, bilgisayar.' },
-  { q: 'Etkinliklerde nasıl bulunabilirim?', a: 'Etkinlik ve buluşma takvimimi Instagram üzerinden duyuruyorum. Yakın zamanda bir meet-up planlanıyor.' },
-]
+// FAQ içerikleri Home component içinde dil-bazlı useMemo ile üretiliyor (localizedFaqs).
 
 function FAQItem({ faq }) {
   const [open, setOpen] = useState(false)
@@ -202,23 +194,33 @@ export default function Home() {
     .sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))
     .slice(0, 3)
 
+  const subscriberLabel = t('home.platformsSub_yt')      // Abone / Subscribers / Abonnenten
+  const followerLabel = t('home.platformsSub_followers') // Takipçi / Followers / Follower
+
+  const liveStreamCopy = lang === 'en' ? 'Live streams' : lang === 'de' ? 'Livestreams' : 'Canlı yayınlar'
+  const microThoughtCopy = lang === 'en' ? 'Quick thoughts' : lang === 'de' ? 'Kurze Gedanken' : 'Anlık düşünceler'
+  const joinChannelCopy = lang === 'en' ? 'Join my channel' : lang === 'de' ? 'Tritt meinem Kanal bei' : 'Kanalıma katıl'
+  const sharingMomentsCopy = lang === 'en' ? 'Sharing moments' : lang === 'de' ? 'Teile Momente' : 'Anları paylaşıyorum'
+  const shortVideosCopy = lang === 'en' ? 'Short videos' : lang === 'de' ? 'Kurzvideos' : 'Kısa videolar'
+
   const socialFollows = [
-    settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: ytSubs ? `${ytSubs} Abone` : 'Kanalıma katıl', url: settings.youtube, color: '#FF0000' },
-    settings.instagram && { icon: FaInstagram, name: 'Instagram', meta: igFollowers ? `${igFollowers} Takipçi` : 'Anları paylaşıyorum', url: settings.instagram, color: '#E4405F' },
-    settings.tiktok && { icon: FaTiktok, name: 'TikTok', meta: ttFollowers ? `${ttFollowers} Takipçi` : 'Kısa videolar', url: settings.tiktok, color: '#00F2EA' },
-    settings.twitch && { icon: FaTwitch, name: 'Twitch', meta: 'Canlı yayınlar', url: settings.twitch, color: '#9146FF' },
-    settings.twitter && { icon: FaXTwitter, name: 'X', meta: 'Anlık düşünceler', url: settings.twitter, color: '#ffffff' },
+    settings.youtube && { icon: FaYoutube, name: 'YouTube', meta: ytSubs ? `${ytSubs} ${subscriberLabel}` : joinChannelCopy, url: settings.youtube, color: '#FF0000' },
+    settings.instagram && { icon: FaInstagram, name: 'Instagram', meta: igFollowers ? `${igFollowers} ${followerLabel}` : sharingMomentsCopy, url: settings.instagram, color: '#E4405F' },
+    settings.tiktok && { icon: FaTiktok, name: 'TikTok', meta: ttFollowers ? `${ttFollowers} ${followerLabel}` : shortVideosCopy, url: settings.tiktok, color: '#00F2EA' },
+    settings.twitch && { icon: FaTwitch, name: 'Twitch', meta: liveStreamCopy, url: settings.twitch, color: '#9146FF' },
+    settings.twitter && { icon: FaXTwitter, name: 'X', meta: microThoughtCopy, url: settings.twitter, color: '#ffffff' },
   ].filter(Boolean)
+
+  const igPlaceholderCaptions = lang === 'en'
+    ? ['Studio shots', 'Behind the scenes', 'New episode soon', 'With the team']
+    : lang === 'de'
+      ? ['Studio-Aufnahmen', 'Behind the Scenes', 'Neue Folge bald', 'Mit dem Team']
+      : ['Stüdyodan kareler', 'Set arkası', 'Yeni bölüm yakında', 'Ekiple birlikte']
 
   const igPosts = (settings.instagramPosts || []).filter(p => p && p.url)
   const instagramShots = igPosts.length > 0
     ? igPosts.slice(0, 6)
-    : [
-        { id: 1, caption: 'Stüdyodan kareler' },
-        { id: 2, caption: 'Set arkası' },
-        { id: 3, caption: 'Yeni bölüm yakında' },
-        { id: 4, caption: 'Ekiple birlikte' },
-      ].map(s => ({ ...s, url: settings.instagram }))
+    : igPlaceholderCaptions.map((caption, i) => ({ id: i + 1, caption, url: settings.instagram }))
 
   const brandName = settings.businessName || 'Kadir Demir'
 

@@ -173,3 +173,12 @@
     justify-content: center;
   }
 }
+
+/* ─── Light theme ─── */
+[data-theme="light"] .kd-newsletter-row {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(26, 23, 21, 0.10);
+}
+[data-theme="light"] .kd-newsletter-row input {
+  color: var(--text-primary);
+}

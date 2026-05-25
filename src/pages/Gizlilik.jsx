@@ -1,12 +1,14 @@
 import { useSEO } from '../hooks/useSEO'
 import PageTransition from '../components/PageTransition'
 import { FadeIn } from '../components/Animations'
+import { useLanguage } from '../i18n/LanguageContext'
 import './Legal.css'
 
 export default function Gizlilik() {
+  const { t } = useLanguage()
   useSEO({
-    title: 'Gizlilik Politikası | Kadir Demir',
-    description: 'Kadir Demir gizlilik politikası. Kişisel verilerinizin nasıl toplandığı, kullanıldığı ve korunduğu hakkında bilgi.',
+    title: t('legal.privacyTitle'),
+    description: `${t('legal.privacyTitle')} — Kadir Demir`,
     path: '/gizlilik',
   })
 

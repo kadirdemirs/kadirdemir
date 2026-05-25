@@ -24,6 +24,7 @@ import {
 import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema } from '../components/StructuredData'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { useLanguage } from '../i18n/LanguageContext'
 import Reveal from '../components/Reveal'
 import './Setup.css'
 
@@ -91,7 +92,7 @@ function pickIcon(item) {
   return FaBoxOpen
 }
 
-function SetupItem({ item }) {
+function SetupItem({ item, productLinkLabel }) {
   const isLink = Boolean(item.url && item.url !== '#')
   const linkProps = {
     href: item.url,
@@ -108,7 +109,7 @@ function SetupItem({ item }) {
         <div className="kd-setup-name">{item.name}</div>
       </div>
       {isLink && (
-        <span className="kd-setup-link" aria-label="Ürün sayfası">
+        <span className="kd-setup-link" aria-label={productLinkLabel}>
           <HiOutlineExternalLink size={16} />
         </span>
       )}
@@ -131,10 +132,11 @@ function SetupItem({ item }) {
 
 export default function Setup() {
   const { settings } = useSiteSettings()
+  const { t } = useLanguage()
 
   useSEO({
-    title: 'Stüdyo Setup',
-    description: 'Kadir Demir’in stüdyo setup’ı — bilgisayar, kamera, mikrofon ve diğer ekipmanlar.',
+    title: t('setup.pill'),
+    description: `${settings.businessName || 'Kadir Demir'} — ${t('setup.heroSub')}`,
     path: '/setup',
   })
 
@@ -149,22 +151,18 @@ export default function Setup() {
     <div className="kd-setup">
       <BreadcrumbSchema
         items={[
-          { name: 'Ana Sayfa', path: '/' },
-          { name: 'Setup', path: '/setup' },
+          { name: t('nav.home'), path: '/' },
+          { name: t('nav.setup'), path: '/setup' },
         ]}
       />
       <header className="kd-setup-head">
         <span className="kd-setup-pill">
-          <HiOutlineCamera size={14} /> Stüdyo Kurulumu
+          <HiOutlineCamera size={14} /> {t('setup.pill')}
         </span>
         <h1>
-          Stüdyomda <span className="kd-accent">neler var?</span>
+          {t('setup.heroTitleA')} <span className="kd-accent">{t('setup.heroTitleB')}</span>
         </h1>
-        <p>
-          Yıllar içinde test edip uzun süredir kullandığım donanımları burada bir araya
-          getirdim. İçerik üretmek isteyenlere referans olur diye. Bazı linkler iş birliği
-          (affiliate) olabilir — fiyatı sana göre değiştirmiyor.
-        </p>
+        <p>{t('setup.heroSub')}</p>
       </header>
 
       <Reveal as="section" className="kd-setup-section">
@@ -173,11 +171,11 @@ export default function Setup() {
           <span className="kd-setup-section-icon">
             <HiOutlineChip size={20} />
           </span>
-          <h2>Bilgisayar Özellikleri</h2>
+          <h2>{t('setup.pcTitle')}</h2>
         </div>
         <div className="kd-setup-grid">
           {pcParts.map((item, idx) => (
-            <SetupItem key={`pc-${item.kind || idx}`} item={item} />
+            <SetupItem key={`pc-${item.kind || idx}`} item={item} productLinkLabel={t('setup.productLink')} />
           ))}
         </div>
       </Reveal>
@@ -188,11 +186,11 @@ export default function Setup() {
           <span className="kd-setup-section-icon">
             <HiOutlineDesktopComputer size={20} />
           </span>
-          <h2>Ekipmanlar</h2>
+          <h2>{t('setup.equipmentTitle')}</h2>
         </div>
         <div className="kd-setup-grid">
           {equipment.map((item, idx) => (
-            <SetupItem key={`eq-${item.kind || idx}`} item={item} />
+            <SetupItem key={`eq-${item.kind || idx}`} item={item} productLinkLabel={t('setup.productLink')} />
           ))}
         </div>
       </Reveal>

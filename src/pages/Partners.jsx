@@ -8,10 +8,10 @@ import { SkeletonGrid } from '../components/Skeleton'
 import { BreadcrumbSchema } from '../components/StructuredData'
 
 const TIER_LABEL = {
-  gold:    { tr: 'Gold Sponsor', en: 'Gold Sponsor' },
-  silver:  { tr: 'Silver Sponsor', en: 'Silver Sponsor' },
-  bronze:  { tr: 'Bronze Sponsor', en: 'Bronze Sponsor' },
-  partner: { tr: 'İş Birliği', en: 'Partner' },
+  gold:    { tr: 'Gold Sponsor', en: 'Gold Sponsor', de: 'Gold-Sponsor' },
+  silver:  { tr: 'Silver Sponsor', en: 'Silver Sponsor', de: 'Silber-Sponsor' },
+  bronze:  { tr: 'Bronze Sponsor', en: 'Bronze Sponsor', de: 'Bronze-Sponsor' },
+  partner: { tr: 'İş Birliği', en: 'Partner', de: 'Partner' },
 }
 
 const TIER_STYLE = {
@@ -27,9 +27,11 @@ export default function Partners() {
   const [loading, setLoading] = useState(true)
 
   useSEO({
-    title: lang === 'en' ? 'Partners' : 'İş Birlikleri',
+    title: lang === 'en' ? 'Partners' : lang === 'de' ? 'Partner' : 'İş Birlikleri',
     description: lang === 'en'
       ? 'Brands and partners I work with — Kadir Demir.'
+      : lang === 'de'
+      ? 'Marken und Partner, mit denen ich zusammenarbeite — Kadir Demir.'
       : 'Birlikte çalıştığım markalar ve iş birlikleri — Kadir Demir.',
     path: '/partnerler',
   })
@@ -42,22 +44,22 @@ export default function Partners() {
   }, [])
 
   const t = (k) => ({
-    pill:     { tr: 'İş Birlikleri', en: 'Partners' },
-    head1:    { tr: 'Birlikte ', en: 'Together ' },
-    headHi:   { tr: 'büyüyoruz', en: 'we grow' },
-    sub:      { tr: 'Birlikte çalıştığım markalar ve uzun soluklu iş birlikleri.', en: 'Brands and long-term collaborations.' },
-    ctaTitle: { tr: 'Sen de partner olmak ister misin?', en: 'Want to become a partner?' },
-    ctaDesc:  { tr: 'Marka iş birlikleri, sponsorluk ve özel projeler için iletişime geç.', en: 'Reach out for brand collaborations, sponsorship and custom projects.' },
-    ctaBtn:   { tr: 'Sponsor başvurusu', en: 'Sponsor inquiry' },
-    visit:    { tr: 'Web sitesi', en: 'Visit site' },
-    empty:    { tr: 'Henüz partner eklenmedi.', en: 'No partners yet.' },
+    pill:     { tr: 'İş Birlikleri', en: 'Partners', de: 'Partner' },
+    head1:    { tr: 'Birlikte ', en: 'Together ', de: 'Gemeinsam ' },
+    headHi:   { tr: 'büyüyoruz', en: 'we grow', de: 'wachsen wir' },
+    sub:      { tr: 'Birlikte çalıştığım markalar ve uzun soluklu iş birlikleri.', en: 'Brands and long-term collaborations.', de: 'Marken und langfristige Kooperationen.' },
+    ctaTitle: { tr: 'Sen de partner olmak ister misin?', en: 'Want to become a partner?', de: 'Möchtest du Partner werden?' },
+    ctaDesc:  { tr: 'Marka iş birlikleri, sponsorluk ve özel projeler için iletişime geç.', en: 'Reach out for brand collaborations, sponsorship and custom projects.', de: 'Schreib mir für Markenkooperationen, Sponsoring und Sonderprojekte.' },
+    ctaBtn:   { tr: 'Sponsor başvurusu', en: 'Sponsor inquiry', de: 'Sponsoring-Anfrage' },
+    visit:    { tr: 'Web sitesi', en: 'Visit site', de: 'Webseite' },
+    empty:    { tr: 'Henüz partner eklenmedi.', en: 'No partners yet.', de: 'Noch keine Partner.' },
   }[k]?.[lang] || k)
 
   return (
     <div className="kd-blog">
       <BreadcrumbSchema
         items={[
-          { name: lang === 'en' ? 'Home' : 'Ana Sayfa', path: '/' },
+          { name: lang === 'en' ? 'Home' : lang === 'de' ? 'Startseite' : 'Ana Sayfa', path: '/' },
           { name: t('pill'), path: '/partnerler' },
         ]}
       />

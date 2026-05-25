@@ -11,8 +11,10 @@ import ErrorBoundary from './components/ErrorBoundary'
 import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
 import CommandPalette from './components/CommandPalette'
-import Aurora from './components/reactbits/Aurora'
-import ClickSpark from './components/reactbits/ClickSpark'
+
+// Heavy WebGL components — lazy load to skip them on initial paint
+const Aurora = lazy(() => import('./components/reactbits/Aurora'))
+const ClickSpark = lazy(() => import('./components/reactbits/ClickSpark'))
 
 const AURORA_COLORS = ['#f59e0b', '#ec4899', '#a855f7']
 
@@ -118,12 +120,14 @@ function App() {
       <ScrollToTop />
       {!isAdmin && (
         <div aria-hidden="true" className="kd-aurora-bg">
-          <Aurora
-            colorStops={AURORA_COLORS}
-            amplitude={0.9}
-            blend={0.55}
-            speed={0.7}
-          />
+          <Suspense fallback={null}>
+            <Aurora
+              colorStops={AURORA_COLORS}
+              amplitude={0.9}
+              blend={0.55}
+              speed={0.7}
+            />
+          </Suspense>
         </div>
       )}
       {!isAdmin && <LiveBanner />}
@@ -154,7 +158,11 @@ function App() {
       {!isAdmin && <Footer />}
       {!isAdmin && <InstallPrompt />}
       {!isAdmin && <CommandPalette />}
-      {!isAdmin && <ClickSpark sparkColor="#f59e0b" sparkCount={10} sparkRadius={22} duration={520} />}
+      {!isAdmin && (
+        <Suspense fallback={null}>
+          <ClickSpark sparkColor="#f59e0b" sparkCount={10} sparkRadius={22} duration={520} />
+        </Suspense>
+      )}
     </>
   )
 }

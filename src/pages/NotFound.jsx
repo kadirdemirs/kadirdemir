@@ -8,16 +8,18 @@ import PageTransition from '../components/PageTransition'
 import CatcherGame from '../components/CatcherGame'
 import './NotFound.css'
 
-const popularPages = [
-  { path: '/', tr: 'Ana Sayfa', en: 'Home', emoji: '🏠' },
-  { path: '/videolar', tr: 'Videolar', en: 'Videos', emoji: '🎬' },
-  { path: '/blog', tr: 'Blog', en: 'Blog', emoji: '📝' },
-  { path: '/hakkimda', tr: 'Hakkımda', en: 'About', emoji: '👋' },
-  { path: '/setup', tr: 'Setup', en: 'Setup', emoji: '🖥️' },
-  { path: '/iletisim', tr: 'İletişim', en: 'Contact', emoji: '✉️' },
-  { path: '/sponsor', tr: 'Sponsorluk', en: 'Sponsor', emoji: '🤝' },
-  { path: '/sor', tr: 'Sor Bana', en: 'Ask Me', emoji: '❓' },
-]
+function buildPopularPages(t) {
+  return [
+    { path: '/', name: t('nav.home'), emoji: '🏠' },
+    { path: '/videolar', name: t('nav.videos'), emoji: '🎬' },
+    { path: '/blog', name: t('nav.blog'), emoji: '📝' },
+    { path: '/hakkimda', name: t('nav.about'), emoji: '👋' },
+    { path: '/setup', name: t('nav.setup'), emoji: '🖥️' },
+    { path: '/iletisim', name: t('nav.contact'), emoji: '✉️' },
+    { path: '/sponsor', name: t('sponsor.pill'), emoji: '🤝' },
+    { path: '/sor', name: t('ama.pill'), emoji: '❓' },
+  ]
+}
 
 function routeFromQuery(query) {
   const q = query.toLowerCase()
@@ -33,15 +35,14 @@ function routeFromQuery(query) {
 }
 
 export default function NotFound() {
-  const { lang } = useLanguage()
+  const { t } = useLanguage()
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
+  const popularPages = buildPopularPages(t)
 
   useSEO({
-    title: lang === 'tr' ? 'Sayfa Bulunamadı' : 'Page Not Found',
-    description: lang === 'tr'
-      ? 'Aradığın sayfa bulunamadı. Popüler sayfalardan veya arama kutusundan devam et.'
-      : 'The page you were looking for could not be found. Try the popular pages or the search box.',
+    title: t('notFound.title'),
+    description: t('notFound.sub'),
     path: '/404',
     noindex: true,
   })
@@ -77,16 +78,14 @@ export default function NotFound() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            {lang === 'tr' ? 'Sayfa bulunamadı' : 'Page not found'}
+            {t('notFound.title')}
           </motion.h1>
           <motion.p
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            {lang === 'tr'
-              ? 'Aradığın sayfa burada değil — taşınmış, silinmiş ya da yanlış bir bağlantıdan gelmiş olabilirsin. Aşağıdan başka bir sayfaya geçebilirsin.'
-              : 'The page you were looking for is not here — it may have moved, been removed, or the link might be wrong. Try one of the options below.'}
+            {t('notFound.sub')}
           </motion.p>
 
           <motion.form
@@ -98,18 +97,18 @@ export default function NotFound() {
             role="search"
           >
             <label htmlFor="notfound-search" className="visually-hidden">
-              {lang === 'tr' ? 'Sitede ara' : 'Search the site'}
+              {t('nav.search')}
             </label>
             <input
               id="notfound-search"
               type="search"
-              placeholder={lang === 'tr' ? 'Ne arıyordun? (blog, video, setup…)' : 'What were you looking for?'}
+              placeholder={t('nav.search')}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="notfound-arama-input"
               autoComplete="off"
             />
-            <button type="submit" className="notfound-arama-btn" aria-label={lang === 'tr' ? 'Ara' : 'Search'}>
+            <button type="submit" className="notfound-arama-btn" aria-label={t('nav.search')}>
               <HiOutlineSearch size={18} />
             </button>
           </motion.form>
@@ -122,10 +121,10 @@ export default function NotFound() {
           >
             <Link to="/" className="btn btn-primary">
               <HiOutlineHome size={18} />
-              {lang === 'tr' ? 'Ana Sayfa' : 'Home'}
+              {t('notFound.goHome')}
             </Link>
             <Link to="/iletisim" className="btn btn-outline">
-              {lang === 'tr' ? 'İletişime geç' : 'Get in touch'}
+              {t('common.contact')}
               <HiOutlineArrowRight size={16} />
             </Link>
           </motion.div>
@@ -136,14 +135,12 @@ export default function NotFound() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <p className="notfound-populer-baslik">
-              {lang === 'tr' ? 'Popüler sayfalar' : 'Popular pages'}
-            </p>
+            <p className="notfound-populer-baslik">{t('notFound.popularTitle')}</p>
             <div className="notfound-populer-grid">
               {popularPages.map((page) => (
                 <Link key={page.path} to={page.path} className="notfound-populer-link">
                   <span aria-hidden="true">{page.emoji}</span>{' '}
-                  {lang === 'tr' ? page.tr : page.en}
+                  {page.name}
                 </Link>
               ))}
             </div>
@@ -156,7 +153,7 @@ export default function NotFound() {
             style={{ marginTop: 48 }}
           >
             <p className="notfound-populer-baslik" style={{ textAlign: 'center' }}>
-              {lang === 'tr' ? 'Canın sıkıldıysa mini oyun 🎮' : 'A little mini game while you’re here 🎮'}
+              {t('notFound.gameTitle')} 🎮 — <span style={{ opacity: 0.7 }}>{t('notFound.gameSub')}</span>
             </p>
             <CatcherGame />
           </motion.div>

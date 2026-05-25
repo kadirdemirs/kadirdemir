@@ -2,14 +2,30 @@ import { createContext, useContext, useState, useEffect } from 'react'
 
 const ThemeContext = createContext()
 
+const LS_KEY = 'theme'
+
+function readInitialTheme() {
+  if (typeof window === 'undefined') return 'dark'
+  try {
+    const stored = localStorage.getItem(LS_KEY)
+    if (stored === 'light' || stored === 'dark') return stored
+  } catch { /* private mode / storage disabled */ }
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light'
+    }
+  } catch { /* ignore */ }
+  return 'dark'
+}
+
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'dark'
-  })
+  const [theme, setTheme] = useState(readInitialTheme)
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem('theme', theme)
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+    try { localStorage.setItem(LS_KEY, theme) } catch { /* ignore */ }
   }, [theme])
 
   const toggleTheme = () => {

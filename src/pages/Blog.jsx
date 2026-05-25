@@ -41,11 +41,14 @@ export default function Blog() {
   }, [query, searchParams, setSearchParams])
 
   useSEO({
-    title: lang === 'en' ? 'Blog | Kadir Demir' : 'Blog | Kadir Demir',
+    title: 'Blog | Kadir Demir',
     description:
       lang === 'en'
         ? 'Articles, notes and behind-the-scenes from Kadir Demir.'
-        : 'Kadir Demir\'in yazıları, notları ve kulis gözlemleri.',
+        : lang === 'de'
+        ? 'Beiträge, Notizen und Behind-the-Scenes von Kadir Demir.'
+        : "Kadir Demir'in yazıları, notları ve kulis gözlemleri.",
+    path: '/blog',
   })
 
   useEffect(() => {

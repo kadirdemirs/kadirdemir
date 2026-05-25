@@ -1,4 +1,11 @@
 import { useEffect } from 'react'
+import { useLanguage } from '../i18n/LanguageContext'
+
+const LOCALE_MAP = {
+  tr: 'tr_TR',
+  en: 'en_US',
+  de: 'de_DE',
+}
 
 const DEFAULT_BASE_URL = 'https://kadirdemir-nu.vercel.app'
 const SITE_NAME = 'Kadir Demir'
@@ -63,6 +70,7 @@ export function useSEO({
   noindex = false,
   twitterHandle = '@kadirdemir',
 }) {
+  const { lang } = useLanguage()
   useEffect(() => {
     const baseUrl = getBaseUrl()
 
@@ -104,7 +112,7 @@ export function useSEO({
     setMeta('og:image', ogImage, true)
     setMeta('og:type', type, true)
     setMeta('og:site_name', SITE_NAME, true)
-    setMeta('og:locale', 'tr_TR', true)
+    setMeta('og:locale', LOCALE_MAP[lang] || 'tr_TR', true)
 
     setMeta('twitter:card', 'summary_large_image')
     setMeta('twitter:title', fullTitle)
@@ -114,5 +122,5 @@ export function useSEO({
 
     setCanonical(canonicalUrl)
     setHreflang(canonicalUrl)
-  }, [title, description, keywords, path, image, type, noindex, twitterHandle])
+  }, [title, description, keywords, path, image, type, noindex, twitterHandle, lang])
 }

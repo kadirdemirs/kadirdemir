@@ -231,6 +231,9 @@ export default function BlogDetail() {
                 <img
                   src={getBlogImage(post)}
                   alt={title}
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px', display: 'block' }}
                   onError={e => {
                     if (e.target.dataset.fallback === '2') { e.target.dataset.failed = '1'; e.target.removeAttribute('src'); return }

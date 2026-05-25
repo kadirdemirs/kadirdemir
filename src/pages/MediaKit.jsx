@@ -12,6 +12,7 @@ import {
 } from 'react-icons/hi'
 import { FaYoutube, FaInstagram, FaTiktok, FaTwitch } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { BreadcrumbSchema } from '../components/StructuredData'
 import ScrollStack, { ScrollStackItem } from '../components/reactbits/ScrollStack'
@@ -21,6 +22,7 @@ import './MediaKit.css'
 
 export default function MediaKit() {
   const { settings } = useSiteSettings()
+  const { t } = useLanguage()
   const audienceBreakdown = Array.isArray(settings.mediaKitAudience) ? settings.mediaKitAudience : []
   const topRegions = Array.isArray(settings.mediaKitRegions) ? settings.mediaKitRegions : []
   const kpis = Array.isArray(settings.mediaKitKpis) ? settings.mediaKitKpis : []
@@ -30,9 +32,8 @@ export default function MediaKit() {
   const dataSourceNote = settings.mediaKitDataSourceNote || ''
 
   useSEO({
-    title: 'Medya Kit',
-    description:
-      `${settings.businessName || 'Kadir Demir'} medya kiti — kanal istatistikleri, izleyici profili, sponsorluk paketleri ve iş birliği koşulları.`,
+    title: t('mediakit.pageTitle'),
+    description: `${settings.businessName || 'Kadir Demir'} — ${t('mediakit.sub')}`,
     path: '/medya-kit',
   })
 
@@ -54,9 +55,9 @@ export default function MediaKit() {
   }, [])
 
   const stats = [
-    { icon: FaYoutube, label: 'YouTube Abone', value: settings.statsYoutubeSubs || '—', color: '#ff0033' },
-    { icon: FaInstagram, label: 'Instagram', value: settings.statsInstagramFollowers || '—', color: '#e1306c' },
-    { icon: FaTiktok, label: 'TikTok', value: settings.statsTiktokFollowers || '—', color: '#ffffff' },
+    { icon: FaYoutube, label: t('home.statsYoutube'), value: settings.statsYoutubeSubs || '—', color: '#ff0033' },
+    { icon: FaInstagram, label: t('home.statsInstagram'), value: settings.statsInstagramFollowers || '—', color: '#e1306c' },
+    { icon: FaTiktok, label: t('home.statsTiktok'), value: settings.statsTiktokFollowers || '—', color: '#ffffff' },
     { icon: FaTwitch, label: 'Twitch', value: settings.statsTwitchFollowers || '—', color: '#9146ff' },
   ].filter((s) => s.value && s.value !== '—')
 
@@ -70,39 +71,36 @@ export default function MediaKit() {
     <div className="kd-mediakit">
       <BreadcrumbSchema
         items={[
-          { name: 'Ana Sayfa', path: '/' },
-          { name: 'Sponsor', path: '/sponsor' },
-          { name: 'Medya Kit', path: '/medya-kit' },
+          { name: t('nav.home'), path: '/' },
+          { name: t('sponsor.pill'), path: '/sponsor' },
+          { name: t('mediakit.pageTitle'), path: '/medya-kit' },
         ]}
       />
 
       <div className="kd-mediakit-toolbar">
         <Link to="/sponsor" className="kd-mediakit-back">
-          ← Sponsor sayfasına dön
+          {t('mediakit.backToSponsor')}
         </Link>
         <div className="kd-mediakit-actions">
           <button type="button" onClick={handlePrint} className="kd-mediakit-btn">
             <HiOutlineDownload size={16} />
-            PDF olarak indir
+            {t('mediakit.downloadPdf')}
           </button>
           <a href={`mailto:${businessEmail}?subject=Sponsorluk%20Talebi`} className="kd-mediakit-btn kd-mediakit-btn-primary">
             <HiOutlineMail size={16} />
-            Doğrudan iletişime geç
+            {t('mediakit.contactDirect')}
           </a>
         </div>
       </div>
 
       <header className="kd-mediakit-hero">
-        <span className="kd-mediakit-pill">Medya Kit · {new Date().getFullYear()}</span>
+        <span className="kd-mediakit-pill">{t('mediakit.headerLabel')} · {new Date().getFullYear()}</span>
         <h1>
           {settings.businessName || 'Kadir Demir'}
           <br />
-          <span className="kd-mediakit-accent">YouTube içerik üreticisi</span>
+          <span className="kd-mediakit-accent">{t('mediakit.role')}</span>
         </h1>
-        <p>
-          {settings.description ||
-            "İstanbul'dan yayın yapan, oyun ve eğlence odaklı bir YouTuber. Sade üretim, samimi hikâye anlatımı ve yüksek izleyici bağlılığı."}
-        </p>
+        <p>{settings.description || t('mediakit.fallbackDesc')}</p>
       </header>
 
       {stats.length > 0 && (
@@ -123,7 +121,7 @@ export default function MediaKit() {
         <div className="kd-mediakit-card">
           <header>
             <HiOutlineUserGroup size={18} />
-            <h2>İzleyici yaş profili</h2>
+            <h2>{t('mediakit.audienceTitle')}</h2>
           </header>
           <ul className="kd-mediakit-bars">
             {audienceBreakdown.map((row) => (
@@ -142,7 +140,7 @@ export default function MediaKit() {
         <div className="kd-mediakit-card">
           <header>
             <HiOutlineGlobeAlt size={18} />
-            <h2>Coğrafi dağılım</h2>
+            <h2>{t('mediakit.regionsTitle')}</h2>
           </header>
           <ul className="kd-mediakit-regions">
             {topRegions.map((r) => (
@@ -158,7 +156,7 @@ export default function MediaKit() {
         <div className="kd-mediakit-card">
           <header>
             <HiOutlineChartBar size={18} />
-            <h2>Tipik performans</h2>
+            <h2>{t('mediakit.kpisTitle')}</h2>
           </header>
           <ul className="kd-mediakit-kpis">
             {kpis.map((k) => (
@@ -172,7 +170,7 @@ export default function MediaKit() {
         <div className="kd-mediakit-card">
           <header>
             <FaYoutube size={18} color="#ff0033" />
-            <h2>İçerik temaları</h2>
+            <h2>{t('mediakit.themesTitle')}</h2>
           </header>
           <ul className="kd-mediakit-tags">
             {themes.map((theme) => (
@@ -183,7 +181,7 @@ export default function MediaKit() {
       </section>
 
       <section className="kd-mediakit-formats">
-        <h2>İş birliği formatları</h2>
+        <h2>{t('mediakit.formatsTitle')}</h2>
         {reduceMotion ? (
           <div className="kd-mediakit-formats-grid">
             {collabFormats.map((f) => (
@@ -219,7 +217,7 @@ export default function MediaKit() {
       </section>
 
       <section className="kd-mediakit-principles">
-        <h2>Çalışma prensipleri</h2>
+        <h2>{t('mediakit.principlesTitle')}</h2>
         <ul>
           {principles.map((p) => (
             <li key={p}>
@@ -232,18 +230,18 @@ export default function MediaKit() {
 
       <section className="kd-mediakit-cta">
         <div>
-          <h2>Hadi konuşalım.</h2>
-          <p>Brief'ini gönder, 24 saat içinde dönüş yapayım.</p>
+          <h2>{t('mediakit.ctaTitle')}</h2>
+          <p>{t('mediakit.ctaSub')}</p>
         </div>
         <div className="kd-mediakit-cta-actions">
           <Link to="/sponsor" className="kd-mediakit-btn kd-mediakit-btn-primary">
-            Sponsorluk formu <HiOutlineArrowRight size={16} />
+            {t('mediakit.sponsorForm')} <HiOutlineArrowRight size={16} />
           </Link>
           <a href={`mailto:${businessEmail}`} className="kd-mediakit-btn">
             <HiOutlineMail size={16} /> {businessEmail}
           </a>
           <button type="button" onClick={handlePrint} className="kd-mediakit-btn">
-            <HiOutlinePrinter size={16} /> Bu sayfayı yazdır
+            <HiOutlinePrinter size={16} /> {t('mediakit.print')}
           </button>
         </div>
       </section>
