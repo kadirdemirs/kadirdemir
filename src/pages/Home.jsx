@@ -38,12 +38,30 @@ import { getYouTubeVideosApi, getBlogsApi, getSocialStatsApi } from '../api'
 import './Home.css'
 
 function parseStat(value) {
-  if (!value) return null
-  const m = String(value).match(/^([\d.,]+)\s*([KMB])?(.*)$/i)
+  if (value == null || value === '') return null
+  if (typeof value === 'number') {
+    if (value >= 1e9) return { num: +(value / 1e9).toFixed(1), suffix: 'B' }
+    if (value >= 1e6) return { num: +(value / 1e6).toFixed(1), suffix: 'M' }
+    if (value >= 1e3) return { num: +(value / 1e3).toFixed(1), suffix: 'K' }
+    return { num: value, suffix: '' }
+  }
+  const m = String(value).trim().match(/^([\d.,]+)\s*([KMB])?(.*)$/i)
   if (!m) return null
-  const num = parseFloat(m[1].replace(',', '.'))
+  // Normalize: keep last separator as decimal — handle "2.4M", "2,4M", "1,200"
+  const raw = m[1]
+  let normalized = raw
+  if (raw.includes(',') && raw.includes('.')) {
+    // assume thousands grouping with one and decimal with other
+    if (raw.lastIndexOf(',') > raw.lastIndexOf('.')) normalized = raw.replace(/\./g, '').replace(',', '.')
+    else normalized = raw.replace(/,/g, '')
+  } else if (raw.includes(',')) {
+    // 2,4 → 2.4 if single comma followed by 1-2 digits, else thousands
+    if (/^\d+,\d{1,2}$/.test(raw)) normalized = raw.replace(',', '.')
+    else normalized = raw.replace(/,/g, '')
+  }
+  const num = parseFloat(normalized)
   if (!Number.isFinite(num)) return null
-  return { num, suffix: (m[2] || '') + (m[3] || '') }
+  return { num, suffix: (m[2] || '').toUpperCase() + (m[3] || '') }
 }
 
 function formatViews(n) {
@@ -67,20 +85,7 @@ function parseDuration(iso) {
   return h > 0 ? `${h}:${pad(min)}:${pad(s)}` : `${min}:${pad(s)}`
 }
 
-// Demo fallback content — API yokken bile dolu görünsün
-const DEMO_VIDEOS = [
-  { youtubeId: 'demo1', title: 'İstanbul sokaklarında 24 saat — vlog #042', thumbnail: '', views: 184000, duration: 'PT12M34S', publishedAt: '2026-05-18' },
-  { youtubeId: 'demo2', title: 'Yeni setup turu — masamda neler değişti?', thumbnail: '', views: 96400, duration: 'PT9M12S', publishedAt: '2026-05-12' },
-  { youtubeId: 'demo3', title: 'Bu oyunu 8 saat üst üste oynadım', thumbnail: '', views: 142500, duration: 'PT14M55S', publishedAt: '2026-05-08' },
-  { youtubeId: 'demo4', title: 'Bir günlük kamera arkası — yeni bölüm', thumbnail: '', views: 78900, duration: 'PT7M48S', publishedAt: '2026-05-03' },
-  { youtubeId: 'demo5', title: 'Topluluk Q&A — sorularınızı yanıtladım', thumbnail: '', views: 312000, duration: 'PT18M20S', publishedAt: '2026-04-26' },
-]
-
-const DEMO_BLOGS = [
-  { slug: 'icerik-uretmenin-mutfagi', title: 'İçerik üretmenin mutfağı: planlama, kurgu, yayın', excerpt: 'Bir videonun arkasında olup biten saatleri ve karar süreçlerini paylaşıyorum.', category: 'Yazı', cover: '' },
-  { slug: 'kamera-onunde-rahat-olmak', title: 'Kameranın önünde rahat olmak nasıl öğrenilir?', excerpt: 'İlk videodan bugüne — kamera korkusunu yenmenin küçük alışkanlıkları.', category: 'Süreç', cover: '' },
-  { slug: 'youtube-algoritmasi-2026', title: '2026 YouTube algoritması: ne değişti?', excerpt: 'Watch time, retention ve CTR üçgeninde son aylarda gözlemlediklerim.', category: 'Strateji', cover: '' },
-]
+// Boş state için minimal placeholder yok — gerçek veri gelmezse o blok hiç gösterilmiyor.
 
 const faqs = [
   { q: 'Yeni videoları ne sıklıkla yüklüyorsun?', a: 'Haftada 2-3 yeni video yüklemeye gayret ediyorum. YouTube’da zile basarsan bildirimleri kaçırmazsın.' },
@@ -152,17 +157,16 @@ export default function Home() {
     getYouTubeVideosApi()
       .then((res) => {
         if (res?.videos?.length) setVideos(res.videos)
-        else setVideos(DEMO_VIDEOS)
       })
-      .catch(() => setVideos(DEMO_VIDEOS))
+      .catch(() => { /* no fallback — empty state */ })
       .finally(() => setVideosLoading(false))
     getBlogsApi()
       .then((res) => {
-        const list = Array.isArray(res?.blogs) ? res.blogs : Array.isArray(res?.data) ? res.data : []
-        const filtered = list.filter((b) => !b?.draft).slice(0, 3)
-        setBlogs(filtered.length ? filtered : DEMO_BLOGS)
+        const list = Array.isArray(res?.blogs) ? res.blogs : Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []
+        const filtered = list.filter((b) => !b?.draft && b?.published !== false).slice(0, 3)
+        setBlogs(filtered)
       })
-      .catch(() => setBlogs(DEMO_BLOGS))
+      .catch(() => { /* no fallback */ })
     getSocialStatsApi()
       .then((data) => setSocialStats(data))
       .catch(() => { /* fallback to settings */ })
@@ -376,53 +380,53 @@ export default function Home() {
       {/* ═══════════════ ABOUT BENTO ═══════════════ */}
       <section className="hm-section">
         <div className="hm-section-head">
-          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> Hakkımda</span>
-          <h2 className="hm-h2">İçerik üretmek<br />benim <span className="hm-accent">#1 tutkum</span>.</h2>
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.aboutEyebrow')}</span>
+          <h2 className="hm-h2">{t('home.aboutTitleA')}<br />{t('home.aboutTitleB')} <span className="hm-accent">{t('home.aboutTitleC')}</span>.</h2>
         </div>
 
         <MagicBento columns={4} className="hm-about-bento">
           <MagicBento.Cell span={2} className="hm-bento-large">
             <div className="hm-bento-padded">
-              <span className="hm-bento-eyebrow">Story</span>
-              <h3 className="hm-bento-title">Kameranın hem önünde hem arkasında.</h3>
-              <p className="hm-bento-text">
-                Çocukluğumdan beri kameranın hem önünde hem arkasında olmayı seviyorum. İlk videomu yıllar önce yükledim ve o günden bu yana izleyicilerimle birlikte büyüyen, evrilen bir kanal kurdum.
-              </p>
+              <span className="hm-bento-eyebrow">{t('home.aboutStory')}</span>
+              <h3 className="hm-bento-title">{t('home.aboutStoryTitle')}</h3>
+              <p className="hm-bento-text">{t('home.aboutStoryText')}</p>
               <Link to="/hakkimda" className="hm-bento-link">
-                Hikayemin devamı <HiOutlineArrowRight />
+                {t('home.aboutStoryLink')} <HiOutlineArrowRight />
               </Link>
             </div>
           </MagicBento.Cell>
 
-          <MagicBento.Cell className="hm-bento-stat">
-            <div className="hm-bento-padded hm-bento-stat-inner">
-              <span className="hm-bento-eyebrow">Yıl</span>
-              <span className="hm-bento-bignum">{settings.statsActiveYears || '5+'}</span>
-              <p className="hm-bento-meta">aktif içerik üretimi</p>
-            </div>
-          </MagicBento.Cell>
+          {settings.statsActiveYears && (
+            <MagicBento.Cell className="hm-bento-stat">
+              <div className="hm-bento-padded hm-bento-stat-inner">
+                <span className="hm-bento-eyebrow">{t('home.aboutYear')}</span>
+                <span className="hm-bento-bignum">{settings.statsActiveYears}</span>
+                <p className="hm-bento-meta">{t('home.aboutYearMeta')}</p>
+              </div>
+            </MagicBento.Cell>
+          )}
 
-          <MagicBento.Cell className="hm-bento-stat">
-            <div className="hm-bento-padded hm-bento-stat-inner">
-              <span className="hm-bento-eyebrow">Video</span>
-              <span className="hm-bento-bignum">{settings.statsTotalVideos || '380+'}</span>
-              <p className="hm-bento-meta">yayında olan üretim</p>
-            </div>
-          </MagicBento.Cell>
+          {(ytVideosCount || settings.statsTotalVideos) && (
+            <MagicBento.Cell className="hm-bento-stat">
+              <div className="hm-bento-padded hm-bento-stat-inner">
+                <span className="hm-bento-eyebrow">{t('home.aboutVideo')}</span>
+                <span className="hm-bento-bignum">{ytVideosCount || settings.statsTotalVideos}</span>
+                <p className="hm-bento-meta">{t('home.aboutVideoMeta')}</p>
+              </div>
+            </MagicBento.Cell>
+          )}
 
           <MagicBento.Cell span={2} className="hm-bento-quote">
             <div className="hm-bento-padded">
-              <span className="hm-bento-eyebrow">Felsefe</span>
-              <p className="hm-bento-quote-text">
-                "Her video, sıradan bir günü ilginç kılmak için yeni bir hikâye anlatma fırsatı."
-              </p>
+              <span className="hm-bento-eyebrow">{t('home.aboutPhilosophy')}</span>
+              <p className="hm-bento-quote-text">{t('home.aboutQuote')}</p>
               <span className="hm-bento-quote-author">— {brandName}</span>
             </div>
           </MagicBento.Cell>
 
           <MagicBento.Cell span={2} className="hm-bento-image">
-            <ResponsivePortrait alt="Behind the scenes" className="hm-bento-img" sizes="(max-width: 820px) 100vw, 480px" />
-            <div className="hm-bento-image-tag">Behind the scenes</div>
+            <ResponsivePortrait alt={`${brandName} — behind the scenes`} className="hm-bento-img" sizes="(max-width: 820px) 100vw, 480px" />
+            <div className="hm-bento-image-tag">{lang === 'tr' ? 'Kamera arkası' : lang === 'de' ? 'Behind the Scenes' : 'Behind the scenes'}</div>
           </MagicBento.Cell>
         </MagicBento>
       </section>
@@ -797,7 +801,19 @@ export default function Home() {
       {/* ═══════════════ VELOCITY STRIP ═══════════════ */}
       <section className="hm-velocity" aria-hidden="true">
         <ScrollVelocity
-          texts={[`${brandName} • Hikâye anlatıcısı • İstanbul •`, 'Vlog • Oyun • Eğlence • Macera •']}
+          key={`vel-${lang}`}
+          texts={[
+            lang === 'en'
+              ? `${brandName} • Storyteller • Istanbul •`
+              : lang === 'de'
+              ? `${brandName} • Geschichtenerzähler • Istanbul •`
+              : `${brandName} • Hikâye anlatıcısı • İstanbul •`,
+            lang === 'en'
+              ? 'Vlog • Gaming • Entertainment • Adventure •'
+              : lang === 'de'
+              ? 'Vlog • Gaming • Unterhaltung • Abenteuer •'
+              : 'Vlog • Oyun • Eğlence • Macera •',
+          ]}
           velocity={60}
         />
       </section>

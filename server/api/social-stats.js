@@ -137,6 +137,11 @@ async function fetchInstagram(handle) {
     }
 
     if (followers == null && posts == null) return null;
+    // Sanity check — Instagram returns garbage when blocked
+    if (followers != null && followers < 100 && (posts == null || posts < 5)) {
+      console.warn(`Instagram stats look suspicious (followers=${followers}, posts=${posts}) — discarding`);
+      return null;
+    }
 
     return {
       platform: 'instagram',
@@ -154,6 +159,7 @@ async function fetchInstagram(handle) {
 }
 
 // ── TikTok (public profile scrape) ──
+const TT_MIN_FOLLOWERS = 100; // Below this we consider the scrape failed/limited
 async function fetchTikTok(handle) {
   const username = extractUsername(handle, 'tiktok.com');
   if (!username) return null;
@@ -184,6 +190,11 @@ async function fetchTikTok(handle) {
           const followers = Number(stats.followerCount || 0);
           const hearts = Number(stats.heartCount || stats.heart || 0);
           const videos = Number(stats.videoCount || 0);
+          // Sanity check: TikTok returns 0/1 when blocked or anti-bot triggered.
+          if (followers < TT_MIN_FOLLOWERS && hearts < TT_MIN_FOLLOWERS) {
+            console.warn(`TikTok stats look suspicious (followers=${followers}, hearts=${hearts}) — discarding`);
+            return null;
+          }
           return {
             platform: 'tiktok',
             handle: user?.uniqueId || username,
@@ -208,6 +219,10 @@ async function fetchTikTok(handle) {
       const l = desc.match(/([\d.,]+\s*[KMB]?)\s*(?:Likes|Beğeni)/i);
       const followers = f ? parseShortNumber(f[1]) : null;
       const likes = l ? parseShortNumber(l[1]) : null;
+      // Same sanity check
+      if (followers != null && followers < TT_MIN_FOLLOWERS && (likes == null || likes < TT_MIN_FOLLOWERS)) {
+        return null;
+      }
       if (followers != null || likes != null) {
         return {
           platform: 'tiktok',
@@ -227,6 +242,13 @@ async function fetchTikTok(handle) {
   }
 }
 
+function isValidCachedTikTok(d) {
+  return d && (Number(d.followers) >= TT_MIN_FOLLOWERS || Number(d.likes) >= TT_MIN_FOLLOWERS);
+}
+function isValidCachedInstagram(d) {
+  return d && (Number(d.followers) >= 100 || Number(d.posts) >= 5);
+}
+
 async function aggregate(db, force = false) {
   const cacheKey = 'social-stats-cache';
   const cached = await db.collection('siteContent').findOne({ section: cacheKey });
@@ -234,7 +256,11 @@ async function aggregate(db, force = false) {
   const fetchedAt = cached?.data?.fetchedAt ? new Date(cached.data.fetchedAt).getTime() : 0;
 
   if (!force && cached?.data && now - fetchedAt < CACHE_TTL) {
-    return { ...cached.data, cached: true };
+    // Filter out suspicious cached values
+    const data = { ...cached.data };
+    if (!isValidCachedTikTok(data.tiktok)) data.tiktok = null;
+    if (!isValidCachedInstagram(data.instagram)) data.instagram = null;
+    return { ...data, cached: true };
   }
 
   const settingsDoc = await db.collection('siteContent').findOne({ section: 'site-settings' });
@@ -252,15 +278,19 @@ async function aggregate(db, force = false) {
     fetchTikTok(ttHandle).catch(() => null),
   ]);
 
+  // Cached fallback only if it passes sanity check
+  const prevTt = isValidCachedTikTok(cached?.data?.tiktok) ? cached.data.tiktok : null;
+  const prevIg = isValidCachedInstagram(cached?.data?.instagram) ? cached.data.instagram : null;
+
   const payload = {
     youtube: youtube || cached?.data?.youtube || null,
-    instagram: instagram || cached?.data?.instagram || null,
-    tiktok: tiktok || cached?.data?.tiktok || null,
+    instagram: instagram || prevIg,
+    tiktok: tiktok || prevTt,
     fetchedAt: new Date(),
     sources: {
       youtube: youtube ? 'live' : cached?.data?.youtube ? 'cache' : 'none',
-      instagram: instagram ? 'live' : cached?.data?.instagram ? 'cache' : 'none',
-      tiktok: tiktok ? 'live' : cached?.data?.tiktok ? 'cache' : 'none',
+      instagram: instagram ? 'live' : prevIg ? 'cache' : 'none',
+      tiktok: tiktok ? 'live' : prevTt ? 'cache' : 'none',
     },
   };
 

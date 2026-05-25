@@ -103,6 +103,22 @@ export function SiteSettingsProvider({ children }) {
       .then((res) => {
         if (res?.data) {
           const merged = { ...DEFAULT_SITE_SETTINGS, ...res.data }
+          // Legacy brand correction — older DB rows may still hold "Kade Media"
+          const fixBrand = (s) => {
+            if (typeof s !== 'string') return s
+            return s
+              .replace(/Kade Media/g, 'Kadir Demir')
+              .replace(/kade media/gi, 'Kadir Demir')
+              .replace(/kademedia/gi, 'kadirdemir')
+              .replace(/Kade(?=\s|$|[^a-z])/g, 'Kadir')
+          }
+          for (const key of ['businessName', 'tagline', 'description', 'seoTitle', 'seoDescription', 'seoKeywords', 'email', 'businessEmail']) {
+            if (merged[key]) merged[key] = fixBrand(merged[key])
+          }
+          // If businessName collapsed to just "Kadir" force the full name
+          if (!merged.businessName || merged.businessName === 'Kadir') {
+            merged.businessName = 'Kadir Demir'
+          }
           setSettings(merged)
           if (merged.baseUrl && typeof window !== 'undefined') {
             window.__SITE_BASE_URL__ = merged.baseUrl
