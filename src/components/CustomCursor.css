@@ -1,0 +1,74 @@
+/* ─────────────────────────────────────────────
+   CUSTOM CURSOR — minimal dot + ring
+   ───────────────────────────────────────────── */
+@media (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor [role="button"] {
+    cursor: none;
+  }
+  body.has-custom-cursor input,
+  body.has-custom-cursor textarea {
+    cursor: text;
+  }
+}
+
+.kd-cursor-dot,
+.kd-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  transition: opacity 0.25s ease, width 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.25s ease, border-color 0.25s ease;
+  will-change: transform;
+  mix-blend-mode: difference;
+}
+
+.kd-cursor-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  z-index: 100000;
+}
+
+.kd-cursor-ring {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  background: transparent;
+}
+
+.kd-cursor-ring.is-hover {
+  width: 64px;
+  height: 64px;
+  border-color: rgba(245, 158, 11, 0.85);
+  background: rgba(245, 158, 11, 0.10);
+  mix-blend-mode: normal;
+}
+
+.kd-cursor-dot.is-hover {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.kd-cursor-ring.is-pressed {
+  width: 24px;
+  height: 24px;
+  background: rgba(245, 158, 11, 0.35);
+  border-color: var(--primary, #f59e0b);
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .kd-cursor-dot,
+  .kd-cursor-ring { display: none !important; }
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button { cursor: auto; }
+}

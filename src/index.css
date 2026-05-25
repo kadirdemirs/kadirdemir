@@ -616,6 +616,33 @@ input, textarea {
     linear-gradient(90deg, rgba(26, 23, 21, 0.04) 1px, transparent 1px);
 }
 
+/* ════════════════════════════════════════════
+   THEME TOGGLE — view transition circular reveal
+   ════════════════════════════════════════════ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+  animation: kd-theme-circle-in 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes kd-theme-circle-in {
+  from {
+    clip-path: circle(0 at var(--kd-theme-origin-x, 50%) var(--kd-theme-origin-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--kd-theme-max-radius, 150vh) at var(--kd-theme-origin-x, 50%) var(--kd-theme-origin-y, 50%));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(root) { animation: none; }
+}
+
 /* Ensure smooth theme transition */
 html, body { transition: background-color 0.4s ease, color 0.4s ease; }
 .glass, .glass-strong, .glass-soft, .glass-card,

@@ -28,13 +28,33 @@ export function ThemeProvider({ children }) {
     try { localStorage.setItem(LS_KEY, theme) } catch { /* ignore */ }
   }, [theme])
 
-  const toggleTheme = () => {
+  const toggleTheme = (e) => {
     const next = theme === 'dark' ? 'light' : 'dark'
-    if (typeof document !== 'undefined' && document.startViewTransition) {
-      document.startViewTransition(() => setTheme(next))
-    } else {
-      setTheme(next)
-    }
+    if (typeof document === 'undefined') { setTheme(next); return }
+    if (!document.startViewTransition) { setTheme(next); return }
+
+    // Tıklanan elemanın merkezini al — yoksa ekran ortası
+    let cx = window.innerWidth / 2
+    let cy = window.innerHeight / 2
+    try {
+      const target = e?.currentTarget || e?.target
+      if (target && target.getBoundingClientRect) {
+        const rect = target.getBoundingClientRect()
+        cx = rect.left + rect.width / 2
+        cy = rect.top + rect.height / 2
+      }
+    } catch { /* ignore */ }
+
+    const maxR = Math.hypot(
+      Math.max(cx, window.innerWidth - cx),
+      Math.max(cy, window.innerHeight - cy)
+    )
+    document.documentElement.style.setProperty('--kd-theme-origin-x', `${cx}px`)
+    document.documentElement.style.setProperty('--kd-theme-origin-y', `${cy}px`)
+    document.documentElement.style.setProperty('--kd-theme-max-radius', `${maxR}px`)
+
+    const transition = document.startViewTransition(() => setTheme(next))
+    transition.ready?.then?.(() => { /* triggered via CSS */ }).catch?.(() => {})
   }
 
   return (

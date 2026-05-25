@@ -144,7 +144,7 @@ export default function Navbar() {
             type="button"
             className="nv-icon nv-theme-toggle"
             aria-label={t('nav.changeTheme')}
-            onClick={toggleTheme}
+            onClick={(e) => toggleTheme(e)}
             data-theme-active={theme}
           >
             <span className="nv-theme-icon nv-theme-sun" aria-hidden="true"><HiOutlineSun size={16} /></span>

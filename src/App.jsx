@@ -3,6 +3,7 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import PageTransition from './components/PageTransition'
 import { trackPageviewApi, heartbeatApi, getSessionApi } from './api'
+import { useLenis } from './hooks/useLenis'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
@@ -11,6 +12,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
 import CommandPalette from './components/CommandPalette'
+import CustomCursor from './components/CustomCursor'
 
 // Heavy WebGL components — lazy load to skip them on initial paint
 const Aurora = lazy(() => import('./components/reactbits/Aurora'))
@@ -78,6 +80,9 @@ function App() {
   const location = useLocation()
   const isAdmin = location.pathname === '/admin'
   const prevPath = useRef(null)
+
+  // Site-wide smooth scroll (admin & reduced-motion hariç)
+  useLenis({ enabled: !isAdmin })
 
   useEffect(() => {
     if (isAdmin) return
@@ -163,6 +168,7 @@ function App() {
           <ClickSpark sparkColor="#f59e0b" sparkCount={10} sparkRadius={22} duration={520} />
         </Suspense>
       )}
+      {!isAdmin && <CustomCursor />}
     </>
   )
 }
