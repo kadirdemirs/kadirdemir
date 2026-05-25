@@ -1264,11 +1264,203 @@ function ChangePasswordModal({ onClose, showToast }) {
   )
 }
 
+// ───── QUICK TOOLS ─────
+function QuickToolsSection({ showToast }) {
+  const [previewLang, setPreviewLang] = useState('tr')
+  const [seoUrl, setSeoUrl] = useState('/')
+  const [seoResult, setSeoResult] = useState(null)
+  const [seoLoading, setSeoLoading] = useState(false)
+
+  const runSEOCheck = async () => {
+    setSeoLoading(true); setSeoResult(null)
+    try {
+      const url = seoUrl.startsWith('http') ? seoUrl : `${window.location.origin}${seoUrl.startsWith('/') ? seoUrl : '/' + seoUrl}`
+      const res = await fetch(url)
+      const html = await res.text()
+      const titleM = html.match(/<title[^>]*>([^<]+)<\/title>/i)
+      const descM = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)
+      const ogTitleM = html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i)
+      const ogDescM = html.match(/<meta\s+property="og:description"\s+content="([^"]+)"/i)
+      const ogImgM = html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i)
+      const canonicalM = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)
+      const h1Count = (html.match(/<h1[\s>]/gi) || []).length
+      const ldJsonCount = (html.match(/application\/ld\+json/gi) || []).length
+      setSeoResult({
+        url,
+        title: titleM?.[1] || null,
+        titleLen: titleM?.[1]?.length || 0,
+        description: descM?.[1] || null,
+        descLen: descM?.[1]?.length || 0,
+        ogTitle: ogTitleM?.[1] || null,
+        ogDesc: ogDescM?.[1] || null,
+        ogImage: ogImgM?.[1] || null,
+        canonical: canonicalM?.[1] || null,
+        h1Count,
+        ldJsonCount,
+      })
+    } catch (e) {
+      showToast(`SEO kontrolü başarısız: ${e.message}`, 'error')
+    } finally {
+      setSeoLoading(false)
+    }
+  }
+
+  const langOptions = [
+    { code: 'tr', label: '🇹🇷 Türkçe' },
+    { code: 'en', label: '🇬🇧 English' },
+    { code: 'de', label: '🇩🇪 Deutsch' },
+  ]
+
+  return (
+    <div>
+      <div className="admin-page-header">
+        <div>
+          <h1>Hızlı <span>Araçlar</span></h1>
+          <p>Yayın öncesi kontrol ve içerik önizleme — tek panelde.</p>
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <h3>🌍 Çok Dilli Önizleme</h3>
+        <p style={{ fontSize: '.82rem', color: 'var(--text-secondary)', margin: '0 0 14px' }}>
+          Sitenin başka bir dilde nasıl göründüğünü hızlıca kontrol et — yeni sekmede aç.
+        </p>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {langOptions.map(o => (
+            <button
+              key={o.code}
+              className={`btn ${previewLang === o.code ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => setPreviewLang(o.code)}
+            >
+              {o.label}
+            </button>
+          ))}
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              try { localStorage.setItem('kade_lang', previewLang) } catch { /* ignore */ }
+              window.open('/', '_blank', 'noopener')
+            }}
+          >
+            🚀 Yeni Sekmede Aç
+          </button>
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <h3>🔎 SEO Hızlı Tarama</h3>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+          <input
+            value={seoUrl}
+            onChange={(e) => setSeoUrl(e.target.value)}
+            placeholder="/ veya /blog/yeni-yazi"
+            style={{ flex: 1, padding: '10px 12px', borderRadius: 8, background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+          />
+          <button className="btn btn-primary" onClick={runSEOCheck} disabled={seoLoading}>
+            {seoLoading ? 'Taranıyor…' : 'Tara'}
+          </button>
+        </div>
+
+        {seoResult && (
+          <div style={{ display: 'grid', gap: 10, fontSize: '.86rem' }}>
+            <SEORow label="URL" value={seoResult.url} />
+            <SEORow label="Title" value={seoResult.title} hint={seoResult.titleLen ? `${seoResult.titleLen} karakter ${seoResult.titleLen > 60 ? '· uzun' : seoResult.titleLen < 30 ? '· kısa' : '· ✓'}` : '· EKSİK'} status={seoResult.title && seoResult.titleLen >= 30 && seoResult.titleLen <= 60 ? 'ok' : 'warn'} />
+            <SEORow label="Meta description" value={seoResult.description} hint={seoResult.descLen ? `${seoResult.descLen} karakter ${seoResult.descLen > 160 ? '· uzun' : seoResult.descLen < 80 ? '· kısa' : '· ✓'}` : '· EKSİK'} status={seoResult.description && seoResult.descLen >= 80 && seoResult.descLen <= 160 ? 'ok' : 'warn'} />
+            <SEORow label="OG title" value={seoResult.ogTitle} status={seoResult.ogTitle ? 'ok' : 'warn'} />
+            <SEORow label="OG description" value={seoResult.ogDesc} status={seoResult.ogDesc ? 'ok' : 'warn'} />
+            <SEORow label="OG image" value={seoResult.ogImage} status={seoResult.ogImage ? 'ok' : 'warn'} />
+            <SEORow label="Canonical" value={seoResult.canonical} status={seoResult.canonical ? 'ok' : 'warn'} />
+            <SEORow label="H1 sayısı" value={String(seoResult.h1Count)} hint={seoResult.h1Count === 1 ? '· ✓' : '· dikkat'} status={seoResult.h1Count === 1 ? 'ok' : 'warn'} />
+            <SEORow label="JSON-LD blok" value={String(seoResult.ldJsonCount)} hint={seoResult.ldJsonCount > 0 ? '· ✓' : '· eksik'} status={seoResult.ldJsonCount > 0 ? 'ok' : 'warn'} />
+          </div>
+        )}
+      </div>
+
+      <div className="settings-section">
+        <h3>⚙️ Sistem Bilgileri</h3>
+        <div className="form-grid">
+          <div>
+            <div style={{ fontSize: '.76rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Tarayıcı</div>
+            <div style={{ fontWeight: 600, marginTop: 4 }}>{navigator.userAgent.split(' ').slice(-1)[0]}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '.76rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Çözünürlük</div>
+            <div style={{ fontWeight: 600, marginTop: 4 }}>{window.innerWidth} × {window.innerHeight}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '.76rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Zaman dilimi</div>
+            <div style={{ fontWeight: 600, marginTop: 4 }}>{Intl.DateTimeFormat().resolvedOptions().timeZone}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '.76rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Cihaz dili</div>
+            <div style={{ fontWeight: 600, marginTop: 4 }}>{navigator.language}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <h3>🔗 Hızlı Linkler</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
+          {[
+            { label: '🌐 Siteyi Aç', href: '/', external: true },
+            { label: '📜 Sitemap (XML)', href: '/sitemap.xml', external: true },
+            { label: '📰 RSS Beslemesi', href: '/api/rss', external: true },
+            { label: '🔍 Google Search Console', href: 'https://search.google.com/search-console', external: true },
+            { label: '📊 Google Analytics', href: 'https://analytics.google.com', external: true },
+            { label: '🎬 YouTube Studio', href: 'https://studio.youtube.com', external: true },
+          ].map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              target={l.external ? '_blank' : undefined}
+              rel="noopener noreferrer"
+              className="btn btn-outline"
+              style={{ justifyContent: 'flex-start' }}
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function SEORow({ label, value, hint, status }) {
+  const bgs = {
+    ok: 'rgba(52, 211, 153, 0.08)',
+    warn: 'rgba(251, 191, 36, 0.08)',
+  }
+  const borders = {
+    ok: 'rgba(52, 211, 153, 0.25)',
+    warn: 'rgba(251, 191, 36, 0.25)',
+  }
+  return (
+    <div style={{
+      padding: '10px 14px',
+      borderRadius: 8,
+      background: bgs[status] || 'rgba(255,255,255,0.03)',
+      border: `1px solid ${borders[status] || 'var(--border)'}`,
+      display: 'grid',
+      gridTemplateColumns: '140px 1fr auto',
+      gap: 12,
+      alignItems: 'center',
+    }}>
+      <strong style={{ color: 'var(--text-secondary)', fontSize: '.78rem', textTransform: 'uppercase', letterSpacing: '.06em' }}>{label}</strong>
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: value ? 'var(--text-primary)' : '#ef4444' }}>
+        {value || '— EKSİK —'}
+      </span>
+      <span style={{ color: status === 'ok' ? '#34d399' : '#fbbf24', fontSize: '.78rem', fontWeight: 600 }}>{hint}</span>
+    </div>
+  )
+}
+
 // ───── ROOT ADMIN ─────
 const TABS = [
   { id: 'dashboard', label: 'Panel', icon: HiOutlineHome },
   { id: 'analytics', label: 'Analitik', icon: HiOutlineChartBar },
   { id: 'social-stats', label: 'Sosyal Medya', icon: HiOutlineChartBar },
+  { id: 'quick-tools', label: 'Hızlı Araçlar', icon: HiOutlineRefresh },
   { id: 'messages', label: 'Mesajlar', icon: HiOutlineMail },
   { id: 'blog', label: 'Blog', icon: HiOutlineNewspaper },
   { id: 'comments', label: 'Yorumlar', icon: HiOutlineChatAlt2 },
@@ -1336,6 +1528,7 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
       case 'dashboard': return <DashboardSection stats={stats} onNavigate={setTab} settings={siteSettings} ytChannel={ytData.channel} />
       case 'analytics': return <AnalyticsSection />
       case 'social-stats': return <SocialStatsSection settings={siteSettings} ytChannel={ytData.channel} ytVideos={ytData.videos} showToast={showToast} />
+      case 'quick-tools': return <QuickToolsSection showToast={showToast} />
       case 'messages': return <MessagesSection showToast={showToast} onCountChange={setUnreadCount} />
       case 'blog': return <BlogSection showToast={showToast} />
       case 'comments': return <CommentsSection showToast={showToast} />
