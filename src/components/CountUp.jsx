@@ -1,17 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 
 export default function CountUp({
-  to = 0,
+  to,
+  end,
   from = 0,
-  duration = 2000,
+  start,
+  duration = 2,
   prefix = '',
   suffix = '',
-  decimals = 0,
+  decimals,
   separator = '.',
   className = '',
   once = true,
 }) {
-  const [value, setValue] = useState(from)
+  const target = Number(to ?? end ?? 0)
+  const begin = Number(from ?? start ?? 0)
+  const durationMs = duration > 50 ? duration : duration * 1000
+  const autoDecimals = decimals != null
+    ? decimals
+    : (Number.isFinite(target) && !Number.isInteger(target) ? 1 : 0)
+
+  const [value, setValue] = useState(begin)
   const ref = useRef(null)
   const started = useRef(false)
 
@@ -20,14 +29,19 @@ export default function CountUp({
     if (!el) return
 
     const animate = () => {
-      const start = performance.now()
+      const startedAt = performance.now()
       const tick = (now) => {
-        const t = Math.min(1, (now - start) / duration)
+        const t = Math.min(1, (now - startedAt) / Math.max(durationMs, 16))
         const eased = 1 - Math.pow(1 - t, 3)
-        setValue(from + (to - from) * eased)
+        setValue(begin + (target - begin) * eased)
         if (t < 1) requestAnimationFrame(tick)
       }
       requestAnimationFrame(tick)
+    }
+
+    if (typeof IntersectionObserver === 'undefined') {
+      if (!started.current) { started.current = true; animate() }
+      return
     }
 
     const io = new IntersectionObserver(
@@ -40,16 +54,16 @@ export default function CountUp({
           }
         })
       },
-      { threshold: 0.35 }
+      { threshold: 0.2 }
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [to, from, duration, once])
+  }, [target, begin, durationMs, once])
 
-  const formatted = Number(value).toFixed(decimals)
-  const [int, dec] = formatted.split('.')
-  const withSep = int.replace(/\B(?=(\d{3})+(?!\d))/g, separator)
-  const display = dec ? `${withSep},${dec}` : withSep
+  const formatted = Number.isFinite(value) ? value.toFixed(autoDecimals) : '0'
+  const [intPart, decPart] = formatted.split('.')
+  const withSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, separator)
+  const display = decPart ? `${withSep},${decPart}` : withSep
 
   return (
     <span ref={ref} className={className}>
