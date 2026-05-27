@@ -15,13 +15,6 @@ import CommandPalette from './components/CommandPalette'
 import CookieBanner from './components/CookieBanner'
 import FloatingCTA from './components/FloatingCTA'
 
-// Heavy WebGL components — lazy load to skip them on initial paint
-<<<<<<< HEAD
-const Aurora = lazy(() => import('./components/reactbits/Aurora'))
-=======
-const ClickSpark = lazy(() => import('./components/reactbits/ClickSpark'))
->>>>>>> 6a06c4288b8cbad782f31de936e249b1c66a82a7
-
 // Core pages — direct import for instant first render
 import Home from './pages/Home'
 import About from './pages/About'
@@ -155,25 +148,11 @@ function App() {
           </Routes>
         </AnimatePresence>
       </main>
-<<<<<<< HEAD
-      {!isAdmin && <Footer />}
-      {!isAdmin && <InstallPrompt />}
-      {!isAdmin && <CommandPalette />}
-      {!isAdmin && <FloatingCTA />}
-      {!isAdmin && <CookieBanner />}
-=======
       {!isStandalone && <Footer />}
       {!isStandalone && <InstallPrompt />}
       {!isStandalone && <CommandPalette />}
-      {!isStandalone && (
-        <Suspense fallback={null}>
-          <ClickSpark sparkColor="#c98a3b" sparkCount={10} sparkRadius={22} duration={520} />
-        </Suspense>
-      )}
-      {!isStandalone && <CustomCursor />}
       {!isStandalone && <FloatingCTA />}
       {!isStandalone && <CookieBanner />}
->>>>>>> 6a06c4288b8cbad782f31de936e249b1c66a82a7
     </>
   )
 }

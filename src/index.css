@@ -644,43 +644,25 @@ input, textarea, select {
   color-scheme: light;
 }
 
-<<<<<<< HEAD
-/* HTML background — warm cream with amber/coral spots instead of harsh dark */
+/* HTML background — warm cream with amber spots (light theme) */
 html[data-theme="light"] {
-  background-color: #FBF8F3 !important;
-  background-image:
-    radial-gradient(ellipse 70% 50% at 15% 5%, rgba(245, 158, 11, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 85% 30%, rgba(236, 72, 153, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 70% 95%, rgba(168, 85, 247, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 30% at 25% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 60%),
-    radial-gradient(circle at 1px 1px, rgba(26, 23, 21, 0.05) 1px, transparent 1px) !important;
-  background-size: auto, auto, auto, auto, 32px 32px !important;
-=======
-[data-theme="light"] html {
-  background-color: var(--bg-deep);
+  background-color: var(--bg-deep, #FBF8F3) !important;
   background-image:
     radial-gradient(ellipse 55% 45% at 15% 8%, rgba(212, 148, 63, 0.22), transparent 55%),
     radial-gradient(ellipse 45% 35% at 85% 92%, rgba(232, 180, 104, 0.18), transparent 55%),
-    radial-gradient(ellipse at center, var(--bg-base) 0%, var(--bg-deep) 100%);
->>>>>>> 6a06c4288b8cbad782f31de936e249b1c66a82a7
+    radial-gradient(ellipse at center, var(--bg-base, #F4EFE6) 0%, var(--bg-deep, #FBF8F3) 100%) !important;
 }
 
 html[data-theme="light"] body { color: var(--text-primary); background-color: transparent; }
 html[data-theme="light"] body::after { mix-blend-mode: multiply; opacity: 0.025; }
 
-<<<<<<< HEAD
-html[data-theme="light"]::-webkit-scrollbar-track { background: var(--bg-1); }
+html[data-theme="light"]::-webkit-scrollbar-track { background: var(--bg-base, #F4EFE6); }
+html[data-theme="light"]::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--amber, #d4943f), var(--amber-deep, #a67428));
+}
 
 /* Aurora background — dim heavily on light */
 [data-theme="light"] .kd-aurora-bg { opacity: 0.18; mix-blend-mode: multiply; }
-[data-theme="light"] .kd-aurora-bg::after {
-  background: radial-gradient(ellipse 70% 60% at 50% 30%, transparent 0%, #FBF8F3 90%);
-=======
-[data-theme="light"] html::-webkit-scrollbar-track { background: var(--bg-base); }
-[data-theme="light"] html::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--amber), var(--amber-deep));
->>>>>>> 6a06c4288b8cbad782f31de936e249b1c66a82a7
-}
 
 [data-theme="light"] .kd-aurora-bg::after {
   background: radial-gradient(ellipse 90% 80% at 50% 40%, transparent 0%, var(--bg-deep) 90%);

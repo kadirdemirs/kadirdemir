@@ -20,11 +20,7 @@
 
 .nv--scrolled { top: 12px; }
 
-<<<<<<< HEAD
-/* ─── Pill shell — transparent ─── */
-=======
 /* ─── Pill Shell ─── */
->>>>>>> 6a06c4288b8cbad782f31de936e249b1c66a82a7
 .nv-pill {
   position: relative;
   display: grid;
@@ -33,23 +29,6 @@
   align-items: center;
   width: 100%;
   max-width: 1080px;
-<<<<<<< HEAD
-  padding: 7px 7px 7px 26px;
-  background: transparent;
-  border: none;
-  border-radius: 999px;
-  box-shadow: none;
-  transition: padding 0.4s ease;
-}
-
-.nv-pill::before,
-.nv-pill::after { content: none; }
-
-.nv--scrolled .nv-pill {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-=======
   padding: 6px 6px 6px 24px;
   background:
     linear-gradient(180deg, rgba(244, 235, 224, 0.04) 0%, transparent 50%),
@@ -109,7 +88,6 @@
     0 0 0 1px rgba(0, 0, 0, 0.5),
     0 28px 64px -20px rgba(0, 0, 0, 0.95),
     0 0 60px -20px var(--amber-glow);
->>>>>>> 6a06c4288b8cbad782f31de936e249b1c66a82a7
 }
 
 /* ─── Brand ─── */
