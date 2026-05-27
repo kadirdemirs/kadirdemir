@@ -8,12 +8,17 @@ const outDir = resolve(__dirname, '..', 'dev-log-screens')
 const BASE = process.env.BASE_URL || 'http://localhost:5176'
 
 const targets = [
-  { name: 'home-desktop', path: '/', viewport: { width: 1440, height: 900 } },
-  { name: 'home-process', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.hm-process' },
-  { name: 'home-milestones', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.hm-milestones' },
-  { name: 'home-testimonials', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.hm-testimonials' },
+  { name: 'home-hero', path: '/', viewport: { width: 1440, height: 900 } },
+  { name: 'home-about', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-about' },
+  { name: 'home-knowhow', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-knowhow' },
+  { name: 'home-stats', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-stats-wrap' },
+  { name: 'home-services', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-services' },
+  { name: 'home-testimonials', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-testimonials' },
+  { name: 'home-works', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-works-wrap' },
+  { name: 'home-story', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-story' },
+  { name: 'home-contact', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-contact' },
+  { name: 'home-touch', path: '/', viewport: { width: 1440, height: 900 }, scrollTo: '.g-touch' },
   { name: 'home-mobile', path: '/', viewport: { width: 390, height: 844 } },
-  { name: 'links-desktop', path: '/links', viewport: { width: 1440, height: 900 } },
 ]
 
 const browser = await chromium.launch()
