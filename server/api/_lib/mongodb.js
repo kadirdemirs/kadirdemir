@@ -49,7 +49,10 @@ function getClientPromise() {
 
 export async function getDb() {
   const connectedClient = await getClientPromise();
-  return connectedClient.db('kademedia');
+  // DB ismi env'den gelir; eski kayıtlarla uyumluluk için 'kademedia'
+  // varsayılan kalır — yeni kurulumlarda MONGODB_DB=kadirdemir tercih edilir.
+  const dbName = process.env.MONGODB_DB || 'kademedia';
+  return connectedClient.db(dbName);
 }
 
 export function isValidObjectId(id) {

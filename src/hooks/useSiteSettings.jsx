@@ -33,7 +33,7 @@ export const DEFAULT_SITE_SETTINGS = {
   statsTiktokFollowers: '1.8M',
   statsTiktokLikes: '24.5M',
   statsInstagramPosts: '420',
-  statsActiveYears: '5+',
+  statsActiveYears: '14',
 
   // SEO
   seoTitle: 'Kadir Demir | YouTube İçerik Üreticisi',
@@ -68,7 +68,7 @@ export const DEFAULT_SITE_SETTINGS = {
     { title: 'Entegrasyon (60–90 sn)', desc: 'Video içinde organik anlatım, hikâyeye yedirilmiş ürün/marka kullanımı.' },
     { title: 'Dedicated Video', desc: 'Tek başına markaya/ürüne odaklanan komple bir video.' },
     { title: 'Shorts Serisi', desc: '3-5 kısa video ile yüksek erişim ve hızlı sosyal yayılma.' },
-    { title: 'Canlı Yayın Sponsorluğu', desc: 'Twitch / YouTube canlı yayınında banner + söz konusu marka anısı.' },
+    { title: 'Canlı Yayın Sponsorluğu', desc: 'YouTube canlı yayınında banner + söz konusu marka anısı.' },
     { title: 'Uzun Soluklu İş Birliği', desc: '3-6 ay süreli, sezon temalı, çoklu format paketi.' },
     { title: 'Etkinlik / Lansman', desc: 'Ürün lansmanı veya etkinlik için özel içerik + sosyal medya kapsamı.' },
   ],

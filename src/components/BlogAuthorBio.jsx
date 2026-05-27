@@ -14,11 +14,9 @@ export default function BlogAuthorBio() {
 
   const bioLine = lang === 'en'
     ? 'YouTube creator broadcasting from Istanbul. Sharing stories about gaming, vlogs and the creative process.'
-    : lang === 'de'
-    ? 'YouTube-Creator aus Istanbul. Geschichten zu Gaming, Vlogs und kreativem Prozess.'
     : "İstanbul'dan yayın yapan YouTube içerik üreticisi. Oyun, vlog ve yaratıcı süreç üzerine yazıyor."
 
-  const aboutCta = lang === 'en' ? 'Read more about me' : lang === 'de' ? 'Mehr über mich' : 'Hakkımda daha fazlası'
+  const aboutCta = lang === 'en' ? 'Read more about me' : 'Hakkımda daha fazlası'
 
   return (
     <aside className="kd-author-bio glass-card" aria-label={brandName}>
@@ -31,7 +29,7 @@ export default function BlogAuthorBio() {
       </div>
       <div className="kd-author-bio-content">
         <div className="kd-author-bio-eyebrow">
-          {lang === 'en' ? 'Author' : lang === 'de' ? 'Autor' : 'Yazar'}
+          {lang === 'en' ? 'Author' : 'Yazar'}
         </div>
         <h3 className="kd-author-bio-name">{brandName}</h3>
         <p className="kd-author-bio-line">{bioLine}</p>

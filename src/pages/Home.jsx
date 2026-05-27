@@ -14,7 +14,6 @@ import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/CountUp'
 import Aurora from '../components/reactbits/Aurora'
-import ScrollVelocity from '../components/reactbits/ScrollVelocity'
 import {
   getYouTubeVideosApi, getBlogsApi, getSocialStatsApi, sendContactApi,
   getPartnersApi,
@@ -107,12 +106,25 @@ export default function Home() {
   const ig = socialStats?.instagram
   const tt = socialStats?.tiktok
 
+  // Önce canlı API, yoksa admin'den girilen manuel istatistikler.
   const liveStats = [
-    yt?.followers && { value: yt.followers, label: isEn ? 'YouTube subscribers' : 'YouTube abonem' },
-    yt?.views && { value: yt.views, label: isEn ? 'Total views' : 'Toplam izlenme' },
-    ig?.followers && { value: ig.followers, label: isEn ? 'Instagram followers' : 'Instagram takipçim' },
-    tt?.followers && { value: tt.followers, label: isEn ? 'TikTok followers' : 'TikTok takipçim' },
-  ].filter(Boolean).slice(0, 4)
+    {
+      value: yt?.followers || settings.statsYoutubeSubs,
+      label: isEn ? 'YouTube subscribers' : 'YouTube abone',
+    },
+    {
+      value: yt?.views || settings.statsTotalViews,
+      label: isEn ? 'Total views' : 'Toplam izlenme',
+    },
+    {
+      value: ig?.followers || settings.statsInstagramFollowers,
+      label: isEn ? 'Instagram followers' : 'Instagram takipçi',
+    },
+    {
+      value: tt?.followers || settings.statsTiktokFollowers,
+      label: isEn ? 'TikTok followers' : 'TikTok takipçi',
+    },
+  ].filter((s) => s.value && s.value !== '—' && s.value !== '0')
 
   const aboutText = settings.description || (isEn
     ? "I've been making content for 14 years. Vlogs, gaming, live streams — whatever pulls me in that week. This site is where I park everything I do."
@@ -222,44 +234,31 @@ export default function Home() {
 
       <section className="g-hero" id="home">
         <div className="g-hero-aurora" aria-hidden="true">
-          <Aurora colorStops={['#d4943f', '#a67428', '#e8b468']} amplitude={1.1} blend={0.55} speed={0.6} />
+          <Aurora colorStops={['#d4943f', '#a67428', '#e8b468']} amplitude={0.7} blend={0.5} speed={0.35} />
         </div>
         <div className="g-hero-veil" />
         <div className="g-hero-inner">
           <span className="g-hero-mark">
-            <span className="g-hero-mark-dot" aria-hidden="true" />
-            {isEn ? 'CONTENT CREATOR · ISTANBUL' : 'İÇERİK ÜRETİCİSİ · İSTANBUL'}
+            {isEn ? 'Content creator · Istanbul' : 'İçerik üreticisi · İstanbul'}
           </span>
           <h1 className="g-hero-title">
-            {brandName.split(' ')[0] || 'KADİR'}
+            {brandName}
             <span className="g-hero-title-accent">.</span>
           </h1>
           <p className="g-hero-lede">
             {isEn
-              ? `${yearsActive} years on YouTube. Vlogs, gaming and live streams that try not to waste your time.`
-              : `${yearsActive} yıldır YouTube'da. Vlog, oyun, canlı yayın — zamanını boşa harcamamaya çalışan içerikler.`}
+              ? `${yearsActive} years on YouTube. Vlogs, gaming and live streams.`
+              : `${yearsActive} yıldır YouTube'dayım. Vlog, oyun ve canlı yayın.`}
           </p>
           <div className="g-hero-actions">
             <a href="#about" className="g-hero-cta g-hero-cta--primary">
               {isEn ? 'About me' : 'Beni tanı'}
-              <span aria-hidden="true">→</span>
             </a>
             <Link to="/iletisim" className="g-hero-cta g-hero-cta--ghost">
               {isEn ? 'Write me' : 'Bana yaz'}
             </Link>
           </div>
         </div>
-      </section>
-
-      <section className="g-velocity" aria-hidden="true">
-        <ScrollVelocity
-          texts={[
-            isEn ? 'VLOGS · GAMING · LIVE · 14 YEARS · ISTANBUL · ' : 'VLOG · OYUN · CANLI YAYIN · 14 YIL · İSTANBUL · ',
-            isEn ? 'KADIR DEMIR — CONTENT WITH A PULSE — ' : 'KADIR DEMİR — NABZI YÜKSEK İÇERİK — ',
-          ]}
-          velocity={60}
-          numCopies={6}
-        />
       </section>
 
       <section className="g-section g-about" id="about">
@@ -281,33 +280,19 @@ export default function Home() {
       </section>
 
       {liveStats.length > 0 && (
-        <section className="g-section g-stats-wrap">
-          <div className="g-stats-aurora" aria-hidden="true">
-            <Aurora colorStops={['#a67428', '#d4943f', '#a67428']} amplitude={0.8} blend={0.6} speed={0.4} />
-          </div>
-          <div className="g-stats-veil" />
-          <div className="g-stats-inner">
-            <span className="g-eyebrow g-eyebrow-light">
-              <span className="g-eyebrow-rule" />
-              <span className="g-eyebrow-label">{isEn ? 'WHERE I LIVE ONLINE' : 'NEREDE TAKILIYORUM'}</span>
-              <span className="g-eyebrow-rule" />
-            </span>
-            <h2 className="g-stats-title">
-              {isEn ? 'Real numbers, no rounding.' : 'Gerçek sayılar, abartı yok.'}
-            </h2>
-            <div className="g-stats-row">
-              {liveStats.map((s, i, arr) => {
-                const parsed = parseStat(s.value)
-                return (
-                  <div key={s.label} className="g-stat" style={{ '--g-stat-i': i, '--g-stat-n': arr.length }}>
-                    <span className="g-stat-value">
-                      {parsed ? <><CountUp end={parsed.num} duration={2.2} />{parsed.suffix}</> : s.value}
-                    </span>
-                    <span className="g-stat-label">{s.label}</span>
-                  </div>
-                )
-              })}
-            </div>
+        <section className="g-section g-stats">
+          <div className="g-stats-row">
+            {liveStats.map((s, i, arr) => {
+              const parsed = parseStat(s.value)
+              return (
+                <div key={s.label} className="g-stat" style={{ '--g-stat-i': i, '--g-stat-n': arr.length }}>
+                  <span className="g-stat-value">
+                    {parsed ? <><CountUp end={parsed.num} duration={2.2} />{parsed.suffix}</> : s.value}
+                  </span>
+                  <span className="g-stat-label">{s.label}</span>
+                </div>
+              )
+            })}
           </div>
         </section>
       )}
@@ -414,9 +399,6 @@ export default function Home() {
       )}
 
       <section className="g-contact" id="contact">
-        <div className="g-contact-aurora" aria-hidden="true">
-          <Aurora colorStops={['#d4943f', '#e8b468', '#a67428']} amplitude={0.9} blend={0.55} speed={0.5} />
-        </div>
         <div className="g-contact-veil" />
         <div className="g-contact-inner">
           <span className="g-eyebrow g-eyebrow-light">

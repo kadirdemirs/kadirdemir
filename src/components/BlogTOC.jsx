@@ -70,7 +70,7 @@ export default function BlogTOC({ articleRef, contentVersion }) {
 
   if (items.length < 2) return null
 
-  const label = lang === 'en' ? 'On this page' : lang === 'de' ? 'Auf dieser Seite' : 'Bu sayfada'
+  const label = lang === 'en' ? 'On this page' : 'Bu sayfada'
 
   return (
     <aside className="kd-toc" aria-label={label}>

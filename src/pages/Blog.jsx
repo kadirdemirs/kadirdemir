@@ -45,8 +45,6 @@ export default function Blog() {
     description:
       lang === 'en'
         ? 'Articles, notes and behind-the-scenes from Kadir Demir.'
-        : lang === 'de'
-        ? 'Beiträge, Notizen und Behind-the-Scenes von Kadir Demir.'
         : "Kadir Demir'in yazıları, notları ve kulis gözlemleri.",
     path: '/blog',
   })

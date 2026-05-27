@@ -24,11 +24,9 @@ function relative(date, lang) {
 export default function AMA() {
   const { lang } = useLanguage()
   useSEO({
-    title: lang === 'en' ? 'AMA — Ask Me Anything' : lang === 'de' ? 'AMA — Frag mich was' : 'Sor Bana — Soru & Cevap',
+    title: lang === 'en' ? 'AMA — Ask Me Anything' : 'Sor Bana — Soru & Cevap',
     description: lang === 'en'
       ? 'Ask anything and read the answers — Kadir Demir.'
-      : lang === 'de'
-      ? 'Frag mich was und lies die Antworten — Kadir Demir.'
       : 'Aklındaki soruları sor, cevaplarımı oku — Kadir Demir.',
     path: '/sor',
   })

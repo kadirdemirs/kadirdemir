@@ -71,13 +71,13 @@
 
 .g-section-title {
   font-family: 'Inter', sans-serif;
-  font-size: clamp(2.4rem, 6vw, 4.4rem);
-  font-weight: 800;
-  letter-spacing: var(--g-track-tight);
-  line-height: 0.96;
+  font-size: clamp(2rem, 4.4vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
   color: var(--g-cream);
   margin: 0;
-  max-width: 820px;
+  max-width: 720px;
 }
 
 .g-section-sub {
@@ -141,64 +141,35 @@
 }
 
 .g-hero-mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
   font-family: 'Inter', sans-serif;
   font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--g-cream-dim);
+  color: var(--g-cream-mute);
   line-height: 1;
-  padding: 9px 18px;
-  border: 1px solid var(--g-rule);
-  border-radius: 999px;
-  background: rgba(17, 15, 13, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.g-hero-mark-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--g-amber);
-  box-shadow: 0 0 0 3px rgba(212, 148, 63, 0.18), 0 0 14px var(--g-amber);
-  animation: g-mark-pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes g-mark-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(0.55); opacity: 0.4; }
 }
 
 .g-hero-title {
   font-family: 'Inter', sans-serif;
-  font-size: clamp(4.4rem, 16vw, 12rem);
-  font-weight: 800;
-  letter-spacing: -0.07em;
-  line-height: 0.86;
+  font-size: clamp(3rem, 8vw, 6.4rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
   color: var(--g-cream);
-  text-transform: uppercase;
   margin: 0;
-  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
-  display: inline-flex;
-  align-items: flex-end;
+  display: inline-block;
 }
 
 .g-hero-title-accent {
   color: var(--g-amber);
-  -webkit-text-fill-color: var(--g-amber);
-  margin-left: 4px;
-  text-shadow: 0 0 32px var(--g-amber-glow);
 }
 
 .g-hero-lede {
-  max-width: 540px;
+  max-width: 460px;
   margin: 0;
-  font-size: clamp(0.96rem, 1.4vw, 1.12rem);
-  line-height: 1.65;
+  font-size: clamp(0.96rem, 1.2vw, 1.06rem);
+  line-height: 1.6;
   color: var(--g-cream-dim);
   font-weight: 400;
 }
@@ -207,50 +178,42 @@
   display: inline-flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 14px;
-  margin-top: 8px;
+  gap: 12px;
+  margin-top: 4px;
 }
 
 .g-hero-cta {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 26px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  border-radius: 999px;
+  gap: 8px;
+  padding: 12px 22px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-radius: 8px;
   text-decoration: none;
-  transition: transform 0.35s var(--ease-out-expo), background 0.35s ease, color 0.35s ease, box-shadow 0.35s ease;
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .g-hero-cta--primary {
-  background: var(--g-amber);
-  color: #150e07;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.22) inset,
-    0 14px 28px -10px var(--g-amber-glow);
+  background: var(--g-cream);
+  color: #0a0907;
 }
 
 .g-hero-cta--primary:hover {
-  background: var(--g-amber-soft);
-  transform: translateY(-2px);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.28) inset,
-    0 18px 36px -10px rgba(212, 148, 63, 0.5);
+  background: var(--g-amber);
+  transform: translateY(-1px);
 }
 
 .g-hero-cta--ghost {
   background: transparent;
-  color: var(--g-cream);
-  border: 1px solid var(--g-rule);
+  color: var(--g-cream-dim);
+  border: 1px solid rgba(244, 235, 224, 0.18);
 }
 
 .g-hero-cta--ghost:hover {
-  border-color: var(--g-amber);
-  color: var(--g-amber);
-  transform: translateY(-2px);
+  border-color: var(--g-cream);
+  color: var(--g-cream);
 }
 
 /* eski hero artıkları kaldırıldı */
@@ -275,44 +238,30 @@
 .g-about-num-frame {
   display: inline-flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
-  padding: 36px 28px;
-  border: 1px solid var(--g-rule);
-  background: linear-gradient(180deg, rgba(212, 148, 63, 0.04), transparent);
-  border-radius: 6px;
+  padding: 0;
+  border: none;
+  background: none;
   position: relative;
 }
 
-.g-about-num-frame::before,
-.g-about-num-frame::after {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 1px solid var(--g-amber);
-}
-
-.g-about-num-frame::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-.g-about-num-frame::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-
 .g-about-num-frame strong {
   font-family: 'Inter', sans-serif;
-  font-size: 5.2rem;
-  font-weight: 200;
+  font-size: 4.2rem;
+  font-weight: 300;
   line-height: 1;
-  color: var(--g-cream);
+  color: var(--g-amber);
   letter-spacing: -0.04em;
 }
 
 .g-about-num-frame em {
   font-style: normal;
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: var(--g-track-upper);
-  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
   color: var(--g-cream-mute);
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .g-about-body {
@@ -448,8 +397,16 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   4 · STATS — dark band w/ background image + 4 huge numbers
+   4 · STATS — minimal numeric strip
    ══════════════════════════════════════════════════════════════ */
+.g-stats {
+  padding: clamp(56px, 8vw, 96px) clamp(24px, 6vw, 80px);
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid var(--g-rule);
+  border-bottom: 1px solid var(--g-rule);
+}
+
 .g-stats-wrap {
   position: relative;
   padding: clamp(80px, 12vw, 140px) 0;
@@ -498,10 +455,12 @@
   gap: 0;
   width: 100%;
   max-width: 1080px;
-  border: 1px solid var(--g-rule);
-  padding: 40px 0;
-  background: linear-gradient(180deg, rgba(212, 148, 63, 0.04), transparent);
+  margin: 0 auto;
+  padding: 0;
+  background: none;
 }
+
+.g-stats .g-stats-row { padding: 0; border: none; }
 
 .g-stat {
   display: flex;
@@ -520,14 +479,11 @@
 
 .g-stat-value {
   font-family: 'Inter', sans-serif;
-  font-size: clamp(2.6rem, 5.5vw, 4.4rem);
-  font-weight: 200;
+  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  font-weight: 300;
   line-height: 1;
-  letter-spacing: -0.04em;
-  background: linear-gradient(180deg, var(--g-cream) 0%, var(--g-amber-soft) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  letter-spacing: -0.035em;
+  color: var(--g-cream);
 }
 
 .g-stat-label {
@@ -550,16 +506,19 @@
 .g-focus-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0;
+  gap: 1px;
   max-width: 1120px;
   margin: 0 auto;
-  border-top: 1px solid var(--g-rule);
-  border-bottom: 1px solid var(--g-rule);
+  background: var(--g-rule-soft);
+  border: 1px solid var(--g-rule-soft);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
 .g-focus-card {
-  padding: 44px 34px;
-  border-right: 1px solid var(--g-rule);
+  padding: 36px 28px;
+  background: var(--g-bg-deep);
+  border-right: none;
   position: relative;
   overflow: hidden;
   transition: background 0.5s var(--ease-out-expo);
@@ -587,28 +546,26 @@
 
 .g-focus-card span {
   display: inline-block;
-  margin-bottom: 28px;
-  font-size: clamp(3rem, 7vw, 5.8rem);
-  font-weight: 200;
-  line-height: 0.85;
-  letter-spacing: -0.05em;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--g-amber);
+  margin-bottom: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--g-amber);
 }
 
 .g-focus-card h3 {
-  margin: 0 0 14px;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
   color: var(--g-cream);
 }
 
 .g-focus-card p {
   margin: 0;
   color: var(--g-cream-dim);
-  line-height: 1.7;
+  line-height: 1.65;
   font-size: 0.94rem;
 }
 
@@ -1487,12 +1444,8 @@ html[data-theme="light"] .g-contact-grid {
    Reduced motion
    ══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  .g-hero-bg img,
   .g-hero-inner,
   .g-stat,
-  .g-knowhow-bar span,
-  .g-hero-scroll span,
   .g-work img,
-  .g-knowhow-img img,
   .g-service::after { animation: none !important; transition: none !important; }
 }

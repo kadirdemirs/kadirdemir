@@ -25,6 +25,7 @@ import {
   getMediaApi, getMediaFileApi, uploadMediaApi, bulkDeleteMediaApi,
   getBackupSummaryApi, createBackupApi,
   getAdminCommentsApi, setCommentApprovalApi, deleteCommentApi,
+  purgeLegacyDryRunApi, purgeLegacyApplyApi,
 } from '../api'
 import {
   KadelinkHeroSection,
@@ -417,7 +418,7 @@ function SocialStatsSection({ settings, ytChannel, ytVideos, showToast }) {
           </div>
           <div className="admin-stat-card">
             <div className="stat-icon" style={{ background: 'rgba(245,158,11,.15)', color: '#f59e0b' }}>📅</div>
-            <div className="stat-number">{settings?.statsActiveYears || '5+'}</div>
+            <div className="stat-number">{settings?.statsActiveYears || '14'}</div>
             <div className="stat-label">Aktif yıl</div>
           </div>
         </div>
@@ -1068,7 +1069,7 @@ function SettingsSection({ showToast, onChangePassword }) {
           <label>📸 Instagram Post<input value={s.statsInstagramPosts || ''} onChange={e => upd('statsInstagramPosts', e.target.value)} placeholder="420" /></label>
           <label>🎵 TikTok Takipçi<input value={s.statsTiktokFollowers || ''} onChange={e => upd('statsTiktokFollowers', e.target.value)} placeholder="1.8M" /></label>
           <label>🎵 TikTok Beğeni<input value={s.statsTiktokLikes || ''} onChange={e => upd('statsTiktokLikes', e.target.value)} placeholder="24.5M" /></label>
-          <label>📅 Aktif Yıl<input value={s.statsActiveYears || ''} onChange={e => upd('statsActiveYears', e.target.value)} placeholder="5+" /></label>
+          <label>📅 Aktif Yıl<input value={s.statsActiveYears || ''} onChange={e => upd('statsActiveYears', e.target.value)} placeholder="14" /></label>
         </div>
       </div>
 
@@ -1473,6 +1474,90 @@ function QuickToolsSection({ showToast }) {
           ))}
         </div>
       </div>
+
+      <PurgeLegacySection showToast={showToast} />
+    </div>
+  )
+}
+
+function PurgeLegacySection({ showToast }) {
+  const [summary, setSummary] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [confirming, setConfirming] = useState(false)
+
+  const runDryRun = async () => {
+    setLoading(true)
+    try {
+      const res = await purgeLegacyDryRunApi()
+      setSummary(res)
+    } catch (e) {
+      showToast(`Dry run hatası: ${e.message}`, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const applyPurge = async () => {
+    setLoading(true)
+    try {
+      const res = await purgeLegacyApplyApi()
+      showToast(`Temizlendi · blogs: ${res.deleted?.blogs || 0}, partners: ${res.deleted?.partners || 0}, messages: ${res.deleted?.messages || 0}`, 'success')
+      setSummary(null)
+      setConfirming(false)
+    } catch (e) {
+      showToast(`Silme hatası: ${e.message}`, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="settings-section" style={{ borderColor: 'rgba(239,68,68,0.3)' }}>
+      <h3>🧹 Kade Media Veri Temizliği</h3>
+      <p style={{ fontSize: '.82rem', color: 'var(--text-secondary)', margin: '0 0 14px', lineHeight: 1.6 }}>
+        DB'deki eski "Kade Media" / sosyal medya ajansı kayıtlarını tespit eder ve siler.
+        Önce <strong>dry run</strong> ile ne silineceğini gör, sonra <strong>uygula</strong>.
+        Site ayarlarındaki legacy metinler otomatik olarak Kadir Demir'e dönüştürülür.
+      </p>
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        <button className="btn btn-outline" onClick={runDryRun} disabled={loading}>
+          {loading ? 'Tarama yapılıyor…' : '🔍 Tara (Dry Run)'}
+        </button>
+        {summary && !confirming && (
+          <button className="btn btn-primary" onClick={() => setConfirming(true)} style={{ background: '#ef4444', borderColor: '#ef4444' }}>
+            🗑️ Şimdi Sil
+          </button>
+        )}
+        {confirming && (
+          <>
+            <button className="btn btn-primary" onClick={applyPurge} disabled={loading} style={{ background: '#ef4444', borderColor: '#ef4444' }}>
+              {loading ? 'Siliniyor…' : '✓ Eminim, sil'}
+            </button>
+            <button className="btn btn-outline" onClick={() => setConfirming(false)} disabled={loading}>
+              Vazgeç
+            </button>
+          </>
+        )}
+      </div>
+      {summary && (
+        <div style={{ marginTop: 14, padding: 14, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 8, fontSize: '.86rem' }}>
+          <strong>Bulunan kayıtlar:</strong>
+          <ul style={{ margin: '8px 0 0', paddingLeft: 20, lineHeight: 1.8 }}>
+            <li>Blog yazıları: <strong>{summary.blogs}</strong></li>
+            <li>Partner kayıtları: <strong>{summary.partners}</strong></li>
+            <li>Eski mesajlar: <strong>{summary.messages}</strong></li>
+            <li>Site ayarları (düzeltilecek alan): <strong>{summary.settingsHits?.length || 0}</strong></li>
+          </ul>
+          {summary.settingsHits?.length > 0 && (
+            <details style={{ marginTop: 10 }}>
+              <summary style={{ cursor: 'pointer', color: 'var(--text-secondary)' }}>Düzeltilecek alanları gör</summary>
+              <pre style={{ marginTop: 8, fontSize: '.76rem', overflow: 'auto', maxHeight: 200 }}>
+                {JSON.stringify(summary.settingsHits, null, 2)}
+              </pre>
+            </details>
+          )}
+        </div>
+      )}
     </div>
   )
 }

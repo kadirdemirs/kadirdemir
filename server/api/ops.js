@@ -427,6 +427,106 @@ async function handleAuditLog(req, res, db) {
   return res.status(405).json({ error: 'Method not allowed' })
 }
 
+// ─────────────────────────────────────────────────────────────
+// PURGE LEGACY KADE MEDIA DATA
+// Eski "Kade Media — sosyal medya ajansı" verilerini DB'den siler.
+// Admin auth + dry-run opsiyonu ile koruma altında.
+//
+// Kullanım:
+//   GET  /api/ops?resource=purge-legacy&dryRun=1   → ne silineceğini sayar
+//   POST /api/ops?resource=purge-legacy            → gerçek silme yapar
+// ─────────────────────────────────────────────────────────────
+async function handlePurgeLegacy(req, res, db) {
+  const user = requireAdmin(req, res)
+  if (!user) return
+  if (user.role !== 'admin') return res.status(403).json({ error: 'Sadece admin' })
+
+  const dryRun = req.method === 'GET' || req.query?.dryRun === '1' || req.query?.dryRun === 'true'
+
+  // Brand kelimeleri içeren string alanları yakalayan regex
+  const legacyRegex = /kade\s*media|kademedia|sosyal\s*medya\s*ajans|biruni\s*teknopark/i
+
+  // 1) blogs — slug'ı kade-media ile başlayan veya başlık/içerikte legacy geçen yazılar
+  const blogsQuery = {
+    $or: [
+      { slug: /^kade-media-/i },
+      { titleTr: legacyRegex },
+      { titleEn: legacyRegex },
+      { excerptTr: legacyRegex },
+      { excerptEn: legacyRegex },
+      { contentTr: legacyRegex },
+      { contentEn: legacyRegex },
+    ],
+  }
+
+  // 2) partners — eski Kade Media partner kayıtları (ajans servisleri)
+  const partnersQuery = {
+    $or: [
+      { descTr: legacyRegex },
+      { descEn: legacyRegex },
+      { longDescTr: legacyRegex },
+      { longDescEn: legacyRegex },
+    ],
+  }
+
+  // 3) messages — eski "Kade Media" konulu lead mesajları (varsa)
+  const messagesQuery = { $or: [{ subject: legacyRegex }, { service: legacyRegex }] }
+
+  // 4) site_settings — businessName / tagline / description'da legacy varsa kayda al
+  const settings = await db.collection('site_settings').findOne({})
+  const settingsHits = []
+  if (settings) {
+    for (const k of ['businessName', 'tagline', 'description', 'seoTitle', 'seoDescription', 'seoKeywords']) {
+      if (typeof settings[k] === 'string' && legacyRegex.test(settings[k])) {
+        settingsHits.push({ field: k, value: settings[k] })
+      }
+    }
+  }
+
+  const summary = {
+    blogs: await db.collection('blogs').countDocuments(blogsQuery),
+    partners: await db.collection('partners').countDocuments(partnersQuery),
+    messages: await db.collection('messages').countDocuments(messagesQuery),
+    settingsHits,
+    dryRun,
+  }
+
+  if (dryRun) {
+    return res.status(200).json({ ...summary, message: 'Dry run — nothing deleted. POST without dryRun to apply.' })
+  }
+
+  // ── Gerçek silme ──
+  const deleted = {
+    blogs: (await db.collection('blogs').deleteMany(blogsQuery)).deletedCount,
+    partners: (await db.collection('partners').deleteMany(partnersQuery)).deletedCount,
+    messages: (await db.collection('messages').deleteMany(messagesQuery)).deletedCount,
+  }
+
+  // site_settings'i Kade Media → Kadir Demir olarak güncelle
+  if (settings && settingsHits.length > 0) {
+    const patch = {}
+    for (const hit of settingsHits) {
+      patch[hit.field] = hit.value
+        .replace(/Kade\s*Media/gi, 'Kadir Demir')
+        .replace(/kademedia/gi, 'kadirdemir')
+        .replace(/sosyal\s*medya\s*ajans[ıi]?/gi, 'içerik üretimi')
+        .replace(/Biruni\s*Teknopark/gi, 'İstanbul')
+    }
+    await db.collection('site_settings').updateOne({ _id: settings._id }, { $set: patch })
+    deleted.settingsUpdated = Object.keys(patch).length
+  }
+
+  await writeAuditLog(db, {
+    actor: user.username,
+    action: 'purge-legacy:apply',
+    target: 'kade-media',
+    ip: req.ip,
+    detail: deleted,
+  })
+
+  return res.status(200).json({ success: true, deleted, summary })
+}
+
 export default async function handler(req, res) {
   if (cors(req, res)) return
 
@@ -443,6 +543,7 @@ export default async function handler(req, res) {
     if (resource === 'email-templates') return handleEmailTemplates(req, res, db)
     if (resource === 'onboarding') return handleOnboarding(req, res, db)
     if (resource === 'audit-log') return handleAuditLog(req, res, db)
+    if (resource === 'purge-legacy') return handlePurgeLegacy(req, res, db)
 
     return res.status(400).json({ error: 'resource parametresi gerekli' })
   } catch (err) {

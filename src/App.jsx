@@ -14,7 +14,6 @@ import LiveBanner from './components/LiveBanner'
 import CommandPalette from './components/CommandPalette'
 import CookieBanner from './components/CookieBanner'
 import FloatingCTA from './components/FloatingCTA'
-import ClickSpark from './components/reactbits/ClickSpark'
 
 // Core pages — direct import for instant first render
 import Home from './pages/Home'
@@ -154,7 +153,6 @@ function App() {
       {!isStandalone && <CommandPalette />}
       {!isStandalone && <FloatingCTA />}
       {!isStandalone && <CookieBanner />}
-      {!isStandalone && <ClickSpark sparkColor="#e8b468" sparkRadius={22} sparkCount={8} duration={500} />}
     </>
   )
 }

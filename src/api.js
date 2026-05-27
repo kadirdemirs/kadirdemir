@@ -760,3 +760,19 @@ export async function createBackupApi() {
   });
   return handleResponse(res);
 }
+
+// ───── Legacy Kade Media data purge ─────
+export async function purgeLegacyDryRunApi() {
+  const res = await fetch(`${API_BASE}/ops?resource=purge-legacy&dryRun=1`, {
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+}
+
+export async function purgeLegacyApplyApi() {
+  const res = await fetch(`${API_BASE}/ops?resource=purge-legacy`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+}

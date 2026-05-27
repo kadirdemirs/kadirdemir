@@ -27,11 +27,9 @@ export default function Partners() {
   const [loading, setLoading] = useState(true)
 
   useSEO({
-    title: lang === 'en' ? 'Partners' : lang === 'de' ? 'Partner' : 'İş Birlikleri',
+    title: lang === 'en' ? 'Partners' : 'İş Birlikleri',
     description: lang === 'en'
       ? 'Brands and partners I work with — Kadir Demir.'
-      : lang === 'de'
-      ? 'Marken und Partner, mit denen ich zusammenarbeite — Kadir Demir.'
       : 'Birlikte çalıştığım markalar ve iş birlikleri — Kadir Demir.',
     path: '/partnerler',
   })
@@ -59,7 +57,7 @@ export default function Partners() {
     <div className="kd-blog">
       <BreadcrumbSchema
         items={[
-          { name: lang === 'en' ? 'Home' : lang === 'de' ? 'Startseite' : 'Ana Sayfa', path: '/' },
+          { name: lang === 'en' ? 'Home' : 'Ana Sayfa', path: '/' },
           { name: t('pill'), path: '/partnerler' },
         ]}
       />

@@ -28,11 +28,9 @@ const BUDGETS = [
 export default function Sponsor() {
   const { lang } = useLanguage()
   useSEO({
-    title: lang === 'en' ? 'Sponsor Inquiry' : lang === 'de' ? 'Sponsoring-Anfrage' : 'Sponsor Başvurusu',
+    title: lang === 'en' ? 'Sponsor Inquiry' : 'Sponsor Başvurusu',
     description: lang === 'en'
       ? 'Brand collaboration & sponsorship inquiries for Kadir Demir.'
-      : lang === 'de'
-      ? 'Markenkooperationen & Sponsoring-Anfragen für Kadir Demir.'
       : 'Kadir Demir ile marka iş birliği ve sponsorluk başvurusu.',
     path: '/sponsor',
   })
