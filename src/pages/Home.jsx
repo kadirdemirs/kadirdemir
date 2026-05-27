@@ -17,6 +17,9 @@ import {
   HiOutlineFilm,
   HiOutlineScissors,
   HiOutlineSparkles,
+  HiOutlineEnvelope,
+  HiOutlineShare,
+  HiOutlineCheckBadge,
 } from 'react-icons/hi2'
 import { useEffect, useMemo, useState } from 'react'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
@@ -25,20 +28,14 @@ import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/CountUp'
 import NewsletterForm from '../components/NewsletterForm'
-import ResponsivePortrait from '../components/ResponsivePortrait'
-import HeroComposition from '../components/HeroComposition'
 import { SkeletonGrid } from '../components/Skeleton'
-import BlurText from '../components/reactbits/BlurText'
 import MagicBento from '../components/reactbits/MagicBento'
 import SpotlightCard from '../components/reactbits/SpotlightCard'
-import ScrollVelocity from '../components/reactbits/ScrollVelocity'
-import TiltedCard from '../components/reactbits/TiltedCard'
 import GlareHover from '../components/reactbits/GlareHover'
-import Particles from '../components/reactbits/Particles'
-import DecryptedText from '../components/reactbits/DecryptedText'
-import Magnet from '../components/reactbits/Magnet'
-import VariableProximity from '../components/reactbits/VariableProximity'
-import { getYouTubeVideosApi, getBlogsApi, getSocialStatsApi } from '../api'
+import {
+  getYouTubeVideosApi, getBlogsApi, getSocialStatsApi,
+  getKadelinkHeroApi, getKadelinkLinksApi, getKadelinkThemeApi,
+} from '../api'
 import './Home.css'
 
 function parseStat(value) {
@@ -114,23 +111,25 @@ export default function Home() {
   const [videosLoading, setVideosLoading] = useState(true)
   const [blogs, setBlogs] = useState([])
   const [socialStats, setSocialStats] = useState(null)
-  const [parallax, setParallax] = useState({ x: 0, y: 0 })
+  const [shareToast, setShareToast] = useState('')
+  const [kdHero, setKdHero] = useState(null)
+  const [kdLinks, setKdLinks] = useState(null)
+  const [kdTheme, setKdTheme] = useState(null)
 
-  // Mouse-tracking parallax (hero section'da)
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) return
-    const fine = window.matchMedia('(pointer: fine)').matches
-    if (!fine) return
-    const onMove = (e) => {
-      const nx = (e.clientX / window.innerWidth - 0.5) * 2  // -1..1
-      const ny = (e.clientY / window.innerHeight - 0.5) * 2
-      setParallax({ x: nx, y: ny })
+  const onShare = async () => {
+    const url = window.location.href
+    const title = document.title
+    if (navigator.share) {
+      try { await navigator.share({ title, url }); return } catch { /* fall through */ }
     }
-    window.addEventListener('mousemove', onMove, { passive: true })
-    return () => window.removeEventListener('mousemove', onMove)
-  }, [])
+    try {
+      await navigator.clipboard.writeText(url)
+      setShareToast(lang === 'en' ? 'Link copied!' : lang === 'de' ? 'Link kopiert!' : 'Link kopyalandı!')
+    } catch {
+      setShareToast(lang === 'en' ? 'Could not copy' : lang === 'de' ? 'Kopieren fehlgeschlagen' : 'Kopyalanamadı')
+    }
+    setTimeout(() => setShareToast(''), 2200)
+  }
 
   const localizedFaqs = useMemo(() => {
     if (lang === 'en') return [
@@ -183,7 +182,27 @@ export default function Home() {
     getSocialStatsApi()
       .then((data) => setSocialStats(data))
       .catch(() => { /* fallback to settings */ })
+    getKadelinkHeroApi().then((doc) => setKdHero(doc?.data || null)).catch(() => {})
+    getKadelinkLinksApi().then((doc) => {
+      const arr = Array.isArray(doc?.data?.links) ? doc.data.links : null
+      setKdLinks(arr)
+    }).catch(() => {})
+    getKadelinkThemeApi().then((doc) => setKdTheme(doc?.data || null)).catch(() => {})
   }, [])
+
+  // Apply theme accent live (if admin set custom colors)
+  useEffect(() => {
+    if (!kdTheme) return
+    const root = document.documentElement
+    if (kdTheme.accent) root.style.setProperty('--amber', kdTheme.accent)
+    if (kdTheme.accentLight) root.style.setProperty('--amber-soft', kdTheme.accentLight)
+    if (kdTheme.accentDeep) root.style.setProperty('--amber-deep', kdTheme.accentDeep)
+    return () => {
+      root.style.removeProperty('--amber')
+      root.style.removeProperty('--amber-soft')
+      root.style.removeProperty('--amber-deep')
+    }
+  }, [kdTheme])
 
   const subscribeUrl = `${settings.youtube || 'https://youtube.com/@kadirdemir'}?sub_confirmation=1`
 
@@ -252,137 +271,150 @@ export default function Home() {
       <FAQSchema items={localizedFaqs} />
       {videos.length > 0 && <VideoSchema videos={videos.slice(0, 8)} />}
 
-      {/* ═══════════════ HERO ═══════════════ */}
-      <section className="hm-hero">
-        {/* Parallax katmanlar — mouse takip eder */}
-        <div className="hm-hero-orbs" aria-hidden="true">
-          <span
-            className="hm-hero-orb hm-hero-orb-1"
-            style={{ transform: `translate3d(${parallax.x * 18}px, ${parallax.y * 18}px, 0)` }}
-          />
-          <span
-            className="hm-hero-orb hm-hero-orb-2"
-            style={{ transform: `translate3d(${parallax.x * -28}px, ${parallax.y * -22}px, 0)` }}
-          />
-          <span
-            className="hm-hero-orb hm-hero-orb-3"
-            style={{ transform: `translate3d(${parallax.x * 14}px, ${parallax.y * -16}px, 0)` }}
-          />
-        </div>
-        <div className="hm-hero-particles" aria-hidden="true"
-          style={{ transform: `translate3d(${parallax.x * 6}px, ${parallax.y * 6}px, 0)` }}>
-          <Particles
-            particleColors={['#f59e0b', '#a855f7', '#ec4899', '#06b6d4']}
-            particleCount={90}
-            particleBaseSize={70}
-            alphaParticles
-          />
-        </div>
-        <div className="hm-hero-grid">
-          <div className="hm-hero-left">
-            <motion.span
-              className="hm-eyebrow"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <span className="hm-eyebrow-dot" />{' '}
-              <DecryptedText
-                key={`epi-${lang}`}
-                text={t('home.eyebrowEpisode')}
-                speed={40}
-                sequential
-                revealDirection="start"
-                animateOn="view"
-              />
-            </motion.span>
-
-            <h1 className="hm-hero-title">
-              <BlurText
-                key={`hi-${lang}`}
-                text={t('home.heroHi')}
-                animateBy="words"
-                delay={100}
-                className="hm-hero-line hm-hero-line-1"
-              />
-              <BlurText
-                key={`iam-${lang}-${brandName}`}
-                text={`${t('home.heroIam')} ${brandName}.`}
-                animateBy="words"
-                delay={120}
-                className="hm-hero-line hm-hero-line-2"
-              />
-              <BlurText
-                key={`love-${lang}`}
-                text={t('home.heroLove')}
-                animateBy="words"
-                delay={80}
-                className="hm-hero-line hm-hero-line-3"
-              />
-            </h1>
-
-            <motion.p
-              className="hm-hero-sub"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              {settings.description || t('home.heroSubFallback')}
-            </motion.p>
-
+      {/* ═══════════════ KADELINK HERO CARD ═══════════════ */}
+      <section className="kd-hero">
+        {(() => {
+          const heroPortrait = kdHero?.portrait || '/kadelink-portrait.png'
+          const heroHandle = kdHero?.handle || `@${(settings.instagramHandle || 'kadirardademir').replace(/^@/, '')}`
+          const heroTagline = (lang === 'en' ? kdHero?.taglineEn : lang === 'de' ? kdHero?.taglineDe : kdHero?.tagline)
+            || (lang === 'en' ? 'Content Creator' : lang === 'de' ? 'Content Creator' : 'İçerik Üreticisi')
+          const heroStatus = (lang === 'en' ? kdHero?.statusLabelEn : kdHero?.statusLabel)
+            || (lang === 'en' ? 'Online' : lang === 'de' ? 'Online' : 'Aktif')
+          const showStatus = kdHero?.showStatus !== false
+          const showVerified = kdHero?.showVerified !== false
+          return (
             <motion.div
-              className="hm-hero-cta"
-              initial={{ opacity: 0, y: 16 }}
+              className="kd-card"
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             >
-              <Magnet padding={70} magnetStrength={0.3}>
-                <a href={subscribeUrl} target="_blank" rel="noopener noreferrer" className="hm-btn hm-btn-primary">
-                  <FaYoutube size={18} /> {t('home.heroSubscribe')}
-                </a>
-              </Magnet>
-              <Magnet padding={70} magnetStrength={0.3}>
-                <Link to="/videolar" className="hm-btn hm-btn-ghost">
-                  <HiOutlinePlay size={18} /> {t('home.heroWatch')}
-                </Link>
-              </Magnet>
-            </motion.div>
-          </div>
+              <img className="kd-card-photo" src={heroPortrait} alt={brandName} />
+              <div className="kd-card-overlay" aria-hidden="true" />
 
-          <motion.div
-            className="hm-hero-right"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            style={{ transform: `translate3d(${parallax.x * -10}px, ${parallax.y * -8}px, 0)` }}
-          >
-            <TiltedCard rotateAmplitude={8} scaleOnHover={1.03} className="hm-hero-tilt">
-              <HeroComposition brandName={brandName} />
-            </TiltedCard>
-          </motion.div>
-        </div>
+              <div className="kd-card-top">
+                {showStatus ? (
+                  <span className="kd-card-tag">
+                    <span className="kd-card-tag-dot" /> {heroStatus}
+                  </span>
+                ) : <span />}
+                <button
+                  type="button"
+                  className="kd-card-share"
+                  aria-label={lang === 'en' ? 'Share' : lang === 'de' ? 'Teilen' : 'Paylaş'}
+                  onClick={onShare}
+                >
+                  <HiOutlineShare size={18} />
+                </button>
+              </div>
+
+              <div className="kd-card-text">
+                <h1 className="kd-card-name">
+                  {heroHandle}
+                  {showVerified && (
+                    <span className="kd-card-verified" aria-label={lang === 'en' ? 'Verified' : 'Doğrulanmış'}>
+                      <HiOutlineCheckBadge />
+                    </span>
+                  )}
+                </h1>
+                <p className="kd-card-title">{heroTagline}</p>
+              </div>
+
+              <div className="kd-card-tabs">
+                <span className="kd-card-tab is-active">
+                  {lang === 'en' ? 'Links' : lang === 'de' ? 'Links' : 'Bağlantılar'}
+                </span>
+                <a className="kd-card-tab" href="https://kademedia.com.tr" target="_blank" rel="noopener noreferrer">
+                  Kade Media
+                </a>
+              </div>
+            </motion.div>
+          )
+        })()}
+
+        <motion.div
+          className="kd-links"
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: {},
+            show: { transition: { staggerChildren: 0.07, delayChildren: 0.4 } },
+          }}
+        >
+          {(() => {
+            const ICONS = {
+              instagram: FaInstagram, youtube: FaYoutube, tiktok: FaTiktok,
+              x: FaXTwitter, twitch: FaTwitch, email: HiOutlineEnvelope,
+              linkedin: FaXTwitter, website: HiOutlineEnvelope,
+            }
+            const list = Array.isArray(kdLinks) && kdLinks.length > 0
+              ? kdLinks
+                  .filter((l) => l && l.enabled !== false && l.url && l.label)
+                  .map((l) => ({ icon: ICONS[l.icon] || HiOutlineEnvelope, label: l.label, url: l.url }))
+              : [
+                  settings.instagram && { icon: FaInstagram, label: 'Instagram', url: settings.instagram },
+                  settings.youtube && { icon: FaYoutube, label: 'YouTube', url: settings.youtube },
+                  settings.tiktok && { icon: FaTiktok, label: 'TikTok', url: settings.tiktok },
+                  settings.twitter && { icon: FaXTwitter, label: 'X', url: settings.twitter },
+                  settings.twitch && { icon: FaTwitch, label: 'Twitch', url: settings.twitch },
+                  settings.businessEmail && {
+                    icon: HiOutlineEnvelope,
+                    label: lang === 'en' ? 'Contact' : lang === 'de' ? 'Kontakt' : 'İletişim',
+                    url: `mailto:${settings.businessEmail}`,
+                  },
+                ].filter(Boolean)
+            return list.map((link) => (
+              <motion.a
+                key={link.label}
+                href={link.url}
+                target={link.url.startsWith('mailto:') ? undefined : '_blank'}
+                rel="noopener noreferrer"
+                className="kd-link"
+                variants={{
+                  hidden: { opacity: 0, y: 16 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+                }}
+              >
+                <span className="kd-link-icon"><link.icon size={20} /></span>
+                <span className="kd-link-label">{link.label}</span>
+                <span className="kd-link-meta">⋮</span>
+              </motion.a>
+            ))
+          })()}
+        </motion.div>
 
         {stats.length > 0 && (
           <motion.div
-            className="hm-stats"
-            initial={{ opacity: 0, y: 24 }}
+            className="kd-stats"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
           >
             {stats.map((s) => {
               const parsed = parseStat(s.value)
               return (
-                <div key={s.label} className="hm-stat">
-                  <span className="hm-stat-icon"><s.icon size={18} /></span>
-                  <span className="hm-stat-value">
-                    {parsed ? <><CountUp end={parsed.num} duration={2.5} />{parsed.suffix}</> : s.value}
+                <div key={s.label} className="kd-stat">
+                  <span className="kd-stat-icon"><s.icon size={16} /></span>
+                  <span className="kd-stat-value">
+                    {parsed ? <><CountUp end={parsed.num} duration={2.4} />{parsed.suffix}</> : s.value}
                   </span>
-                  <span className="hm-stat-label">{s.label}</span>
+                  <span className="kd-stat-label">{s.label}</span>
                 </div>
               )
             })}
           </motion.div>
         )}
+
+        <div className="kd-hero-actions">
+          <a href={subscribeUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+            <FaYoutube size={16} /> {t('home.heroSubscribe')}
+          </a>
+          <Link to="/videolar" className="btn btn-outline">
+            <HiOutlinePlay size={16} /> {t('home.heroWatch')}
+          </Link>
+        </div>
+
+        {shareToast && <div className="kd-toast" role="status">{shareToast}</div>}
       </section>
 
       {/* ═══════════════ SERVICES MARQUEE ═══════════════ */}
@@ -465,7 +497,7 @@ export default function Home() {
           </MagicBento.Cell>
 
           <MagicBento.Cell span={2} className="hm-bento-image">
-            <ResponsivePortrait alt={`${brandName} — behind the scenes`} className="hm-bento-img" sizes="(max-width: 820px) 100vw, 480px" />
+            <img src="/kadir.jpg" alt={`${brandName} — behind the scenes`} className="hm-bento-img" loading="lazy" />
             <div className="hm-bento-image-tag">{lang === 'tr' ? 'Kamera arkası' : lang === 'de' ? 'Behind the Scenes' : 'Behind the scenes'}</div>
           </MagicBento.Cell>
         </MagicBento>
@@ -484,8 +516,8 @@ export default function Home() {
             rel="noopener noreferrer"
             className="hm-featured"
           >
-            <TiltedCard rotateAmplitude={8} scaleOnHover={1.02} className="hm-featured-tilt">
-              <GlareHover className="hm-featured-thumb" glareColor="rgba(225, 29, 46, 0.25)">
+            <div className="hm-featured-tilt">
+              <GlareHover className="hm-featured-thumb" glareColor="rgba(201, 138, 59, 0.3)">
                 {featuredVideo.thumbnail ? (
                   <img src={featuredVideo.thumbnail} alt={featuredVideo.title} loading="lazy" />
                 ) : (
@@ -500,7 +532,7 @@ export default function Home() {
                   <span className="hm-featured-duration">{parseDuration(featuredVideo.duration)}</span>
                 )}
               </GlareHover>
-            </TiltedCard>
+            </div>
             <div className="hm-featured-meta">
               <span className="hm-featured-eyebrow">{featuredVideo.publishedAt ? new Date(featuredVideo.publishedAt).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long' }) : 'Yeni'}</span>
               <h3 className="hm-featured-title">{featuredVideo.title}</h3>
@@ -781,16 +813,7 @@ export default function Home() {
         <section className="hm-section">
           <div className="hm-section-head">
             <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.socialEyebrow')}</span>
-            <h2 className="hm-h2 hm-h2-vp">
-              <VariableProximity
-                key={`vp-${lang}`}
-                label={t('home.socialTitle')}
-                fromFontVariationSettings="'wght' 500"
-                toFontVariationSettings="'wght' 900"
-                radius={140}
-                falloff="exponential"
-              />
-            </h2>
+            <h2 className="hm-h2">{t('home.socialTitle')}</h2>
           </div>
           <div className="hm-social-grid">
             {socialFollows.map((s) => (
@@ -937,24 +960,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════ VELOCITY STRIP ═══════════════ */}
+      {/* ═══════════════ MARQUEE STRIP ═══════════════ */}
       <section className="hm-velocity" aria-hidden="true">
-        <ScrollVelocity
-          key={`vel-${lang}`}
-          texts={[
-            lang === 'en'
-              ? `${brandName} • Storyteller • Istanbul •`
-              : lang === 'de'
-              ? `${brandName} • Geschichtenerzähler • Istanbul •`
-              : `${brandName} • Hikâye anlatıcısı • İstanbul •`,
-            lang === 'en'
-              ? 'Vlog • Gaming • Entertainment • Adventure •'
-              : lang === 'de'
-              ? 'Vlog • Gaming • Unterhaltung • Abenteuer •'
-              : 'Vlog • Oyun • Eğlence • Macera •',
-          ]}
-          velocity={60}
-        />
+        <div className="hm-velocity-track">
+          {Array.from({ length: 2 }).map((_, dup) => (
+            <span key={dup} className="hm-velocity-row">
+              {(lang === 'en'
+                ? `${brandName} • Storyteller • Istanbul • Vlog • Gaming • Entertainment • Adventure • `
+                : lang === 'de'
+                ? `${brandName} • Geschichtenerzähler • Istanbul • Vlog • Gaming • Unterhaltung • Abenteuer • `
+                : `${brandName} • Hikâye anlatıcısı • İstanbul • Vlog • Oyun • Eğlence • Macera • `
+              ).repeat(3)}
+            </span>
+          ))}
+        </div>
       </section>
 
       {/* ═══════════════ CTA ═══════════════ */}
@@ -966,11 +985,9 @@ export default function Home() {
             <h2 className="hm-h2 hm-cta-title">{t('home.ctaTitleA')}<br />{t('home.ctaTitleB')}</h2>
             <p>{t('home.ctaSub')}</p>
           </div>
-          <Magnet padding={90} magnetStrength={0.35}>
-            <Link to="/iletisim" className="hm-btn hm-btn-primary hm-btn-lg">
-              {t('home.ctaButton')} <HiOutlineArrowRight />
-            </Link>
-          </Magnet>
+          <Link to="/iletisim" className="hm-btn hm-btn-primary hm-btn-lg">
+            {t('home.ctaButton')} <HiOutlineArrowRight />
+          </Link>
         </div>
       </section>
     </div>

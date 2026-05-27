@@ -596,3 +596,67 @@
     gap: 8px;
   }
 }
+
+/* ════════════════════════════════════════════
+   KADELINK OVERRIDES — warm amber palette
+   ════════════════════════════════════════════ */
+.ft-cta {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, transparent 50%),
+    radial-gradient(circle at 25% 25%, var(--amber-soft) 0%, var(--amber) 55%, var(--amber-deep) 100%) !important;
+}
+
+.ft-cta-blob {
+  background: rgba(242, 232, 216, 0.22) !important;
+}
+
+.ft-cta-eyebrow,
+.ft-cta-title,
+.ft-cta-sub,
+.ft-cta-rail {
+  color: #1a1208 !important;
+}
+
+.ft-cta-dot {
+  background: #1a1208 !important;
+  box-shadow: 0 0 0 2px rgba(26, 18, 8, 0.18), 0 0 10px rgba(26, 18, 8, 0.4) !important;
+}
+
+.ft-cta-title-accent {
+  color: var(--bg-deep) !important;
+  -webkit-text-fill-color: var(--bg-deep);
+}
+
+.ft-cta-btn {
+  background: var(--bg-deep) !important;
+  color: var(--amber) !important;
+}
+
+.ft-cta-btn:hover {
+  background: #000 !important;
+  color: var(--amber-soft) !important;
+}
+
+.ft-mega-accent {
+  background: linear-gradient(180deg, var(--amber-soft) 0%, var(--amber) 60%, var(--amber-deep) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ft-mega-dot { color: var(--amber); }
+
+.ft-brand-mark {
+  background: var(--amber) !important;
+  color: #1a1208 !important;
+  box-shadow: 0 0 24px var(--amber-glow);
+}
+
+.ft-list a:hover {
+  color: var(--amber) !important;
+}
+
+[data-theme="light"] .ft-cta-btn {
+  background: var(--cream) !important;
+  color: var(--amber-deep) !important;
+}

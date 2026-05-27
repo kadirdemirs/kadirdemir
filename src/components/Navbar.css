@@ -619,3 +619,87 @@
 @media (prefers-reduced-motion: reduce) {
   .nv-theme-icon { transition: none; }
 }
+
+/* ════════════════════════════════════════════
+   KADELINK OVERRIDES — warm amber on deep black
+   ════════════════════════════════════════════ */
+.nv-pill {
+  background:
+    linear-gradient(180deg, rgba(242, 232, 216, 0.05) 0%, rgba(242, 232, 216, 0) 50%),
+    rgba(20, 18, 16, 0.72);
+  border-color: rgba(201, 138, 59, 0.22);
+}
+
+.nv-pill::after {
+  background: linear-gradient(135deg, rgba(201, 138, 59, 0.35), rgba(201, 138, 59, 0) 40%, rgba(201, 138, 59, 0.28));
+}
+
+.nv--scrolled .nv-pill {
+  background:
+    linear-gradient(180deg, rgba(242, 232, 216, 0.06) 0%, rgba(242, 232, 216, 0) 50%),
+    rgba(10, 9, 7, 0.88);
+  border-color: rgba(201, 138, 59, 0.32);
+  box-shadow:
+    0 1px 0 rgba(242, 232, 216, 0.1) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 24px 60px -20px rgba(0, 0, 0, 0.9),
+    0 0 70px -28px var(--amber-glow);
+}
+
+.nv-brand-text {
+  background: linear-gradient(180deg, var(--cream) 0%, var(--amber-soft) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nv-brand:hover .nv-brand-text {
+  filter: drop-shadow(0 0 12px var(--amber-glow));
+}
+
+.nv-cta {
+  background: var(--amber);
+  color: #1a1208;
+  box-shadow: 0 0 24px var(--amber-glow);
+}
+
+.nv-cta:hover {
+  background: var(--amber-soft);
+  color: #1a1208;
+  box-shadow: 0 0 32px var(--amber-glow-strong);
+}
+
+.nv-link.is-active {
+  color: var(--amber-soft);
+}
+
+.nv-icon:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+[data-theme="light"] .nv-pill {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%),
+    rgba(255, 255, 255, 0.7);
+  border-color: rgba(160, 109, 42, 0.25);
+}
+
+[data-theme="light"] .nv--scrolled .nv-pill {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 50%),
+    rgba(255, 255, 255, 0.88);
+  border-color: rgba(160, 109, 42, 0.35);
+}
+
+[data-theme="light"] .nv-brand-text {
+  background: linear-gradient(180deg, #1a1208 0%, var(--amber-deep) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .nv-cta {
+  background: var(--amber-deep);
+  color: #fff;
+}

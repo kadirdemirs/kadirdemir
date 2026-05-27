@@ -17,10 +17,7 @@ import CookieBanner from './components/CookieBanner'
 import FloatingCTA from './components/FloatingCTA'
 
 // Heavy WebGL components — lazy load to skip them on initial paint
-const Aurora = lazy(() => import('./components/reactbits/Aurora'))
 const ClickSpark = lazy(() => import('./components/reactbits/ClickSpark'))
-
-const AURORA_COLORS = ['#f59e0b', '#ec4899', '#a855f7']
 
 // Core pages — direct import for instant first render
 import Home from './pages/Home'
@@ -125,18 +122,7 @@ function App() {
       <ErrorTracker />
       <a href="#main-content" className="skip-to-content">İçeriğe geç</a>
       <ScrollToTop />
-      {!isAdmin && (
-        <div aria-hidden="true" className="kd-aurora-bg">
-          <Suspense fallback={null}>
-            <Aurora
-              colorStops={AURORA_COLORS}
-              amplitude={0.9}
-              blend={0.55}
-              speed={0.7}
-            />
-          </Suspense>
-        </div>
-      )}
+      {!isAdmin && <div aria-hidden="true" className="kd-aurora-bg" />}
       {!isAdmin && <LiveBanner />}
       {!isAdmin && <Navbar />}
       <main id="main-content">
@@ -167,7 +153,7 @@ function App() {
       {!isAdmin && <CommandPalette />}
       {!isAdmin && (
         <Suspense fallback={null}>
-          <ClickSpark sparkColor="#f59e0b" sparkCount={10} sparkRadius={22} duration={520} />
+          <ClickSpark sparkColor="#c98a3b" sparkCount={10} sparkRadius={22} duration={520} />
         </Suspense>
       )}
       {!isAdmin && <CustomCursor />}

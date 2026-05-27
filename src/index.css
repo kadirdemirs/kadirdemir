@@ -1,79 +1,100 @@
 /* ==========================================
-   KADIR DEMIR — Editorial-Bento Design System
-   True dark + amber accent. Sade, premium, sıcak.
+   KADIR DEMIR — KADELINK design system
+   Warm amber + cream on true black.
+   Glass, ambient amber glow, subtle grain.
    ========================================== */
 
 :root {
-  /* ─── Brand accents — electric cyber palette ─── */
-  --primary: #f59e0b;          /* amber — main */
-  --primary-dark: #b45309;
-  --primary-light: #fbbf24;
-  --primary-deep: #92400e;
-  --primary-glow: rgba(245, 158, 11, 0.35);
-  --accent-violet: #a855f7;    /* gaming/streaming accent */
-  --accent-pink: #ec4899;      /* Twitch/streamer hue */
-  --accent-cyan: #06b6d4;      /* neon cool spot */
-  --accent-mint: #fb923c;
-  --accent-red: #e11d2e;       /* brand red — CTA & wordmark stroke */
-  --accent-red-dark: #b8141f;
-  --accent-red-glow: rgba(225, 29, 46, 0.45);
-  --neon-glow: 0 0 24px var(--primary-glow), 0 0 48px rgba(168, 85, 247, 0.25);
-  --gradient-cyber: linear-gradient(135deg, #f59e0b 0%, #ec4899 50%, #a855f7 100%);
-  --gradient-electric: linear-gradient(90deg, #06b6d4 0%, #a855f7 50%, #ec4899 100%);
+  /* ─── KADELINK palette ─── */
+  --bg-base: #0a0907;
+  --bg-deep: #050403;
+  --bg-elevated: #141210;
+  --bg-elevated-2: #1c1814;
 
-  /* ─── Surface (true dark) ─── */
-  --bg-0: #0a0a0a;
-  --bg-1: #111111;
-  --bg-2: #181818;
-  --black: #0a0a0a;
-  --black-light: #111111;
-  --black-lighter: #181818;
-  --dark-gray: #1f1f1f;
-  --gray: #262626;
-  --bg-primary: #0a0a0a;
-  --bg-secondary: rgba(255, 255, 255, 0.025);
-  --card-bg: rgba(255, 255, 255, 0.03);
+  --amber: #c98a3b;
+  --amber-soft: #e0a661;
+  --amber-deep: #a06d2a;
+  --amber-glow: rgba(201, 138, 59, 0.35);
+  --amber-glow-strong: rgba(201, 138, 59, 0.55);
+
+  --cream: #f2e8d8;
+  --cream-dim: rgba(242, 232, 216, 0.75);
+  --cream-mute: rgba(242, 232, 216, 0.55);
+  --cream-faint: rgba(242, 232, 216, 0.32);
+
+  /* ─── Aliases that the rest of the app already uses ─── */
+  --primary: var(--amber);
+  --primary-dark: var(--amber-deep);
+  --primary-light: var(--amber-soft);
+  --primary-deep: var(--amber-deep);
+  --primary-glow: var(--amber-glow);
+
+  /* Older accents kept for sub-pages that still reference them, but
+     reframed inside the amber world so nothing screams off-brand. */
+  --accent-violet: var(--amber-soft);
+  --accent-pink: var(--amber);
+  --accent-cyan: var(--amber-soft);
+  --accent-mint: var(--amber);
+  --accent-red: var(--amber);
+  --accent-red-dark: var(--amber-deep);
+  --accent-red-glow: var(--amber-glow);
+
+  --neon-glow: 0 0 24px var(--amber-glow), 0 0 48px rgba(201, 138, 59, 0.18);
+  --gradient-cyber: linear-gradient(135deg, var(--amber-soft) 0%, var(--amber) 50%, var(--amber-deep) 100%);
+  --gradient-electric: linear-gradient(90deg, var(--amber-soft) 0%, var(--amber) 50%, var(--amber-deep) 100%);
+
+  /* ─── Surface scale ─── */
+  --bg-0: var(--bg-deep);
+  --bg-1: var(--bg-base);
+  --bg-2: var(--bg-elevated);
+  --black: var(--bg-deep);
+  --black-light: var(--bg-base);
+  --black-lighter: var(--bg-elevated);
+  --dark-gray: var(--bg-elevated-2);
+  --gray: #2a241e;
+  --bg-primary: var(--bg-deep);
+  --bg-secondary: rgba(242, 232, 216, 0.025);
+  --card-bg: rgba(20, 18, 16, 0.55);
 
   /* ─── Text scale ─── */
-  --text-primary: #fafafa;
-  --text-secondary: #a3a3a3;
-  --text-tertiary: #737373;
-  --gray-light: #a3a3a3;
-  --gray-lighter: #d4d4d4;
-  --white: #fafafa;
-  --white-dim: #d4d4d4;
+  --text-primary: var(--cream);
+  --text-secondary: var(--cream-dim);
+  --text-tertiary: var(--cream-mute);
+  --gray-light: var(--cream-mute);
+  --gray-lighter: var(--cream-dim);
+  --white: var(--cream);
+  --white-dim: var(--cream-dim);
 
-  /* ─── Surfaces (less glass, more solid) ─── */
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-bg-strong: rgba(255, 255, 255, 0.06);
-  --glass-bg-soft: rgba(255, 255, 255, 0.015);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --glass-border-strong: rgba(255, 255, 255, 0.12);
-  --glass-highlight: rgba(255, 255, 255, 0.08);
+  /* ─── Glass (KADELINK feel — warm-tinted) ─── */
+  --glass-bg: rgba(20, 18, 16, 0.55);
+  --glass-bg-strong: rgba(40, 32, 24, 0.7);
+  --glass-bg-soft: rgba(20, 18, 16, 0.35);
+  --glass-border: rgba(201, 138, 59, 0.22);
+  --glass-border-strong: rgba(201, 138, 59, 0.5);
+  --glass-highlight: rgba(242, 232, 216, 0.08);
   --glass-blur: 18px;
   --glass-blur-strong: 28px;
   --glass-saturation: 120%;
 
-  /* Composed shadow — sharper, less diffused */
   --glass-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.04) inset,
-    0 12px 32px -16px rgba(0, 0, 0, 0.7);
+    0 1px 0 rgba(242, 232, 216, 0.04) inset,
+    0 12px 32px -16px rgba(0, 0, 0, 0.75);
   --glass-shadow-hover:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 20px 48px -16px rgba(0, 0, 0, 0.85),
-    0 0 0 1px var(--primary-glow);
+    0 1px 0 rgba(242, 232, 216, 0.06) inset,
+    0 20px 48px -16px rgba(0, 0, 0, 0.9),
+    0 0 0 1px var(--amber-glow);
 
   /* ─── Gradients ─── */
-  --gradient-primary: linear-gradient(135deg, #f59e0b 0%, #fb923c 100%);
-  --gradient-dark: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
-  --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.005));
-  --gradient-glow: radial-gradient(circle at center, rgba(245,158,11,0.18) 0%, transparent 60%);
-  --gradient-aurora: linear-gradient(135deg, #f59e0b 0%, #fb923c 50%, #f59e0b 100%);
+  --gradient-primary: linear-gradient(135deg, var(--amber) 0%, var(--amber-soft) 100%);
+  --gradient-dark: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-base) 100%);
+  --gradient-card: linear-gradient(180deg, rgba(242,232,216,0.04), rgba(242,232,216,0.01));
+  --gradient-glow: radial-gradient(circle at center, var(--amber-glow) 0%, transparent 60%);
+  --gradient-aurora: linear-gradient(135deg, var(--amber-soft) 0%, var(--amber) 50%, var(--amber-deep) 100%);
 
-  /* ─── Typography ─── */
-  --font-display: 'Clash Display', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-primary: 'Satoshi', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-secondary: 'Satoshi', 'Inter', system-ui, -apple-system, sans-serif;
+  /* ─── Typography — KADELINK uses Inter, app keeps Clash/Satoshi as fallback ─── */
+  --font-display: 'Inter', 'Clash Display', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-primary: 'Inter', 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-secondary: 'Inter', 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* ─── Layout ─── */
   --section-padding: 120px 0;
@@ -90,17 +111,17 @@
   --transition-slow: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 
   /* ─── Borders ─── */
-  --border-color: rgba(255, 255, 255, 0.06);
-  --border-color-hover: rgba(245, 158, 11, 0.3);
-  --border: rgba(255, 255, 255, 0.06);
+  --border-color: rgba(201, 138, 59, 0.14);
+  --border-color-hover: var(--glass-border-strong);
+  --border: rgba(201, 138, 59, 0.14);
 
   /* ─── Shadows ─── */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-  --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.12);
-  --shadow-glow-strong: 0 0 80px rgba(245, 158, 11, 0.22);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 40px rgba(201, 138, 59, 0.18);
+  --shadow-glow-strong: 0 0 80px rgba(201, 138, 59, 0.3);
 }
 
-/* Glass — kept but minimal */
+/* Glass helpers */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
@@ -128,19 +149,19 @@
 
 @supports not (backdrop-filter: blur(1px)) {
   .glass, .glass-strong, .glass-soft {
-    background: rgba(24, 24, 24, 0.85);
+    background: rgba(20, 18, 16, 0.92);
   }
 }
 
-/* Skip to content — accessibility */
+/* Skip to content */
 .skip-to-content {
   position: absolute;
   top: -100px;
   left: 16px;
   z-index: 9999;
   padding: 10px 20px;
-  background: var(--primary);
-  color: #000;
+  background: var(--amber);
+  color: #1a1208;
   font-weight: 700;
   border-radius: 4px;
   transition: top 0.2s;
@@ -154,7 +175,7 @@
 }
 
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--amber);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -162,63 +183,66 @@
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: var(--primary) var(--bg-0);
+  scrollbar-color: var(--amber) var(--bg-deep);
   -webkit-overflow-scrolling: touch;
-  background-color: var(--bg-0);
+  background-color: var(--bg-deep);
+  /* KADELINK ambient amber glow — two warm spots blooming on deep black */
   background-image:
-    radial-gradient(ellipse 70% 50% at 15% 5%, rgba(245, 158, 11, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 85% 30%, rgba(168, 85, 247, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 70% 95%, rgba(236, 72, 153, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 30% at 25% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 60%),
-    repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(255, 255, 255, 0.012) 3px, rgba(255, 255, 255, 0.012) 4px),
-    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: auto, auto, auto, auto, 100% 100%, 32px 32px;
+    radial-gradient(ellipse 60% 50% at 20% 10%, var(--amber-glow), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 90%, rgba(201, 138, 59, 0.18), transparent 60%),
+    radial-gradient(ellipse at center, var(--bg-base) 0%, var(--bg-deep) 100%);
   background-attachment: fixed;
 }
 
 html::-webkit-scrollbar { width: 8px; }
-html::-webkit-scrollbar-track { background: var(--bg-0); }
+html::-webkit-scrollbar-track { background: var(--bg-deep); }
 html::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: var(--amber);
   border-radius: 4px;
 }
 
 body {
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   background-color: transparent;
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.5;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-feature-settings: 'ss01', 'ss02', 'kern', 'liga', 'calt';
+  font-feature-settings: 'kern', 'liga', 'calt';
   letter-spacing: -0.003em;
+  position: relative;
+  min-height: 100vh;
 }
 
 ::selection {
-  background: var(--accent-red);
-  color: #fff;
+  background: var(--amber);
+  color: #1a1208;
   text-shadow: none;
 }
 
-/* Subtle film grain — keep, lighter */
+/* KADELINK film grain — fixed, blends gently */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 180px 180px;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   mix-blend-mode: overlay;
+}
+
+/* Ambient shift — slow, dreamy */
+@keyframes kdAmbientShift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-2%, 1%, 0) scale(1.05); }
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -264,12 +288,13 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   background: none;
+  color: inherit;
 }
 
 input, textarea {
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   outline: none;
 }
 
@@ -297,12 +322,12 @@ input, textarea {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(245, 158, 11, 0.06);
-  border: 1px solid rgba(245, 158, 11, 0.15);
+  background: rgba(201, 138, 59, 0.08);
+  border: 1px solid rgba(201, 138, 59, 0.25);
   border-radius: 100px;
   font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--primary);
+  font-weight: 600;
+  color: var(--amber-soft);
   margin-bottom: 24px;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -330,7 +355,7 @@ input, textarea {
   line-height: 1.7;
 }
 
-/* ─── Buttons — sharper, premium ─── */
+/* ─── Buttons — KADELINK pill ─── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -349,28 +374,31 @@ input, textarea {
 }
 
 .btn-primary {
-  background: var(--text-primary);
-  border-color: var(--text-primary);
-  color: var(--bg-0);
-  box-shadow: 0 8px 24px -8px rgba(255, 255, 255, 0.25);
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #1a1208;
+  box-shadow: 0 8px 24px -8px var(--amber-glow-strong);
 }
 .btn-primary:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--bg-0);
+  background: var(--amber-soft);
+  border-color: var(--amber-soft);
+  color: #1a1208;
   transform: translateY(-1px);
-  box-shadow: 0 12px 32px -8px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 12px 32px -8px var(--amber-glow-strong), 0 0 32px var(--amber-glow);
 }
 
 .btn-outline {
-  background: transparent;
-  color: var(--text-primary);
-  border-color: var(--border-color);
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--cream);
+  border-color: var(--glass-border);
 }
 .btn-outline:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--amber);
+  color: var(--amber);
   transform: translateY(-1px);
+  box-shadow: 0 0 24px var(--amber-glow);
 }
 
 /* ─── Card primary surface ─── */
@@ -391,13 +419,13 @@ input, textarea {
 }
 
 @supports not (backdrop-filter: blur(1px)) {
-  .glass-card { background: rgba(24, 24, 24, 0.85); }
+  .glass-card { background: rgba(20, 18, 16, 0.92); }
 }
 
 /* Page price note */
 .package-price-note {
   font-size: 0.82rem;
-  color: var(--gray-light);
+  color: var(--cream-mute);
   margin-top: 6px;
   font-style: italic;
 }
@@ -413,7 +441,7 @@ input, textarea {
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 60%);
+  background: radial-gradient(circle, var(--amber-glow) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
   filter: blur(40px);
@@ -423,8 +451,8 @@ input, textarea {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(242, 232, 216, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 232, 216, 0.025) 1px, transparent 1px);
   background-size: 80px 80px;
   pointer-events: none;
   z-index: 0;
@@ -438,20 +466,32 @@ input, textarea {
   .container { padding: 0 20px; }
 }
 
-/* Site-wide Aurora background — sits behind everything except <html> canvas */
+/* KADELINK ambient background — replaces Aurora */
 .kd-aurora-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.6;
+  overflow: hidden;
+}
+
+.kd-aurora-bg::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 15%, var(--amber-glow), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 85%, rgba(201, 138, 59, 0.22), transparent 60%),
+    radial-gradient(ellipse 40% 35% at 65% 30%, rgba(224, 166, 97, 0.12), transparent 65%);
+  animation: kdAmbientShift 14s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .kd-aurora-bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 50% 30%, transparent 0%, var(--bg-0) 85%);
+  background: radial-gradient(ellipse 90% 80% at 50% 40%, transparent 0%, var(--bg-deep) 95%);
   pointer-events: none;
 }
 
@@ -481,7 +521,7 @@ input, textarea {
   transition: transform var(--transition-fast);
 }
 .kd-link-arrow:hover {
-  color: var(--primary);
+  color: var(--amber);
 }
 .kd-link-arrow:hover svg {
   transform: translateX(4px);
@@ -490,130 +530,129 @@ input, textarea {
 @media (prefers-reduced-motion: reduce) {
   .kd-hover-lift,
   .kd-link-arrow,
-  .kd-link-arrow svg {
+  .kd-link-arrow svg,
+  .kd-aurora-bg::before {
     transition: none !important;
+    animation: none !important;
   }
   .kd-hover-lift:hover { transform: none !important; }
 }
 
 /* ════════════════════════════════════════════
-   LIGHT THEME — warm cream + amber, full coverage
+   LIGHT THEME — warm cream + amber
    ════════════════════════════════════════════ */
 [data-theme="light"] {
-  /* Surfaces */
-  --bg-0: #FBF8F3;
-  --bg-1: #F4EFE6;
-  --bg-2: #EAE3D6;
-  --black: #FBF8F3;
-  --black-light: #F4EFE6;
-  --black-lighter: #EAE3D6;
-  --dark-gray: #D6CFC1;
-  --gray: #8A8175;
-  --gray-light: #5C5650;
-  --gray-lighter: #2A2622;
-  --white: #1A1715;
-  --white-dim: #2A2622;
-  --text-primary: #1A1715;
-  --text-secondary: #5C5650;
-  --text-tertiary: #8A8175;
-  --bg-primary: #FBF8F3;
-  --bg-secondary: rgba(26, 23, 21, 0.04);
+  --bg-base: #fbf5ea;
+  --bg-deep: #f6ecd9;
+  --bg-elevated: #ffffff;
+  --bg-elevated-2: #f9f1e2;
+
+  --cream: #1a1208;
+  --cream-dim: rgba(26, 18, 8, 0.75);
+  --cream-mute: rgba(26, 18, 8, 0.55);
+  --cream-faint: rgba(26, 18, 8, 0.32);
+
+  --bg-0: var(--bg-deep);
+  --bg-1: var(--bg-base);
+  --bg-2: var(--bg-elevated);
+  --black: var(--bg-deep);
+  --black-light: var(--bg-base);
+  --black-lighter: var(--bg-elevated);
+  --dark-gray: var(--bg-elevated-2);
+  --gray: #c4b39a;
+  --gray-light: var(--cream-mute);
+  --gray-lighter: var(--cream-dim);
+  --white: var(--cream);
+  --white-dim: var(--cream-dim);
+  --text-primary: var(--cream);
+  --text-secondary: var(--cream-dim);
+  --text-tertiary: var(--cream-mute);
+  --bg-primary: var(--bg-deep);
+  --bg-secondary: rgba(26, 18, 8, 0.04);
   --card-bg: rgba(255, 255, 255, 0.75);
 
-  /* Glass — light variant */
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-strong: rgba(255, 255, 255, 0.85);
-  --glass-bg-soft: rgba(255, 255, 255, 0.35);
-  --glass-border: rgba(26, 23, 21, 0.09);
-  --glass-border-strong: rgba(26, 23, 21, 0.16);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.88);
+  --glass-bg-soft: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(160, 109, 42, 0.2);
+  --glass-border-strong: rgba(160, 109, 42, 0.45);
   --glass-highlight: rgba(255, 255, 255, 0.9);
   --glass-shadow:
     0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 12px 32px -16px rgba(45, 35, 20, 0.18);
+    0 12px 32px -16px rgba(75, 50, 20, 0.22);
   --glass-shadow-hover:
     0 1px 0 rgba(255, 255, 255, 0.9) inset,
-    0 20px 48px -16px rgba(45, 35, 20, 0.25),
-    0 0 0 1px var(--primary-glow);
+    0 20px 48px -16px rgba(75, 50, 20, 0.32),
+    0 0 0 1px var(--amber-glow);
 
-  --border-color: rgba(26, 23, 21, 0.09);
-  --border-color-hover: rgba(245, 158, 11, 0.5);
-  --border: rgba(26, 23, 21, 0.09);
+  --border-color: rgba(160, 109, 42, 0.2);
+  --border-color-hover: rgba(201, 138, 59, 0.55);
+  --border: rgba(160, 109, 42, 0.2);
 
-  --shadow-sm: 0 1px 2px rgba(45, 35, 20, 0.06);
-  --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.18);
+  --shadow-sm: 0 1px 2px rgba(75, 50, 20, 0.08);
+  --shadow-glow: 0 0 40px rgba(201, 138, 59, 0.22);
 
-  --gradient-dark: linear-gradient(180deg, #FBF8F3 0%, #F4EFE6 100%);
-  --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.55));
-  --gradient-glow: radial-gradient(circle at center, rgba(245,158,11,0.22) 0%, transparent 60%);
+  --gradient-dark: linear-gradient(180deg, var(--bg-base) 0%, var(--bg-deep) 100%);
+  --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.55));
 
   color-scheme: light;
 }
 
-/* HTML background — warm cream with amber/coral spots instead of harsh dark */
 [data-theme="light"] html {
-  background-color: #FBF8F3;
+  background-color: var(--bg-deep);
   background-image:
-    radial-gradient(ellipse 70% 50% at 15% 5%, rgba(245, 158, 11, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 85% 30%, rgba(236, 72, 153, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 70% 95%, rgba(168, 85, 247, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 30% at 25% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 60%),
-    radial-gradient(circle at 1px 1px, rgba(26, 23, 21, 0.05) 1px, transparent 1px);
-  background-size: auto, auto, auto, auto, 32px 32px;
+    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(201, 138, 59, 0.28), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 90%, rgba(224, 166, 97, 0.22), transparent 60%),
+    radial-gradient(ellipse at center, var(--bg-base) 0%, var(--bg-deep) 100%);
 }
 
 [data-theme="light"] body { color: var(--text-primary); }
-[data-theme="light"] body::after { mix-blend-mode: multiply; opacity: 0.03; }
+[data-theme="light"] body::after { mix-blend-mode: multiply; opacity: 0.04; }
 
-[data-theme="light"] html::-webkit-scrollbar-track { background: var(--bg-1); }
+[data-theme="light"] html::-webkit-scrollbar-track { background: var(--bg-base); }
 
-/* Aurora background — dim heavily on light */
-[data-theme="light"] .kd-aurora-bg { opacity: 0.18; mix-blend-mode: multiply; }
 [data-theme="light"] .kd-aurora-bg::after {
-  background: radial-gradient(ellipse 70% 60% at 50% 30%, transparent 0%, #FBF8F3 90%);
+  background: radial-gradient(ellipse 90% 80% at 50% 40%, transparent 0%, var(--bg-deep) 95%);
 }
 
-/* Selection */
-[data-theme="light"] ::selection { background: var(--primary); color: #fff; }
+[data-theme="light"] ::selection { background: var(--amber); color: #fff; }
 
-/* Buttons */
 [data-theme="light"] .btn-primary {
-  background: var(--text-primary);
+  background: var(--amber-deep);
   color: #fff;
-  box-shadow: 0 8px 24px -8px rgba(26, 23, 21, 0.28);
+  border-color: var(--amber-deep);
+  box-shadow: 0 8px 24px -8px rgba(160, 109, 42, 0.5);
 }
 [data-theme="light"] .btn-primary:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-  box-shadow: 0 12px 32px -8px var(--primary-glow);
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #1a1208;
+  box-shadow: 0 12px 32px -8px var(--amber-glow-strong);
 }
 [data-theme="light"] .btn-outline {
-  color: var(--text-primary);
-  border-color: var(--border-color);
+  color: var(--cream);
+  border-color: var(--glass-border);
 }
 
-/* Generic glass cards inherit but need backdrop on light */
 @supports not (backdrop-filter: blur(1px)) {
   [data-theme="light"] .glass,
   [data-theme="light"] .glass-strong,
   [data-theme="light"] .glass-soft,
   [data-theme="light"] .glass-card {
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.95);
   }
 }
 
-/* Section badge */
 [data-theme="light"] .section-badge {
-  background: rgba(245, 158, 11, 0.10);
-  border-color: rgba(245, 158, 11, 0.32);
-  color: var(--primary-dark);
+  background: rgba(201, 138, 59, 0.14);
+  border-color: rgba(201, 138, 59, 0.35);
+  color: var(--amber-deep);
 }
 
-/* Grid bg on light */
 [data-theme="light"] .grid-bg {
   background-image:
-    linear-gradient(rgba(26, 23, 21, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26, 23, 21, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(26, 18, 8, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 18, 8, 0.05) 1px, transparent 1px);
 }
 
 /* ════════════════════════════════════════════
@@ -624,26 +663,19 @@ input, textarea {
   animation: none;
   mix-blend-mode: normal;
 }
-::view-transition-old(root) {
-  z-index: 1;
-}
+::view-transition-old(root) { z-index: 1; }
 ::view-transition-new(root) {
   z-index: 2;
   animation: kd-theme-circle-in 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes kd-theme-circle-in {
-  from {
-    clip-path: circle(0 at var(--kd-theme-origin-x, 50%) var(--kd-theme-origin-y, 50%));
-  }
-  to {
-    clip-path: circle(var(--kd-theme-max-radius, 150vh) at var(--kd-theme-origin-x, 50%) var(--kd-theme-origin-y, 50%));
-  }
+  from { clip-path: circle(0 at var(--kd-theme-origin-x, 50%) var(--kd-theme-origin-y, 50%)); }
+  to   { clip-path: circle(var(--kd-theme-max-radius, 150vh) at var(--kd-theme-origin-x, 50%) var(--kd-theme-origin-y, 50%)); }
 }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-new(root) { animation: none; }
 }
 
-/* Ensure smooth theme transition */
 html, body { transition: background-color 0.4s ease, color 0.4s ease; }
 .glass, .glass-strong, .glass-soft, .glass-card,
 .btn, .btn-primary, .btn-outline {

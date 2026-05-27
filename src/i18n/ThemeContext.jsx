@@ -10,11 +10,6 @@ function readInitialTheme() {
     const stored = localStorage.getItem(LS_KEY)
     if (stored === 'light' || stored === 'dark') return stored
   } catch { /* private mode / storage disabled */ }
-  try {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-      return 'light'
-    }
-  } catch { /* ignore */ }
   return 'dark'
 }
 
