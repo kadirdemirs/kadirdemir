@@ -14,7 +14,7 @@
     0 1px 0 rgba(255, 255, 255, 0.06) inset,
     0 0 0 1px rgba(255, 255, 255, 0.04),
     0 30px 80px -28px rgba(0, 0, 0, 0.85),
-    0 0 100px -40px var(--accent-red-glow);
+    0 0 100px -40px var(--amber-glow);
   isolation: isolate;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -25,8 +25,8 @@
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 30% 30%, rgba(225, 29, 46, 0.16) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 70% 80%, rgba(120, 12, 22, 0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 50% at 30% 30%, rgba(212, 148, 63, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 70% 80%, rgba(120, 83, 32, 0.22) 0%, transparent 65%),
     linear-gradient(165deg, #0a0a0a 0%, #050505 50%, #020202 100%);
 }
 
@@ -66,9 +66,9 @@
   background: conic-gradient(
     from 130deg,
     rgba(255, 255, 255, 0.14) 0deg,
-    rgba(225, 29, 46, 0.35) 80deg,
+    rgba(212, 148, 63, 0.35) 80deg,
     rgba(255, 255, 255, 0.04) 180deg,
-    rgba(225, 29, 46, 0.18) 280deg,
+    rgba(212, 148, 63, 0.18) 280deg,
     rgba(255, 255, 255, 0.14) 360deg
   );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -111,10 +111,10 @@
 .hc-meta-label {
   position: relative;
   padding: 4px 10px 4px 18px;
-  background: rgba(225, 29, 46, 0.14);
-  border: 1px solid rgba(225, 29, 46, 0.3);
+  background: rgba(212, 148, 63, 0.14);
+  border: 1px solid rgba(212, 148, 63, 0.3);
   border-radius: 4px;
-  color: #ff5d6d;
+  color: #e8b468;
   letter-spacing: 0.2em;
 }
 
@@ -122,8 +122,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--accent-red);
-  box-shadow: 0 0 8px var(--accent-red);
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
   position: absolute;
   left: 6px;
   top: 50%;
@@ -142,8 +142,8 @@
   position: absolute;
   inset: -25%;
   background:
-    radial-gradient(circle at 25% 35%, rgba(225, 29, 46, 0.22) 0%, transparent 45%),
-    radial-gradient(circle at 75% 65%, rgba(225, 29, 46, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 25% 35%, rgba(212, 148, 63, 0.22) 0%, transparent 45%),
+    radial-gradient(circle at 75% 65%, rgba(212, 148, 63, 0.1) 0%, transparent 50%);
   filter: blur(50px);
   pointer-events: none;
   z-index: 0;
@@ -165,8 +165,8 @@
   transform: rotate(-7deg);
   z-index: 1;
   filter:
-    drop-shadow(0 0 30px var(--accent-red-glow))
-    drop-shadow(0 0 60px rgba(225, 29, 46, 0.25));
+    drop-shadow(0 0 30px var(--amber-glow))
+    drop-shadow(0 0 60px rgba(212, 148, 63, 0.25));
 }
 
 .hc-stroke path { stroke-dasharray: 1800; }
@@ -205,7 +205,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 60px rgba(225, 29, 46, 0.3);
+  text-shadow: 0 0 60px rgba(212, 148, 63, 0.3);
   filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.55));
   will-change: transform;
 }
@@ -230,10 +230,10 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent-red);
+  background: var(--amber);
   box-shadow:
-    0 0 0 2px rgba(225, 29, 46, 0.2),
-    0 0 12px var(--accent-red);
+    0 0 0 2px rgba(212, 148, 63, 0.2),
+    0 0 12px var(--amber);
   animation: hc-blink 1.5s ease-in-out infinite;
 }
 
@@ -266,7 +266,7 @@
   justify-content: space-between;
   gap: 2px;
   z-index: 2;
-  filter: drop-shadow(0 0 12px rgba(225, 29, 46, 0.3));
+  filter: drop-shadow(0 0 12px rgba(212, 148, 63, 0.3));
 }
 
 .hc-bar {
@@ -275,13 +275,13 @@
   background:
     linear-gradient(180deg,
       rgba(255, 255, 255, 0.95) 0%,
-      rgba(255, 90, 100, 0.85) 50%,
-      var(--accent-red) 100%);
+      rgba(232, 180, 104, 0.85) 50%,
+      var(--amber) 100%);
   border-radius: 2px 2px 1px 1px;
   transform-origin: bottom center;
   animation: hc-bar-wave var(--dur, 1.4s) cubic-bezier(0.4, 0, 0.6, 1) var(--d, 0s) infinite alternate;
   box-shadow:
-    0 0 4px rgba(225, 29, 46, 0.4),
+    0 0 4px rgba(212, 148, 63, 0.4),
     0 1px 0 rgba(255, 255, 255, 0.4) inset;
 }
 
@@ -310,21 +310,21 @@
   justify-content: center;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 50%),
-    var(--accent-red);
+    var(--amber);
   color: #fff;
   border-radius: 50%;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.3) inset,
     0 0 0 1px rgba(0, 0, 0, 0.2),
-    0 10px 24px -8px var(--accent-red-glow),
-    0 0 30px -8px var(--accent-red-glow);
+    0 10px 24px -8px var(--amber-glow),
+    0 0 30px -8px var(--amber-glow);
   padding-left: 2px;
 }
 
 .hc-badge-ring {
   position: absolute;
   inset: 0;
-  border: 1px dashed rgba(225, 29, 46, 0.55);
+  border: 1px dashed rgba(212, 148, 63, 0.55);
   border-radius: 50%;
   animation: hc-spin 16s linear infinite;
 }
@@ -366,7 +366,7 @@
   justify-content: center;
   width: 22px;
   height: 22px;
-  background: var(--accent-red);
+  background: var(--amber);
   color: #fff;
   border-radius: 50%;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
@@ -447,7 +447,7 @@
 [data-theme="light"] .hc-backdrop {
   background:
     radial-gradient(ellipse 70% 50% at 30% 30%, rgba(245, 158, 11, 0.20) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 70% 80%, rgba(236, 72, 153, 0.16) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 70% 80%, rgba(232, 180, 104, 0.16) 0%, transparent 65%),
     linear-gradient(165deg, #FBF8F3 0%, #F4EFE6 50%, #EAE3D6 100%);
 }
 
@@ -471,7 +471,7 @@
     rgba(245, 158, 11, 0.35) 40deg,
     transparent 80deg,
     transparent 180deg,
-    rgba(236, 72, 153, 0.30) 220deg,
+    rgba(232, 180, 104, 0.30) 220deg,
     transparent 280deg
   );
 }

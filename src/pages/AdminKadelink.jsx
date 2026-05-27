@@ -23,6 +23,7 @@ const DEFAULT_HERO = {
   taglineDe: 'Content Creator',
   statusLabel: 'Aktif',
   statusLabelEn: 'Online',
+  statusLabelDe: 'Online',
   showStatus: true,
   showVerified: true,
 }
@@ -155,6 +156,15 @@ export function KadelinkHeroSection({ showToast }) {
               type="text"
               value={hero.statusLabelEn}
               onChange={(e) => update('statusLabelEn', e.target.value)}
+              placeholder="Online"
+            />
+          </label>
+          <label className="form-group">
+            <span>Etiket (DE)</span>
+            <input
+              type="text"
+              value={hero.statusLabelDe}
+              onChange={(e) => update('statusLabelDe', e.target.value)}
               placeholder="Online"
             />
           </label>
@@ -330,7 +340,6 @@ export function KadelinkLinksSection({ showToast }) {
                 {LINK_PRESETS.map((p) => (
                   <option key={p.id} value={p.icon}>{p.label}</option>
                 ))}
-                <option value="website">Diğer / Website</option>
               </select>
             </div>
 

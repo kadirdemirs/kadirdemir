@@ -5,11 +5,13 @@ import { dirname, resolve } from 'node:path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const outDir = resolve(__dirname, '..', 'dev-log-screens')
 
-const BASE = process.env.BASE_URL || 'http://localhost:5175'
+const BASE = process.env.BASE_URL || 'http://localhost:5176'
 
 const targets = [
   { name: 'home-desktop', path: '/', viewport: { width: 1440, height: 900 } },
   { name: 'home-mobile', path: '/', viewport: { width: 390, height: 844 } },
+  { name: 'links-desktop', path: '/links', viewport: { width: 1440, height: 900 } },
+  { name: 'links-mobile', path: '/links', viewport: { width: 390, height: 844 } },
   { name: 'admin-login', path: '/admin', viewport: { width: 1440, height: 900 } },
 ]
 

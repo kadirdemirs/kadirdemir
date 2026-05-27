@@ -27,6 +27,7 @@ import Blog from './pages/Blog'
 import BlogDetail from './pages/BlogDetail'
 import Videolar from './pages/Videolar'
 import Setup from './pages/Setup'
+import Links from './pages/Links'
 import NotFound from './pages/NotFound'
 
 const KVKK = lazy(() => import('./pages/KVKK'))
@@ -78,13 +79,15 @@ function ProtectedAdminRoute() {
 function App() {
   const location = useLocation()
   const isAdmin = location.pathname === '/admin'
+  const isLinks = location.pathname === '/links'
+  const isStandalone = isAdmin || isLinks
   const prevPath = useRef(null)
 
   // Site-wide smooth scroll (admin & reduced-motion hariç)
-  useLenis({ enabled: !isAdmin })
+  useLenis({ enabled: !isStandalone })
 
   useEffect(() => {
-    if (isAdmin) return
+    if (isStandalone) return
     if (prevPath.current === location.pathname) return
     prevPath.current = location.pathname
     trackPageviewApi(location.pathname, document.referrer)
@@ -96,10 +99,10 @@ function App() {
         page_title: document.title,
       })
     }
-  }, [location.pathname, isAdmin])
+  }, [location.pathname, isStandalone])
 
   useEffect(() => {
-    if (isAdmin) return
+    if (isStandalone) return
     let sid
     try {
       sid = sessionStorage.getItem('kade_visitor_sid')
@@ -115,16 +118,16 @@ function App() {
     const onVisible = () => { if (document.visibilityState === 'visible') ping() }
     document.addEventListener('visibilitychange', onVisible)
     return () => { clearInterval(interval); document.removeEventListener('visibilitychange', onVisible) }
-  }, [location.pathname, isAdmin])
+  }, [location.pathname, isStandalone])
 
   return (
     <>
       <ErrorTracker />
       <a href="#main-content" className="skip-to-content">İçeriğe geç</a>
       <ScrollToTop />
-      {!isAdmin && <div aria-hidden="true" className="kd-aurora-bg" />}
-      {!isAdmin && <LiveBanner />}
-      {!isAdmin && <Navbar />}
+      {!isStandalone && <div aria-hidden="true" className="kd-aurora-bg" />}
+      {!isStandalone && <LiveBanner />}
+      {!isStandalone && <Navbar />}
       <main id="main-content">
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={location} key={location.pathname}>
@@ -135,6 +138,7 @@ function App() {
             <Route path="/blog/:slug" element={<PageTransition><BlogDetail /></PageTransition>} />
             <Route path="/videolar" element={<PageTransition><Videolar /></PageTransition>} />
             <Route path="/setup" element={<PageTransition><Setup /></PageTransition>} />
+            <Route path="/links" element={<PageTransition><Links /></PageTransition>} />
             <Route path="/iletisim" element={<PageTransition><Contact /></PageTransition>} />
             <Route path="/kvkk" element={<LazyRoute><PageTransition><KVKK /></PageTransition></LazyRoute>} />
             <Route path="/gizlilik" element={<LazyRoute><PageTransition><Gizlilik /></PageTransition></LazyRoute>} />
@@ -148,17 +152,17 @@ function App() {
           </Routes>
         </AnimatePresence>
       </main>
-      {!isAdmin && <Footer />}
-      {!isAdmin && <InstallPrompt />}
-      {!isAdmin && <CommandPalette />}
-      {!isAdmin && (
+      {!isStandalone && <Footer />}
+      {!isStandalone && <InstallPrompt />}
+      {!isStandalone && <CommandPalette />}
+      {!isStandalone && (
         <Suspense fallback={null}>
           <ClickSpark sparkColor="#c98a3b" sparkCount={10} sparkRadius={22} duration={520} />
         </Suspense>
       )}
-      {!isAdmin && <CustomCursor />}
-      {!isAdmin && <FloatingCTA />}
-      {!isAdmin && <CookieBanner />}
+      {!isStandalone && <CustomCursor />}
+      {!isStandalone && <FloatingCTA />}
+      {!isStandalone && <CookieBanner />}
     </>
   )
 }

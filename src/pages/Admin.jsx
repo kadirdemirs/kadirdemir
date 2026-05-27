@@ -25,10 +25,6 @@ import {
   getMediaApi, uploadMediaApi, bulkDeleteMediaApi,
   getBackupSummaryApi, createBackupApi,
   getAdminCommentsApi, setCommentApprovalApi, deleteCommentApi,
-  getKadelinkHeroApi, updateKadelinkHeroApi,
-  getKadelinkLinksApi, updateKadelinkLinksApi,
-  getKadelinkThemeApi, updateKadelinkThemeApi,
-  getAuditLogApi, clearAuditLogApi,
 } from '../api'
 import {
   KadelinkHeroSection,
@@ -663,7 +659,7 @@ function BlogEditor({ post, onSave, onCancel }) {
   )
 }
 
-// ───── NEWSLETTER ─────
+// ───── COMMENTS ─────
 function CommentsSection({ showToast }) {
   const [comments, setComments] = useState([])
   const [filter, setFilter] = useState('pending')

@@ -2,28 +2,29 @@
   position: sticky;
   top: 96px;
   padding: 18px 18px 14px;
-  background: var(--glass-bg, rgba(255,255,255,0.03));
-  border: 1px solid var(--glass-border, rgba(255,255,255,0.08));
-  border-radius: 14px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   max-height: calc(100vh - 130px);
   overflow-y: auto;
+  border-radius: 20px;
+  background: rgba(17, 15, 13, 0.68);
+  border: 1px solid rgba(212, 148, 63, 0.18);
+  backdrop-filter: blur(18px) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(18px) saturate(var(--glass-saturation));
+  box-shadow: var(--glass-shadow);
 }
 
 .kd-toc-header {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-tertiary, #737373);
-  font-weight: 600;
+  width: 100%;
   margin-bottom: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px dashed var(--border-color, rgba(255,255,255,0.08));
-  width: 100%;
+  border-bottom: 1px solid rgba(212, 148, 63, 0.12);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--amber-soft);
+  font-weight: 900;
 }
 
 .kd-toc-list {
@@ -32,29 +33,25 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .kd-toc-item a {
   display: block;
-  padding: 7px 10px;
+  padding: 8px 10px;
   font-size: 0.84rem;
-  color: var(--text-secondary, #a3a3a3);
+  color: var(--text-secondary);
   text-decoration: none;
   border-left: 2px solid transparent;
-  margin-left: 0;
-  border-radius: 0 6px 6px 0;
-  transition: all 0.2s ease;
+  border-radius: 0 10px 10px 0;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
   line-height: 1.4;
 }
 
 .kd-toc-item a:hover {
-  color: var(--text-primary, #fff);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="light"] .kd-toc-item a:hover {
-  background: rgba(26, 23, 21, 0.04);
+  color: var(--text-primary);
+  background: rgba(212, 148, 63, 0.07);
+  transform: translateX(2px);
 }
 
 .kd-toc-sub a {
@@ -63,10 +60,14 @@
 }
 
 .kd-toc-item.is-active a {
-  color: var(--primary, #f59e0b);
-  border-left-color: var(--primary, #f59e0b);
-  background: var(--accent-alpha, rgba(245, 158, 11, 0.08));
-  font-weight: 600;
+  color: var(--amber-soft);
+  border-left-color: var(--amber);
+  background: rgba(212, 148, 63, 0.1);
+  font-weight: 800;
+}
+
+[data-theme="light"] .kd-toc {
+  background: rgba(255, 255, 255, 0.82);
 }
 
 @media (max-width: 1080px) {
