@@ -104,13 +104,24 @@ export function SiteSettingsProvider({ children }) {
           const merged = { ...DEFAULT_SITE_SETTINGS, ...res.data }
           // Legacy DB temizliği — eski kayıtlar Kade Media içeriyor olabilir.
           // thekademedia@gmail.com bilerek korunuyor (gerçek e-posta).
+          // Lookbehind kullanmıyoruz (Safari/iOS uyumsuzluğu) — manuel split.
           const fixBrand = (s) => {
             if (typeof s !== 'string') return s
-            return s
-              .replace(/Kade Media/g, 'Kadir Demir')
-              .replace(/kade media/gi, 'Kadir Demir')
-              .replace(/(?<!the)kademedia(?!@)/gi, 'kadirdemir')
-              .replace(/Kade(?=\s|$|[^a-z])/g, 'Kadir')
+            try {
+              let out = s
+                .replace(/Kade Media/g, 'Kadir Demir')
+                .replace(/kade media/gi, 'Kadir Demir')
+              // "kademedia" → "kadirdemir" ama "thekademedia@" hariç
+              out = out.replace(/([a-z]?)kademedia(@?)/gi, (m, before, after) => {
+                if (before.toLowerCase() === 'e' && after === '@') return m // thekademedia@... korumaya al
+                if (m.toLowerCase().startsWith('thekademedia') && after === '@') return m
+                return `${before}kadirdemir${after}`
+              })
+              out = out.replace(/\bKade\b/g, 'Kadir')
+              return out
+            } catch {
+              return s
+            }
           }
           for (const key of ['businessName', 'tagline', 'description', 'seoTitle', 'seoDescription', 'seoKeywords']) {
             if (merged[key]) merged[key] = fixBrand(merged[key])

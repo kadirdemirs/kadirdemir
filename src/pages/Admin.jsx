@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Component } from 'react'
 import { motion } from 'framer-motion'
 import {
   HiOutlineLogin, HiOutlineLogout, HiOutlineHome, HiOutlineNewspaper,
@@ -1664,26 +1664,28 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
   if (!auth) return <LoginScreen onLogin={handleLogin} />
 
   const renderTab = () => {
+    let node = null
     switch (tab) {
-      case 'dashboard': return <DashboardSection stats={stats} onNavigate={setTab} settings={siteSettings} ytChannel={ytData.channel} />
-      case 'kadelink-hero': return <KadelinkHeroSection showToast={showToast} />
-      case 'kadelink-links': return <KadelinkLinksSection showToast={showToast} />
-      case 'kadelink-theme': return <KadelinkThemeSection showToast={showToast} />
-      case 'audit-log': return <AuditLogSection showToast={showToast} />
-      case 'analytics': return <AnalyticsSection />
-      case 'social-stats': return <SocialStatsSection settings={siteSettings} ytChannel={ytData.channel} ytVideos={ytData.videos} showToast={showToast} />
-      case 'quick-tools': return <QuickToolsSection showToast={showToast} />
-      case 'messages': return <MessagesSection showToast={showToast} onCountChange={setUnreadCount} />
-      case 'blog': return <BlogSection showToast={showToast} />
-      case 'comments': return <CommentsSection showToast={showToast} />
-      case 'newsletter': return <NewsletterSection showToast={showToast} />
-      case 'media': return <MediaSection showToast={showToast} />
-      case 'reminders': return <RemindersSection showToast={showToast} />
-      case 'users': return <UsersSection showToast={showToast} currentUser={user} />
-      case 'backup': return <BackupSection showToast={showToast} />
-      case 'settings': return <SettingsSection showToast={showToast} onChangePassword={() => setPwModal(true)} />
-      default: return null
+      case 'dashboard': node = <DashboardSection stats={stats} onNavigate={setTab} settings={siteSettings} ytChannel={ytData.channel} />; break
+      case 'kadelink-hero': node = <KadelinkHeroSection showToast={showToast} />; break
+      case 'kadelink-links': node = <KadelinkLinksSection showToast={showToast} />; break
+      case 'kadelink-theme': node = <KadelinkThemeSection showToast={showToast} />; break
+      case 'audit-log': node = <AuditLogSection showToast={showToast} />; break
+      case 'analytics': node = <AnalyticsSection />; break
+      case 'social-stats': node = <SocialStatsSection settings={siteSettings} ytChannel={ytData.channel} ytVideos={ytData.videos} showToast={showToast} />; break
+      case 'quick-tools': node = <QuickToolsSection showToast={showToast} />; break
+      case 'messages': node = <MessagesSection showToast={showToast} onCountChange={setUnreadCount} />; break
+      case 'blog': node = <BlogSection showToast={showToast} />; break
+      case 'comments': node = <CommentsSection showToast={showToast} />; break
+      case 'newsletter': node = <NewsletterSection showToast={showToast} />; break
+      case 'media': node = <MediaSection showToast={showToast} />; break
+      case 'reminders': node = <RemindersSection showToast={showToast} />; break
+      case 'users': node = <UsersSection showToast={showToast} currentUser={user} />; break
+      case 'backup': node = <BackupSection showToast={showToast} />; break
+      case 'settings': node = <SettingsSection showToast={showToast} onChangePassword={() => setPwModal(true)} />; break
+      default: node = null
     }
+    return <SafeAdminSection sectionKey={tab}>{node}</SafeAdminSection>
   }
 
   return (
@@ -1723,4 +1725,46 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
       {pwModal && <ChangePasswordModal onClose={() => setPwModal(false)} showToast={showToast} />}
     </div>
   )
+}
+
+// ─── Per-section error boundary — bir bölüm patlasa bile admin shell ayakta kalsın
+class SafeAdminSection extends Component {
+  state = { hasError: false, error: null }
+  static getDerivedStateFromError(error) { return { hasError: true, error } }
+  componentDidCatch(error, info) {
+    console.error(`[Admin section "${this.props.sectionKey}"] crashed:`, error, info)
+  }
+  componentDidUpdate(prev) {
+    if (prev.sectionKey !== this.props.sectionKey && this.state.hasError) {
+      this.setState({ hasError: false, error: null })
+    }
+  }
+  render() {
+    if (this.state.hasError) {
+      const isDev = import.meta.env?.DEV
+      const msg = this.state.error?.message || String(this.state.error || 'Unknown error')
+      return (
+        <div style={{ padding: 28 }}>
+          <h2 style={{ marginTop: 0 }}>Bu bölüm şu an açılamadı</h2>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            "<strong>{this.props.sectionKey}</strong>" bölümünde bir hata oluştu. Diğer bölümlere yan menüden geçebilirsin.
+          </p>
+          {isDev && (
+            <details style={{ marginTop: 12, padding: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: 8 }}>
+              <summary style={{ cursor: 'pointer', color: '#f59e0b', fontWeight: 600 }}>{msg}</summary>
+              <pre style={{ whiteSpace: 'pre-wrap', fontSize: '.78rem', marginTop: 8 }}>{this.state.error?.stack}</pre>
+            </details>
+          )}
+          <button
+            className="btn btn-outline"
+            style={{ marginTop: 14 }}
+            onClick={() => this.setState({ hasError: false, error: null })}
+          >
+            Tekrar dene
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
 }

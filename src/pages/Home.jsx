@@ -96,10 +96,14 @@ export default function Home() {
 
     getSocialStatsApi({ force: true }).then((data) => setSocialStats(data)).catch(() => setSocialStats(null))
 
-    getPartnersApi?.().then?.((res) => {
-      const list = Array.isArray(res?.partners) ? res.partners : Array.isArray(res) ? res : []
-      setPartners(list.filter((p) => p && (p.name || p.logo)).slice(0, 12))
-    }).catch(() => {})
+    if (typeof getPartnersApi === 'function') {
+      getPartnersApi()
+        .then((res) => {
+          const list = Array.isArray(res?.partners) ? res.partners : Array.isArray(res) ? res : []
+          setPartners(list.filter((p) => p && (p.name || p.logo)).slice(0, 12))
+        })
+        .catch(() => {})
+    }
   }, [])
 
   const yt = socialStats?.youtube
