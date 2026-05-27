@@ -28,7 +28,7 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: 24px 16px 28px;
+  padding: 24px 16px 16px;
   position: relative;
   overflow-x: hidden;
   line-height: 1.45;
@@ -263,7 +263,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 96px;
+  bottom: 32px;
   text-align: center;
   z-index: 2;
   padding: 0 24px;

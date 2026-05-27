@@ -4,11 +4,10 @@ import { translations } from './translations'
 const LanguageContext = createContext()
 
 const LS_KEY = 'kade_lang'
-export const SUPPORTED_LANGS = ['tr', 'en', 'de']
+export const SUPPORTED_LANGS = ['tr', 'en']
 const LANG_META = {
   tr: { code: 'tr', label: 'Türkçe', short: 'TR', flag: '🇹🇷' },
   en: { code: 'en', label: 'English', short: 'EN', flag: '🇬🇧' },
-  de: { code: 'de', label: 'Deutsch', short: 'DE', flag: '🇩🇪' },
 }
 
 function detectInitialLang() {
@@ -56,12 +55,9 @@ export function LanguageProvider({ children }) {
     [lang]
   )
 
-  // Cycles tr → en → de → tr (used by simple button)
+  // Toggles tr ⇄ en
   const toggleLang = useCallback(() => {
-    setLangState((prev) => {
-      const idx = SUPPORTED_LANGS.indexOf(prev)
-      return SUPPORTED_LANGS[(idx + 1) % SUPPORTED_LANGS.length]
-    })
+    setLangState((prev) => (prev === 'tr' ? 'en' : 'tr'))
   }, [])
 
   const value = useMemo(

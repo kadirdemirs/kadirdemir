@@ -10,7 +10,7 @@ import {
   HiOutlineGlobeAlt,
   HiOutlineCheck,
 } from 'react-icons/hi'
-import { FaYoutube, FaInstagram, FaTiktok, FaTwitch } from 'react-icons/fa6'
+import { FaYoutube, FaInstagram, FaTiktok, FaXTwitter } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
@@ -58,7 +58,7 @@ export default function MediaKit() {
     { icon: FaYoutube, label: t('home.statsYoutube'), value: settings.statsYoutubeSubs || '—', color: '#ff0033' },
     { icon: FaInstagram, label: t('home.statsInstagram'), value: settings.statsInstagramFollowers || '—', color: '#e1306c' },
     { icon: FaTiktok, label: t('home.statsTiktok'), value: settings.statsTiktokFollowers || '—', color: '#ffffff' },
-    { icon: FaTwitch, label: 'Twitch', value: settings.statsTwitchFollowers || '—', color: '#9146ff' },
+    { icon: FaXTwitter, label: 'X', value: settings.statsTwitterFollowers || '—', color: '#ffffff' },
   ].filter((s) => s.value && s.value !== '—')
 
   const handlePrint = () => {

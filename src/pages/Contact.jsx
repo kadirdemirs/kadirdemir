@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { FaYoutube, FaInstagram } from 'react-icons/fa'
+import { FaYoutube, FaInstagram, FaTiktok, FaDiscord, FaLinkedin } from 'react-icons/fa6'
 import { HiOutlineMail, HiOutlinePhone, HiOutlineCheck, HiOutlineExclamation } from 'react-icons/hi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
@@ -52,14 +52,26 @@ export default function Contact() {
       desc: t('contact.followDescInstagram'),
       url: settings.instagram,
     },
-    settings.email && {
-      icon: HiOutlineMail,
-      name: t('contact.email'),
-      desc: t('contact.followDescEmail'),
-      url: `mailto:${settings.email}`,
+    settings.tiktok && {
+      icon: FaTiktok,
+      name: 'TikTok',
+      desc: t('contact.followDescInstagram'),
+      url: settings.tiktok,
+    },
+    settings.discord && {
+      icon: FaDiscord,
+      name: 'Discord',
+      desc: t('contact.followDescBusiness'),
+      url: settings.discord,
+    },
+    settings.linkedin && {
+      icon: FaLinkedin,
+      name: 'LinkedIn',
+      desc: t('contact.followDescBusiness'),
+      url: settings.linkedin,
     },
     settings.businessEmail && {
-      icon: HiOutlinePhone,
+      icon: HiOutlineMail,
       name: t('contact.business'),
       desc: t('contact.followDescBusiness'),
       url: `mailto:${settings.businessEmail}`,

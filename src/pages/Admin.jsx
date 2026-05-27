@@ -1048,9 +1048,9 @@ function SettingsSection({ showToast, onChangePassword }) {
           <label>📸 Instagram Handle<input value={s.instagramHandle || ''} onChange={e => upd('instagramHandle', e.target.value)} placeholder="@kadirardademir" /></label>
           <label>🎵 TikTok URL<input value={s.tiktok || ''} onChange={e => upd('tiktok', e.target.value)} placeholder="https://tiktok.com/@kadirdemirs" /></label>
           <label>🎵 TikTok Handle<input value={s.tiktokHandle || ''} onChange={e => upd('tiktokHandle', e.target.value)} placeholder="@kadirdemirs" /></label>
-          <label>🎮 Twitch URL<input value={s.twitch || ''} onChange={e => upd('twitch', e.target.value)} /></label>
           <label>𝕏 X (Twitter) URL<input value={s.twitter || ''} onChange={e => upd('twitter', e.target.value)} /></label>
-          <label>💬 Discord<input value={s.discord || ''} onChange={e => upd('discord', e.target.value)} /></label>
+          <label>💬 Discord URL<input value={s.discord || ''} onChange={e => upd('discord', e.target.value)} placeholder="https://discord.gg/..." /></label>
+          <label>💼 LinkedIn URL<input value={s.linkedin || ''} onChange={e => upd('linkedin', e.target.value)} placeholder="https://linkedin.com/in/..." /></label>
           <label>📞 WhatsApp<input value={s.whatsapp || ''} onChange={e => upd('whatsapp', e.target.value)} /></label>
         </div>
       </div>
@@ -1360,7 +1360,6 @@ function QuickToolsSection({ showToast }) {
   const langOptions = [
     { code: 'tr', label: '🇹🇷 Türkçe' },
     { code: 'en', label: '🇬🇧 English' },
-    { code: 'de', label: '🇩🇪 Deutsch' },
   ]
 
   return (

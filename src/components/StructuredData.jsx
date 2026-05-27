@@ -31,14 +31,14 @@ export function PersonSchema({ socials }) {
     if (socials?.youtube) sameAs.push(socials.youtube)
     if (socials?.instagram) sameAs.push(socials.instagram)
     if (socials?.tiktok) sameAs.push(socials.tiktok)
-    if (socials?.twitch) sameAs.push(socials.twitch)
     if (socials?.twitter) sameAs.push(socials.twitter)
+    if (socials?.discord) sameAs.push(socials.discord)
+    if (socials?.linkedin) sameAs.push(socials.linkedin)
     if (sameAs.length === 0) {
       sameAs.push(
         'https://youtube.com/@kadirdemir',
         'https://instagram.com/kadirardademir',
         'https://tiktok.com/@kadirdemirs',
-        'https://twitch.tv/kadirdemir',
         'https://x.com/kadirdemir'
       )
     }

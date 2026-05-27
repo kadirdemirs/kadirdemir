@@ -4,9 +4,6 @@ const PRODUCTION_ORIGINS = [
   'https://kadirdemir.tv',
   'https://kadirdemir.vercel.app',
   'https://kadirdemir-nu.vercel.app',
-  // Legacy — kept until DNS fully migrates
-  'https://www.kademedia.com.tr',
-  'https://kademedia.com.tr',
 ];
 
 function isProductionRuntime() {

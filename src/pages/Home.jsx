@@ -4,7 +4,8 @@ import {
   FaYoutube,
   FaInstagram,
   FaTiktok,
-  FaTwitch,
+  FaDiscord,
+  FaLinkedin,
   FaXTwitter,
 } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
@@ -12,9 +13,11 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/CountUp'
-import NewsletterForm from '../components/NewsletterForm'
+import Aurora from '../components/reactbits/Aurora'
+import ScrollVelocity from '../components/reactbits/ScrollVelocity'
 import {
   getYouTubeVideosApi, getBlogsApi, getSocialStatsApi, sendContactApi,
+  getPartnersApi,
 } from '../api'
 import './Home.css'
 
@@ -67,6 +70,7 @@ export default function Home() {
   const [videos, setVideos] = useState([])
   const [blogs, setBlogs] = useState([])
   const [socialStats, setSocialStats] = useState(null)
+  const [partners, setPartners] = useState([])
   const [touchForm, setTouchForm] = useState({ name: '', email: '', topic: '', message: '' })
   const [touchStatus, setTouchStatus] = useState(null)
   const [touchSubmitting, setTouchSubmitting] = useState(false)
@@ -76,7 +80,7 @@ export default function Home() {
 
   useSEO({
     title: settings.seoTitle || 'Kadir Demir | İçerik Üreticisi',
-    description: settings.seoDescription || 'Kadir Demir içerik üreticisi resmi web sitesi.',
+    description: settings.seoDescription || 'Kadir Demir — 14 yıldır içerik üretiyorum. YouTube, vlog, oyun.',
     keywords: settings.seoKeywords,
     path: '/',
   })
@@ -92,76 +96,88 @@ export default function Home() {
     }).catch(() => {})
 
     getSocialStatsApi({ force: true }).then((data) => setSocialStats(data)).catch(() => setSocialStats(null))
+
+    getPartnersApi?.().then?.((res) => {
+      const list = Array.isArray(res?.partners) ? res.partners : Array.isArray(res) ? res : []
+      setPartners(list.filter((p) => p && (p.name || p.logo)).slice(0, 12))
+    }).catch(() => {})
   }, [])
 
   const yt = socialStats?.youtube
   const ig = socialStats?.instagram
   const tt = socialStats?.tiktok
 
-  const statItems = [
-    yt?.followers && { value: yt.followers, label: isEn ? 'YouTube subscribers' : 'YouTube abone', source: socialStats?.sources?.youtube },
-    yt?.views && { value: yt.views, label: isEn ? 'Total views' : 'Toplam izlenme', source: socialStats?.sources?.youtube },
-    yt?.videos && { value: yt.videos, label: isEn ? 'Published videos' : 'Yayınlanmış video', source: socialStats?.sources?.youtube },
-    ig?.followers && { value: ig.followers, label: isEn ? 'Instagram followers' : 'Instagram takipçi', source: socialStats?.sources?.instagram },
-    tt?.followers && { value: tt.followers, label: isEn ? 'TikTok followers' : 'TikTok takipçi', source: socialStats?.sources?.tiktok },
+  const liveStats = [
+    yt?.followers && { value: yt.followers, label: isEn ? 'YouTube subscribers' : 'YouTube abonem' },
+    yt?.views && { value: yt.views, label: isEn ? 'Total views' : 'Toplam izlenme' },
+    ig?.followers && { value: ig.followers, label: isEn ? 'Instagram followers' : 'Instagram takipçim' },
+    tt?.followers && { value: tt.followers, label: isEn ? 'TikTok followers' : 'TikTok takipçim' },
   ].filter(Boolean).slice(0, 4)
 
   const aboutText = settings.description || (isEn
-    ? 'I create videos from Istanbul: vlogs, gaming, live streams and short stories built for people who actually watch until the end.'
-    : 'İstanbul’dan video üretiyorum: vlog, oyun, canlı yayın ve sonuna kadar izlenen kısa hikayeler. Bu site, bütün içeriklerimin ve projelerimin merkezi.')
+    ? "I've been making content for 14 years. Vlogs, gaming, live streams — whatever pulls me in that week. This site is where I park everything I do."
+    : '14 yıldır içerik üretiyorum. Vlog, oyun, canlı yayın — o hafta neye ilgi duyuyorsam onu çekiyorum. Bu site de yaptıklarımın toplandığı yer.')
 
   const focusCards = [
     {
       n: '01',
-      title: isEn ? 'Videos with a point' : 'Bir fikri olan videolar',
+      title: isEn ? 'Long-form videos' : 'Uzun videolar',
       body: isEn
-        ? 'Every upload starts with a clear hook, a real moment and an edit that respects the viewer’s time.'
-        : 'Her video net bir giriş, gerçek bir an ve izleyicinin zamanına saygı duyan bir kurgu ile başlıyor.',
+        ? "Vlogs and storytelling pieces I actually want to watch back. No filler, no fake hype."
+        : 'Geri dönüp izleyebileceğim vloglar ve hikayeli videolar. Doldurma yok, sahte heyecan yok.',
     },
     {
       n: '02',
-      title: isEn ? 'Community first' : 'Önce topluluk',
+      title: isEn ? 'Gaming & live' : 'Oyun & canlı yayın',
       body: isEn
-        ? 'Comments, streams and messages shape what comes next. The audience is not decoration, it is the room.'
-        : 'Yorumlar, yayınlar ve mesajlar sıradaki içeriği şekillendiriyor. İzleyici dekor değil, işin kendisi.',
+        ? 'Streams where chat actually matters — we play, we mess up, we talk.'
+        : 'Sohbetin gerçekten önemli olduğu yayınlar — oynuyoruz, batırıyoruz, konuşuyoruz.',
     },
     {
       n: '03',
-      title: isEn ? 'Kade Media' : 'Kade Media',
+      title: isEn ? 'Brand work' : 'Marka işleri',
       body: isEn
-        ? 'A focused production space for creator projects, brand integrations and long-form ideas.'
-        : 'İçerik projeleri, marka entegrasyonları ve uzun format fikirler için odaklı bir üretim alanı.',
+        ? "I only work with brands I'd already use. If it doesn't fit the channel, it's a no."
+        : 'Sadece zaten kullanacağım markalarla çalışıyorum. Kanala uymuyorsa olmuyor.',
     },
   ]
 
+  // Content roadmap with placeholder years — admin can edit later
   const story = [
     {
-      period: isEn ? 'Now' : 'Bugün',
-      role: isEn ? 'Content creator' : 'İçerik üreticisi',
+      period: '2011',
+      role: isEn ? 'First upload' : 'İlk video',
       body: isEn
-        ? 'Publishing videos, testing formats and building a creator-led media brand around Kade Media.'
-        : 'Videolar yayınlıyor, formatlar deniyor ve Kade Media etrafında içerik üreticisi odaklı bir medya markası kuruyorum.',
+        ? "I hit publish on my first video. No plan, no gear — just a laptop camera and curiosity."
+        : 'İlk videoyu yükledim. Plan yok, ekipman yok — sadece laptop kamerası ve merak.',
     },
     {
-      period: 'YouTube',
-      role: isEn ? 'Long-form stories' : 'Uzun format hikayeler',
+      period: '2015',
+      role: isEn ? 'Gaming era' : 'Oyun dönemi',
       body: isEn
-        ? 'Vlogs, gaming episodes and videos that carry a real story instead of just filling a timeline.'
-        : 'Sadece akışı dolduran değil, gerçek bir hikaye taşıyan vloglar, oyun bölümleri ve videolar.',
+        ? "Gaming videos took off. The community started to feel like a real place."
+        : 'Oyun videoları tuttu. Topluluk gerçek bir yer gibi hissettirmeye başladı.',
     },
     {
-      period: isEn ? 'Everywhere' : 'Her platform',
-      role: isEn ? 'Shorts, reels and live' : 'Shorts, reels ve canlı yayın',
+      period: '2020',
+      role: isEn ? 'Going full-time' : 'Tam zamanlı',
       body: isEn
-        ? 'Short-form clips and live moments keep the conversation alive between bigger uploads.'
-        : 'Kısa videolar ve canlı anlar, büyük yayınların arasında sohbeti canlı tutuyor.',
+        ? "Started treating this like an actual job. Better gear, better edits, longer videos."
+        : 'Bunu gerçek bir iş gibi görmeye başladım. Daha iyi ekipman, daha iyi kurgu, daha uzun videolar.',
+    },
+    {
+      period: isEn ? 'Today' : 'Bugün',
+      role: isEn ? '14 years in' : '14. yıl',
+      body: isEn
+        ? "Still showing up, still trying new stuff. Vlogs, streams, the occasional weird experiment."
+        : 'Hâlâ devam ediyorum, hâlâ yeni şeyler deniyorum. Vloglar, yayınlar, ara sıra acayip deneyler.',
     },
   ]
 
   const localizedFaqs = useMemo(() => ([
-    { q: 'Yeni videoları ne sıklıkla yüklüyorsun?', a: 'Program ve projeye göre değişiyor; güncel içerikler YouTube ve sosyal hesaplarda.' },
-    { q: 'İş birliklerine açık mısın?', a: 'Evet. Uygun marka ve içerik fikirleri için iletişim formundan yazabilirsin.' },
-    { q: 'Tüm bağlantılar nerede?', a: '/links sayfasında sosyal medya ve iletişim bağlantıları tek yerde.' },
+    { q: 'Yeni videoları ne sıklıkla yüklüyorsun?', a: 'Genellikle haftada 1-2 video. Yayın takvimini YouTube ve sosyal hesaplardan görebilirsin.' },
+    { q: 'İş birliklerine açık mısın?', a: 'Evet. Kanala yakışan marka ve fikirler için iletişim formundan yazabilirsin.' },
+    { q: 'Tüm bağlantılar nerede?', a: '/links sayfasında her şey tek yerde.' },
   ]), [])
 
   const updateTouch = (key) => (e) => {
@@ -186,14 +202,16 @@ export default function Home() {
     setTouchStatus(null)
     try {
       await sendContactApi(payload)
-      setTouchStatus({ type: 'success', text: isEn ? 'Message sent. I will get back to you soon.' : 'Mesaj gönderildi. En kısa sürede dönüş yapacağım.' })
+      setTouchStatus({ type: 'success', text: isEn ? 'Got it — I will write back soon.' : 'Aldım — en kısa sürede dönüş yapacağım.' })
       setTouchForm({ name: '', email: '', topic: '', message: '' })
     } catch (err) {
-      setTouchStatus({ type: 'error', text: err?.message || (isEn ? 'Message could not be sent.' : 'Mesaj gönderilemedi.') })
+      setTouchStatus({ type: 'error', text: err?.message || (isEn ? 'Could not send the message.' : 'Mesaj gönderilemedi.') })
     } finally {
       setTouchSubmitting(false)
     }
   }
+
+  const yearsActive = settings.statsActiveYears || '14'
 
   return (
     <div className="g">
@@ -203,22 +221,45 @@ export default function Home() {
       {videos.length > 0 && <VideoSchema videos={videos.slice(0, 8)} />}
 
       <section className="g-hero" id="home">
-        <div className="g-hero-bg" aria-hidden="true">
-          <img src="/kadelink-portrait.png" alt="" />
-          <div className="g-hero-veil" />
+        <div className="g-hero-aurora" aria-hidden="true">
+          <Aurora colorStops={['#d4943f', '#a67428', '#e8b468']} amplitude={1.1} blend={0.55} speed={0.6} />
         </div>
+        <div className="g-hero-veil" />
         <div className="g-hero-inner">
-          <span className="g-hero-mark">{brandName.split(' ')[0] || 'Kadir'}</span>
+          <span className="g-hero-mark">
+            <span className="g-hero-mark-dot" aria-hidden="true" />
+            {isEn ? 'CONTENT CREATOR · ISTANBUL' : 'İÇERİK ÜRETİCİSİ · İSTANBUL'}
+          </span>
           <h1 className="g-hero-title">
-            {isEn ? 'Content with a pulse.' : 'İçerik üreticisi.'}
+            {brandName.split(' ')[0] || 'KADİR'}
+            <span className="g-hero-title-accent">.</span>
           </h1>
-          <ul className="g-hero-taglines">
-            <li>{isEn ? 'YouTube' : 'YouTube'}</li>
-            <li>{isEn ? 'Gaming and vlogs' : 'Oyun ve vlog'}</li>
-            <li>{isEn ? 'Kade Media' : 'Kade Media'}</li>
-          </ul>
-          <a href="#about" className="g-hero-scroll" aria-label="Scroll"><span /></a>
+          <p className="g-hero-lede">
+            {isEn
+              ? `${yearsActive} years on YouTube. Vlogs, gaming and live streams that try not to waste your time.`
+              : `${yearsActive} yıldır YouTube'da. Vlog, oyun, canlı yayın — zamanını boşa harcamamaya çalışan içerikler.`}
+          </p>
+          <div className="g-hero-actions">
+            <a href="#about" className="g-hero-cta g-hero-cta--primary">
+              {isEn ? 'About me' : 'Beni tanı'}
+              <span aria-hidden="true">→</span>
+            </a>
+            <Link to="/iletisim" className="g-hero-cta g-hero-cta--ghost">
+              {isEn ? 'Write me' : 'Bana yaz'}
+            </Link>
+          </div>
         </div>
+      </section>
+
+      <section className="g-velocity" aria-hidden="true">
+        <ScrollVelocity
+          texts={[
+            isEn ? 'VLOGS · GAMING · LIVE · 14 YEARS · ISTANBUL · ' : 'VLOG · OYUN · CANLI YAYIN · 14 YIL · İSTANBUL · ',
+            isEn ? 'KADIR DEMIR — CONTENT WITH A PULSE — ' : 'KADIR DEMİR — NABZI YÜKSEK İÇERİK — ',
+          ]}
+          velocity={60}
+          numCopies={6}
+        />
       </section>
 
       <section className="g-section g-about" id="about">
@@ -226,8 +267,8 @@ export default function Home() {
         <div className="g-about-grid">
           <div className="g-about-num">
             <span className="g-about-num-frame">
-              <strong>{settings.statsActiveYears || '5+'}</strong>
-              <em>{isEn ? 'years creating' : 'yıldır üretim'}</em>
+              <strong>{yearsActive}</strong>
+              <em>{isEn ? 'years creating' : 'yıldır üretiyorum'}</em>
             </span>
           </div>
           <div className="g-about-body">
@@ -239,46 +280,55 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="g-section g-stats-wrap">
-        <div className="g-stats-bg" aria-hidden="true">
-          <img src="/kadelink-portrait.png" alt="" />
-          <div className="g-stats-veil" />
-        </div>
-        <div className="g-stats-inner">
-          <span className="g-eyebrow g-eyebrow-light">
-            <span className="g-eyebrow-rule" />
-            <span className="g-eyebrow-label">{isEn ? 'LIVE NUMBERS' : 'CANLI SAYILAR'}</span>
-            <span className="g-eyebrow-rule" />
-          </span>
-          <h2 className="g-stats-title">
-            {isEn ? 'Pulled from the platform APIs.' : 'Sayılar API üzerinden çekiliyor.'}
-          </h2>
-          <div className="g-stats-row">
-            {(statItems.length ? statItems : [{ value: 0, label: isEn ? 'Loading live data' : 'Canlı veri yükleniyor', source: 'api' }]).map((s, i, arr) => {
-              const parsed = parseStat(s.value)
-              return (
-                <div key={s.label} className="g-stat" style={{ '--g-stat-i': i, '--g-stat-n': arr.length }}>
-                  <span className="g-stat-value">
-                    {parsed ? <><CountUp end={parsed.num} duration={2.2} />{parsed.suffix}</> : s.value}
-                  </span>
-                  <span className="g-stat-label">{s.label}</span>
-                  {s.source && <span className="g-stat-source">{s.source}</span>}
-                </div>
-              )
-            })}
+      {liveStats.length > 0 && (
+        <section className="g-section g-stats-wrap">
+          <div className="g-stats-aurora" aria-hidden="true">
+            <Aurora colorStops={['#a67428', '#d4943f', '#a67428']} amplitude={0.8} blend={0.6} speed={0.4} />
           </div>
-        </div>
-      </section>
+          <div className="g-stats-veil" />
+          <div className="g-stats-inner">
+            <span className="g-eyebrow g-eyebrow-light">
+              <span className="g-eyebrow-rule" />
+              <span className="g-eyebrow-label">{isEn ? 'WHERE I LIVE ONLINE' : 'NEREDE TAKILIYORUM'}</span>
+              <span className="g-eyebrow-rule" />
+            </span>
+            <h2 className="g-stats-title">
+              {isEn ? 'Real numbers, no rounding.' : 'Gerçek sayılar, abartı yok.'}
+            </h2>
+            <div className="g-stats-row">
+              {liveStats.map((s, i, arr) => {
+                const parsed = parseStat(s.value)
+                return (
+                  <div key={s.label} className="g-stat" style={{ '--g-stat-i': i, '--g-stat-n': arr.length }}>
+                    <span className="g-stat-value">
+                      {parsed ? <><CountUp end={parsed.num} duration={2.2} />{parsed.suffix}</> : s.value}
+                    </span>
+                    <span className="g-stat-label">{s.label}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="g-section g-focus">
         <GiantSectionHead
-          eyebrow={isEn ? 'CREATOR MODE' : 'ÜRETİM MODU'}
-          title={isEn ? 'What this site is actually about.' : 'Bu sitenin asıl işi.'}
-          sub={isEn ? 'Less agency talk, more creator work: videos, community and projects.' : 'Ajans cümlesi değil; video, topluluk ve üretim odaklı gerçek içerik.'}
+          eyebrow={isEn ? 'WHAT I DO' : 'NE YAPIYORUM'}
+          title={isEn ? 'Three things, done properly.' : 'Üç şey, doğru düzgün.'}
+          sub={isEn ? 'Less talk, more actual content.' : 'Az laf, çok iş.'}
         />
         <div className="g-focus-grid">
           {focusCards.map((card) => (
-            <article key={card.n} className="g-focus-card">
+            <article
+              key={card.n}
+              className="g-focus-card"
+              onMouseMove={(e) => {
+                const r = e.currentTarget.getBoundingClientRect()
+                e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`)
+                e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`)
+              }}
+            >
               <span>{card.n}</span>
               <h3>{card.title}</h3>
               <p>{card.body}</p>
@@ -317,7 +367,7 @@ export default function Home() {
       )}
 
       <section className="g-section g-story">
-        <GiantSectionHead eyebrow={isEn ? 'CONTENT ROADMAP' : 'İÇERİK AKIŞI'} />
+        <GiantSectionHead eyebrow={isEn ? 'THE TIMELINE' : 'YOLCULUK'} />
         <div className="g-story-list">
           {story.map((s, i) => (
             <article key={s.period} className={`g-story-row ${i % 2 ? 'is-right' : 'is-left'}`}>
@@ -336,27 +386,54 @@ export default function Home() {
         </div>
       </section>
 
+      {partners.length > 0 && (
+        <section className="g-section g-partners">
+          <GiantSectionHead
+            eyebrow={isEn ? 'WORKED WITH' : 'BİRLİKTE ÇALIŞTIKLARIM'}
+            sub={isEn ? 'Brands and people I’ve actually built things with.' : 'Gerçekten bir şeyler ürettiğim markalar ve insanlar.'}
+          />
+          <div className="g-partners-grid">
+            {partners.map((p, i) => (
+              <a
+                key={p._id || p.name || i}
+                href={p.url || '#'}
+                target={p.url ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                className="g-partner"
+                title={p.name}
+              >
+                {p.logo ? (
+                  <img src={p.logo} alt={p.name || 'partner'} loading="lazy" />
+                ) : (
+                  <span>{p.name}</span>
+                )}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="g-contact" id="contact">
-        <div className="g-contact-bg" aria-hidden="true">
-          <img src="/kadelink-portrait.png" alt="" />
-          <div className="g-contact-veil" />
+        <div className="g-contact-aurora" aria-hidden="true">
+          <Aurora colorStops={['#d4943f', '#e8b468', '#a67428']} amplitude={0.9} blend={0.55} speed={0.5} />
         </div>
+        <div className="g-contact-veil" />
         <div className="g-contact-inner">
           <span className="g-eyebrow g-eyebrow-light">
             <span className="g-eyebrow-rule" />
             <span className="g-eyebrow-label">{isEn ? 'CONTACT' : 'İLETİŞİM'}</span>
             <span className="g-eyebrow-rule" />
           </span>
-          <h2 className="g-contact-title">{isEn ? 'Send the idea, brief or hello.' : 'Fikir, proje ya da selam: buradan ulaş.'}</h2>
+          <h2 className="g-contact-title">{isEn ? 'Got an idea? Just write.' : 'Aklında bir şey mi var? Yaz yeter.'}</h2>
           <p className="g-contact-copy">
             {isEn
-              ? 'For brand work, video ideas, events and creator projects, use the form below or send an email directly.'
-              : 'Marka işleri, video fikirleri, etkinlikler ve içerik projeleri için aşağıdaki formu kullanabilir ya da direkt e-posta atabilirsin.'}
+              ? 'Brand collabs, video ideas, podcast invites or just a quick hello — all fair game.'
+              : 'Marka iş birlikleri, video fikirleri, podcast davetleri ya da kısaca selam — hepsi olur.'}
           </p>
           <div className="g-contact-grid">
             <div className="g-contact-cell">
-              <span className="g-contact-label">{isEn ? 'BASE' : 'MERKEZ'}</span>
-              <p>Kade Media<br />İstanbul, TR</p>
+              <span className="g-contact-label">{isEn ? 'BASE' : 'ŞEHİR'}</span>
+              <p>İstanbul, TR</p>
             </div>
             <div className="g-contact-cell">
               <span className="g-contact-label">EMAIL</span>
@@ -371,7 +448,8 @@ export default function Home() {
                 {settings.instagram && <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram size={18} /></a>}
                 {settings.tiktok && <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"><FaTiktok size={18} /></a>}
                 {settings.twitter && <a href={settings.twitter} target="_blank" rel="noopener noreferrer" aria-label="X"><FaXTwitter size={18} /></a>}
-                {settings.twitch && <a href={settings.twitch} target="_blank" rel="noopener noreferrer" aria-label="Twitch"><FaTwitch size={18} /></a>}
+                {settings.discord && <a href={settings.discord} target="_blank" rel="noopener noreferrer" aria-label="Discord"><FaDiscord size={18} /></a>}
+                {settings.linkedin && <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={18} /></a>}
               </div>
             </div>
           </div>
@@ -380,9 +458,9 @@ export default function Home() {
 
       <section className="g-section g-touch">
         <GiantSectionHead
-          eyebrow={isEn ? 'WRITE TO ME' : 'BANA YAZ'}
-          title={isEn ? 'This form actually sends.' : 'Bu form gerçekten gönderiyor.'}
-          sub={isEn ? 'Keep it short or send the whole brief.' : 'Kısa yazabilir ya da tüm briefi bırakabilirsin.'}
+          eyebrow={isEn ? 'WRITE ME' : 'BANA YAZ'}
+          title={isEn ? 'Drop a line.' : 'Bir iki satır yaz.'}
+          sub={isEn ? 'Short hello or full brief — both land in the same inbox.' : 'Kısa selam ya da uzun brief — ikisi de aynı gelen kutusuna düşüyor.'}
         />
         <form className="g-touch-form" onSubmit={submitTouch}>
           <div className="g-touch-row">
@@ -414,17 +492,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      <section className="g-section g-newsletter">
-        <GiantSectionHead
-          eyebrow={isEn ? 'NEWSLETTER' : 'BÜLTEN'}
-          title={isEn ? 'New uploads, no noise.' : 'Yeni içerikler, gereksiz kalabalık yok.'}
-          sub={isEn ? 'Only important updates from the channel and Kade Media.' : 'Sadece kanal ve Kade Media tarafındaki önemli güncellemeler.'}
-        />
-        <div className="g-newsletter-form">
-          <NewsletterForm lang={lang} />
-        </div>
-      </section>
     </div>
   )
 }

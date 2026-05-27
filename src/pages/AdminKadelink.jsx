@@ -194,7 +194,7 @@ const LINK_PRESETS = [
   { id: 'youtube', label: 'YouTube', icon: 'youtube' },
   { id: 'tiktok', label: 'TikTok', icon: 'tiktok' },
   { id: 'x', label: 'X', icon: 'x' },
-  { id: 'twitch', label: 'Twitch', icon: 'twitch' },
+  { id: 'discord', label: 'Discord', icon: 'discord' },
   { id: 'linkedin', label: 'LinkedIn', icon: 'linkedin' },
   { id: 'email', label: 'İletişim', icon: 'email' },
   { id: 'website', label: 'Website', icon: 'website' },

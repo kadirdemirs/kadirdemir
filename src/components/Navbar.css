@@ -20,7 +20,7 @@
 
 .nv--scrolled { top: 12px; }
 
-/* ─── Pill Shell ─── */
+/* ─── Pill Shell — premium glass when scrolled ─── */
 .nv-pill {
   position: relative;
   display: grid;
@@ -40,24 +40,59 @@
     background 0.5s var(--ease-out-expo),
     border-color 0.5s ease,
     box-shadow 0.5s ease,
+    backdrop-filter 0.5s ease,
     padding 0.4s ease;
 }
 
-/* Top sheen */
+/* Subtle top sheen — visible when scrolled */
 .nv-pill::before {
-  content: none;
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(244, 235, 224, 0.06) 0%, transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
-/* Amber outline ring */
+/* Animated amber ring — appears on scroll */
 .nv-pill::after {
-  content: none;
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from 200deg,
+    rgba(212, 148, 63, 0) 0deg,
+    rgba(212, 148, 63, 0.35) 70deg,
+    rgba(244, 235, 224, 0.08) 180deg,
+    rgba(212, 148, 63, 0.25) 280deg,
+    rgba(212, 148, 63, 0) 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
 .nv--scrolled .nv-pill {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
+  background: rgba(8, 7, 6, 0.62);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border-color: rgba(212, 148, 63, 0.14);
+  box-shadow:
+    0 1px 0 rgba(244, 235, 224, 0.05) inset,
+    0 20px 48px -16px rgba(0, 0, 0, 0.85),
+    0 0 60px -20px var(--amber-glow);
 }
+
+.nv--scrolled .nv-pill::before { opacity: 1; }
+.nv--scrolled .nv-pill::after { opacity: 1; }
 
 /* ─── Brand ─── */
 .nv-brand {
@@ -589,24 +624,14 @@
 /* ══════════════════════════════════════════════
    LIGHT THEME OVERRIDES
    ══════════════════════════════════════════════ */
-[data-theme="light"] .nv-pill {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-[data-theme="light"] .nv-pill::before {
-  content: none;
-}
-
-[data-theme="light"] .nv-pill::after {
-  content: none;
-}
-
 [data-theme="light"] .nv--scrolled .nv-pill {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border-color: rgba(166, 116, 40, 0.18);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 16px 40px -12px rgba(0, 0, 0, 0.18);
 }
 
 [data-theme="light"] .nv-brand-text {

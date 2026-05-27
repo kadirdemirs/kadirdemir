@@ -19,12 +19,11 @@ export const DEFAULT_SITE_SETTINGS = {
   instagramHandle: '@kadirardademir',
   tiktok: 'https://tiktok.com/@kadirdemirs',
   tiktokHandle: '@kadirdemirs',
-  twitch: 'https://twitch.tv/kadirdemir',
   twitter: 'https://x.com/kadirdemir',
   twitterHandle: '@kadirdemir',
   linkedin: '',
-  whatsapp: '',
   discord: '',
+  whatsapp: '',
 
   // Stats (overridable)
   statsYoutubeSubs: '2.4M',
@@ -103,19 +102,19 @@ export function SiteSettingsProvider({ children }) {
       .then((res) => {
         if (res?.data) {
           const merged = { ...DEFAULT_SITE_SETTINGS, ...res.data }
-          // Legacy brand correction — older DB rows may still hold "Kade Media"
+          // Legacy DB temizliği — eski kayıtlar Kade Media içeriyor olabilir.
+          // thekademedia@gmail.com bilerek korunuyor (gerçek e-posta).
           const fixBrand = (s) => {
             if (typeof s !== 'string') return s
             return s
               .replace(/Kade Media/g, 'Kadir Demir')
               .replace(/kade media/gi, 'Kadir Demir')
-              .replace(/kademedia/gi, 'kadirdemir')
+              .replace(/(?<!the)kademedia(?!@)/gi, 'kadirdemir')
               .replace(/Kade(?=\s|$|[^a-z])/g, 'Kadir')
           }
-          for (const key of ['businessName', 'tagline', 'description', 'seoTitle', 'seoDescription', 'seoKeywords', 'email', 'businessEmail']) {
+          for (const key of ['businessName', 'tagline', 'description', 'seoTitle', 'seoDescription', 'seoKeywords']) {
             if (merged[key]) merged[key] = fixBrand(merged[key])
           }
-          // If businessName collapsed to just "Kadir" force the full name
           if (!merged.businessName || merged.businessName === 'Kadir') {
             merged.businessName = 'Kadir Demir'
           }

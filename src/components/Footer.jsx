@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FaYoutube, FaInstagram, FaTiktok, FaTwitch, FaXTwitter } from 'react-icons/fa6'
+import { FaYoutube, FaInstagram, FaTiktok, FaDiscord, FaLinkedin, FaXTwitter } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useLanguage } from '../i18n/LanguageContext'
 import './Footer.css'
@@ -9,8 +9,9 @@ function buildSocials(s) {
   if (s.youtube) list.push({ icon: FaYoutube, name: 'YouTube', url: s.youtube, color: '#FF0000' })
   if (s.instagram) list.push({ icon: FaInstagram, name: 'Instagram', url: s.instagram, color: '#E4405F' })
   if (s.tiktok) list.push({ icon: FaTiktok, name: 'TikTok', url: s.tiktok, color: '#00F2EA' })
-  if (s.twitch) list.push({ icon: FaTwitch, name: 'Twitch', url: s.twitch, color: '#9146FF' })
   if (s.twitter) list.push({ icon: FaXTwitter, name: 'X', url: s.twitter, color: '#ffffff' })
+  if (s.discord) list.push({ icon: FaDiscord, name: 'Discord', url: s.discord, color: '#5865F2' })
+  if (s.linkedin) list.push({ icon: FaLinkedin, name: 'LinkedIn', url: s.linkedin, color: '#0A66C2' })
   return list
 }
 
@@ -31,8 +32,8 @@ export default function Footer() {
 
   const LEGAL = [
     { name: 'KVKK', path: '/kvkk' },
-    { name: t('footer.legal') === 'Yasal' ? 'Gizlilik' : t('footer.legal') === 'Legal' ? 'Privacy' : 'Datenschutz', path: '/gizlilik' },
-    { name: t('footer.legal') === 'Yasal' ? 'Çerezler' : t('footer.legal') === 'Legal' ? 'Cookies' : 'Cookies', path: '/cerez-politikasi' },
+    { name: t('footer.legal') === 'Yasal' ? 'Gizlilik' : 'Privacy', path: '/gizlilik' },
+    { name: t('footer.legal') === 'Yasal' ? 'Çerezler' : 'Cookies', path: '/cerez-politikasi' },
   ]
 
   return (
@@ -101,7 +102,6 @@ export default function Footer() {
 
       <div className="ft-bottom">
         <p>© {new Date().getFullYear()} {brandName}. {t('footer.copyright')}.</p>
-        <p className="ft-bottom-meta">{t('footer.builtWith')}</p>
       </div>
     </footer>
   )
