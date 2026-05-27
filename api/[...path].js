@@ -58,17 +58,26 @@ function getRouteKey(req) {
   return pathOnly.replace(/^\/api\/?/, '').replace(/^\/+|\/+$/g, '')
 }
 
+function setQuery(req, query) {
+  Object.defineProperty(req, 'query', {
+    value: query,
+    writable: true,
+    configurable: true,
+    enumerable: true,
+  })
+}
+
 function normalizeRoute(req) {
   const routeKey = getRouteKey(req)
 
   if (routeKey === 'auth/login') return 'auth'
   if (routeKey === 'auth/change-password') {
-    req.query = { ...(req.query || {}), action: 'change-password' }
+    setQuery(req, { ...(req.query || {}), action: 'change-password' })
     return 'auth'
   }
 
   if (routeKey === 'newsletter') {
-    req.query = { ...(req.query || {}), action: 'newsletter' }
+    setQuery(req, { ...(req.query || {}), action: 'newsletter' })
     return 'contact'
   }
 
@@ -104,7 +113,7 @@ export default async function handler(req, res) {
       sanitizedQuery[key] = value;
     }
   }
-  req.query = sanitizedQuery;
+  setQuery(req, sanitizedQuery);
 
   if (!validateQuery(req, res)) return
   if (!isPublicPost(req) && !validateCsrf(req, res)) return

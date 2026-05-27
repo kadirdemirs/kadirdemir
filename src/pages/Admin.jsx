@@ -22,7 +22,7 @@ import {
   getSocialStatsApi, refreshSocialStatsApi,
   getAnalyticsApi, getGA4AnalyticsApi, getActiveVisitorsApi,
   getRemindersApi, createReminderApi, updateReminderApi, deleteReminderApi,
-  getMediaApi, uploadMediaApi, bulkDeleteMediaApi,
+  getMediaApi, getMediaFileApi, uploadMediaApi, bulkDeleteMediaApi,
   getBackupSummaryApi, createBackupApi,
   getAdminCommentsApi, setCommentApprovalApi, deleteCommentApi,
 } from '../api'
@@ -585,12 +585,32 @@ function BlogSection({ showToast }) {
   const [posts, setPosts] = useState([])
   const [editing, setEditing] = useState(null)
 
-  const load = () => { getBlogsApi().then(d => Array.isArray(d) && setPosts(d)).catch(() => {}) }
+  const load = () => {
+    getBlogsApi()
+      .then(d => setPosts(Array.isArray(d) ? d : Array.isArray(d?.blogs) ? d.blogs : []))
+      .catch(() => setPosts([]))
+  }
   useEffect(load, [])
 
   const handleSave = async (data) => {
     try {
-      if (data._id) await updateBlogApi(data); else await createBlogApi(data)
+      const payload = {
+        titleTr: data.titleTr?.trim() || data.title?.trim() || '',
+        titleEn: data.titleEn?.trim() || data.titleTr?.trim() || data.title?.trim() || '',
+        excerptTr: data.excerptTr || data.excerpt || '',
+        excerptEn: data.excerptEn || data.excerptTr || data.excerpt || '',
+        contentTr: data.contentTr || data.content || '',
+        contentEn: data.contentEn || data.contentTr || data.content || '',
+        category: data.category || '',
+        categoryEn: data.categoryEn || data.category || '',
+        image: data.image || data.coverImage || '',
+        color: data.color || '#eac321',
+        readTime: data.readTime || 5,
+        slug: data.slug?.trim() || '',
+        publishAt: data.publishAt || null,
+        published: data.published !== false,
+      }
+      if (data._id) await updateBlogApi({ id: data._id, ...payload }); else await createBlogApi(payload)
       showToast('Yazı kaydedildi', 'success')
       setEditing(null); load()
     } catch (e) { showToast(e.message, 'error') }
@@ -608,7 +628,7 @@ function BlogSection({ showToast }) {
     <div>
       <div className="admin-page-header">
         <div><h1>Blog Yazıları</h1><p>{posts.length} yazı</p></div>
-        <button className="btn btn-primary" onClick={() => setEditing({ title: '', slug: '', excerpt: '', content: '', published: false })}>
+        <button className="btn btn-primary" onClick={() => setEditing({ titleTr: '', titleEn: '', slug: '', excerptTr: '', excerptEn: '', contentTr: '', contentEn: '', category: '', categoryEn: '', image: '', published: true })}>
           <HiOutlinePlus size={18} /> Yeni Yazı
         </button>
       </div>
@@ -616,8 +636,8 @@ function BlogSection({ showToast }) {
         {posts.map(p => (
           <div key={p._id} className="blog-card">
             <div className="blog-card-status">{p.published ? '🟢 Yayında' : '⚪ Taslak'}</div>
-            <h3>{p.title}</h3>
-            <p>{p.excerpt}</p>
+            <h3>{p.titleTr || p.title}</h3>
+            <p>{p.excerptTr || p.excerpt}</p>
             <div className="blog-card-actions">
               <button className="btn btn-outline" onClick={() => setEditing(p)}>Düzenle</button>
               <button className="btn-icon-danger" onClick={() => handleDelete(p._id)}><HiOutlineTrash size={16} /></button>
@@ -644,12 +664,16 @@ function BlogEditor({ post, onSave, onCancel }) {
         </div>
       </div>
       <div className="form-stack">
-        <label>Başlık<input value={data.title} onChange={e => upd('title', e.target.value)} /></label>
-        <label>Slug (URL)<input value={data.slug} onChange={e => upd('slug', e.target.value)} placeholder="otomatik oluşturulur" /></label>
-        <label>Özet<textarea value={data.excerpt} onChange={e => upd('excerpt', e.target.value)} rows={2} /></label>
-        <label>İçerik (HTML / Markdown)<textarea value={data.content} onChange={e => upd('content', e.target.value)} rows={14} /></label>
-        <label>Kapak Görseli URL<input value={data.coverImage || ''} onChange={e => upd('coverImage', e.target.value)} /></label>
-        <label>Etiketler (virgülle)<input value={data.tags || ''} onChange={e => upd('tags', e.target.value)} /></label>
+        <label>Başlık (TR)<input value={data.titleTr || data.title || ''} onChange={e => upd('titleTr', e.target.value)} /></label>
+        <label>Başlık (EN)<input value={data.titleEn || ''} onChange={e => upd('titleEn', e.target.value)} /></label>
+        <label>Slug (URL)<input value={data.slug || ''} onChange={e => upd('slug', e.target.value)} placeholder="otomatik oluşturulur" /></label>
+        <label>Özet (TR)<textarea value={data.excerptTr || data.excerpt || ''} onChange={e => upd('excerptTr', e.target.value)} rows={2} /></label>
+        <label>Özet (EN)<textarea value={data.excerptEn || ''} onChange={e => upd('excerptEn', e.target.value)} rows={2} /></label>
+        <label>İçerik (TR, HTML / Markdown)<textarea value={data.contentTr || data.content || ''} onChange={e => upd('contentTr', e.target.value)} rows={12} /></label>
+        <label>İçerik (EN, HTML / Markdown)<textarea value={data.contentEn || ''} onChange={e => upd('contentEn', e.target.value)} rows={12} /></label>
+        <label>Kapak Görseli URL<input value={data.image || data.coverImage || ''} onChange={e => upd('image', e.target.value)} /></label>
+        <label>Kategori (TR)<input value={data.category || ''} onChange={e => upd('category', e.target.value)} /></label>
+        <label>Kategori (EN)<input value={data.categoryEn || ''} onChange={e => upd('categoryEn', e.target.value)} /></label>
         <label className="checkbox-row">
           <input type="checkbox" checked={!!data.published} onChange={e => upd('published', e.target.checked)} />
           Yayında
@@ -877,7 +901,23 @@ function MediaSection({ showToast }) {
   const [items, setItems] = useState([])
   const [selected, setSelected] = useState(new Set())
 
-  const load = () => { getMediaApi().then(d => Array.isArray(d) && setItems(d)).catch(() => {}) }
+  const load = () => {
+    getMediaApi()
+      .then(async (d) => {
+        const list = Array.isArray(d) ? d : []
+        const withPreviews = await Promise.all(list.map(async (item) => {
+          if (!String(item.mimeType || '').startsWith('image/')) return item
+          try {
+            const file = await getMediaFileApi(item._id)
+            return { ...item, previewUrl: `data:${file.mimeType};base64,${file.data}` }
+          } catch {
+            return item
+          }
+        }))
+        setItems(withPreviews)
+      })
+      .catch(() => setItems([]))
+  }
   useEffect(load, [])
 
   const handleUpload = async (e) => {
@@ -924,7 +964,11 @@ function MediaSection({ showToast }) {
         {items.map(it => (
           <div key={it._id} className={`media-tile ${selected.has(it._id) ? 'selected' : ''}`}
             onClick={() => toggle(it._id)}>
-            <img src={`data:${it.mimeType};base64,${it.data}`} alt={it.name} loading="lazy" />
+            {it.previewUrl ? (
+              <img src={it.previewUrl} alt={it.name} loading="lazy" />
+            ) : (
+              <div className="media-file-placeholder">{it.type || 'file'}</div>
+            )}
             <div className="media-name">{it.name}</div>
           </div>
         ))}

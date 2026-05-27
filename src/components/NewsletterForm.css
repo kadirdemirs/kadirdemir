@@ -16,6 +16,12 @@
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
 }
 
+.kd-newsletter-form {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
 .kd-newsletter::before {
   content: '';
   position: absolute;
@@ -72,6 +78,7 @@
   border: 1px solid rgba(212, 148, 63, 0.16);
   border-radius: 18px;
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: border-color var(--transition-normal), box-shadow var(--transition-normal), background var(--transition-normal);
 }
 
@@ -151,6 +158,10 @@
 [data-theme="light"] .kd-newsletter,
 [data-theme="light"] .kd-newsletter-row {
   background: rgba(255, 255, 255, 0.82);
+}
+
+[data-theme="light"] .kd-newsletter-row {
+  border-color: rgba(26, 23, 21, 0.12);
 }
 
 [data-theme="light"] .kd-newsletter-row input {

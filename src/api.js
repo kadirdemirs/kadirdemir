@@ -328,11 +328,7 @@ export async function subscribeNewsletterApi(email) {
 }
 
 export async function confirmNewsletterApi(token) {
-  const res = await globalThis.fetch(`${API_BASE}/contact?action=confirm`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token }),
-  });
+  const res = await globalThis.fetch(`${API_BASE}/contact?action=confirm&token=${encodeURIComponent(token)}`);
   return handleResponse(res);
 }
 
@@ -682,6 +678,11 @@ export async function getMediaApi(params = {}) {
   const qs = new URLSearchParams(params).toString();
   const url = qs ? `${API_BASE}/media?${qs}` : `${API_BASE}/media`;
   const res = await fetch(url, { headers: getAuthHeaders() });
+  return handleResponse(res);
+}
+
+export async function getMediaFileApi(id) {
+  const res = await fetch(`${API_BASE}/media?id=${encodeURIComponent(id)}&action=file`, { headers: getAuthHeaders() });
   return handleResponse(res);
 }
 

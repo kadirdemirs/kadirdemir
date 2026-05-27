@@ -644,25 +644,21 @@ input, textarea, select {
   color-scheme: light;
 }
 
-/* HTML background — warm cream with amber spots (light theme) */
 html[data-theme="light"] {
-  background-color: var(--bg-deep, #FBF8F3) !important;
+  background-color: var(--bg-deep);
   background-image:
     radial-gradient(ellipse 55% 45% at 15% 8%, rgba(212, 148, 63, 0.22), transparent 55%),
     radial-gradient(ellipse 45% 35% at 85% 92%, rgba(232, 180, 104, 0.18), transparent 55%),
-    radial-gradient(ellipse at center, var(--bg-base, #F4EFE6) 0%, var(--bg-deep, #FBF8F3) 100%) !important;
+    radial-gradient(ellipse at center, var(--bg-base) 0%, var(--bg-deep) 100%);
 }
 
 html[data-theme="light"] body { color: var(--text-primary); background-color: transparent; }
 html[data-theme="light"] body::after { mix-blend-mode: multiply; opacity: 0.025; }
 
-html[data-theme="light"]::-webkit-scrollbar-track { background: var(--bg-base, #F4EFE6); }
+html[data-theme="light"]::-webkit-scrollbar-track { background: var(--bg-base); }
 html[data-theme="light"]::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--amber, #d4943f), var(--amber-deep, #a67428));
+  background: linear-gradient(180deg, var(--amber), var(--amber-deep));
 }
-
-/* Aurora background — dim heavily on light */
-[data-theme="light"] .kd-aurora-bg { opacity: 0.18; mix-blend-mode: multiply; }
 
 [data-theme="light"] .kd-aurora-bg::after {
   background: radial-gradient(ellipse 90% 80% at 50% 40%, transparent 0%, var(--bg-deep) 90%);

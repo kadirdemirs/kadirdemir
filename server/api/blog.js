@@ -46,13 +46,16 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       const now = new Date();
-      const posts = await collection.find({
+      const user = requireAuth(req);
+      const publicFilter = {
+        published: { $ne: false },
         $or: [
           { publishAt: { $exists: false } },
           { publishAt: null },
           { publishAt: { $lte: now } },
         ],
-      }).sort({ createdAt: -1 }).toArray();
+      };
+      const posts = await collection.find(user ? {} : publicFilter).sort({ createdAt: -1 }).toArray();
       return res.status(200).json(posts.map(sanitizePost));
     } catch (error) {
       console.error('Blog GET error:', error);
@@ -69,7 +72,7 @@ export default async function handler(req, res) {
       const {
         titleTr, titleEn, excerptTr, excerptEn,
         contentTr, contentEn, category, categoryEn,
-        image, color, readTime, slug, publishAt
+        image, color, readTime, slug, publishAt, published = true
       } = req.body;
 
       if (!titleTr || !slug) return res.status(400).json({ error: 'Başlık ve slug gerekli' });
@@ -87,6 +90,7 @@ export default async function handler(req, res) {
         category: category || '', categoryEn: categoryEn || '',
         image: image || '', color: color || '#eac321',
         readTime: parseInt(readTime) || 5, slug,
+        published: published !== false,
         publishAt: publishAt ? new Date(publishAt) : null,
         date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }),
         createdAt: new Date(), updatedAt: new Date(),

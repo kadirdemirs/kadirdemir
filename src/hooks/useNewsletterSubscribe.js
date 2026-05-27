@@ -6,12 +6,12 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MESSAGES = {
   tr: {
     invalid: 'Geçerli bir e-posta adresi gir.',
-    success: 'Teşekkürler — onay maili gönderildi. Spam klasörünü de kontrol et.',
+    success: 'Teşekkürler, onay maili gönderildi. Spam klasörünü de kontrol et.',
     error: 'Şu an abone olunamadı, biraz sonra tekrar dener misin?',
   },
   en: {
     invalid: 'Please enter a valid email.',
-    success: 'Thanks — a confirmation email is on its way. Check your spam folder too.',
+    success: 'Thanks, a confirmation email is on its way. Check your spam folder too.',
     error: 'Could not subscribe right now. Mind trying again in a moment?',
   },
 }

@@ -330,8 +330,9 @@ export default async function handler(req, res) {
   }
 
   const {
-    name, email, phone, company, service, message, source = 'iletisim-formu',
+    name, email, phone, company, service, subject, message, source = 'iletisim-formu',
   } = body || {};
+  const serviceValue = service || subject || '-';
 
   if (!name?.trim() || !email?.trim() || !message?.trim()) {
     return res.status(400).json({ error: 'Ad, e-posta ve mesaj alanları zorunludur.' });
@@ -360,14 +361,15 @@ export default async function handler(req, res) {
         email: email.trim().toLowerCase(),
         phone: phone?.trim() || '-',
         company: company?.trim() || '-',
-        service: service || '-',
+        service: serviceValue,
+        subject: subject || service || '',
         message: message.trim(),
         source,
         status: 'yeni',
         read: false,
         createdAt: new Date(),
       });
-      logActivity(db, { action: 'Yeni mesaj alındı', detail: `${name.trim()} - ${service || 'Genel'}`, type: 'message', icon: '✉️', user: 'sistem' }).catch(() => {});
+      logActivity(db, { action: 'Yeni mesaj alındı', detail: `${name.trim()} - ${serviceValue || 'Genel'}`, type: 'message', icon: '✉️', user: 'sistem' }).catch(() => {});
     } catch (dbErr) {
       console.error('MongoDB save failed (non-critical):', dbErr.message);
     }
@@ -381,7 +383,7 @@ export default async function handler(req, res) {
         await transporter.sendMail({
           from: `"Kadir Demir Website" <${process.env.SMTP_USER}>`,
           to: mailTo,
-          subject: `🔔 Yeni Lead: ${escapeHtml(name)} — ${service || 'Genel'}`,
+          subject: `🔔 Yeni Lead: ${escapeHtml(name)} — ${serviceValue || 'Genel'}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#0a0a0a;color:#fff;border-radius:12px;">
               <div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;">
@@ -394,7 +396,7 @@ export default async function handler(req, res) {
                   <tr><td style="padding:8px 0;color:#888;">E-posta</td><td style="padding:8px 0;color:#eac321;">${escapeHtml(email)}</td></tr>
                   <tr><td style="padding:8px 0;color:#888;">Telefon</td><td style="padding:8px 0;color:#fff;">${escapeHtml(phone || '-')}</td></tr>
                   <tr><td style="padding:8px 0;color:#888;">Şirket</td><td style="padding:8px 0;color:#fff;">${escapeHtml(company || '-')}</td></tr>
-                  <tr><td style="padding:8px 0;color:#888;">Hizmet</td><td style="padding:8px 0;color:#fff;">${escapeHtml(service || '-')}</td></tr>
+                  <tr><td style="padding:8px 0;color:#888;">Konu</td><td style="padding:8px 0;color:#fff;">${escapeHtml(serviceValue || '-')}</td></tr>
                 </table>
                 <div style="margin-top:20px;padding:16px;background:#1a1a1a;border-radius:8px;border-left:3px solid #eac321;">
                   <p style="color:#ccc;margin:0;line-height:1.6;">${escapeHtml(message)}</p>
@@ -445,7 +447,7 @@ export default async function handler(req, res) {
     if (waPhone && waApiKey) {
       try {
         const waText = encodeURIComponent(
-          `🔔 Yeni Lead!\n👤 ${name}\n📧 ${email}\n📞 ${phone || '-'}\n🏢 ${company || '-'}\n🎯 ${service || '-'}\n💬 ${message.substring(0, 100)}${message.length > 100 ? '...' : ''}`
+          `🔔 Yeni Lead!\n👤 ${name}\n📧 ${email}\n📞 ${phone || '-'}\n🏢 ${company || '-'}\n🎯 ${serviceValue || '-'}\n💬 ${message.substring(0, 100)}${message.length > 100 ? '...' : ''}`
         );
         await fetch(`https://api.callmebot.com/whatsapp.php?phone=${waPhone}&text=${waText}&apikey=${waApiKey}`);
       } catch (waError) {

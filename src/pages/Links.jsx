@@ -103,7 +103,6 @@ export default function Links() {
   const [toast, setToast] = useState('')
   const [modal, setModal] = useState(null)
   const [showToTop, setShowToTop] = useState(false)
-  const [sparkles, setSparkles] = useState([])
 
   useSEO({
     title: 'Kadir Demir — @kadirardademir',
@@ -192,29 +191,6 @@ export default function Links() {
     setTimeout(() => setToast(''), 2200)
   }
 
-  const onNameClick = (() => {
-    let clicks = 0
-    let timer = null
-    return () => {
-      clicks += 1
-      clearTimeout(timer)
-      timer = setTimeout(() => { clicks = 0 }, 600)
-      if (clicks >= 3) {
-        clicks = 0
-        const arr = Array.from({ length: 24 }, (_, i) => ({
-          id: `${Date.now()}-${i}`,
-          left: 50 + (Math.random() - 0.5) * 60,
-          top: 40 + (Math.random() - 0.5) * 20,
-          dx: (Math.random() - 0.5) * 300,
-          dy: (Math.random() - 0.5) * 300,
-          delay: Math.random() * 0.2,
-        }))
-        setSparkles(arr)
-        setTimeout(() => setSparkles([]), 1400)
-      }
-    }
-  })()
-
   const openModal = (key) => setModal(key)
   const closeModal = () => setModal(null)
 
@@ -261,7 +237,7 @@ export default function Links() {
           </div>
 
           <div className="kdl-hero-text">
-            <h1 className="kdl-name" onClick={onNameClick}>
+            <h1 className="kdl-name">
               {handle}
               {showVerified && (
                 <span className="kdl-verified" aria-label={lang === 'en' ? 'Verified' : 'Doğrulanmış'}>
@@ -354,19 +330,6 @@ export default function Links() {
         </div>
       )}
 
-      {sparkles.map((s) => (
-        <span
-          key={s.id}
-          className="kdl-sparkle"
-          style={{
-            left: `${s.left}%`,
-            top: `${s.top}%`,
-            '--dx': `${s.dx}px`,
-            '--dy': `${s.dy}px`,
-            animationDelay: `${s.delay}s`,
-          }}
-        />
-      ))}
     </div>
   )
 }

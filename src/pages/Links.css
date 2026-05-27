@@ -28,7 +28,7 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: 32px 16px 56px;
+  padding: 24px 16px 28px;
   position: relative;
   overflow-x: hidden;
   line-height: 1.45;
@@ -360,10 +360,12 @@
 /* ═══════════ TABS ═══════════ */
 .kdl-tabs {
   position: absolute;
-  left: 50%;
+  left: 18px;
+  right: 18px;
   bottom: 18px;
-  transform: translateX(-50%);
-  display: inline-flex;
+  transform: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   background: rgba(17, 15, 13, 0.75);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
@@ -390,6 +392,7 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   transition: all 0.35s var(--kdl-ease);
   white-space: nowrap;
   letter-spacing: 0.01em;
@@ -552,7 +555,7 @@
 
 /* ═══════════ FOOTER ═══════════ */
 .kdl-footer {
-  margin-top: 36px;
+  margin-top: 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -770,29 +773,12 @@
 }
 
 /* ═══════════ SPARKLE EASTER EGG ═══════════ */
-.kdl-sparkle {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  background: var(--kdl-amber);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 300;
-  box-shadow: 0 0 14px var(--kdl-amber), 0 0 28px var(--kdl-amber-soft);
-  animation: kdl-sparkleFly 1.3s var(--kdl-ease) forwards;
-}
-
-@keyframes kdl-sparkleFly {
-  0%   { opacity: 1; transform: translate(0, 0) scale(1); }
-  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.2); }
-}
-
 /* ═══════════ RESPONSIVE ═══════════ */
 @media (max-width: 520px) {
-  .kdl-page { padding: 20px 14px 40px; }
+  .kdl-page { padding: 16px 14px 22px; }
   .kdl-hero { aspect-ratio: 3 / 4; border-radius: 26px; }
   .kdl-hero-text { bottom: 88px; }
-  .kdl-tabs { bottom: 14px; }
+  .kdl-tabs { bottom: 14px; left: 14px; right: 14px; }
   .kdl-tab { padding: 9px 20px; font-size: 0.86rem; }
   .kdl-link { padding: 15px 20px; }
   .kdl-card-wrap { max-width: 100%; }
@@ -819,8 +805,7 @@
   .kdl-status-dot,
   .kdl-page::before,
   .kdl-toast,
-  .kdl-modal-panel,
-  .kdl-sparkle {
+  .kdl-modal-panel {
     animation: none !important;
   }
   .kdl-link { opacity: 1; transform: none; }
