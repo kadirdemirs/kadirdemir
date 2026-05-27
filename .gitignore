@@ -48,3 +48,7 @@ site_mirror/
 # Misc
 .FullName
 *.local
+
+# Visual test screenshots
+dev-log-screens/
+dev-api-log.txt

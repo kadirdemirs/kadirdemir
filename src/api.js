@@ -190,6 +190,30 @@ export async function updateContentApi(section, data) {
   return handleResponse(res);
 }
 
+// ─── KADELINK sections (hero / links / theme) ───
+export const getKadelinkHeroApi = () => getContentApi('kadelink-hero');
+export const updateKadelinkHeroApi = (data) => updateContentApi('kadelink-hero', data);
+export const getKadelinkLinksApi = () => getContentApi('kadelink-links');
+export const updateKadelinkLinksApi = (data) => updateContentApi('kadelink-links', data);
+export const getKadelinkThemeApi = () => getContentApi('kadelink-theme');
+export const updateKadelinkThemeApi = (data) => updateContentApi('kadelink-theme', data);
+
+// ─── Audit log ───
+export async function getAuditLogApi(limit = 200) {
+  const res = await fetch(`${API_BASE}/ops?resource=audit-log&limit=${limit}`, {
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+}
+
+export async function clearAuditLogApi() {
+  const res = await fetch(`${API_BASE}/ops?resource=audit-log`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+}
+
 // ───── Messages (iletişim formu) ─────
 export async function getMessagesApi() {
   const res = await fetch(`${API_BASE}/messages`, { headers: getAuthHeaders() });

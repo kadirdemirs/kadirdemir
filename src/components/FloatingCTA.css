@@ -13,27 +13,45 @@
   align-items: center;
   gap: 0;
   padding: 14px;
+  min-height: 52px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 50%),
-    var(--accent-red, #e11d2e);
-  border-radius: 999px;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 52%),
+    var(--amber);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill);
   text-decoration: none;
-  color: #fff;
-  font-weight: 600;
+  color: #0d0a06;
+  font-weight: 800;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.2) inset,
-    0 18px 36px -10px var(--accent-red-glow, rgba(225, 29, 46, 0.5));
+    0 1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 18px 40px -12px var(--amber-glow-strong),
+    0 0 42px -18px var(--amber-glow);
   overflow: hidden;
-  transition: gap 0.3s ease, padding 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: gap var(--transition-normal), padding var(--transition-normal), transform var(--transition-normal), box-shadow var(--transition-normal), background var(--transition-normal);
+}
+
+.kd-fab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.22) 48%, transparent 100%);
+  transform: translateX(-120%);
+  transition: transform 0.65s ease;
 }
 
 .kd-fab:hover {
-  gap: 8px;
+  gap: 9px;
   padding: 14px 22px 14px 16px;
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  background: var(--amber-soft);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.25) inset,
-    0 22px 44px -10px var(--accent-red-glow, rgba(225, 29, 46, 0.7));
+    0 1px 0 rgba(255, 255, 255, 0.28) inset,
+    0 24px 50px -14px var(--amber-glow-strong),
+    0 0 58px -14px var(--amber-glow);
+}
+
+.kd-fab:hover::before {
+  transform: translateX(120%);
 }
 
 .kd-fab-icon {
@@ -42,6 +60,8 @@
   justify-content: center;
   width: 24px;
   height: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .kd-fab-label {
@@ -52,46 +72,49 @@
   white-space: nowrap;
   overflow: hidden;
   opacity: 0;
-  transition: max-width 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+  transition: max-width 0.42s var(--ease-out-expo), opacity 0.28s ease;
   font-size: 0.88rem;
+  position: relative;
+  z-index: 1;
 }
 
 .kd-fab:hover .kd-fab-label {
-  max-width: 200px;
+  max-width: 220px;
   opacity: 1;
 }
 
 .kd-fab-ring {
   position: absolute;
-  inset: -4px;
+  inset: -5px;
   border-radius: inherit;
-  border: 2px solid var(--accent-red, #e11d2e);
+  border: 2px solid rgba(212, 148, 63, 0.68);
   opacity: 0;
-  animation: kd-fab-pulse 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  animation: kd-fab-pulse 2.5s var(--ease-out-expo) infinite;
   pointer-events: none;
 }
 
 @keyframes kd-fab-pulse {
-  0%   { opacity: 0; transform: scale(1); }
-  20%  { opacity: 0.4; }
-  100% { opacity: 0; transform: scale(1.35); }
+  0% { opacity: 0; transform: scale(1); }
+  18% { opacity: 0.44; }
+  100% { opacity: 0; transform: scale(1.32); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .kd-fab-ring { animation: none; }
 }
 
-/* Mobile — ekrana hâkim olmasın */
 @media (max-width: 720px) {
   .kd-fab-wrap {
     right: 14px;
     bottom: 14px;
   }
+
   .kd-fab,
   .kd-fab:hover {
     padding: 13px;
     gap: 0;
   }
+
   .kd-fab-label {
     display: none;
   }

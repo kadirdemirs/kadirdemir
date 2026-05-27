@@ -593,18 +593,43 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Section ve data gerekli' });
       }
 
+      // Only allow known sections (whitelist)
+      const ALLOWED_SECTIONS = new Set([
+        'site-settings',
+        'kadelink-hero',
+        'kadelink-links',
+        'kadelink-theme',
+        'youtube-cache',
+      ]);
+      if (!ALLOWED_SECTIONS.has(section)) {
+        return res.status(400).json({ error: 'Geçersiz section' });
+      }
+
       await collection.updateOne(
         { section },
         {
           $set: {
             section,
             data,
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            updatedBy: user.username,
           },
           $setOnInsert: { createdAt: new Date() }
         },
         { upsert: true }
       );
+
+      // Audit log
+      try {
+        const { writeAuditLog } = await import('./ops.js');
+        await writeAuditLog(db, {
+          actor: user.username,
+          action: 'content:update',
+          target: section,
+          details: `Section "${section}" güncellendi`,
+          ip: req.ip || req.headers['x-forwarded-for'] || '',
+        });
+      } catch { /* non-fatal */ }
 
       return res.status(200).json({ message: 'İçerik güncellendi' });
     } catch (error) {

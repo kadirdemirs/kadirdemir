@@ -384,6 +384,49 @@ async function handlePush(req, res, db) {
   return res.status(200).json({ success: true })
 }
 
+// ── Audit log ─────────────────────────────────────────────────────────────
+// Lightweight activity log: who, what, when, optional details. Read-only via
+// admin GET; writes happen from other handlers (helper exported below).
+export async function writeAuditLog(db, { actor, action, target, details, ip }) {
+  try {
+    await db.collection('audit_log').insertOne({
+      actor: clean(actor, 80) || 'system',
+      action: clean(action, 80),
+      target: clean(target, 200),
+      details: clean(details, 1000),
+      ip: clean(ip, 64),
+      createdAt: new Date(),
+    })
+  } catch (err) {
+    console.error('Audit log write failed:', err.message)
+  }
+}
+
+async function handleAuditLog(req, res, db) {
+  const user = requireAdmin(req, res)
+  if (!user) return
+
+  if (req.method === 'GET') {
+    const limit = Math.min(Number(req.query?.limit) || 200, 500)
+    const items = await db.collection('audit_log')
+      .find({})
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .toArray()
+    return res.status(200).json(items)
+  }
+
+  if (req.method === 'DELETE') {
+    // Clear all (admin only)
+    if (user.role !== 'admin') return res.status(403).json({ error: 'Sadece admin temizleyebilir' })
+    await db.collection('audit_log').deleteMany({})
+    await writeAuditLog(db, { actor: user.username, action: 'audit-log:clear', target: 'audit_log', ip: req.ip })
+    return res.status(200).json({ success: true })
+  }
+
+  return res.status(405).json({ error: 'Method not allowed' })
+}
+
 export default async function handler(req, res) {
   if (cors(req, res)) return
 
@@ -399,6 +442,7 @@ export default async function handler(req, res) {
     if (resource === 'push') return handlePush(req, res, db)
     if (resource === 'email-templates') return handleEmailTemplates(req, res, db)
     if (resource === 'onboarding') return handleOnboarding(req, res, db)
+    if (resource === 'audit-log') return handleAuditLog(req, res, db)
 
     return res.status(400).json({ error: 'resource parametresi gerekli' })
   } catch (err) {

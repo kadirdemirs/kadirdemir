@@ -135,6 +135,16 @@ async function handleLogin(req, res) {
     const csrfToken = setAuthCookies(req, res, token);
 
     logActivity(db, { action: 'Admin girişi yapıldı', detail: `${user.username} giriş yaptı`, type: 'system', icon: '🔐', user: user.username }).catch(() => {});
+    // Audit log (KADELINK)
+    import('./ops.js').then(({ writeAuditLog }) =>
+      writeAuditLog(db, {
+        actor: user.username,
+        action: 'auth:login',
+        target: user.username,
+        details: 'Admin paneline başarılı giriş',
+        ip: req.ip || req.headers['x-forwarded-for'] || '',
+      })
+    ).catch(() => {});
 
     return res.status(200).json({
       csrfToken,

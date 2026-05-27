@@ -6,7 +6,9 @@ import {
   HiOutlinePlus, HiOutlineSave, HiOutlineEye, HiOutlineEyeOff,
   HiOutlineX, HiOutlineMenuAlt3, HiOutlineRefresh, HiOutlineChartBar,
   HiOutlineBell, HiOutlinePhotograph, HiOutlineKey, HiOutlineDatabase,
-  HiOutlineChatAlt2, HiOutlineCheck,
+  HiOutlineChatAlt2, HiOutlineCheck, HiOutlineLink, HiOutlineUser,
+  HiOutlineColorSwatch, HiOutlineClipboardList, HiOutlineArrowUp,
+  HiOutlineArrowDown,
 } from 'react-icons/hi'
 import {
   loginApi, logoutApi, changePasswordApi,
@@ -24,6 +26,12 @@ import {
   getBackupSummaryApi, createBackupApi,
   getAdminCommentsApi, setCommentApprovalApi, deleteCommentApi,
 } from '../api'
+import {
+  KadelinkHeroSection,
+  KadelinkLinksSection,
+  KadelinkThemeSection,
+  AuditLogSection,
+} from './AdminKadelink'
 import './Admin.css'
 
 function Toast({ message, type, onClose }) {
@@ -651,7 +659,7 @@ function BlogEditor({ post, onSave, onCancel }) {
   )
 }
 
-// ───── NEWSLETTER ─────
+// ───── COMMENTS ─────
 function CommentsSection({ showToast }) {
   const [comments, setComments] = useState([])
   const [filter, setFilter] = useState('pending')
@@ -1458,6 +1466,10 @@ function SEORow({ label, value, hint, status }) {
 // ───── ROOT ADMIN ─────
 const TABS = [
   { id: 'dashboard', label: 'Panel', icon: HiOutlineHome },
+  { id: 'kadelink-hero', label: 'Hero Kartı', icon: HiOutlineUser },
+  { id: 'kadelink-links', label: 'KADELINK Linkleri', icon: HiOutlineLink },
+  { id: 'kadelink-theme', label: 'Tema', icon: HiOutlineColorSwatch },
+  { id: 'audit-log', label: 'Aktivite Günlüğü', icon: HiOutlineClipboardList },
   { id: 'analytics', label: 'Analitik', icon: HiOutlineChartBar },
   { id: 'social-stats', label: 'Sosyal Medya', icon: HiOutlineChartBar },
   { id: 'quick-tools', label: 'Hızlı Araçlar', icon: HiOutlineRefresh },
@@ -1526,6 +1538,10 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
   const renderTab = () => {
     switch (tab) {
       case 'dashboard': return <DashboardSection stats={stats} onNavigate={setTab} settings={siteSettings} ytChannel={ytData.channel} />
+      case 'kadelink-hero': return <KadelinkHeroSection showToast={showToast} />
+      case 'kadelink-links': return <KadelinkLinksSection showToast={showToast} />
+      case 'kadelink-theme': return <KadelinkThemeSection showToast={showToast} />
+      case 'audit-log': return <AuditLogSection showToast={showToast} />
       case 'analytics': return <AnalyticsSection />
       case 'social-stats': return <SocialStatsSection settings={siteSettings} ytChannel={ytData.channel} ytVideos={ytData.videos} showToast={showToast} />
       case 'quick-tools': return <QuickToolsSection showToast={showToast} />

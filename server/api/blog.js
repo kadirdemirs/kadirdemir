@@ -94,6 +94,9 @@ export default async function handler(req, res) {
 
       const result = await collection.insertOne(post);
       logActivity(db, { action: 'Blog yazısı oluşturuldu', detail: `"${titleTr}"`, type: 'create', icon: '📝', user: user.username }).catch(() => {});
+      import('./ops.js').then(({ writeAuditLog }) =>
+        writeAuditLog(db, { actor: user.username, action: 'blog:create', target: slug, details: `"${titleTr}" yazısı oluşturuldu`, ip: req.ip || '' })
+      ).catch(() => {});
       return res.status(201).json({ ...post, _id: result.insertedId });
     } catch (error) {
       console.error('Blog POST error:', error);
@@ -122,6 +125,9 @@ export default async function handler(req, res) {
       if (result.matchedCount === 0) return res.status(404).json({ error: 'Post bulunamadı' });
 
       logActivity(db, { action: 'Blog yazısı güncellendi', detail: `"${updateData.titleTr || id}"`, type: 'update', icon: '✏️', user: user.username }).catch(() => {});
+      import('./ops.js').then(({ writeAuditLog }) =>
+        writeAuditLog(db, { actor: user.username, action: 'blog:update', target: id, details: `"${updateData.titleTr || id}" yazısı güncellendi`, ip: req.ip || '' })
+      ).catch(() => {});
       return res.status(200).json({ message: 'Post güncellendi' });
     } catch (error) {
       console.error('Blog PUT error:', error);
