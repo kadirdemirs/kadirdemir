@@ -12,13 +12,11 @@ import ErrorBoundary from './components/ErrorBoundary'
 import InstallPrompt from './components/InstallPrompt'
 import LiveBanner from './components/LiveBanner'
 import CommandPalette from './components/CommandPalette'
-import CustomCursor from './components/CustomCursor'
 import CookieBanner from './components/CookieBanner'
 import FloatingCTA from './components/FloatingCTA'
 
 // Heavy WebGL components — lazy load to skip them on initial paint
 const Aurora = lazy(() => import('./components/reactbits/Aurora'))
-const ClickSpark = lazy(() => import('./components/reactbits/ClickSpark'))
 
 const AURORA_COLORS = ['#f59e0b', '#ec4899', '#a855f7']
 
@@ -165,12 +163,6 @@ function App() {
       {!isAdmin && <Footer />}
       {!isAdmin && <InstallPrompt />}
       {!isAdmin && <CommandPalette />}
-      {!isAdmin && (
-        <Suspense fallback={null}>
-          <ClickSpark sparkColor="#f59e0b" sparkCount={10} sparkRadius={22} duration={520} />
-        </Suspense>
-      )}
-      {!isAdmin && <CustomCursor />}
       {!isAdmin && <FloatingCTA />}
       {!isAdmin && <CookieBanner />}
     </>

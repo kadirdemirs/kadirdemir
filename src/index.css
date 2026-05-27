@@ -550,21 +550,21 @@ input, textarea {
 }
 
 /* HTML background — warm cream with amber/coral spots instead of harsh dark */
-[data-theme="light"] html {
-  background-color: #FBF8F3;
+html[data-theme="light"] {
+  background-color: #FBF8F3 !important;
   background-image:
     radial-gradient(ellipse 70% 50% at 15% 5%, rgba(245, 158, 11, 0.18) 0%, transparent 55%),
     radial-gradient(ellipse 50% 40% at 85% 30%, rgba(236, 72, 153, 0.10) 0%, transparent 60%),
     radial-gradient(ellipse 60% 50% at 70% 95%, rgba(168, 85, 247, 0.08) 0%, transparent 55%),
     radial-gradient(ellipse 40% 30% at 25% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 60%),
-    radial-gradient(circle at 1px 1px, rgba(26, 23, 21, 0.05) 1px, transparent 1px);
-  background-size: auto, auto, auto, auto, 32px 32px;
+    radial-gradient(circle at 1px 1px, rgba(26, 23, 21, 0.05) 1px, transparent 1px) !important;
+  background-size: auto, auto, auto, auto, 32px 32px !important;
 }
 
-[data-theme="light"] body { color: var(--text-primary); }
-[data-theme="light"] body::after { mix-blend-mode: multiply; opacity: 0.03; }
+html[data-theme="light"] body { color: var(--text-primary); background-color: transparent; }
+html[data-theme="light"] body::after { mix-blend-mode: multiply; opacity: 0.025; }
 
-[data-theme="light"] html::-webkit-scrollbar-track { background: var(--bg-1); }
+html[data-theme="light"]::-webkit-scrollbar-track { background: var(--bg-1); }
 
 /* Aurora background — dim heavily on light */
 [data-theme="light"] .kd-aurora-bg { opacity: 0.18; mix-blend-mode: multiply; }
@@ -648,4 +648,96 @@ html, body { transition: background-color 0.4s ease, color 0.4s ease; }
 .glass, .glass-strong, .glass-soft, .glass-card,
 .btn, .btn-primary, .btn-outline {
   transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform var(--transition-normal);
+}
+
+/* ─── Light theme full coverage — sayfa içerikleri için ─── */
+html[data-theme="light"] .hm-faq-item,
+html[data-theme="light"] .hm-newsletter,
+html[data-theme="light"] .hm-platform-card,
+html[data-theme="light"] .hm-social-card,
+html[data-theme="light"] .hm-video-card,
+html[data-theme="light"] .hm-top-card,
+html[data-theme="light"] .hm-blog-card,
+html[data-theme="light"] .hm-bento-large,
+html[data-theme="light"] .hm-bento-stat,
+html[data-theme="light"] .hm-bento-quote,
+html[data-theme="light"] .hm-stat,
+html[data-theme="light"] .kd-contact-card,
+html[data-theme="light"] .kd-follow-tile,
+html[data-theme="light"] .kd-newsletter,
+html[data-theme="light"] .kd-newsletter-row {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(26, 23, 21, 0.12) !important;
+  color: var(--text-primary);
+}
+html[data-theme="light"] .hm-newsletter::before,
+html[data-theme="light"] .hm-newsletter::after { display: none; }
+
+html[data-theme="light"] .hm-h2,
+html[data-theme="light"] .hm-bento-title,
+html[data-theme="light"] .hm-bento-quote-text,
+html[data-theme="light"] .hm-featured-title,
+html[data-theme="light"] .hm-video-title,
+html[data-theme="light"] .hm-top-info h4,
+html[data-theme="light"] .hm-blog-title,
+html[data-theme="light"] .hm-platform-name,
+html[data-theme="light"] .hm-social-name,
+html[data-theme="light"] .hm-faq-q,
+html[data-theme="light"] .hm-newsletter-text h2,
+html[data-theme="light"] .kd-newsletter-text h2,
+html[data-theme="light"] .ft-mega,
+html[data-theme="light"] .ft-mega-text,
+html[data-theme="light"] .kd-contact-card a,
+html[data-theme="light"] .kd-follow-tile h4 {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  background: none !important;
+}
+
+html[data-theme="light"] .hm-h2 .hm-accent,
+html[data-theme="light"] .kd-accent {
+  color: var(--primary-dark) !important;
+  -webkit-text-fill-color: var(--primary-dark) !important;
+  background: none !important;
+}
+
+html[data-theme="light"] .hm-bento-text,
+html[data-theme="light"] .hm-bento-meta,
+html[data-theme="light"] .hm-platform-handle,
+html[data-theme="light"] .hm-platform-stat-lbl,
+html[data-theme="light"] .hm-social-meta,
+html[data-theme="light"] .hm-faq-a,
+html[data-theme="light"] .hm-blog-excerpt,
+html[data-theme="light"] .hm-section-sub,
+html[data-theme="light"] .hm-newsletter-text p,
+html[data-theme="light"] .kd-newsletter-text p,
+html[data-theme="light"] .ft-tagline,
+html[data-theme="light"] .ft-list a,
+html[data-theme="light"] .ft-bottom {
+  color: var(--text-secondary) !important;
+}
+
+html[data-theme="light"] .nv-pill {
+  background: rgba(255, 255, 255, 0.55) !important;
+  border-color: rgba(26, 23, 21, 0.08) !important;
+}
+html[data-theme="light"] .nv-link {
+  color: rgba(26, 23, 21, 0.65) !important;
+}
+html[data-theme="light"] .nv-link:hover,
+html[data-theme="light"] .nv-link.is-active {
+  color: var(--text-primary) !important;
+}
+html[data-theme="light"] .nv-brand-text {
+  background: linear-gradient(180deg, #1a1715 0%, #5c5650 100%) !important;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+html[data-theme="light"] .nv-icon {
+  color: rgba(26, 23, 21, 0.55);
+}
+html[data-theme="light"] .nv-icon:hover {
+  background: rgba(26, 23, 21, 0.05);
+  color: var(--text-primary);
 }

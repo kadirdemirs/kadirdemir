@@ -13,10 +13,10 @@ import {
   HiOutlineEye,
   HiOutlineVideoCamera,
   HiOutlineChevronDown,
-  HiOutlineLightBulb,
-  HiOutlineFilm,
-  HiOutlineScissors,
-  HiOutlineSparkles,
+  HiOutlineRocketLaunch,
+  HiOutlineMicrophone,
+  HiOutlineQuestionMarkCircle,
+  HiOutlineWrenchScrewdriver,
 } from 'react-icons/hi2'
 import { useEffect, useMemo, useState } from 'react'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
@@ -384,38 +384,6 @@ export default function Home() {
           </motion.div>
         )}
       </section>
-
-      {/* ═══════════════ SERVICES MARQUEE ═══════════════ */}
-      <div className="hm-services-marquee" aria-hidden="true">
-        <div className="hm-services-marquee-inner">
-          <div className="hm-services-track">
-            {Array.from({ length: 2 }).map((_, dup) => (
-              <div key={dup} className="hm-services-group">
-                {[
-                  'YOUTUBE',
-                  'VLOG',
-                  'OYUN',
-                  'PODCAST',
-                  'CANLI YAYIN',
-                  'KISA VİDEO',
-                  'BLOG',
-                  'KAMERA ARKASI',
-                  'SPONSORLUK',
-                ].map((label, i) => (
-                  <span key={`${dup}-${i}`} className="hm-services-item">
-                    <span className="hm-services-star" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-                        <path d="M12 0c.7 6.3 5.7 11.3 12 12-6.3.7-11.3 5.7-12 12-.7-6.3-5.7-11.3-12-12 6.3-.7 11.3-5.7 12-12Z"/>
-                      </svg>
-                    </span>
-                    <span className="hm-services-label">{label}</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* ═══════════════ ABOUT BENTO ═══════════════ */}
       <section className="hm-section">
@@ -838,30 +806,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════ PROCESS TIMELINE ═══════════════ */}
-      <section className="hm-section">
-        <div className="hm-section-head">
-          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.processEyebrow')}</span>
-          <h2 className="hm-h2">{t('home.processTitle')}</h2>
-          <p className="hm-section-sub">{t('home.processSub')}</p>
-        </div>
-        <ol className="hm-process">
-          {[
-            { icon: HiOutlineLightBulb, title: t('home.process1Title'), desc: t('home.process1Desc'), step: '01' },
-            { icon: HiOutlineFilm, title: t('home.process2Title'), desc: t('home.process2Desc'), step: '02' },
-            { icon: HiOutlineScissors, title: t('home.process3Title'), desc: t('home.process3Desc'), step: '03' },
-            { icon: HiOutlineSparkles, title: t('home.process4Title'), desc: t('home.process4Desc'), step: '04' },
-          ].map((s) => (
-            <li key={s.step} className="hm-process-step">
-              <div className="hm-process-step-num">{s.step}</div>
-              <div className="hm-process-step-icon"><s.icon size={22} /></div>
-              <h3 className="hm-process-step-title">{s.title}</h3>
-              <p className="hm-process-step-desc">{s.desc}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
       {/* ═══════════════ MILESTONES ═══════════════ */}
       {(ytSubs || ytViews || ytVideosCount || igFollowers || ttFollowers) && (
         <section className="hm-section">
@@ -888,51 +832,26 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══════════════ TESTIMONIALS ═══════════════ */}
+      {/* ═══════════════ EXPLORE / QUICK ACCESS ═══════════════ */}
       <section className="hm-section">
         <div className="hm-section-head">
-          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.testimonialEyebrow')}</span>
-          <h2 className="hm-h2">{t('home.testimonialTitle')}</h2>
-          <p className="hm-section-sub">{t('home.testimonialSub')}</p>
+          <span className="hm-eyebrow"><span className="hm-eyebrow-dot" /> {t('home.exploreEyebrow')}</span>
+          <h2 className="hm-h2">{t('home.exploreTitle')}</h2>
+          <p className="hm-section-sub">{t('home.exploreSub')}</p>
         </div>
-        <div className="hm-testimonials">
+        <div className="hm-explore-grid">
           {[
-            {
-              quote: lang === 'en'
-                ? "Kadir delivered exactly the energy our launch needed — natural storytelling that didn't feel like an ad."
-                : lang === 'de'
-                ? 'Kadir hat genau die Energie geliefert, die unser Launch brauchte — natürliches Storytelling, das sich nicht wie eine Werbung anfühlte.'
-                : "Kadir, lansmanımızın ihtiyacı olan tam o enerjiyi getirdi — reklam gibi durmayan doğal bir anlatım.",
-              author: lang === 'en' ? 'Marketing Lead, mobile game studio' : lang === 'de' ? 'Marketing-Lead, mobiles Spielestudio' : 'Pazarlama Direktörü, mobil oyun stüdyosu',
-              tag: 'Brand',
-            },
-            {
-              quote: lang === 'en'
-                ? "I've been watching since the 200th video. Each one feels like an evening with a friend."
-                : lang === 'de'
-                ? '200. Video seit ich zuschaue. Jedes Video fühlt sich wie ein Abend mit einem Freund an.'
-                : '200. videodan beri izliyorum. Her bölüm bir arkadaşla geçirilen akşam gibi.',
-              author: lang === 'en' ? 'Long-time viewer' : lang === 'de' ? 'Langjährige Zuschauerin' : 'Uzun süreli izleyici',
-              tag: 'Community',
-            },
-            {
-              quote: lang === 'en'
-                ? "Most professional creator we've worked with this year. Clean brief, clear deadlines, sharp result."
-                : lang === 'de'
-                ? 'Der professionellste Creator, mit dem wir dieses Jahr gearbeitet haben. Klares Briefing, klare Deadlines, scharfes Ergebnis.'
-                : "Bu yıl çalıştığımız en profesyonel içerik üreticisi. Net brief, net deadline, keskin sonuç.",
-              author: lang === 'en' ? 'Influencer manager, agency' : lang === 'de' ? 'Influencer-Manager, Agentur' : 'Influencer yöneticisi, ajans',
-              tag: 'Agency',
-            },
-          ].map((q, i) => (
-            <figure key={i} className="hm-testimonial">
-              <span className="hm-testimonial-quote" aria-hidden="true">"</span>
-              <blockquote className="hm-testimonial-text">{q.quote}</blockquote>
-              <figcaption className="hm-testimonial-foot">
-                <span className="hm-testimonial-author">{q.author}</span>
-                <span className="hm-testimonial-tag">{q.tag}</span>
-              </figcaption>
-            </figure>
+            { to: '/videolar', icon: HiOutlineVideoCamera, title: t('home.exploreVideosTitle'), desc: t('home.exploreVideosDesc'), color: '#FF0000' },
+            { to: '/setup', icon: HiOutlineWrenchScrewdriver, title: t('home.exploreSetupTitle'), desc: t('home.exploreSetupDesc'), color: '#06b6d4' },
+            { to: '/sor', icon: HiOutlineQuestionMarkCircle, title: t('home.exploreAmaTitle'), desc: t('home.exploreAmaDesc'), color: '#a855f7' },
+            { to: '/sponsor', icon: HiOutlineRocketLaunch, title: t('home.exploreSponsorTitle'), desc: t('home.exploreSponsorDesc'), color: '#f59e0b' },
+          ].map((c) => (
+            <Link key={c.to} to={c.to} className="hm-explore-card" style={{ '--ex-color': c.color }}>
+              <span className="hm-explore-icon" aria-hidden="true"><c.icon size={26} /></span>
+              <h3 className="hm-explore-title">{c.title}</h3>
+              <p className="hm-explore-desc">{c.desc}</p>
+              <span className="hm-explore-arrow" aria-hidden="true"><HiOutlineArrowRight /></span>
+            </Link>
           ))}
         </div>
       </section>
@@ -943,10 +862,10 @@ export default function Home() {
           key={`vel-${lang}`}
           texts={[
             lang === 'en'
-              ? `${brandName} • Storyteller • Istanbul •`
+              ? `${brandName} • Content Creator • Istanbul •`
               : lang === 'de'
-              ? `${brandName} • Geschichtenerzähler • Istanbul •`
-              : `${brandName} • Hikâye anlatıcısı • İstanbul •`,
+              ? `${brandName} • Content Creator • Istanbul •`
+              : `${brandName} • İçerik Üreticisi • İstanbul •`,
             lang === 'en'
               ? 'Vlog • Gaming • Entertainment • Adventure •'
               : lang === 'de'
