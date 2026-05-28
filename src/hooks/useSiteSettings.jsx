@@ -9,7 +9,7 @@ export const DEFAULT_SITE_SETTINGS = {
   businessEmail: 'thekademedia@gmail.com',
   phone: '',
   address: 'İstanbul, TR',
-  baseUrl: 'https://kadirdemir-nu.vercel.app',
+  baseUrl: 'https://kadirardademir.com',
 
   // Social URLs
   youtube: 'https://youtube.com/@kadirdemir',

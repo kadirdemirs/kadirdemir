@@ -1,5 +1,7 @@
 const LOCAL_ORIGINS = ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:4173'];
 const PRODUCTION_ORIGINS = [
+  'https://www.kadirardademir.com',
+  'https://kadirardademir.com',
   'https://www.kadirdemir.tv',
   'https://kadirdemir.tv',
   'https://kadirdemir.vercel.app',

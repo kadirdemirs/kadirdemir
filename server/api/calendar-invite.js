@@ -42,7 +42,7 @@ function generateICS({ title, description, date, time, duration = 60 }) {
     `SUMMARY:${title}`,
     `DESCRIPTION:${(description || '').replace(/\n/g, '\\n')}`,
     'ORGANIZER;CN=Kadir Demir:mailto:thekademedia@gmail.com',
-    `UID:${Date.now()}@kadirdemir.tv`,
+    `UID:${Date.now()}@kadirardademir.com`,
     'STATUS:CONFIRMED',
     'END:VEVENT',
     'END:VCALENDAR',

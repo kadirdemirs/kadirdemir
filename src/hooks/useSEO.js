@@ -7,7 +7,7 @@ const LOCALE_MAP = {
   de: 'de_DE',
 }
 
-const DEFAULT_BASE_URL = 'https://kadirdemir-nu.vercel.app'
+const DEFAULT_BASE_URL = 'https://kadirardademir.com'
 const SITE_NAME = 'Kadir Demir'
 const DEFAULT_TITLE = 'Kadir Demir | YouTube İçerik Üreticisi'
 

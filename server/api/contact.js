@@ -123,7 +123,7 @@ export default async function handler(req, res) {
       for (const sub of subscribers) {
         try {
           const unsubToken = generateUnsubToken(sub.email);
-          const unsubLink = `https://kadirdemir.tv/api/contact?action=unsubscribe&email=${encodeURIComponent(sub.email)}${unsubToken ? `&token=${unsubToken}` : ''}`;
+          const unsubLink = `https://kadirardademir.com/api/contact?action=unsubscribe&email=${encodeURIComponent(sub.email)}${unsubToken ? `&token=${unsubToken}` : ''}`;
           const safeHtml = sanitizedHtml + `<div style="margin-top:32px;padding-top:16px;border-top:1px solid #333;text-align:center;font-size:12px;color:#888;">
             <a href="${unsubLink}" style="color:#888;">Abonelikten çık</a>
           </div>`;
@@ -265,7 +265,7 @@ export default async function handler(req, res) {
           from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
           to: email,
           subject: `Sosyal Medya Analiz Raporunuz — ${safeScore}/100 Puan`,
-          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;"><h1 style="color:#eac321;margin:0;">Kadir Demir</h1><p style="color:#888;margin:8px 0 0;">Sosyal Medya Analiz Raporu</p></div><div style="padding:30px 20px;"><div style="text-align:center;margin-bottom:24px;"><div style="display:inline-block;width:100px;height:100px;border-radius:50%;border:3px solid ${scoreColor};line-height:100px;font-size:2rem;font-weight:700;color:${scoreColor};">${safeScore}</div><div style="color:#888;font-size:0.85rem;margin-top:4px;">/100 — ${scoreLabel}</div></div><p style="color:#ccc;line-height:1.8;">Merhaba,</p><p style="color:#ccc;line-height:1.8;">Sosyal medya hesaplarınızın analizini tamamladık. İşte detaylı sonuçlarınız:</p><table style="width:100%;border-collapse:collapse;margin:16px 0;background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;">${catRows}</table><p style="color:#ccc;line-height:1.8;">Hesaplarınızı daha da güçlendirmek için uzman ekibimizle ücretsiz bir görüşme yapabilirsiniz.</p><div style="text-align:center;margin:24px 0;"><a href="https://kadirdemir.tv/iletisim" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">Ücretsiz Danışmanlık Al →</a></div><hr style="border:none;border-top:1px solid #333;margin:24px 0;"/><p style="color:#888;font-size:12px;">Kadir Demir · İstanbul<br/>thekademedia@gmail.com</p></div></div>`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;"><h1 style="color:#eac321;margin:0;">Kadir Demir</h1><p style="color:#888;margin:8px 0 0;">Sosyal Medya Analiz Raporu</p></div><div style="padding:30px 20px;"><div style="text-align:center;margin-bottom:24px;"><div style="display:inline-block;width:100px;height:100px;border-radius:50%;border:3px solid ${scoreColor};line-height:100px;font-size:2rem;font-weight:700;color:${scoreColor};">${safeScore}</div><div style="color:#888;font-size:0.85rem;margin-top:4px;">/100 — ${scoreLabel}</div></div><p style="color:#ccc;line-height:1.8;">Merhaba,</p><p style="color:#ccc;line-height:1.8;">Sosyal medya hesaplarınızın analizini tamamladık. İşte detaylı sonuçlarınız:</p><table style="width:100%;border-collapse:collapse;margin:16px 0;background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;">${catRows}</table><p style="color:#ccc;line-height:1.8;">Hesaplarınızı daha da güçlendirmek için uzman ekibimizle ücretsiz bir görüşme yapabilirsiniz.</p><div style="text-align:center;margin:24px 0;"><a href="https://kadirardademir.com/iletisim" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">Ücretsiz Danışmanlık Al →</a></div><hr style="border:none;border-top:1px solid #333;margin:24px 0;"/><p style="color:#888;font-size:12px;">Kadir Demir · İstanbul<br/>thekademedia@gmail.com</p></div></div>`,
         }).catch(() => {});
       }
 
@@ -526,7 +526,7 @@ async function handleNewsletter(req, res) {
     );
 
     // Confirm linki gönder
-    const baseUrl = (process.env.SITE_BASE_URL || 'https://kadirdemir-nu.vercel.app').replace(/\/$/, '');
+    const baseUrl = (process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '');
     const confirmUrl = `${baseUrl}/api/contact?action=confirm&token=${encodeURIComponent(confirmToken)}`;
 
     const transporter = makeTransporter();

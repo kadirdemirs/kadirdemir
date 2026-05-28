@@ -1,6 +1,6 @@
 import { getDb } from './_lib/mongodb.js';
 
-const BASE = (process.env.SITE_BASE_URL || 'https://kadirdemir-nu.vercel.app').replace(/\/$/, '');
+const BASE = (process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '');
 const SITE_TITLE = 'Kadir Demir';
 const SITE_DESC = 'İstanbul\'dan yayın yapan YouTube içerik üreticisi. Oyun, vlog ve eğlence videoları, blog yazıları.';
 

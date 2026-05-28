@@ -95,7 +95,7 @@ export default function BlogDetail() {
     description: excerpt || '',
     path: `/blog/${slug}`,
     type: 'article',
-    image: `https://kadirdemir-nu.vercel.app/api/og?${ogImageParams}`,
+    image: `https://kadirardademir.com/api/og?${ogImageParams}`,
   })
 
   useEffect(() => {
@@ -118,14 +118,14 @@ export default function BlogDetail() {
       description: excerpt,
       ...(published ? { datePublished: published } : {}),
       ...(modified ? { dateModified: modified } : {}),
-      author: { '@type': 'Person', name: 'Kadir Demir', url: 'https://kadirdemir-nu.vercel.app' },
+      author: { '@type': 'Person', name: 'Kadir Demir', url: 'https://kadirardademir.com' },
       publisher: {
         '@type': 'Organization',
         name: 'Kadir Demir',
-        logo: { '@type': 'ImageObject', url: 'https://kadirdemir-nu.vercel.app/favicon.png' },
+        logo: { '@type': 'ImageObject', url: 'https://kadirardademir.com/favicon.png' },
       },
-      url: `https://kadirdemir-nu.vercel.app/blog/${slug}`,
-      mainEntityOfPage: { '@type': 'WebPage', '@id': `https://kadirdemir-nu.vercel.app/blog/${slug}` },
+      url: `https://kadirardademir.com/blog/${slug}`,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': `https://kadirardademir.com/blog/${slug}` },
       inLanguage: lang === 'en' ? 'en-US' : 'tr-TR',
       ...(post.coverImage && /^https?:\/\//.test(post.coverImage) ? { image: post.coverImage } : (post.image && /^https?:\/\//.test(post.image) ? { image: post.image } : {})),
     }
@@ -142,9 +142,9 @@ export default function BlogDetail() {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: 'https://kadirdemir-nu.vercel.app' },
-        { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://kadirdemir-nu.vercel.app/blog' },
-        { '@type': 'ListItem', position: 3, name: title, item: `https://kadirdemir-nu.vercel.app/blog/${slug}` },
+        { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: 'https://kadirardademir.com' },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://kadirardademir.com/blog' },
+        { '@type': 'ListItem', position: 3, name: title, item: `https://kadirardademir.com/blog/${slug}` },
       ],
     }
     let bcEl = document.getElementById('jsonld-breadcrumb')
@@ -172,7 +172,7 @@ export default function BlogDetail() {
   }
   if (!post) return <Navigate to="/blog" replace />
 
-  const postUrl = `https://kadirdemir-nu.vercel.app/blog/${slug}`
+  const postUrl = `https://kadirardademir.com/blog/${slug}`
   const encodedUrl = encodeURIComponent(postUrl)
   const encodedTitle = encodeURIComponent(title)
 

@@ -368,7 +368,7 @@ export default async function handler(req, res) {
       const settingsData = (settingsDoc?.data) || {};
       const ytVideos = (ytCache?.data?.videos) || [];
 
-      const base = (settingsData.baseUrl || process.env.SITE_BASE_URL || 'https://kadirdemir-nu.vercel.app').replace(/\/$/, '');
+      const base = (settingsData.baseUrl || process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '');
       const today = new Date().toISOString().slice(0, 10);
       const staticUrls = [
         { loc: '/', priority: '1.0', freq: 'weekly' },

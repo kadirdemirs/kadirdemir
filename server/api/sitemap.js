@@ -1,6 +1,6 @@
 import { getDb } from './_lib/mongodb.js';
 
-const BASE = (process.env.SITE_BASE_URL || 'https://kadirdemir-nu.vercel.app').replace(/\/$/, '');
+const BASE = (process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '');
 
 const STATIC_PAGES = [
   { loc: '/', changefreq: 'weekly', priority: '1.0', images: ['/icon-512.png'] },

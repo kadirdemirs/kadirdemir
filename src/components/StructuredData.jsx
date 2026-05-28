@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const DEFAULT_BASE_URL = 'https://kadirdemir-nu.vercel.app'
+const DEFAULT_BASE_URL = 'https://kadirardademir.com'
 
 function baseUrl() {
   if (typeof window !== 'undefined' && window.__SITE_BASE_URL__) return window.__SITE_BASE_URL__

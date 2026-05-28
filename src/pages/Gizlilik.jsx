@@ -25,7 +25,7 @@ export default function Gizlilik() {
               <h2>1. Genel Bilgi</h2>
               <p>
                 Kadir Demir olarak kişisel verilerinizin güvenliğine büyük önem veriyoruz. Bu Gizlilik
-                Politikası, web sitemizi (<strong>kadirdemir-nu.vercel.app</strong>) kullanırken hangi verilerin
+                Politikası, web sitemizi (<strong>kadirardademir.com</strong>) kullanırken hangi verilerin
                 toplandığını ve bu verilerin nasıl kullanıldığını açıklamaktadır.
               </p>
 

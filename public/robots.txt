@@ -16,4 +16,4 @@ Disallow: /
 User-agent: anthropic-ai
 Disallow: /
 
-Sitemap: https://kadirdemir-nu.vercel.app/sitemap.xml
+Sitemap: https://kadirardademir.com/sitemap.xml
