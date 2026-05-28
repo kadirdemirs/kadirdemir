@@ -215,10 +215,11 @@ export default async function handler(req, res) {
     }
   }
 
-  // GET /api/youtube — public, cache'li
+  // GET /api/youtube — public, cache'li (force=1 ile yenilenebilir)
   if (req.method === 'GET') {
     try {
-      const result = await getCachedOrRefresh(db, false);
+      const wantForce = req.query?.force === '1' || req.query?.force === 'true';
+      const result = await getCachedOrRefresh(db, wantForce);
       return res.status(200).json(result);
     } catch (e) {
       return res.status(500).json({ error: e.message });

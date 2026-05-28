@@ -323,8 +323,13 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
-      const result = await aggregate(db, false);
-      res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
+      // force=1: cache'i atla (test/ilk kurulum). API kotasını korumak için
+      // sadece mevcut cache 'none'/boşsa ya da çok eskiyse zorla yeniler.
+      const wantForce = req.query?.force === '1' || req.query?.force === 'true';
+      const result = await aggregate(db, wantForce);
+      if (!wantForce) {
+        res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
+      }
       return res.status(200).json(result);
     }
 
