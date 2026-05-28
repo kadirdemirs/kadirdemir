@@ -1440,9 +1440,6 @@
   to { transform: translateX(-50%); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .g-marquee-track { animation: none; }
-}
 
 /* ══════════════════════════════════════════════════════════════
    İçerik türleri — sonsuz kayan loop (LogoLoop)
@@ -1759,9 +1756,3 @@ html[data-theme="light"] .g-contact-grid {
 /* ══════════════════════════════════════════════════════════════
    Reduced motion
    ══════════════════════════════════════════════════════════════ */
-@media (prefers-reduced-motion: reduce) {
-  .g-hero-inner,
-  .g-stat,
-  .g-work img,
-  .g-service::after { animation: none !important; transition: none !important; }
-}

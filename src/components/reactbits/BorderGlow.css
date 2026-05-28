@@ -121,8 +121,4 @@
   z-index: 1;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .border-glow-card::before,
-  .border-glow-card::after,
-  .border-glow-card > .edge-light { opacity: 0 !important; }
-}
+/* Kenar parıltısı kullanıcı isteğiyle her durumda aktif */

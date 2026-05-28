@@ -87,7 +87,4 @@
   background: linear-gradient(to left, var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%, rgba(0,0,0,0) 100%);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .logoloop__track { transform: translate3d(0, 0, 0) !important; }
-  .logoloop__item img, .logoloop__node { transition: none !important; }
-}
+/* Kayan şerit kullanıcı isteğiyle her durumda aktif */

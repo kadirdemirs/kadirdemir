@@ -45,9 +45,4 @@
   -webkit-text-fill-color: transparent;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animated-gradient-text .text-content,
-  .animated-gradient-text .gradient-overlay {
-    background-position: 0% 50% !important;
-  }
-}
+/* Animasyon kullanıcı isteğiyle her durumda aktif tutuluyor */
