@@ -186,7 +186,7 @@ export default async function handler(req, res) {
       logActivity(db, { action: 'Yeni kariyer başvurusu', detail: `${name.trim()} — ${position.trim()}`, type: 'message', icon: '💼', user: 'sistem' }).catch(() => {});
       const transporter = makeTransporter();
       if (transporter) {
-        const mailTo = process.env.MAIL_TO || 'hello@kadirdemir.tv';
+        const mailTo = process.env.MAIL_TO || 'thekademedia@gmail.com';
         transporter.sendMail({
           from: `"Kadir Demir Website" <${process.env.SMTP_USER}>`,
           to: mailTo,
@@ -197,7 +197,7 @@ export default async function handler(req, res) {
           from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
           to: email,
           subject: 'Başvurunuz Alındı — Kadir Demir',
-          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><h2 style="color:#eac321;">Kadir Demir</h2><h3>Merhaba ${escapeHtml(name)},</h3><p style="color:#ccc;line-height:1.8;"><strong style="color:#eac321;">${escapeHtml(position)}</strong> pozisyonu için başvurunuz alındı. İnceleme sonrasında sizinle iletişime geçeceğiz.</p><p style="color:#888;font-size:12px;margin-top:24px;">Kadir Demir | hello@kadirdemir.tv | +90 506 729 34 23</p></div>`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><h2 style="color:#eac321;">Kadir Demir</h2><h3>Merhaba ${escapeHtml(name)},</h3><p style="color:#ccc;line-height:1.8;"><strong style="color:#eac321;">${escapeHtml(position)}</strong> pozisyonu için başvurunuz alındı. İnceleme sonrasında sizinle iletişime geçeceğiz.</p><p style="color:#888;font-size:12px;margin-top:24px;">Kadir Demir | thekademedia@gmail.com</p></div>`,
         }).catch(() => {});
       }
       return res.status(200).json({ message: 'Başvurunuz başarıyla alındı!' });
@@ -251,8 +251,8 @@ export default async function handler(req, res) {
         const scoreColor = safeScore <= 40 ? '#FF4444' : safeScore <= 60 ? '#FF9800' : safeScore <= 80 ? '#eac321' : '#2ECC71';
         const scoreLabel = safeScore <= 40 ? 'Acil İyileştirme Gerekli' : safeScore <= 60 ? 'Geliştirilmeli' : safeScore <= 80 ? 'İyi Durumda' : 'Mükemmel';
 
-        // Notify hello@kadirdemir.tv
-        const mailTo = process.env.MAIL_TO || 'hello@kadirdemir.tv';
+        // Notify thekademedia@gmail.com
+        const mailTo = process.env.MAIL_TO || 'thekademedia@gmail.com';
         transporter.sendMail({
           from: `"Kadir Demir Website" <${process.env.SMTP_USER}>`,
           to: mailTo,
@@ -265,7 +265,7 @@ export default async function handler(req, res) {
           from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
           to: email,
           subject: `Sosyal Medya Analiz Raporunuz — ${safeScore}/100 Puan`,
-          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;"><h1 style="color:#eac321;margin:0;">Kadir Demir</h1><p style="color:#888;margin:8px 0 0;">Sosyal Medya Analiz Raporu</p></div><div style="padding:30px 20px;"><div style="text-align:center;margin-bottom:24px;"><div style="display:inline-block;width:100px;height:100px;border-radius:50%;border:3px solid ${scoreColor};line-height:100px;font-size:2rem;font-weight:700;color:${scoreColor};">${safeScore}</div><div style="color:#888;font-size:0.85rem;margin-top:4px;">/100 — ${scoreLabel}</div></div><p style="color:#ccc;line-height:1.8;">Merhaba,</p><p style="color:#ccc;line-height:1.8;">Sosyal medya hesaplarınızın analizini tamamladık. İşte detaylı sonuçlarınız:</p><table style="width:100%;border-collapse:collapse;margin:16px 0;background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;">${catRows}</table><p style="color:#ccc;line-height:1.8;">Hesaplarınızı daha da güçlendirmek için uzman ekibimizle ücretsiz bir görüşme yapabilirsiniz.</p><div style="text-align:center;margin:24px 0;"><a href="https://kadirdemir.tv/iletisim" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">Ücretsiz Danışmanlık Al →</a></div><hr style="border:none;border-top:1px solid #333;margin:24px 0;"/><p style="color:#888;font-size:12px;">Kadir Demir · İstanbul<br/>hello@kadirdemir.tv</p></div></div>`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;"><div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;"><h1 style="color:#eac321;margin:0;">Kadir Demir</h1><p style="color:#888;margin:8px 0 0;">Sosyal Medya Analiz Raporu</p></div><div style="padding:30px 20px;"><div style="text-align:center;margin-bottom:24px;"><div style="display:inline-block;width:100px;height:100px;border-radius:50%;border:3px solid ${scoreColor};line-height:100px;font-size:2rem;font-weight:700;color:${scoreColor};">${safeScore}</div><div style="color:#888;font-size:0.85rem;margin-top:4px;">/100 — ${scoreLabel}</div></div><p style="color:#ccc;line-height:1.8;">Merhaba,</p><p style="color:#ccc;line-height:1.8;">Sosyal medya hesaplarınızın analizini tamamladık. İşte detaylı sonuçlarınız:</p><table style="width:100%;border-collapse:collapse;margin:16px 0;background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;">${catRows}</table><p style="color:#ccc;line-height:1.8;">Hesaplarınızı daha da güçlendirmek için uzman ekibimizle ücretsiz bir görüşme yapabilirsiniz.</p><div style="text-align:center;margin:24px 0;"><a href="https://kadirdemir.tv/iletisim" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">Ücretsiz Danışmanlık Al →</a></div><hr style="border:none;border-top:1px solid #333;margin:24px 0;"/><p style="color:#888;font-size:12px;">Kadir Demir · İstanbul<br/>thekademedia@gmail.com</p></div></div>`,
         }).catch(() => {});
       }
 
@@ -375,7 +375,7 @@ export default async function handler(req, res) {
     }
 
     // Send notification email to team
-    const mailTo = process.env.MAIL_TO || 'hello@kadirdemir.tv';
+    const mailTo = process.env.MAIL_TO || 'thekademedia@gmail.com';
     const transporter = makeTransporter();
 
     if (transporter) {
@@ -425,13 +425,9 @@ export default async function handler(req, res) {
               </div>
               <div style="padding:30px 20px;">
                 <h2 style="color:#fff;">Merhaba ${escapeHtml(name)},</h2>
-                <p style="color:#ccc;line-height:1.8;">Mesajınız başarıyla alındı. Ekibimiz en kısa sürede sizinle iletişime geçecek — genellikle 1 iş günü içinde yanıt veriyoruz.</p>
-                <p style="color:#ccc;line-height:1.8;">Acil bir konunuz varsa WhatsApp üzerinden ulaşabilirsiniz:</p>
-                <div style="text-align:center;margin:24px 0;">
-                  <a href="https://wa.me/905067293423" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">WhatsApp'tan Yaz</a>
-                </div>
+                <p style="color:#ccc;line-height:1.8;">Mesajın bana ulaştı. En kısa sürede dönüş yapacağım — genellikle 1-2 gün içinde.</p>
                 <hr style="border:none;border-top:1px solid #333;margin:24px 0;" />
-                <p style="color:#888;font-size:13px;">Kadir Demir · İstanbul<br/>hello@kadirdemir.tv</p>
+                <p style="color:#888;font-size:13px;">Kadir Demir · İstanbul<br/>thekademedia@gmail.com</p>
               </div>
             </div>
           `,

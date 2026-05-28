@@ -65,7 +65,7 @@ export default function MediaKit() {
     if (typeof window !== 'undefined') window.print()
   }
 
-  const businessEmail = settings.businessEmail || 'business@kadirdemir.tv'
+  const businessEmail = settings.businessEmail || 'thekademedia@gmail.com'
 
   return (
     <div className="kd-mediakit">

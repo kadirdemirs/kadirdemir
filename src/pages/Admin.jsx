@@ -1501,7 +1501,7 @@ function PurgeLegacySection({ showToast }) {
     setLoading(true)
     try {
       const res = await purgeLegacyApplyApi()
-      showToast(`Temizlendi · blogs: ${res.deleted?.blogs || 0}, partners: ${res.deleted?.partners || 0}, messages: ${res.deleted?.messages || 0}`, 'success')
+      showToast(`Temizlendi · blog: ${res.deleted?.blogs || 0}, partner: ${res.deleted?.partners || 0}, mesaj: ${res.deleted?.messages || 0}, içerik: ${res.deleted?.content || 0}`, 'success')
       setSummary(null)
       setConfirming(false)
     } catch (e) {
@@ -1546,6 +1546,7 @@ function PurgeLegacySection({ showToast }) {
             <li>Blog yazıları: <strong>{summary.blogs}</strong></li>
             <li>Partner kayıtları: <strong>{summary.partners}</strong></li>
             <li>Eski mesajlar: <strong>{summary.messages}</strong></li>
+            <li>İçerik bölümleri (hero/stats): <strong>{summary.content || 0}</strong></li>
             <li>Site ayarları (düzeltilecek alan): <strong>{summary.settingsHits?.length || 0}</strong></li>
           </ul>
           {summary.settingsHits?.length > 0 && (

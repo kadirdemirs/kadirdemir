@@ -504,34 +504,38 @@ input, textarea, select {
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at center, black 20%, transparent 80%);
 }
 
-/* ═══════════ AMBIENT BACKGROUND ═══════════ */
+/* ═══════════ AMBIENT BACKGROUND — Dark grid + glow (Vercel/Linear tarzı) ═══════════ */
 .kd-aurora-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   overflow: hidden;
+  background: var(--bg-deep);
 }
 
+/* İnce ızgara çizgileri — merkeze doğru solan radial mask */
 .kd-aurora-bg::before {
   content: '';
   position: absolute;
-  inset: -15%;
-  background:
-    radial-gradient(ellipse 50% 40% at 12% 12%, rgba(212, 148, 63, 0.2), transparent 55%),
-    radial-gradient(ellipse 45% 35% at 88% 88%, rgba(212, 148, 63, 0.15), transparent 55%),
-    radial-gradient(ellipse 35% 30% at 60% 25%, rgba(232, 180, 104, 0.08), transparent 55%),
-    radial-gradient(ellipse 30% 25% at 35% 75%, rgba(166, 116, 40, 0.1), transparent 55%);
-  animation: kdAmbientShift 18s ease-in-out infinite alternate;
-  will-change: transform;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(212, 148, 63, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 148, 63, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 0%, transparent 75%);
 }
 
+/* Üstte yumuşak amber glow + alta doğru koyulaşan vignette */
 .kd-aurora-bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 90% 80% at 50% 40%, transparent 0%, var(--bg-deep) 90%);
-  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% -5%, rgba(212, 148, 63, 0.16), transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 15%, rgba(232, 180, 104, 0.07), transparent 55%),
+    radial-gradient(ellipse 100% 70% at 50% 100%, var(--bg-deep) 10%, transparent 70%);
 }
 
 /* GPU acceleration */

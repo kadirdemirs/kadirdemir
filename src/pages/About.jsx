@@ -16,7 +16,7 @@ export default function About() {
   const youtubeUrl = settings.youtube || 'https://youtube.com/@kadirdemir'
   const instagramUrl = settings.instagram || 'https://instagram.com/kadirardademir'
   const tiktokUrl = settings.tiktok || 'https://tiktok.com/@kadirdemirs'
-  const emailAddr = settings.businessEmail || settings.email || 'hello@kadirdemir.tv'
+  const emailAddr = settings.businessEmail || settings.email || 'thekademedia@gmail.com'
   const brandName = settings.businessName || 'Kadir Demir'
   return (
     <div className="kd-about">

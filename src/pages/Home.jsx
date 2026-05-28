@@ -13,7 +13,6 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/CountUp'
-import Aurora from '../components/reactbits/Aurora'
 import {
   getYouTubeVideosApi, getBlogsApi, getSocialStatsApi, sendContactApi,
   getPartnersApi,
@@ -237,9 +236,6 @@ export default function Home() {
       {videos.length > 0 && <VideoSchema videos={videos.slice(0, 8)} />}
 
       <section className="g-hero" id="home">
-        <div className="g-hero-aurora" aria-hidden="true">
-          <Aurora colorStops={['#d4943f', '#a67428', '#e8b468']} amplitude={0.7} blend={0.5} speed={0.35} />
-        </div>
         <div className="g-hero-veil" />
         <div className="g-hero-inner">
           <span className="g-hero-mark">

@@ -32,7 +32,7 @@ function getEmails(reminder) {
     return reminder.emails;
   }
   if (reminder.email) return [reminder.email];
-  return [process.env.MAIL_TO || 'hello@kadirdemir.tv'];
+  return [process.env.MAIL_TO || 'thekademedia@gmail.com'];
 }
 
 function timingSafeHexEqual(left, right) {
@@ -220,7 +220,7 @@ export default async function handler(req, res) {
     // emails: array of email strings; assignedUsers: array of user IDs for in-app notification
     const emailList = Array.isArray(emails) && emails.length > 0
       ? emails.filter(e => e && e.includes('@'))
-      : [process.env.MAIL_TO || 'hello@kadirdemir.tv'];
+      : [process.env.MAIL_TO || 'thekademedia@gmail.com'];
 
     const reminder = {
       title: title.trim(),
@@ -293,7 +293,7 @@ export default async function handler(req, res) {
       const endM = String(endTotal % 60).padStart(2, '0');
       const startFmt = `${year}${month}${day}T${hours.padStart(2, '0')}${minutes.padStart(2, '0')}00`;
       const endFmt = `${year}${month}${day}T${endH}${endM}00`;
-      return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kadir Demir//Calendar//TR','CALSCALE:GREGORIAN','METHOD:REQUEST','BEGIN:VTIMEZONE','TZID:Europe/Istanbul','BEGIN:STANDARD','DTSTART:19700101T000000','TZOFFSETFROM:+0300','TZOFFSETTO:+0300','END:STANDARD','END:VTIMEZONE','BEGIN:VEVENT',`DTSTART;TZID=Europe/Istanbul:${startFmt}`,`DTEND;TZID=Europe/Istanbul:${endFmt}`,`SUMMARY:${title}`,`DESCRIPTION:${(description || '').replace(/\n/g, '\\n')}`,'ORGANIZER;CN=Kadir Demir:mailto:hello@kadirdemir.tv',`UID:${Date.now()}@kadirdemir.tv`,'STATUS:CONFIRMED','END:VEVENT','END:VCALENDAR'].join('\r\n');
+      return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kadir Demir//Calendar//TR','CALSCALE:GREGORIAN','METHOD:REQUEST','BEGIN:VTIMEZONE','TZID:Europe/Istanbul','BEGIN:STANDARD','DTSTART:19700101T000000','TZOFFSETFROM:+0300','TZOFFSETTO:+0300','END:STANDARD','END:VTIMEZONE','BEGIN:VEVENT',`DTSTART;TZID=Europe/Istanbul:${startFmt}`,`DTEND;TZID=Europe/Istanbul:${endFmt}`,`SUMMARY:${title}`,`DESCRIPTION:${(description || '').replace(/\n/g, '\\n')}`,'ORGANIZER;CN=Kadir Demir:mailto:thekademedia@gmail.com',`UID:${Date.now()}@kadirdemir.tv`,'STATUS:CONFIRMED','END:VEVENT','END:VCALENDAR'].join('\r\n');
     }
 
     const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

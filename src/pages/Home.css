@@ -93,8 +93,7 @@
    ══════════════════════════════════════════════════════════════ */
 .g-hero {
   position: relative;
-  height: 100vh;
-  min-height: 640px;
+  min-height: 88vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,27 +102,12 @@
   isolation: isolate;
 }
 
-.g-hero-aurora,
-.g-stats-aurora,
-.g-contact-aurora {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  overflow: hidden;
-  opacity: 0.85;
-}
-
-.g-hero-aurora > div,
-.g-stats-aurora > div,
-.g-contact-aurora > div { width: 100%; height: 100%; }
-
+/* Global kd-aurora-bg grid'i hero'da görünsün; sadece hafif bir merkez glow */
 .g-hero-veil {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    radial-gradient(ellipse 90% 70% at 50% 50%, rgba(4, 3, 2, 0.45), rgba(4, 3, 2, 0.92)),
-    linear-gradient(180deg, rgba(4, 3, 2, 0.55), rgba(4, 3, 2, 0.96));
+  background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(212, 148, 63, 0.06), transparent 70%);
 }
 
 .g-hero-inner {

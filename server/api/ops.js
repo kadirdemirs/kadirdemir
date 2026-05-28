@@ -472,6 +472,16 @@ async function handlePurgeLegacy(req, res, db) {
   // 3) messages — eski "Kade Media" konulu lead mesajları (varsa)
   const messagesQuery = { $or: [{ subject: legacyRegex }, { service: legacyRegex }] }
 
+  // 3b) content — eski "ajans" hero/stats section'ları (stats section komple ajans verisi)
+  const contentQuery = {
+    $or: [
+      { section: 'stats' }, // clients/campaigns/satisfaction → YouTuber için anlamsız
+      { 'data.tr.subtitle': legacyRegex },
+      { 'data.en.subtitle': legacyRegex },
+      { 'data.tr.title2': /markanızı/i },
+    ],
+  }
+
   // 4) site_settings — businessName / tagline / description'da legacy varsa kayda al
   const settings = await db.collection('site_settings').findOne({})
   const settingsHits = []
@@ -487,6 +497,7 @@ async function handlePurgeLegacy(req, res, db) {
     blogs: await db.collection('blogs').countDocuments(blogsQuery),
     partners: await db.collection('partners').countDocuments(partnersQuery),
     messages: await db.collection('messages').countDocuments(messagesQuery),
+    content: await db.collection('content').countDocuments(contentQuery),
     settingsHits,
     dryRun,
   }
@@ -500,6 +511,7 @@ async function handlePurgeLegacy(req, res, db) {
     blogs: (await db.collection('blogs').deleteMany(blogsQuery)).deletedCount,
     partners: (await db.collection('partners').deleteMany(partnersQuery)).deletedCount,
     messages: (await db.collection('messages').deleteMany(messagesQuery)).deletedCount,
+    content: (await db.collection('content').deleteMany(contentQuery)).deletedCount,
   }
 
   // site_settings'i Kade Media → Kadir Demir olarak güncelle

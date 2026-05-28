@@ -73,8 +73,8 @@ export default function CerezPolitikasi() {
               <h2>5. İletişim</h2>
               <p>
                 Çerez politikamızla ilgili sorularınız için:{' '}
-                <a href="mailto:hello@kadirdemir.tv" style={{ color: 'var(--primary)' }}>
-                  hello@kadirdemir.tv
+                <a href="mailto:thekademedia@gmail.com" style={{ color: 'var(--primary)' }}>
+                  thekademedia@gmail.com
                 </a>
               </p>
             </div>

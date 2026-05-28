@@ -41,7 +41,7 @@ function generateICS({ title, description, date, time, duration = 60 }) {
     `DTEND;TZID=Europe/Istanbul:${endFmt}`,
     `SUMMARY:${title}`,
     `DESCRIPTION:${(description || '').replace(/\n/g, '\\n')}`,
-    'ORGANIZER;CN=Kadir Demir:mailto:hello@kadirdemir.tv',
+    'ORGANIZER;CN=Kadir Demir:mailto:thekademedia@gmail.com',
     `UID:${Date.now()}@kadirdemir.tv`,
     'STATUS:CONFIRMED',
     'END:VEVENT',
