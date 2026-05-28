@@ -7,6 +7,12 @@ import {
   FaDiscord,
   FaLinkedin,
   FaXTwitter,
+  FaVideo,
+  FaGamepad,
+  FaTowerBroadcast as FaBroadcastTower,
+  FaFilm,
+  FaRegImage,
+  FaMicrophone,
 } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -64,7 +70,7 @@ function GiantSectionHead({ eyebrow, title, sub }) {
 
 export default function Home() {
   const { settings } = useSiteSettings()
-  const { lang } = useLanguage()
+  const { lang, t } = useLanguage()
   const [videos, setVideos] = useState([])
   const [blogs, setBlogs] = useState([])
   const [socialStats, setSocialStats] = useState(null)
@@ -144,6 +150,22 @@ export default function Home() {
         ? "I only work with brands I'd already use. If it doesn't fit the channel, it's a no."
         : 'Sadece zaten kullanacağım markalarla çalışıyorum. Kanala uymuyorsa olmuyor.',
     },
+  ]
+
+  const processSteps = [
+    { n: '01', title: t('home.process1Title'), body: t('home.process1Desc') },
+    { n: '02', title: t('home.process2Title'), body: t('home.process2Desc') },
+    { n: '03', title: t('home.process3Title'), body: t('home.process3Desc') },
+    { n: '04', title: t('home.process4Title'), body: t('home.process4Desc') },
+  ]
+
+  const contentTypes = [
+    { icon: FaVideo, label: isEn ? 'Vlogs' : 'Vlog' },
+    { icon: FaGamepad, label: isEn ? 'Gaming' : 'Oyun' },
+    { icon: FaBroadcastTower, label: isEn ? 'Live streams' : 'Canlı yayın' },
+    { icon: FaFilm, label: isEn ? 'Editing' : 'Kurgu' },
+    { icon: FaRegImage, label: 'Thumbnail' },
+    { icon: FaMicrophone, label: isEn ? 'Podcasts' : 'Podcast' },
   ]
 
   // Content roadmap with placeholder years — admin can edit later
@@ -267,6 +289,23 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="g-marquee" aria-hidden="true">
+        <div className="g-marquee-track">
+          {Array.from({ length: 2 }).map((_, dup) => (
+            <span className="g-marquee-group" key={dup}>
+              {(isEn
+                ? ['Content', 'Vlogs', 'Gaming', 'Live streams', 'Istanbul', 'Since 2011']
+                : ['İçerik', 'Vlog', 'Oyun', 'Canlı yayın', 'İstanbul', '2011’den beri']
+              ).map((w, i) => (
+                <span className="g-marquee-item" key={`${dup}-${i}`}>
+                  {w}<span className="g-marquee-dot">•</span>
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
+
       <section className="g-section g-about" id="about">
         <GiantSectionHead eyebrow={isEn ? 'ABOUT' : 'HAKKIMDA'} />
         <div className="g-about-grid">
@@ -326,6 +365,33 @@ export default function Home() {
             </article>
           ))}
         </div>
+
+        <div className="g-types">
+          {contentTypes.map((c) => (
+            <span className="g-type" key={c.label}>
+              <c.icon size={18} />
+              {c.label}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* Süreç — bir video nasıl çıkıyor */}
+      <section className="g-section g-process">
+        <GiantSectionHead
+          eyebrow={t('home.processEyebrow')}
+          title={t('home.processTitle')}
+          sub={t('home.processSub')}
+        />
+        <ol className="g-process-list">
+          {processSteps.map((step) => (
+            <li className="g-process-step" key={step.n}>
+              <span className="g-process-num">{step.n}</span>
+              <h3 className="g-process-title">{step.title}</h3>
+              <p className="g-process-body">{step.body}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
       {/* Öne çıkan video — varsa ilk video, yoksa kanal CTA */}
