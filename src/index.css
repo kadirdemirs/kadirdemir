@@ -799,8 +799,8 @@ html[data-theme="light"] .ft-bottom {
 }
 
 html[data-theme="light"] .nv-pill {
-  background: rgba(255, 255, 255, 0.55) !important;
-  border-color: rgba(26, 23, 21, 0.08) !important;
+  background: transparent !important;
+  border-color: transparent !important;
 }
 html[data-theme="light"] .nv-link {
   color: rgba(26, 23, 21, 0.65) !important;

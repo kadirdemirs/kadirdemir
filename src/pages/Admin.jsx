@@ -591,7 +591,7 @@ function BlogSection({ showToast }) {
       .then(d => setPosts(Array.isArray(d) ? d : Array.isArray(d?.blogs) ? d.blogs : []))
       .catch(() => setPosts([]))
   }
-  useEffect(load, [])
+  useEffect(() => { load() }, [])
 
   const handleSave = async (data) => {
     try {
@@ -836,7 +836,7 @@ function NewsletterSection({ showToast }) {
   const load = () => {
     getNewsletterSubscribersApi().then(d => Array.isArray(d) && setSubscribers(d)).catch(() => {})
   }
-  useEffect(load, [])
+  useEffect(() => { load() }, [])
 
   const handleSend = async () => {
     if (!subject.trim() || !html.trim()) return
@@ -919,7 +919,7 @@ function MediaSection({ showToast }) {
       })
       .catch(() => setItems([]))
   }
-  useEffect(load, [])
+  useEffect(() => { load() }, [])
 
   const handleUpload = async (e) => {
     const file = e.target.files?.[0]
@@ -1110,7 +1110,7 @@ function UsersSection({ showToast, currentUser }) {
   const [form, setForm] = useState({ username: '', password: '', role: 'editor' })
 
   const load = () => getUsersApi().then(d => Array.isArray(d) && setUsers(d)).catch(() => {})
-  useEffect(load, [])
+  useEffect(() => { load() }, [])
 
   const handleAdd = async () => {
     try {
@@ -1185,7 +1185,7 @@ function RemindersSection({ showToast }) {
   const [form, setForm] = useState({ title: '', date: '', notes: '' })
 
   const load = () => getRemindersApi().then(d => Array.isArray(d) && setItems(d)).catch(() => {})
-  useEffect(load, [])
+  useEffect(() => { load() }, [])
 
   const handleAdd = async () => {
     if (!form.title || !form.date) return
@@ -1252,7 +1252,7 @@ function BackupSection({ showToast }) {
   const [creating, setCreating] = useState(false)
 
   const load = () => getBackupSummaryApi().then(setSummary).catch(() => {})
-  useEffect(load, [])
+  useEffect(() => { load() }, [])
 
   const handleCreate = async () => {
     setCreating(true)

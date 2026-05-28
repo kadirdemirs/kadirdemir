@@ -18,7 +18,7 @@ const allowedActions = new Set([
 const allowedResources = new Set([
   'backup', 'client-errors', 'customer-profiles', 'email-templates',
   'invoices', 'onboarding', 'proposals', 'push', 'quotes',
-  'subscriptions', 'surveys', 'tasks',
+  'subscriptions', 'surveys', 'tasks', 'purge-legacy', 'audit-log',
 ]);
 
 function first(value) {

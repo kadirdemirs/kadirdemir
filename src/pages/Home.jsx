@@ -23,7 +23,7 @@ import GradientText from '../components/reactbits/GradientText'
 import LogoLoop from '../components/reactbits/LogoLoop'
 import BorderGlow from '../components/reactbits/BorderGlow'
 import {
-  getYouTubeVideosApi, getBlogsApi, getSocialStatsApi, sendContactApi,
+  getYouTubeVideosApi, getSocialStatsApi, sendContactApi,
   getPartnersApi,
 } from '../api'
 import './Home.css'
@@ -73,9 +73,8 @@ function GiantSectionHead({ eyebrow, title, sub }) {
 
 export default function Home() {
   const { settings } = useSiteSettings()
-  const { lang, t } = useLanguage()
+  const { lang } = useLanguage()
   const [videos, setVideos] = useState([])
-  const [blogs, setBlogs] = useState([])
   const [socialStats, setSocialStats] = useState(null)
   const [partners, setPartners] = useState([])
   const [touchForm, setTouchForm] = useState({ name: '', email: '', topic: '', message: '' })
@@ -95,11 +94,6 @@ export default function Home() {
   useEffect(() => {
     getYouTubeVideosApi().then((res) => {
       if (Array.isArray(res?.videos)) setVideos(res.videos)
-    }).catch(() => {})
-
-    getBlogsApi().then((res) => {
-      const list = Array.isArray(res?.blogs) ? res.blogs : Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []
-      setBlogs(list.filter((b) => !b?.draft && b?.published !== false).slice(0, 3))
     }).catch(() => {})
 
     getSocialStatsApi({ force: true }).then((data) => setSocialStats(data)).catch(() => setSocialStats(null))
@@ -128,38 +122,31 @@ export default function Home() {
   ].filter((s) => s && s.value && s.value !== '—' && Number(String(s.value).replace(/\D/g, '')) > 0)
 
   const aboutText = settings.description || (isEn
-    ? "I've been making content for 14 years. Vlogs, gaming, live streams — whatever pulls me in that week. This site is where I park everything I do."
-    : '14 yıldır içerik üretiyorum. Vlog, oyun, canlı yayın — o hafta neye ilgi duyuyorsam onu çekiyorum. Bu site de yaptıklarımın toplandığı yer.')
+    ? "Lifelong content guy — 14 years and counting. I make videos, stream, and mostly just film whatever I'm into that week. Everything I do ends up here."
+    : '14 senedir bu işteyim, hâlâ bırakamadım. Video çekiyorum, yayın açıyorum, o hafta neye taktıysam onu paylaşıyorum. Ne yapıyorsam burada toplanıyor.')
 
   const focusCards = [
     {
       n: '01',
       title: isEn ? 'Long-form videos' : 'Uzun videolar',
       body: isEn
-        ? "Vlogs and storytelling pieces I actually want to watch back. No filler, no fake hype."
-        : 'Geri dönüp izleyebileceğim vloglar ve hikayeli videolar. Doldurma yok, sahte heyecan yok.',
+        ? "The stuff I'd actually rewatch. No filler, no fake 'you won't believe this'."
+        : 'Geri dönüp ben de izlerim dediğim videolar. Doldurma yok, "buna inanamayacaksınız" muhabbeti hiç yok.',
     },
     {
       n: '02',
       title: isEn ? 'Gaming & live' : 'Oyun & canlı yayın',
       body: isEn
-        ? 'Streams where chat actually matters — we play, we mess up, we talk.'
-        : 'Sohbetin gerçekten önemli olduğu yayınlar — oynuyoruz, batırıyoruz, konuşuyoruz.',
+        ? "Streams where the chat runs the show. We play, we lose, we laugh about it."
+        : 'Sohbetin işi yönettiği yayınlar. Oynuyoruz, yeniliyoruz, gülüp geçiyoruz.',
     },
     {
       n: '03',
       title: isEn ? 'Brand work' : 'Marka işleri',
       body: isEn
-        ? "I only work with brands I'd already use. If it doesn't fit the channel, it's a no."
-        : 'Sadece zaten kullanacağım markalarla çalışıyorum. Kanala uymuyorsa olmuyor.',
+        ? "I only push stuff I'd use myself. Doesn't fit the channel? Then it's a no, simple."
+        : 'Sadece kendi kullanacağım şeyleri öne çıkarırım. Kanala uymuyorsa, yok — bu kadar basit.',
     },
-  ]
-
-  const processSteps = [
-    { n: '01', title: t('home.process1Title'), body: t('home.process1Desc') },
-    { n: '02', title: t('home.process2Title'), body: t('home.process2Desc') },
-    { n: '03', title: t('home.process3Title'), body: t('home.process3Desc') },
-    { n: '04', title: t('home.process4Title'), body: t('home.process4Desc') },
   ]
 
   const contentTypes = [
@@ -203,11 +190,15 @@ export default function Home() {
     },
   ]
 
-  const localizedFaqs = useMemo(() => ([
-    { q: 'Yeni videoları ne sıklıkla yüklüyorsun?', a: 'Genellikle haftada 1-2 video. Yayın takvimini YouTube ve sosyal hesaplardan görebilirsin.' },
-    { q: 'İş birliklerine açık mısın?', a: 'Evet. Kanala yakışan marka ve fikirler için iletişim formundan yazabilirsin.' },
-    { q: 'Tüm bağlantılar nerede?', a: '/links sayfasında her şey tek yerde.' },
-  ]), [])
+  const localizedFaqs = useMemo(() => (isEn ? [
+    { q: 'How often do you upload?', a: 'Usually 1-2 videos a week. You can follow the schedule on YouTube and my socials.' },
+    { q: 'Are you open to collabs?', a: 'Yes. For brands and ideas that fit the channel, write me through the contact form below.' },
+    { q: 'Where are all your links?', a: 'All my links are in one place on the links page.', link: '/links', linkText: 'Open links page →' },
+  ] : [
+    { q: 'Yeni video ne sıklıkla geliyor?', a: 'Genelde haftada 1-2 video. Takvimi YouTube ve sosyal hesaplardan takip edebilirsin.' },
+    { q: 'İş birliğine açık mısın?', a: 'Evet. Kanala uyan marka ve fikirler için aşağıdaki formdan yazabilirsin.' },
+    { q: 'Tüm bağlantılar nerede?', a: 'Hepsi tek sayfada — links sayfasına göz at.', link: '/links', linkText: 'Linkler sayfasını aç →' },
+  ]), [isEn])
 
   const updateTouch = (key) => (e) => {
     setTouchForm((form) => ({ ...form, [key]: e.target.value }))
@@ -298,23 +289,6 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="g-marquee" aria-hidden="true">
-        <div className="g-marquee-track">
-          {Array.from({ length: 2 }).map((_, dup) => (
-            <span className="g-marquee-group" key={dup}>
-              {(isEn
-                ? ['Content', 'Vlogs', 'Gaming', 'Live streams', 'Istanbul', 'Since 2011']
-                : ['İçerik', 'Vlog', 'Oyun', 'Canlı yayın', 'İstanbul', '2011’den beri']
-              ).map((w, i) => (
-                <span className="g-marquee-item" key={`${dup}-${i}`}>
-                  {w}<span className="g-marquee-dot">•</span>
-                </span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
-
       <section className="g-section g-about" id="about">
         <GiantSectionHead eyebrow={isEn ? 'ABOUT' : 'HAKKIMDA'} />
         <div className="g-about-grid">
@@ -396,24 +370,6 @@ export default function Home() {
             ariaLabel={isEn ? 'Content types' : 'İçerik türleri'}
           />
         </div>
-      </section>
-
-      {/* Süreç — bir video nasıl çıkıyor */}
-      <section className="g-section g-process">
-        <GiantSectionHead
-          eyebrow={t('home.processEyebrow')}
-          title={t('home.processTitle')}
-          sub={t('home.processSub')}
-        />
-        <ol className="g-process-list">
-          {processSteps.map((step) => (
-            <li className="g-process-step" key={step.n}>
-              <span className="g-process-num">{step.n}</span>
-              <h3 className="g-process-title">{step.title}</h3>
-              <p className="g-process-body">{step.body}</p>
-            </li>
-          ))}
-        </ol>
       </section>
 
       {/* Öne çıkan video — varsa ilk video, yoksa kanal CTA */}
@@ -611,7 +567,10 @@ export default function Home() {
                 <span>{f.q}</span>
                 <span className="g-faq-plus" aria-hidden="true" />
               </summary>
-              <p>{f.a}</p>
+              <p>
+                {f.a}
+                {f.link && <> <Link to={f.link} className="g-faq-link">{f.linkText}</Link></>}
+              </p>
             </details>
           ))}
         </div>
@@ -637,22 +596,6 @@ export default function Home() {
         </form>
       </section>
 
-      {blogs.length > 0 && (
-        <section className="g-section g-blogs">
-          <GiantSectionHead eyebrow={isEn ? 'LATEST WRITING' : 'SON YAZILAR'} />
-          <div className="g-blogs-row">
-            {blogs.map((b, i) => (
-              <Link key={b._id || b.slug} to={`/blog/${b.slug}`} className="g-blog">
-                <span className="g-blog-num">{String(i + 1).padStart(2, '0')}</span>
-                <span className="g-blog-cat">{(b.category || 'YAZI').toUpperCase().slice(0, 14)}</span>
-                <h4 className="g-blog-title">{b.title}</h4>
-                {b.excerpt && <p className="g-blog-excerpt">{b.excerpt.slice(0, 110)}...</p>}
-                <span className="g-blog-link">{isEn ? 'Read' : 'Oku'} →</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   )
 }
