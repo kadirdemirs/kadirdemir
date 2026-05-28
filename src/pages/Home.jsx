@@ -228,6 +228,23 @@ export default function Home() {
 
   const yearsActive = settings.statsActiveYears || '14'
 
+  // En çok izlenen videoyu öne çıkar; yoksa ilk video
+  const featuredVideo = useMemo(() => {
+    if (!videos.length) return null
+    const withId = videos.filter((v) => v?.youtubeId)
+    if (!withId.length) return null
+    return [...withId].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))[0]
+  }, [videos])
+
+  const platformCards = [
+    settings.youtube && { name: 'YouTube', icon: FaYoutube, url: settings.youtube, color: '#FF0000', stat: yt?.followers || settings.statsYoutubeSubs, statLabel: isEn ? 'subs' : 'abone' },
+    settings.instagram && { name: 'Instagram', icon: FaInstagram, url: settings.instagram, color: '#E4405F', stat: ig?.followers || settings.statsInstagramFollowers, statLabel: isEn ? 'followers' : 'takipçi' },
+    settings.tiktok && { name: 'TikTok', icon: FaTiktok, url: settings.tiktok, color: '#00F2EA', stat: tt?.followers || settings.statsTiktokFollowers, statLabel: isEn ? 'followers' : 'takipçi' },
+    settings.discord && { name: 'Discord', icon: FaDiscord, url: settings.discord, color: '#5865F2' },
+    settings.linkedin && { name: 'LinkedIn', icon: FaLinkedin, url: settings.linkedin, color: '#0A66C2' },
+    settings.twitter && { name: 'X', icon: FaXTwitter, url: settings.twitter, color: '#ffffff' },
+  ].filter(Boolean)
+
   return (
     <div className="g">
       <PersonSchema socials={settings} />
@@ -322,11 +339,40 @@ export default function Home() {
         </div>
       </section>
 
-      {videos.length > 0 && (
-        <section className="g-section g-works-wrap">
-          <GiantSectionHead eyebrow={isEn ? 'LATEST VIDEOS' : 'SON VİDEOLAR'} />
+      {/* Öne çıkan video — varsa ilk video, yoksa kanal CTA */}
+      <section className="g-section g-feature">
+        <GiantSectionHead
+          eyebrow={isEn ? 'FEATURED' : 'ÖNE ÇIKAN'}
+          title={featuredVideo ? featuredVideo.title : (isEn ? 'On the channel' : 'Kanalda')}
+        />
+        <div className="g-feature-frame">
+          {featuredVideo ? (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${featuredVideo.youtubeId}`}
+              title={featuredVideo.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+            />
+          ) : (
+            <a className="g-feature-cta" href={settings.youtube || 'https://youtube.com/@kadirdemir'} target="_blank" rel="noopener noreferrer">
+              <FaYoutube size={44} />
+              <span>{isEn ? 'Watch on YouTube' : "YouTube'da izle"}</span>
+              <small>{isEn ? 'New videos every week' : 'Her hafta yeni video'}</small>
+            </a>
+          )}
+        </div>
+      </section>
+
+      {/* Son videolar — varsa grid, yoksa kanal daveti */}
+      <section className="g-section g-works-wrap">
+        <GiantSectionHead
+          eyebrow={isEn ? 'LATEST VIDEOS' : 'SON VİDEOLAR'}
+          sub={videos.length === 0 ? (isEn ? 'Head to the channel for the latest uploads.' : 'En yeni videolar için kanala göz at.') : undefined}
+        />
+        {videos.length > 0 ? (
           <div className="g-works-grid">
-            {videos.slice(0, 6).map((v, i) => (
+            {videos.slice(featuredVideo ? 1 : 0, featuredVideo ? 7 : 6).map((v, i) => (
               <a
                 key={v.youtubeId || i}
                 href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
@@ -348,8 +394,35 @@ export default function Home() {
               </a>
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <div className="g-works-empty">
+            <a className="g-hero-cta g-hero-cta--primary" href={settings.youtube || 'https://youtube.com/@kadirdemir'} target="_blank" rel="noopener noreferrer">
+              <FaYoutube size={18} /> {isEn ? 'Open channel' : 'Kanala git'}
+            </a>
+            <Link className="g-hero-cta g-hero-cta--ghost" to="/videolar">
+              {isEn ? 'All videos' : 'Tüm videolar'}
+            </Link>
+          </div>
+        )}
+      </section>
+
+      {/* Platform kartları */}
+      <section className="g-section g-platforms">
+        <GiantSectionHead
+          eyebrow={isEn ? 'FIND ME' : 'BENİ BUL'}
+          title={isEn ? 'Everywhere, one me.' : 'Her yerde, tek ben.'}
+        />
+        <div className="g-platforms-grid">
+          {platformCards.map((p) => (
+            <a key={p.name} href={p.url} target="_blank" rel="noopener noreferrer" className="g-platform" style={{ '--pc': p.color }}>
+              <span className="g-platform-icon"><p.icon size={26} /></span>
+              <span className="g-platform-name">{p.name}</span>
+              {p.stat && <span className="g-platform-stat">{formatViews(p.stat)} {p.statLabel}</span>}
+              <span className="g-platform-go">{isEn ? 'Follow' : 'Takip et'} →</span>
+            </a>
+          ))}
+        </div>
+      </section>
 
       <section className="g-section g-story">
         <GiantSectionHead eyebrow={isEn ? 'THE TIMELINE' : 'YOLCULUK'} />
@@ -435,6 +508,24 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="g-section g-faq">
+        <GiantSectionHead
+          eyebrow={isEn ? 'FAQ' : 'SIKÇA SORULANLAR'}
+          title={isEn ? 'Quick answers.' : 'Kısa cevaplar.'}
+        />
+        <div className="g-faq-list">
+          {localizedFaqs.map((f, i) => (
+            <details key={i} className="g-faq-item">
+              <summary>
+                <span>{f.q}</span>
+                <span className="g-faq-plus" aria-hidden="true" />
+              </summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
         </div>
       </section>
 

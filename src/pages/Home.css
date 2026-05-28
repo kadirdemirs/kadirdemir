@@ -18,7 +18,7 @@
   --g-bg-base: var(--bg-base, #080706);
   --g-track-upper: 0.36em;
   --g-track-tight: -0.045em;
-  --g-pad-y: clamp(96px, 14vw, 180px);
+  --g-pad-y: clamp(56px, 8vw, 104px);
   color: var(--g-cream);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
@@ -64,9 +64,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 26px;
+  gap: 18px;
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 52px;
 }
 
 .g-section-title {
@@ -1394,6 +1394,176 @@
   filter: grayscale(0%) brightness(1) contrast(1);
   opacity: 1;
   transform: scale(1.04);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Featured video — büyük embed / CTA
+   ══════════════════════════════════════════════════════════════ */
+.g-feature-frame {
+  max-width: 980px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--g-rule);
+  background: var(--g-bg-deep);
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+}
+
+.g-feature-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.g-feature-cta {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--g-cream);
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 50%, rgba(212, 148, 63, 0.1), transparent 70%);
+  transition: background 0.4s ease;
+}
+
+.g-feature-cta svg { color: #ff0000; }
+.g-feature-cta span { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; }
+.g-feature-cta small { color: var(--g-cream-mute); font-size: 0.86rem; }
+.g-feature-cta:hover { background: radial-gradient(ellipse 70% 90% at 50% 50%, rgba(212, 148, 63, 0.16), transparent 70%); }
+
+/* Boş video state */
+.g-works-empty {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Platform kartları
+   ══════════════════════════════════════════════════════════════ */
+.g-platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.g-platform {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 26px 24px;
+  border: 1px solid var(--g-rule);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(244, 235, 224, 0.02), transparent);
+  text-decoration: none;
+  color: var(--g-cream);
+  transition: transform 0.35s var(--ease-out-expo), border-color 0.35s ease, background 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.g-platform::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--pc, var(--g-amber));
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.g-platform:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--pc, var(--g-amber)) 50%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--pc, var(--g-amber)) 8%, transparent), transparent);
+}
+
+.g-platform:hover::before { opacity: 1; }
+
+.g-platform-icon { color: var(--pc, var(--g-amber)); }
+.g-platform-name { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+.g-platform-stat { font-size: 0.84rem; color: var(--g-cream-mute); }
+.g-platform-go {
+  margin-top: 6px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--g-amber);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SSS — açılır kapanır
+   ══════════════════════════════════════════════════════════════ */
+.g-faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.g-faq-item {
+  border: 1px solid var(--g-rule);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(244, 235, 224, 0.015), transparent);
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.g-faq-item[open] { border-color: color-mix(in srgb, var(--g-amber) 40%, transparent); }
+
+.g-faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--g-cream);
+}
+
+.g-faq-item summary::-webkit-details-marker { display: none; }
+
+.g-faq-plus {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.g-faq-plus::before,
+.g-faq-plus::after {
+  content: '';
+  position: absolute;
+  background: var(--g-amber);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.g-faq-plus::before { top: 50%; left: 0; width: 100%; height: 2px; transform: translateY(-50%); }
+.g-faq-plus::after { left: 50%; top: 0; width: 2px; height: 100%; transform: translateX(-50%); }
+.g-faq-item[open] .g-faq-plus::after { opacity: 0; transform: translateX(-50%) rotate(90deg); }
+
+.g-faq-item p {
+  margin: 0;
+  padding: 0 22px 20px;
+  color: var(--g-cream-dim);
+  line-height: 1.65;
+  font-size: 0.94rem;
+}
+
+@media (max-width: 600px) {
+  .g-platforms-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 html[data-theme="light"] .g {
