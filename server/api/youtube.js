@@ -5,6 +5,10 @@ import { cors } from './_lib/cors.js';
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 dk
 const MAX_VIDEOS = 12;
 
+// Kadir Demir kanalı — @kadirardademirr. forHandle API'si bazen çözemiyor,
+// bu yüzden bilinen channel ID'yi kod fallback'i olarak tutuyoruz.
+const DEFAULT_CHANNEL_ID = 'UC2u_ajxQbXb1vscMUOYsp-w';
+
 async function resolveChannelId(apiKey, db) {
   const settings = await db.collection('siteContent').findOne({ section: 'site-settings' });
   const data = settings?.data || {};
@@ -12,20 +16,23 @@ async function resolveChannelId(apiKey, db) {
   if (data.youtubeChannelId && /^UC[\w-]{20,}$/.test(data.youtubeChannelId)) {
     return data.youtubeChannelId;
   }
+  if (process.env.YOUTUBE_CHANNEL_ID && /^UC[\w-]{20,}$/.test(process.env.YOUTUBE_CHANNEL_ID)) {
+    return process.env.YOUTUBE_CHANNEL_ID;
+  }
 
-  // Handle (@kadirdemir) → channel ID dönüştürme
+  // Handle (@kadirardademirr) → channel ID dönüştürme
   const handle = (data.youtubeHandle || '').replace(/^@/, '');
-  if (!handle) return null;
+  if (!handle) return DEFAULT_CHANNEL_ID;
 
   try {
     const r = await fetch(
       `https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=@${encodeURIComponent(handle)}&key=${apiKey}`
     );
-    if (!r.ok) return null;
+    if (!r.ok) return DEFAULT_CHANNEL_ID;
     const j = await r.json();
-    return j.items?.[0]?.id || null;
+    return j.items?.[0]?.id || DEFAULT_CHANNEL_ID;
   } catch {
-    return null;
+    return DEFAULT_CHANNEL_ID;
   }
 }
 

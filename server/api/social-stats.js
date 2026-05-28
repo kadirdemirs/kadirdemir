@@ -267,7 +267,8 @@ async function aggregate(db, force = false) {
   const settings = settingsDoc?.data || {};
 
   const apiKey = settings.youtubeApiKey || process.env.YOUTUBE_API_KEY;
-  const ytChannelId = settings.youtubeChannelId || process.env.YOUTUBE_CHANNEL_ID;
+  // forHandle bazen çözemiyor — bilinen channel ID fallback'i (Kadir Demir / @kadirardademirr)
+  const ytChannelId = settings.youtubeChannelId || process.env.YOUTUBE_CHANNEL_ID || 'UC2u_ajxQbXb1vscMUOYsp-w';
   const ytHandle = settings.youtubeHandle || settings.youtube;
   const igHandle = settings.instagramHandle || settings.instagram;
   const ttHandle = settings.tiktokHandle || settings.tiktok;

@@ -14,7 +14,7 @@ export const DEFAULT_SITE_SETTINGS = {
   // Social URLs
   youtube: 'https://youtube.com/@kadirardademirr',
   youtubeHandle: '@kadirardademirr',
-  youtubeChannelId: '',
+  youtubeChannelId: 'UC2u_ajxQbXb1vscMUOYsp-w',
   instagram: 'https://instagram.com/kadirardademir',
   instagramHandle: '@kadirardademir',
   tiktok: 'https://tiktok.com/@kadirardademir',
