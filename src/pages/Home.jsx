@@ -125,29 +125,31 @@ export default function Home() {
     ? "Lifelong content guy — 14 years and counting. I make videos, stream, and mostly just film whatever I'm into that week. Everything I do ends up here."
     : '14 senedir bu işteyim, hâlâ bırakamadım. Video çekiyorum, yayın açıyorum, o hafta neye taktıysam onu paylaşıyorum. Ne yapıyorsam burada toplanıyor.')
 
-  const focusCards = [
+  const defaultFocus = [
     {
-      n: '01',
       title: isEn ? 'Long-form videos' : 'Uzun videolar',
       body: isEn
         ? "The stuff I'd actually rewatch. No filler, no fake 'you won't believe this'."
         : 'Geri dönüp ben de izlerim dediğim videolar. Doldurma yok, "buna inanamayacaksınız" muhabbeti hiç yok.',
     },
     {
-      n: '02',
       title: isEn ? 'Gaming & live' : 'Oyun & canlı yayın',
       body: isEn
         ? "Streams where the chat runs the show. We play, we lose, we laugh about it."
         : 'Sohbetin işi yönettiği yayınlar. Oynuyoruz, yeniliyoruz, gülüp geçiyoruz.',
     },
     {
-      n: '03',
       title: isEn ? 'Brand work' : 'Marka işleri',
       body: isEn
         ? "I only push stuff I'd use myself. Doesn't fit the channel? Then it's a no, simple."
         : 'Sadece kendi kullanacağım şeyleri öne çıkarırım. Kanala uymuyorsa, yok — bu kadar basit.',
     },
   ]
+  // Admin'den girilen focus varsa onu kullan, yoksa default
+  const focusCards = (Array.isArray(settings.homeFocus) && settings.homeFocus.length > 0
+    ? settings.homeFocus
+    : defaultFocus
+  ).map((c, i) => ({ ...c, n: String(i + 1).padStart(2, '0') }))
 
   const contentTypes = [
     { icon: FaVideo, label: isEn ? 'Vlogs' : 'Vlog' },
@@ -158,8 +160,8 @@ export default function Home() {
     { icon: FaMicrophone, label: isEn ? 'Podcasts' : 'Podcast' },
   ]
 
-  // Content roadmap with placeholder years — admin can edit later
-  const story = [
+  // Yolculuk/timeline — placeholder; admin Site Ayarları'ndan düzenleyebilir
+  const defaultStory = [
     {
       period: '2011',
       role: isEn ? 'First upload' : 'İlk video',
@@ -189,16 +191,25 @@ export default function Home() {
         : 'Hâlâ devam ediyorum, hâlâ yeni şeyler deniyorum. Vloglar, yayınlar, ara sıra acayip deneyler.',
     },
   ]
+  const story = Array.isArray(settings.homeStory) && settings.homeStory.length > 0
+    ? settings.homeStory
+    : defaultStory
 
-  const localizedFaqs = useMemo(() => (isEn ? [
-    { q: 'How often do you upload?', a: 'Usually 1-2 videos a week. You can follow the schedule on YouTube and my socials.' },
-    { q: 'Are you open to collabs?', a: 'Yes. For brands and ideas that fit the channel, write me through the contact form below.' },
-    { q: 'Where are all your links?', a: 'All my links are in one place on the links page.', link: '/links', linkText: 'Open links page →' },
-  ] : [
-    { q: 'Yeni video ne sıklıkla geliyor?', a: 'Genelde haftada 1-2 video. Takvimi YouTube ve sosyal hesaplardan takip edebilirsin.' },
-    { q: 'İş birliğine açık mısın?', a: 'Evet. Kanala uyan marka ve fikirler için aşağıdaki formdan yazabilirsin.' },
-    { q: 'Tüm bağlantılar nerede?', a: 'Hepsi tek sayfada — links sayfasına göz at.', link: '/links', linkText: 'Linkler sayfasını aç →' },
-  ]), [isEn])
+  const localizedFaqs = useMemo(() => {
+    // Admin'den girilen SSS varsa onu kullan
+    if (Array.isArray(settings.homeFaq) && settings.homeFaq.length > 0) {
+      return settings.homeFaq.filter((f) => f && f.q && f.a)
+    }
+    return isEn ? [
+      { q: 'How often do you upload?', a: 'Usually 1-2 videos a week. You can follow the schedule on YouTube and my socials.' },
+      { q: 'Are you open to collabs?', a: 'Yes. For brands and ideas that fit the channel, write me through the contact form below.' },
+      { q: 'Where are all your links?', a: 'All my links are in one place on the links page.', link: '/links', linkText: 'Open links page →' },
+    ] : [
+      { q: 'Yeni video ne sıklıkla geliyor?', a: 'Genelde haftada 1-2 video. Takvimi YouTube ve sosyal hesaplardan takip edebilirsin.' },
+      { q: 'İş birliğine açık mısın?', a: 'Evet. Kanala uyan marka ve fikirler için aşağıdaki formdan yazabilirsin.' },
+      { q: 'Tüm bağlantılar nerede?', a: 'Hepsi tek sayfada — links sayfasına göz at.', link: '/links', linkText: 'Linkler sayfasını aç →' },
+    ]
+  }, [isEn, settings.homeFaq])
 
   const updateTouch = (key) => (e) => {
     setTouchForm((form) => ({ ...form, [key]: e.target.value }))

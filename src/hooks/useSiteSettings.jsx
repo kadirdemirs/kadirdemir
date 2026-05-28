@@ -81,9 +81,11 @@ export const DEFAULT_SITE_SETTINGS = {
   mediaKitContentThemes: ['Oyun', 'Vlog', 'Eğlence', 'Teknoloji & setup', 'Yaşam tarzı', 'Topluluk etkinlikleri'],
   mediaKitDataSourceNote: 'YouTube Studio + Meta Insights, son 90 gün ortalama.',
 
-  // Setup equipment (editable from admin → site settings)
-  setupPC: [],
-  setupEquipment: [],
+  // ─── Ana sayfa içerikleri (admin → Site Ayarları'ndan düzenlenebilir) ───
+  // Boş bırakılırsa Home.jsx koddaki varsayılanları gösterir.
+  homeFocus: [],   // [{ title, body }] — "Ne yapıyorum" 3 kart
+  homeStory: [],   // [{ period, role, body }] — Yolculuk/timeline
+  homeFaq: [],     // [{ q, a }] — Sıkça sorulanlar
 }
 
 const SiteSettingsContext = createContext({

@@ -1082,6 +1082,62 @@ function SettingsSection({ showToast, onChangePassword }) {
         </div>
       </div>
 
+      {/* ── Ana Sayfa: Ne Yapıyorum (3 kart) ── */}
+      <div className="settings-section">
+        <h3>🏠 Ana Sayfa — "Ne Yapıyorum" Kartları</h3>
+        <p style={{ fontSize: '.8rem', color: 'var(--text-secondary)', margin: '0 0 12px' }}>Boş bırakılırsa varsayılan kartlar gösterilir.</p>
+        {(s.homeFocus || []).map((c, i) => (
+          <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
+            <input value={c.title || ''} placeholder="Başlık" style={{ flex: '0 0 200px' }}
+              onChange={e => { const n = [...s.homeFocus]; n[i] = { ...n[i], title: e.target.value }; upd('homeFocus', n) }} />
+            <textarea value={c.body || ''} placeholder="Açıklama" rows={2} style={{ flex: 1 }}
+              onChange={e => { const n = [...s.homeFocus]; n[i] = { ...n[i], body: e.target.value }; upd('homeFocus', n) }} />
+            <button className="btn-icon-danger" onClick={() => upd('homeFocus', s.homeFocus.filter((_, j) => j !== i))}><HiOutlineTrash size={16} /></button>
+          </div>
+        ))}
+        <button className="btn btn-outline" onClick={() => upd('homeFocus', [...(s.homeFocus || []), { title: '', body: '' }])}>
+          <HiOutlinePlus size={16} /> Kart Ekle
+        </button>
+      </div>
+
+      {/* ── Ana Sayfa: Yolculuk / Timeline ── */}
+      <div className="settings-section">
+        <h3>🛣️ Ana Sayfa — Yolculuk (Timeline)</h3>
+        <p style={{ fontSize: '.8rem', color: 'var(--text-secondary)', margin: '0 0 12px' }}>Yıl/dönem, rol ve açıklama. Boşsa varsayılan gösterilir.</p>
+        {(s.homeStory || []).map((c, i) => (
+          <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
+            <input value={c.period || ''} placeholder="2011 / Bugün" style={{ flex: '0 0 110px' }}
+              onChange={e => { const n = [...s.homeStory]; n[i] = { ...n[i], period: e.target.value }; upd('homeStory', n) }} />
+            <input value={c.role || ''} placeholder="Başlık" style={{ flex: '0 0 180px' }}
+              onChange={e => { const n = [...s.homeStory]; n[i] = { ...n[i], role: e.target.value }; upd('homeStory', n) }} />
+            <textarea value={c.body || ''} placeholder="Açıklama" rows={2} style={{ flex: 1 }}
+              onChange={e => { const n = [...s.homeStory]; n[i] = { ...n[i], body: e.target.value }; upd('homeStory', n) }} />
+            <button className="btn-icon-danger" onClick={() => upd('homeStory', s.homeStory.filter((_, j) => j !== i))}><HiOutlineTrash size={16} /></button>
+          </div>
+        ))}
+        <button className="btn btn-outline" onClick={() => upd('homeStory', [...(s.homeStory || []), { period: '', role: '', body: '' }])}>
+          <HiOutlinePlus size={16} /> Dönem Ekle
+        </button>
+      </div>
+
+      {/* ── Ana Sayfa: SSS ── */}
+      <div className="settings-section">
+        <h3>❓ Ana Sayfa — Sıkça Sorulanlar</h3>
+        <p style={{ fontSize: '.8rem', color: 'var(--text-secondary)', margin: '0 0 12px' }}>Soru-cevap. Boşsa varsayılan gösterilir.</p>
+        {(s.homeFaq || []).map((c, i) => (
+          <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
+            <input value={c.q || ''} placeholder="Soru" style={{ flex: '0 0 240px' }}
+              onChange={e => { const n = [...s.homeFaq]; n[i] = { ...n[i], q: e.target.value }; upd('homeFaq', n) }} />
+            <textarea value={c.a || ''} placeholder="Cevap" rows={2} style={{ flex: 1 }}
+              onChange={e => { const n = [...s.homeFaq]; n[i] = { ...n[i], a: e.target.value }; upd('homeFaq', n) }} />
+            <button className="btn-icon-danger" onClick={() => upd('homeFaq', s.homeFaq.filter((_, j) => j !== i))}><HiOutlineTrash size={16} /></button>
+          </div>
+        ))}
+        <button className="btn btn-outline" onClick={() => upd('homeFaq', [...(s.homeFaq || []), { q: '', a: '' }])}>
+          <HiOutlinePlus size={16} /> Soru Ekle
+        </button>
+      </div>
+
       <div className="settings-section">
         <h3>Instagram Post Linkleri (manuel)</h3>
         {posts.map((p, i) => (
