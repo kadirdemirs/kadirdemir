@@ -634,11 +634,15 @@
     0 16px 40px -12px rgba(0, 0, 0, 0.18);
 }
 
-[data-theme="light"] .nv-brand-text {
-  background: linear-gradient(180deg, #16120a 0%, var(--amber-deep) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+[data-theme="light"] .nv-brand-text,
+[data-theme="light"] .nv-brand:hover .nv-brand-text {
+  background-image: none !important;
+  background-color: transparent !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: #16120a !important;
+  color: #16120a !important;
+  filter: none !important;
 }
 
 [data-theme="light"] .nv-link {

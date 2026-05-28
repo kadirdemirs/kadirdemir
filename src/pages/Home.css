@@ -180,23 +180,24 @@
 }
 
 .g-hero-cta--primary {
-  background: var(--g-cream);
-  color: #0a0907;
+  background: var(--g-amber);
+  color: #150e07;
+  font-weight: 600;
 }
 
 .g-hero-cta--primary:hover {
-  background: var(--g-amber);
+  background: var(--g-amber-soft);
   transform: translateY(-1px);
 }
 
 .g-hero-cta--ghost {
   background: transparent;
   color: var(--g-cream-dim);
-  border: 1px solid rgba(244, 235, 224, 0.18);
+  border: 1px solid var(--g-rule);
 }
 
 .g-hero-cta--ghost:hover {
-  border-color: var(--g-cream);
+  border-color: var(--g-amber);
   color: var(--g-cream);
 }
 
@@ -1576,18 +1577,12 @@ html[data-theme="light"] .g {
   --g-bg-base: #faf4e8;
 }
 
-html[data-theme="light"] .g-hero-veil,
-html[data-theme="light"] .g-stats-veil,
-html[data-theme="light"] .g-contact-veil {
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(250, 244, 232, 0.12), rgba(244, 235, 214, 0.6)),
-    linear-gradient(180deg, rgba(22, 18, 10, 0.2), rgba(22, 18, 10, 0.46));
+html[data-theme="light"] .g-hero-veil {
+  background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(212, 148, 63, 0.1), transparent 70%);
 }
 
-html[data-theme="light"] .g-hero-bg img,
-html[data-theme="light"] .g-stats-bg img,
-html[data-theme="light"] .g-contact-bg img {
-  filter: grayscale(8%) contrast(1.02) brightness(0.9);
+html[data-theme="light"] .g-contact-veil {
+  background: radial-gradient(ellipse 90% 65% at 50% 50%, rgba(244, 235, 214, 0.4), transparent 75%);
 }
 
 html[data-theme="light"] .g-contact-grid {

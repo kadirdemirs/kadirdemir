@@ -843,10 +843,12 @@ html[data-theme="light"] .nv-link.is-active {
   color: var(--text-primary) !important;
 }
 html[data-theme="light"] .nv-brand-text {
-  background: linear-gradient(180deg, #1a1715 0%, #5c5650 100%) !important;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: none !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: #16120a !important;
+  color: #16120a !important;
 }
 html[data-theme="light"] .nv-icon {
   color: rgba(26, 23, 21, 0.55);
