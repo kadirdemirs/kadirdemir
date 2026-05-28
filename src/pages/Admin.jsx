@@ -300,7 +300,7 @@ function SocialStatsSection({ settings, ytChannel, ytVideos, showToast }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <span style={{ fontSize: 28 }}>▶️</span>
           <div>
-            <h3 style={{ margin: 0 }}>YouTube — {liveYt?.title || ytChannel?.title || settings?.youtubeHandle || '@kadirdemir'}</h3>
+            <h3 style={{ margin: 0 }}>YouTube — {liveYt?.title || ytChannel?.title || settings?.youtubeHandle || '@kadirardademirr'}</h3>
             <small style={{ color: liveYt ? '#34d399' : 'var(--text-secondary)' }}>
               {liveYt ? '● Canlı (Data API)' : ytChannel ? 'Cache' : 'Veri yok — "Yenile" tıklayın'}
             </small>
@@ -374,7 +374,7 @@ function SocialStatsSection({ settings, ytChannel, ytVideos, showToast }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <span style={{ fontSize: 28 }}>🎵</span>
           <div>
-            <h3 style={{ margin: 0 }}>TikTok — @{liveTt?.handle || settings?.tiktokHandle?.replace(/^@/, '') || 'kadirdemirs'}</h3>
+            <h3 style={{ margin: 0 }}>TikTok — @{liveTt?.handle || settings?.tiktokHandle?.replace(/^@/, '') || 'kadirardademir'}</h3>
             <small style={{ color: liveTt ? '#34d399' : 'var(--text-secondary)' }}>
               {liveTt ? '● Canlı (scrape)' : 'Scrape başarısız — manuel değer gösteriliyor'}
             </small>
@@ -1042,13 +1042,13 @@ function SettingsSection({ showToast, onChangePassword }) {
       <div className="settings-section">
         <h3>🌐 Sosyal Medya</h3>
         <div className="form-grid">
-          <label>▶️ YouTube URL<input value={s.youtube || ''} onChange={e => upd('youtube', e.target.value)} placeholder="https://youtube.com/@kadirdemir" /></label>
-          <label>▶️ YouTube Handle<input value={s.youtubeHandle || ''} onChange={e => upd('youtubeHandle', e.target.value)} placeholder="@kadirdemir" /></label>
+          <label>▶️ YouTube URL<input value={s.youtube || ''} onChange={e => upd('youtube', e.target.value)} placeholder="https://youtube.com/@kadirardademirr" /></label>
+          <label>▶️ YouTube Handle<input value={s.youtubeHandle || ''} onChange={e => upd('youtubeHandle', e.target.value)} placeholder="@kadirardademirr" /></label>
           <label>▶️ YouTube Channel ID<input value={s.youtubeChannelId || ''} onChange={e => upd('youtubeChannelId', e.target.value)} placeholder="UCxxxxxx..." /></label>
           <label>📸 Instagram URL<input value={s.instagram || ''} onChange={e => upd('instagram', e.target.value)} placeholder="https://instagram.com/kadirardademir" /></label>
           <label>📸 Instagram Handle<input value={s.instagramHandle || ''} onChange={e => upd('instagramHandle', e.target.value)} placeholder="@kadirardademir" /></label>
-          <label>🎵 TikTok URL<input value={s.tiktok || ''} onChange={e => upd('tiktok', e.target.value)} placeholder="https://tiktok.com/@kadirdemirs" /></label>
-          <label>🎵 TikTok Handle<input value={s.tiktokHandle || ''} onChange={e => upd('tiktokHandle', e.target.value)} placeholder="@kadirdemirs" /></label>
+          <label>🎵 TikTok URL<input value={s.tiktok || ''} onChange={e => upd('tiktok', e.target.value)} placeholder="https://tiktok.com/@kadirardademir" /></label>
+          <label>🎵 TikTok Handle<input value={s.tiktokHandle || ''} onChange={e => upd('tiktokHandle', e.target.value)} placeholder="@kadirardademir" /></label>
           <label>𝕏 X (Twitter) URL<input value={s.twitter || ''} onChange={e => upd('twitter', e.target.value)} /></label>
           <label>💬 Discord URL<input value={s.discord || ''} onChange={e => upd('discord', e.target.value)} placeholder="https://discord.gg/..." /></label>
           <label>💼 LinkedIn URL<input value={s.linkedin || ''} onChange={e => upd('linkedin', e.target.value)} placeholder="https://linkedin.com/in/..." /></label>

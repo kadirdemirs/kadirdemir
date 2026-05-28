@@ -36,10 +36,10 @@ export function PersonSchema({ socials }) {
     if (socials?.linkedin) sameAs.push(socials.linkedin)
     if (sameAs.length === 0) {
       sameAs.push(
-        'https://youtube.com/@kadirdemir',
+        'https://youtube.com/@kadirardademirr',
         'https://instagram.com/kadirardademir',
-        'https://tiktok.com/@kadirdemirs',
-        'https://x.com/kadirdemir'
+        'https://tiktok.com/@kadirardademir',
+        'https://x.com/kadirardademir'
       )
     }
 

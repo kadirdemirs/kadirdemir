@@ -91,7 +91,7 @@ export default function CommandPalette() {
   }, [open])
 
   const socials = useMemo(() => ([
-    settings.youtube && { id: 'yt', title: `YouTube — ${settings.youtubeHandle || '@kadirdemir'}`, href: settings.youtube, icon: FaYoutube, kind: 'Sosyal' },
+    settings.youtube && { id: 'yt', title: `YouTube — ${settings.youtubeHandle || '@kadirardademirr'}`, href: settings.youtube, icon: FaYoutube, kind: 'Sosyal' },
     settings.instagram && { id: 'ig', title: `Instagram — ${settings.instagramHandle || ''}`, href: settings.instagram, icon: FaInstagram, kind: 'Sosyal' },
     settings.tiktok && { id: 'tt', title: `TikTok — ${settings.tiktokHandle || ''}`, href: settings.tiktok, icon: FaTiktok, kind: 'Sosyal' },
   ].filter(Boolean)), [settings])

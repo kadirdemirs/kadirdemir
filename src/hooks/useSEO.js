@@ -68,7 +68,7 @@ export function useSEO({
   image,
   type = 'website',
   noindex = false,
-  twitterHandle = '@kadirdemir',
+  twitterHandle = '@kadirardademir',
 }) {
   const { lang } = useLanguage()
   useEffect(() => {
