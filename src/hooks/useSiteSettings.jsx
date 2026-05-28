@@ -21,7 +21,7 @@ export const DEFAULT_SITE_SETTINGS = {
   tiktokHandle: '@kadirardademir',
   twitter: 'https://x.com/kadirardademir',
   twitterHandle: '@kadirardademir',
-  linkedin: '',
+  linkedin: 'https://www.linkedin.com/in/kadirdemirr',
   discord: '',
   whatsapp: '',
 
@@ -129,6 +129,15 @@ export function SiteSettingsProvider({ children }) {
           if (!merged.businessName || merged.businessName === 'Kadir') {
             merged.businessName = 'Kadir Demir'
           }
+          // Sosyal medya: DB'deki eski/yanlış handle'lar (kadirdemir, kadirdemirs vb.)
+          // güvenilmez. Doğru hesapları her zaman koddaki default'tan zorla.
+          // Discord yok — DB'de dolu gelse bile gizle.
+          const SOCIAL_KEYS = ['youtube', 'youtubeHandle', 'instagram', 'instagramHandle',
+            'tiktok', 'tiktokHandle', 'twitter', 'twitterHandle', 'linkedin']
+          for (const key of SOCIAL_KEYS) {
+            merged[key] = DEFAULT_SITE_SETTINGS[key]
+          }
+          merged.discord = ''
           setSettings(merged)
           if (merged.baseUrl && typeof window !== 'undefined') {
             window.__SITE_BASE_URL__ = merged.baseUrl

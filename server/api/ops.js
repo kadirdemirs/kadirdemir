@@ -482,13 +482,14 @@ async function handlePurgeLegacy(req, res, db) {
     ],
   }
 
-  // 4) site_settings — businessName / tagline / description'da legacy varsa kayda al
-  const settings = await db.collection('site_settings').findOne({})
+  // 4) site-settings — siteContent koleksiyonunda { section, data } yapısında
+  const settingsDoc = await db.collection('siteContent').findOne({ section: 'site-settings' })
+  const settingsData = settingsDoc?.data || null
   const settingsHits = []
-  if (settings) {
+  if (settingsData) {
     for (const k of ['businessName', 'tagline', 'description', 'seoTitle', 'seoDescription', 'seoKeywords']) {
-      if (typeof settings[k] === 'string' && legacyRegex.test(settings[k])) {
-        settingsHits.push({ field: k, value: settings[k] })
+      if (typeof settingsData[k] === 'string' && legacyRegex.test(settingsData[k])) {
+        settingsHits.push({ field: k, value: settingsData[k] })
       }
     }
   }
@@ -497,7 +498,7 @@ async function handlePurgeLegacy(req, res, db) {
     blogs: await db.collection('blogs').countDocuments(blogsQuery),
     partners: await db.collection('partners').countDocuments(partnersQuery),
     messages: await db.collection('messages').countDocuments(messagesQuery),
-    content: await db.collection('content').countDocuments(contentQuery),
+    content: await db.collection('siteContent').countDocuments(contentQuery),
     settingsHits,
     dryRun,
   }
@@ -511,22 +512,44 @@ async function handlePurgeLegacy(req, res, db) {
     blogs: (await db.collection('blogs').deleteMany(blogsQuery)).deletedCount,
     partners: (await db.collection('partners').deleteMany(partnersQuery)).deletedCount,
     messages: (await db.collection('messages').deleteMany(messagesQuery)).deletedCount,
-    content: (await db.collection('content').deleteMany(contentQuery)).deletedCount,
+    content: (await db.collection('siteContent').deleteMany(contentQuery)).deletedCount,
   }
 
-  // site_settings'i Kade Media → Kadir Demir olarak güncelle
-  if (settings && settingsHits.length > 0) {
+  // site-settings: brand metinleri + DOĞRU sosyal medya hesapları (data.* alanları)
+  if (settingsDoc) {
     const patch = {}
     for (const hit of settingsHits) {
-      patch[hit.field] = hit.value
+      patch[`data.${hit.field}`] = hit.value
         .replace(/Kade\s*Media/gi, 'Kadir Demir')
         .replace(/kademedia/gi, 'kadirdemir')
         .replace(/sosyal\s*medya\s*ajans[ıi]?/gi, 'içerik üretimi')
         .replace(/Biruni\s*Teknopark/gi, 'İstanbul')
     }
-    await db.collection('site_settings').updateOne({ _id: settings._id }, { $set: patch })
+    // Eski/yanlış sosyal medya hesaplarını doğrularıyla değiştir
+    Object.assign(patch, {
+      'data.youtube': 'https://youtube.com/@kadirardademirr',
+      'data.youtubeHandle': '@kadirardademirr',
+      'data.instagram': 'https://instagram.com/kadirardademir',
+      'data.instagramHandle': '@kadirardademir',
+      'data.tiktok': 'https://tiktok.com/@kadirardademir',
+      'data.tiktokHandle': '@kadirardademir',
+      'data.twitter': 'https://x.com/kadirardademir',
+      'data.twitterHandle': '@kadirardademir',
+      'data.linkedin': 'https://www.linkedin.com/in/kadirdemirr',
+      'data.discord': '',
+    })
+    await db.collection('siteContent').updateOne({ _id: settingsDoc._id }, { $set: patch })
     deleted.settingsUpdated = Object.keys(patch).length
   }
+
+  // siteContent: kadelink linkleri + sosyal istatistik cache'i eski/yanlış olabilir.
+  // Bu section'ları sil → Links.jsx doğru default'ları, Home doğru API'yi kullanır.
+  try {
+    deleted.kadelinkLinks = (await db.collection('siteContent').deleteOne({ section: 'kadelink-links' })).deletedCount
+  } catch { deleted.kadelinkLinks = 0 }
+  try {
+    deleted.socialStatsCache = (await db.collection('siteContent').deleteMany({ section: { $in: ['social-stats', 'social-stats-cache'] } })).deletedCount
+  } catch { deleted.socialStatsCache = 0 }
 
   await writeAuditLog(db, {
     actor: user.username,
