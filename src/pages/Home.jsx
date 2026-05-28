@@ -18,7 +18,11 @@ import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
-import CountUp from '../components/CountUp'
+import CountUp from '../components/reactbits/CountUpRB'
+import GradientText from '../components/reactbits/GradientText'
+import ScrollFloat from '../components/reactbits/ScrollFloat'
+import LogoLoop from '../components/reactbits/LogoLoop'
+import BorderGlow from '../components/reactbits/BorderGlow'
 import {
   getYouTubeVideosApi, getBlogsApi, getSocialStatsApi, sendContactApi,
   getPartnersApi,
@@ -62,7 +66,21 @@ function GiantSectionHead({ eyebrow, title, sub }) {
   return (
     <header className="g-section-head">
       <GiantEyebrow>{eyebrow}</GiantEyebrow>
-      {title && <h2 className="g-section-title">{title}</h2>}
+      {title && (
+        <h2 className="g-section-title">
+          {typeof title === 'string' ? (
+            <ScrollFloat
+              animationDuration={0.8}
+              ease="back.out(1.6)"
+              scrollStart="top bottom-=10%"
+              scrollEnd="center center"
+              stagger={0.025}
+            >
+              {title}
+            </ScrollFloat>
+          ) : title}
+        </h2>
+      )}
       {sub && <p className="g-section-sub">{sub}</p>}
     </header>
   )
@@ -270,7 +288,13 @@ export default function Home() {
             {isEn ? 'Content creator · Istanbul' : 'İçerik üreticisi · İstanbul'}
           </span>
           <h1 className="g-hero-title">
-            {brandName}
+            <GradientText
+              colors={['#f4ebe0', '#e8b468', '#d4943f', '#e8b468', '#f4ebe0']}
+              animationSpeed={9}
+              direction="horizontal"
+            >
+              {brandName}
+            </GradientText>
             <span className="g-hero-title-accent">.</span>
           </h1>
           <p className="g-hero-lede">
@@ -332,7 +356,7 @@ export default function Home() {
               return (
                 <div key={s.label} className="g-stat" style={{ '--g-stat-i': i, '--g-stat-n': arr.length }}>
                   <span className="g-stat-value">
-                    {parsed ? <><CountUp end={parsed.num} duration={2.2} />{parsed.suffix}</> : s.value}
+                    {parsed ? <><CountUp to={parsed.num} duration={2} separator="," />{parsed.suffix}</> : s.value}
                   </span>
                   <span className="g-stat-label">{s.label}</span>
                 </div>
@@ -366,13 +390,26 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="g-types">
-          {contentTypes.map((c) => (
-            <span className="g-type" key={c.label}>
-              <c.icon size={18} />
-              {c.label}
-            </span>
-          ))}
+        <div className="g-types-loop">
+          <LogoLoop
+            logos={contentTypes.map((c) => ({
+              node: (
+                <span className="g-type-node">
+                  <c.icon size={18} />
+                  {c.label}
+                </span>
+              ),
+              title: c.label,
+            }))}
+            speed={45}
+            direction="left"
+            logoHeight={20}
+            gap={28}
+            pauseOnHover
+            fadeOut
+            scaleOnHover
+            ariaLabel={isEn ? 'Content types' : 'İçerik türleri'}
+          />
         </div>
       </section>
 
@@ -469,12 +506,23 @@ export default function Home() {
         />
         <div className="g-platforms-grid">
           {platformCards.map((p) => (
-            <a key={p.name} href={p.url} target="_blank" rel="noopener noreferrer" className="g-platform" style={{ '--pc': p.color }}>
-              <span className="g-platform-icon"><p.icon size={26} /></span>
-              <span className="g-platform-name">{p.name}</span>
-              {p.stat && <span className="g-platform-stat">{formatViews(p.stat)} {p.statLabel}</span>}
-              <span className="g-platform-go">{isEn ? 'Follow' : 'Takip et'} →</span>
-            </a>
+            <BorderGlow
+              key={p.name}
+              className="g-platform-glow"
+              borderRadius={14}
+              glowColor="38 75 55"
+              backgroundColor="rgba(10,9,7,0.6)"
+              colors={['#e8b468', '#d4943f', '#a67428']}
+              edgeSensitivity={35}
+              glowRadius={32}
+            >
+              <a href={p.url} target="_blank" rel="noopener noreferrer" className="g-platform" style={{ '--pc': p.color }}>
+                <span className="g-platform-icon"><p.icon size={26} /></span>
+                <span className="g-platform-name">{p.name}</span>
+                {p.stat && <span className="g-platform-stat">{formatViews(p.stat)} {p.statLabel}</span>}
+                <span className="g-platform-go">{isEn ? 'Follow' : 'Takip et'} →</span>
+              </a>
+            </BorderGlow>
           ))}
         </div>
       </section>
