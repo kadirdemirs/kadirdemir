@@ -95,7 +95,7 @@ export function useSEO({
         })
         ogImage = `${baseUrl}/api/og?${params.toString()}`
       } else {
-        ogImage = `${baseUrl}/logo.png`
+        ogImage = `${baseUrl}/og-cover.png`
       }
     }
 

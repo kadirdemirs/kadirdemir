@@ -3,16 +3,15 @@ import { getDb } from './_lib/mongodb.js';
 const BASE = (process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '');
 
 const STATIC_PAGES = [
-  { loc: '/', changefreq: 'weekly', priority: '1.0', images: ['/icon-512.png'] },
+  { loc: '/', changefreq: 'weekly', priority: '1.0', images: ['/og-cover.png'] },
   { loc: '/hakkimda', changefreq: 'monthly', priority: '0.9', images: ['/kadir.jpg'] },
   { loc: '/videolar', changefreq: 'weekly', priority: '0.9' },
-  { loc: '/blog', changefreq: 'weekly', priority: '0.9' },
-  { loc: '/setup', changefreq: 'monthly', priority: '0.8' },
+  { loc: '/blog', changefreq: 'weekly', priority: '0.8' },
+  { loc: '/links', changefreq: 'monthly', priority: '0.8' },
   { loc: '/iletisim', changefreq: 'yearly', priority: '0.7' },
   { loc: '/sponsor', changefreq: 'monthly', priority: '0.7' },
   { loc: '/medya-kit', changefreq: 'monthly', priority: '0.7' },
   { loc: '/sor', changefreq: 'weekly', priority: '0.6' },
-  { loc: '/partnerler', changefreq: 'monthly', priority: '0.6' },
   { loc: '/kvkk', changefreq: 'yearly', priority: '0.3' },
   { loc: '/gizlilik', changefreq: 'yearly', priority: '0.3' },
   { loc: '/cerez-politikasi', changefreq: 'yearly', priority: '0.3' },

@@ -112,14 +112,14 @@ export default function Home() {
   const ig = socialStats?.instagram
   const tt = socialStats?.tiktok
 
-  // Sadece canlı API verisi — sahte/placeholder rakam göstermiyoruz.
-  // Veri yoksa bölüm tamamen gizlenir (aşağıda liveStats.length > 0 koşulu).
+  // Önce canlı API verisi, yoksa admin'den girilen manuel istatistikler.
+  // Hiçbiri yoksa bölüm gizlenir (liveStats.length > 0 koşulu).
   const liveStats = [
-    yt?.followers && { value: yt.followers, label: isEn ? 'YouTube subscribers' : 'YouTube abone' },
-    yt?.views && { value: yt.views, label: isEn ? 'Total views' : 'Toplam izlenme' },
-    ig?.followers && { value: ig.followers, label: isEn ? 'Instagram followers' : 'Instagram takipçi' },
-    tt?.followers && { value: tt.followers, label: isEn ? 'TikTok followers' : 'TikTok takipçi' },
-  ].filter((s) => s && s.value && s.value !== '—' && Number(String(s.value).replace(/\D/g, '')) > 0)
+    { value: yt?.followers || settings.statsYoutubeSubs, label: isEn ? 'YouTube subscribers' : 'YouTube abone' },
+    { value: yt?.views || settings.statsTotalViews, label: isEn ? 'Total views' : 'Toplam izlenme' },
+    { value: ig?.followers || settings.statsInstagramFollowers, label: isEn ? 'Instagram followers' : 'Instagram takipçi' },
+    { value: tt?.followers || settings.statsTiktokFollowers, label: isEn ? 'TikTok followers' : 'TikTok takipçi' },
+  ].filter((s) => s && s.value && s.value !== '—' && String(s.value).trim() !== '' && Number(String(s.value).replace(/[^\d.]/g, '')) > 0)
 
   const aboutText = settings.description || (isEn
     ? "Lifelong content guy — 14 years and counting. I make videos, stream, and mostly just film whatever I'm into that week. Everything I do ends up here."
@@ -242,9 +242,9 @@ export default function Home() {
   }, [videos])
 
   const platformCards = [
-    settings.youtube && { name: 'YouTube', icon: FaYoutube, url: settings.youtube, color: '#FF0000', stat: yt?.followers, statLabel: isEn ? 'subs' : 'abone' },
-    settings.instagram && { name: 'Instagram', icon: FaInstagram, url: settings.instagram, color: '#E4405F', stat: ig?.followers, statLabel: isEn ? 'followers' : 'takipçi' },
-    settings.tiktok && { name: 'TikTok', icon: FaTiktok, url: settings.tiktok, color: '#00F2EA', stat: tt?.followers, statLabel: isEn ? 'followers' : 'takipçi' },
+    settings.youtube && { name: 'YouTube', icon: FaYoutube, url: settings.youtube, color: '#FF0000', stat: yt?.followers || settings.statsYoutubeSubs, statLabel: isEn ? 'subs' : 'abone' },
+    settings.instagram && { name: 'Instagram', icon: FaInstagram, url: settings.instagram, color: '#E4405F', stat: ig?.followers || settings.statsInstagramFollowers, statLabel: isEn ? 'followers' : 'takipçi' },
+    settings.tiktok && { name: 'TikTok', icon: FaTiktok, url: settings.tiktok, color: '#00F2EA', stat: tt?.followers || settings.statsTiktokFollowers, statLabel: isEn ? 'followers' : 'takipçi' },
     settings.discord && { name: 'Discord', icon: FaDiscord, url: settings.discord, color: '#5865F2' },
     settings.linkedin && { name: 'LinkedIn', icon: FaLinkedin, url: settings.linkedin, color: '#0A66C2' },
     settings.twitter && { name: 'X', icon: FaXTwitter, url: settings.twitter, color: '#ffffff' },
