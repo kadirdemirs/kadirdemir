@@ -20,7 +20,6 @@ import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/reactbits/CountUpRB'
 import GradientText from '../components/reactbits/GradientText'
-import ScrollFloat from '../components/reactbits/ScrollFloat'
 import LogoLoop from '../components/reactbits/LogoLoop'
 import BorderGlow from '../components/reactbits/BorderGlow'
 import {
@@ -66,21 +65,7 @@ function GiantSectionHead({ eyebrow, title, sub }) {
   return (
     <header className="g-section-head">
       <GiantEyebrow>{eyebrow}</GiantEyebrow>
-      {title && (
-        <h2 className="g-section-title">
-          {typeof title === 'string' ? (
-            <ScrollFloat
-              animationDuration={0.8}
-              ease="back.out(1.6)"
-              scrollStart="top bottom-=10%"
-              scrollEnd="center center"
-              stagger={0.025}
-            >
-              {title}
-            </ScrollFloat>
-          ) : title}
-        </h2>
-      )}
+      {title && <h2 className="g-section-title">{title}</h2>}
       {sub && <p className="g-section-sub">{sub}</p>}
     </header>
   )
