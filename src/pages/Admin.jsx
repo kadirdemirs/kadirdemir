@@ -1074,6 +1074,25 @@ function SettingsSection({ showToast, onChangePassword }) {
       </div>
 
       <div className="settings-section">
+        <h3>⭐ Ana Sayfa — Öne Çıkan Video & Sırada</h3>
+        <div className="form-grid">
+          <label className="full">🎬 Öne Çıkan Video ID
+            <input value={s.featuredVideoId || ''} onChange={e => upd('featuredVideoId', e.target.value)} placeholder="dQw4w9WgXcQ (boşsa en çok izlenen)" />
+          </label>
+          <label>⏭️ Sıradaki Video Başlığı<input value={s.nextVideoTitle || ''} onChange={e => upd('nextVideoTitle', e.target.value)} placeholder="Yeni vlog: İstanbul turu" /></label>
+          <label>📅 Yayın Tarihi<input value={s.nextVideoDate || ''} onChange={e => upd('nextVideoDate', e.target.value)} placeholder="Cuma 20:00" /></label>
+          <label className="full">📝 Not<input value={s.nextVideoNote || ''} onChange={e => upd('nextVideoNote', e.target.value)} placeholder="Kaçırma!" /></label>
+          <label className="full checkbox-row">
+            <input type="checkbox" checked={!!s.newsletterEnabled} onChange={e => upd('newsletterEnabled', e.target.checked)} />
+            📧 Ana sayfada bülten (e-posta) kutusunu göster
+          </label>
+        </div>
+        <p style={{ fontSize: '.78rem', color: 'var(--text-secondary)', margin: '10px 0 0' }}>
+          Video ID = YouTube linkindeki watch?v=<strong>BURASI</strong>. Sıradaki video başlığı boşsa o bölüm gizlenir.
+        </p>
+      </div>
+
+      <div className="settings-section">
         <h3>SEO</h3>
         <div className="form-grid">
           <label className="full">Meta Title<input value={s.seoTitle || ''} onChange={e => upd('seoTitle', e.target.value)} /></label>

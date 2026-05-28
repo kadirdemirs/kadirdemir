@@ -1531,6 +1531,58 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
+   Sırada ne var
+   ══════════════════════════════════════════════════════════════ */
+.g-next-card {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 36px 32px;
+  border: 1px solid var(--g-rule);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(212, 148, 63, 0.05), transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.g-next-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--g-amber), transparent);
+}
+
+.g-next-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--g-amber);
+}
+
+.g-next-title {
+  margin: 12px 0 8px;
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--g-cream);
+}
+
+.g-next-meta {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--g-cream-dim);
+}
+.g-next-meta strong { color: var(--g-amber); }
+
+/* Newsletter */
+.g-newsletter-wrap {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ══════════════════════════════════════════════════════════════
    Featured video — büyük embed / CTA
    ══════════════════════════════════════════════════════════════ */
 .g-feature-frame {

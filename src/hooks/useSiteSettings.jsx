@@ -86,6 +86,15 @@ export const DEFAULT_SITE_SETTINGS = {
   homeFocus: [],   // [{ title, body }] — "Ne yapıyorum" 3 kart
   homeStory: [],   // [{ period, role, body }] — Yolculuk/timeline
   homeFaq: [],     // [{ q, a }] — Sıkça sorulanlar
+
+  // Öne çıkan video — boşsa en çok izlenen otomatik seçilir
+  featuredVideoId: '',
+  // "Sırada ne var" — boşsa bölüm gizlenir
+  nextVideoTitle: '',
+  nextVideoDate: '',
+  nextVideoNote: '',
+  // Newsletter bölümü ana sayfada gösterilsin mi
+  newsletterEnabled: false,
 }
 
 const SiteSettingsContext = createContext({

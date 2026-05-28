@@ -19,6 +19,7 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/reactbits/CountUpRB'
+import NewsletterForm from '../components/NewsletterForm'
 import GradientText from '../components/reactbits/GradientText'
 import LogoLoop from '../components/reactbits/LogoLoop'
 import BorderGlow from '../components/reactbits/BorderGlow'
@@ -244,13 +245,17 @@ export default function Home() {
 
   const yearsActive = settings.statsActiveYears || '14'
 
-  // En çok izlenen videoyu öne çıkar; yoksa ilk video
+  // Admin'den seçilen video varsa onu, yoksa en çok izleneni öne çıkar
   const featuredVideo = useMemo(() => {
     if (!videos.length) return null
     const withId = videos.filter((v) => v?.youtubeId)
     if (!withId.length) return null
+    if (settings.featuredVideoId) {
+      const picked = withId.find((v) => v.youtubeId === settings.featuredVideoId)
+      if (picked) return picked
+    }
     return [...withId].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))[0]
-  }, [videos])
+  }, [videos, settings.featuredVideoId])
 
   const platformCards = [
     settings.youtube && { name: 'YouTube', icon: FaYoutube, url: settings.youtube, color: '#FF0000', stat: yt?.followers || settings.statsYoutubeSubs, statLabel: isEn ? 'subs' : 'abone' },
@@ -407,6 +412,23 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Sırada ne var — admin'den girilirse göster */}
+      {settings.nextVideoTitle && (
+        <section className="g-section g-next">
+          <div className="g-next-card">
+            <span className="g-next-eyebrow">{isEn ? 'COMING UP' : 'SIRADA'}</span>
+            <h3 className="g-next-title">{settings.nextVideoTitle}</h3>
+            {(settings.nextVideoDate || settings.nextVideoNote) && (
+              <p className="g-next-meta">
+                {settings.nextVideoDate && <strong>{settings.nextVideoDate}</strong>}
+                {settings.nextVideoDate && settings.nextVideoNote && ' · '}
+                {settings.nextVideoNote}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Son videolar — varsa grid, yoksa kanal daveti */}
       <section className="g-section g-works-wrap">
@@ -586,6 +608,19 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {settings.newsletterEnabled && (
+        <section className="g-section g-newsletter">
+          <GiantSectionHead
+            eyebrow={isEn ? 'NEWSLETTER' : 'BÜLTEN'}
+            title={isEn ? 'New video? You hear first.' : 'Yeni video çıkınca ilk sen duy.'}
+            sub={isEn ? 'No spam — just a heads-up when something new drops.' : 'Spam yok — sadece yeni bir şey çıkınca kısa bir haber.'}
+          />
+          <div className="g-newsletter-wrap">
+            <NewsletterForm lang={lang} />
+          </div>
+        </section>
+      )}
 
       <section className="g-section g-touch">
         <GiantSectionHead
