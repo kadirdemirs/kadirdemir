@@ -765,17 +765,6 @@ html, body {
 }
 
 /* ─── Light theme full coverage — sayfa içerikleri için ─── */
-html[data-theme="light"] .hm-faq-item,
-html[data-theme="light"] .hm-newsletter,
-html[data-theme="light"] .hm-platform-card,
-html[data-theme="light"] .hm-social-card,
-html[data-theme="light"] .hm-video-card,
-html[data-theme="light"] .hm-top-card,
-html[data-theme="light"] .hm-blog-card,
-html[data-theme="light"] .hm-bento-large,
-html[data-theme="light"] .hm-bento-stat,
-html[data-theme="light"] .hm-bento-quote,
-html[data-theme="light"] .hm-stat,
 html[data-theme="light"] .kd-contact-card,
 html[data-theme="light"] .kd-follow-tile,
 html[data-theme="light"] .kd-newsletter,
@@ -784,20 +773,7 @@ html[data-theme="light"] .kd-newsletter-row {
   border-color: rgba(26, 23, 21, 0.12) !important;
   color: var(--text-primary);
 }
-html[data-theme="light"] .hm-newsletter::before,
-html[data-theme="light"] .hm-newsletter::after { display: none; }
 
-html[data-theme="light"] .hm-h2,
-html[data-theme="light"] .hm-bento-title,
-html[data-theme="light"] .hm-bento-quote-text,
-html[data-theme="light"] .hm-featured-title,
-html[data-theme="light"] .hm-video-title,
-html[data-theme="light"] .hm-top-info h4,
-html[data-theme="light"] .hm-blog-title,
-html[data-theme="light"] .hm-platform-name,
-html[data-theme="light"] .hm-social-name,
-html[data-theme="light"] .hm-faq-q,
-html[data-theme="light"] .hm-newsletter-text h2,
 html[data-theme="light"] .kd-newsletter-text h2,
 html[data-theme="light"] .ft-mega,
 html[data-theme="light"] .ft-mega-text,
@@ -808,22 +784,12 @@ html[data-theme="light"] .kd-follow-tile h4 {
   background: none !important;
 }
 
-html[data-theme="light"] .hm-h2 .hm-accent,
 html[data-theme="light"] .kd-accent {
   color: var(--primary-dark) !important;
   -webkit-text-fill-color: var(--primary-dark) !important;
   background: none !important;
 }
 
-html[data-theme="light"] .hm-bento-text,
-html[data-theme="light"] .hm-bento-meta,
-html[data-theme="light"] .hm-platform-handle,
-html[data-theme="light"] .hm-platform-stat-lbl,
-html[data-theme="light"] .hm-social-meta,
-html[data-theme="light"] .hm-faq-a,
-html[data-theme="light"] .hm-blog-excerpt,
-html[data-theme="light"] .hm-section-sub,
-html[data-theme="light"] .hm-newsletter-text p,
 html[data-theme="light"] .kd-newsletter-text p,
 html[data-theme="light"] .ft-tagline,
 html[data-theme="light"] .ft-list a,

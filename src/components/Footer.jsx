@@ -26,8 +26,13 @@ export default function Footer() {
     { name: t('nav.about'), path: '/hakkimda' },
     { name: t('nav.videos'), path: '/videolar' },
     { name: t('nav.blog'), path: '/blog' },
-    { name: t('nav.setup'), path: '/setup' },
     { name: t('nav.contact'), path: '/iletisim' },
+  ]
+
+  const COLLAB = [
+    { name: t('footer.collab'), path: '/sponsor' },
+    { name: t('footer.mediaKit'), path: '/medya-kit' },
+    { name: t('footer.askMe'), path: '/sor' },
   ]
 
   const LEGAL = [
@@ -86,6 +91,15 @@ export default function Footer() {
                   <s.icon size={14} aria-hidden="true" /> {s.name}
                 </a>
               </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="ft-col">
+          <h4 className="ft-col-title">{t('footer.collabTitle')}</h4>
+          <ul className="ft-list">
+            {COLLAB.map((l) => (
+              <li key={l.path}><Link to={l.path}>{l.name}</Link></li>
             ))}
           </ul>
         </div>

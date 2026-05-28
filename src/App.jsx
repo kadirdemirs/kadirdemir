@@ -22,14 +22,12 @@ import Contact from './pages/Contact'
 import Blog from './pages/Blog'
 import BlogDetail from './pages/BlogDetail'
 import Videolar from './pages/Videolar'
-import Setup from './pages/Setup'
 import Links from './pages/Links'
 import NotFound from './pages/NotFound'
 
 const KVKK = lazy(() => import('./pages/KVKK'))
 const Gizlilik = lazy(() => import('./pages/Gizlilik'))
 const CerezPolitikasi = lazy(() => import('./pages/CerezPolitikasi'))
-const Partners = lazy(() => import('./pages/Partners'))
 const Sponsor = lazy(() => import('./pages/Sponsor'))
 const AMA = lazy(() => import('./pages/AMA'))
 const MediaKit = lazy(() => import('./pages/MediaKit'))
@@ -133,13 +131,13 @@ function App() {
             <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
             <Route path="/blog/:slug" element={<PageTransition><BlogDetail /></PageTransition>} />
             <Route path="/videolar" element={<PageTransition><Videolar /></PageTransition>} />
-            <Route path="/setup" element={<PageTransition><Setup /></PageTransition>} />
             <Route path="/links" element={<PageTransition><Links /></PageTransition>} />
             <Route path="/iletisim" element={<PageTransition><Contact /></PageTransition>} />
+            <Route path="/setup" element={<Navigate to="/" replace />} />
+            <Route path="/partnerler" element={<Navigate to="/" replace />} />
             <Route path="/kvkk" element={<LazyRoute><PageTransition><KVKK /></PageTransition></LazyRoute>} />
             <Route path="/gizlilik" element={<LazyRoute><PageTransition><Gizlilik /></PageTransition></LazyRoute>} />
             <Route path="/cerez-politikasi" element={<LazyRoute><PageTransition><CerezPolitikasi /></PageTransition></LazyRoute>} />
-            <Route path="/partnerler" element={<LazyRoute><PageTransition><Partners /></PageTransition></LazyRoute>} />
             <Route path="/sponsor" element={<LazyRoute><PageTransition><Sponsor /></PageTransition></LazyRoute>} />
             <Route path="/medya-kit" element={<LazyRoute><PageTransition><MediaKit /></PageTransition></LazyRoute>} />
             <Route path="/sor" element={<LazyRoute><PageTransition><AMA /></PageTransition></LazyRoute>} />

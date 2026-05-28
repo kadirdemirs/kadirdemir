@@ -14,7 +14,6 @@ function buildPopularPages(t) {
     { path: '/videolar', name: t('nav.videos'), emoji: '🎬' },
     { path: '/blog', name: t('nav.blog'), emoji: '📝' },
     { path: '/hakkimda', name: t('nav.about'), emoji: '👋' },
-    { path: '/setup', name: t('nav.setup'), emoji: '🖥️' },
     { path: '/iletisim', name: t('nav.contact'), emoji: '✉️' },
     { path: '/sponsor', name: t('sponsor.pill'), emoji: '🤝' },
     { path: '/sor', name: t('ama.pill'), emoji: '❓' },
@@ -25,7 +24,6 @@ function routeFromQuery(query) {
   const q = query.toLowerCase()
   if (/(blog|yazı|yazi|article|post)/.test(q)) return '/blog'
   if (/(video|izle|watch|youtube)/.test(q)) return '/videolar'
-  if (/(setup|donanım|donanim|equipment|kurulum)/.test(q)) return '/setup'
   if (/(hakk|about|kim)/.test(q)) return '/hakkimda'
   if (/(iletiş|iletis|contact|mail)/.test(q)) return '/iletisim'
   if (/(sponsor|işbirliği|isbirligi|brand)/.test(q)) return '/sponsor'

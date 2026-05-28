@@ -25,14 +25,14 @@ export const DEFAULT_SITE_SETTINGS = {
   discord: '',
   whatsapp: '',
 
-  // Stats (overridable)
-  statsYoutubeSubs: '2.4M',
-  statsInstagramFollowers: '3.3M',
-  statsTotalViews: '1.02B',
-  statsTotalVideos: '3.8K',
-  statsTiktokFollowers: '1.8M',
-  statsTiktokLikes: '24.5M',
-  statsInstagramPosts: '420',
+  // Stats — gerçek değerler YouTube API + admin'den gelir; sahte placeholder yok
+  statsYoutubeSubs: '',
+  statsInstagramFollowers: '',
+  statsTotalViews: '',
+  statsTotalVideos: '',
+  statsTiktokFollowers: '',
+  statsTiktokLikes: '',
+  statsInstagramPosts: '',
   statsActiveYears: '14',
 
   // SEO

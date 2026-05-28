@@ -25,11 +25,9 @@ const PAGES = [
   { id: 'about', title: 'Hakkımda', path: '/hakkimda', icon: HiOutlineUser, kind: 'Sayfa' },
   { id: 'blog', title: 'Blog', path: '/blog', icon: HiOutlineDocumentText, kind: 'Sayfa' },
   { id: 'videos', title: 'Videolar', path: '/videolar', icon: HiOutlineVideoCamera, kind: 'Sayfa' },
-  { id: 'setup', title: 'Setup', path: '/setup', icon: HiOutlineDesktopComputer, kind: 'Sayfa' },
   { id: 'contact', title: 'İletişim', path: '/iletisim', icon: HiOutlineMail, kind: 'Sayfa' },
   { id: 'sponsor', title: 'Sponsorluk Başvurusu', path: '/sponsor', icon: HiOutlineSparkles, kind: 'Sayfa' },
   { id: 'mediakit', title: 'Medya Kit', path: '/medya-kit', icon: HiOutlineDownload, kind: 'Sayfa' },
-  { id: 'partners', title: 'Partnerler', path: '/partnerler', icon: HiOutlineUserGroup, kind: 'Sayfa' },
   { id: 'ama', title: 'Sor Bana', path: '/sor', icon: HiOutlineQuestionMarkCircle, kind: 'Sayfa' },
 ]
 
