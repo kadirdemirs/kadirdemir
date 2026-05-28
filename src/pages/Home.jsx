@@ -97,7 +97,7 @@ export default function Home() {
       if (Array.isArray(res?.videos)) setVideos(res.videos)
     }).catch(() => {})
 
-    getSocialStatsApi({ force: true }).then((data) => setSocialStats(data)).catch(() => setSocialStats(null))
+    getSocialStatsApi().then((data) => setSocialStats(data)).catch(() => setSocialStats(null))
 
     if (typeof getPartnersApi === 'function') {
       getPartnersApi()
