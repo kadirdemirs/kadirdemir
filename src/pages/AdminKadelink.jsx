@@ -210,6 +210,16 @@ function newLinkRow() {
   }
 }
 
+// DB boşken admin'e gösterilen varsayılan linkler (gerçek hesaplar)
+const DEFAULT_KADELINK_LINKS = [
+  { id: 'instagram', label: 'Instagram', icon: 'instagram', url: 'https://www.instagram.com/kadirardademir', enabled: true },
+  { id: 'youtube', label: 'YouTube', icon: 'youtube', url: 'https://www.youtube.com/@kadirardademirr', enabled: true },
+  { id: 'tiktok', label: 'TikTok', icon: 'tiktok', url: 'https://www.tiktok.com/@kadirardademir', enabled: true },
+  { id: 'x', label: 'X', icon: 'x', url: 'https://x.com/kadirardademir', enabled: true },
+  { id: 'linkedin', label: 'LinkedIn', icon: 'linkedin', url: 'https://www.linkedin.com/in/kadirdemirr', enabled: true },
+  { id: 'email', label: 'İletişim', icon: 'email', url: 'mailto:thekademedia@gmail.com', enabled: true },
+]
+
 export function KadelinkLinksSection({ showToast }) {
   const [links, setLinks] = useState([])
   const [loading, setLoading] = useState(true)
@@ -219,9 +229,10 @@ export function KadelinkLinksSection({ showToast }) {
     getKadelinkLinksApi()
       .then((doc) => {
         const arr = Array.isArray(doc?.data?.links) ? doc.data.links : []
-        setLinks(arr)
+        // DB boşsa varsayılan linkleri önceden doldur (kullanıcı Kaydet'e basınca DB'ye yazılır)
+        setLinks(arr.length > 0 ? arr : DEFAULT_KADELINK_LINKS.map((l) => ({ ...l })))
       })
-      .catch(() => { /* empty */ })
+      .catch(() => setLinks(DEFAULT_KADELINK_LINKS.map((l) => ({ ...l }))))
       .finally(() => setLoading(false))
   }, [])
 
