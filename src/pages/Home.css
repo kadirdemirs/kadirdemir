@@ -1754,5 +1754,52 @@ html[data-theme="light"] .g-contact-grid {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   INSTAGRAM GRID — admin'den girilen post'lar (g-instagram)
+   ══════════════════════════════════════════════════════════════ */
+.g-ig-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.g-ig-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--g-rule-soft);
+  background: var(--g-bg-deep);
+}
+.g-ig-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+.g-ig-tile:hover img { transform: scale(1.06); }
+.g-ig-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(212, 148, 63, 0.36), rgba(20, 16, 12, 0.55));
+  transition: opacity 0.35s ease;
+}
+.g-ig-tile:hover .g-ig-overlay { opacity: 1; }
+.g-ig-cta { text-align: center; margin-top: 28px; }
+@media (max-width: 760px) {
+  .g-ig-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .g-ig-tile img,
+  .g-ig-tile:hover img { transition: none; transform: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
    Reduced motion
    ══════════════════════════════════════════════════════════════ */

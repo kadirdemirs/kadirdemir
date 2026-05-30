@@ -501,6 +501,37 @@ export default function Home() {
         </div>
       </section>
 
+      {Array.isArray(settings.instagramPosts) && settings.instagramPosts.filter((p) => p?.thumbnail).length > 0 && (
+        <section className="g-section g-instagram">
+          <GiantSectionHead
+            eyebrow="INSTAGRAM"
+            title={isEn ? 'From the feed.' : 'Akıştan.'}
+          />
+          <div className="g-ig-grid">
+            {settings.instagramPosts.filter((p) => p?.thumbnail).slice(0, 8).map((p, i) => (
+              <a
+                key={i}
+                href={p.url || settings.instagram || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="g-ig-tile"
+                aria-label={isEn ? 'Instagram post' : 'Instagram gönderisi'}
+              >
+                <img src={p.thumbnail} alt={isEn ? 'Instagram post' : 'Instagram gönderisi'} loading="lazy" />
+                <span className="g-ig-overlay"><FaInstagram size={24} /></span>
+              </a>
+            ))}
+          </div>
+          {settings.instagram && (
+            <div className="g-ig-cta">
+              <a className="g-hero-cta g-hero-cta--ghost" href={settings.instagram} target="_blank" rel="noopener noreferrer">
+                <FaInstagram size={18} /> {isEn ? 'Follow on Instagram' : "Instagram'da takip et"}
+              </a>
+            </div>
+          )}
+        </section>
+      )}
+
       <section className="g-section g-story">
         <GiantSectionHead eyebrow={isEn ? 'THE TIMELINE' : 'YOLCULUK'} />
         <div className="g-story-list">
