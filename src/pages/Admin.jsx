@@ -8,7 +8,7 @@ import {
   HiOutlineBell, HiOutlinePhotograph, HiOutlineKey, HiOutlineDatabase,
   HiOutlineChatAlt2, HiOutlineCheck, HiOutlineLink, HiOutlineUser,
   HiOutlineColorSwatch, HiOutlineClipboardList, HiOutlineArrowUp,
-  HiOutlineArrowDown,
+  HiOutlineArrowDown, HiOutlineSearch,
 } from 'react-icons/hi'
 import {
   loginApi, logoutApi, changePasswordApi,
@@ -1717,6 +1717,67 @@ const TABS = [
   { id: 'settings', label: 'Ayarlar', icon: HiOutlineCog },
 ]
 
+// ───── ADMIN COMMAND PALETTE (Ctrl+K — sekmeye hızlı git) ─────
+function AdminCommandPalette({ tabs, onSelect }) {
+  const [open, setOpen] = useState(false)
+  const [q, setQ] = useState('')
+  const [idx, setIdx] = useState(0)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setOpen((v) => !v) }
+      else if (e.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  useEffect(() => {
+    if (open) { setQ(''); setIdx(0); setTimeout(() => inputRef.current?.focus(), 40) }
+  }, [open])
+
+  const norm = (s) => String(s || '').toLocaleLowerCase('tr')
+  const results = tabs.filter((t) => !q || norm(t.label).includes(norm(q)))
+  if (!open) return null
+
+  return (
+    <div className="admin-cmdk-overlay" onClick={() => setOpen(false)}>
+      <div className="admin-cmdk" role="dialog" aria-label="Panel araması" onClick={(e) => e.stopPropagation()}>
+        <div className="admin-cmdk-head">
+          <HiOutlineSearch size={18} />
+          <input
+            ref={inputRef}
+            value={q}
+            placeholder="Panelde ara — sekmeye git…"
+            onChange={(e) => { setQ(e.target.value); setIdx(0) }}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowDown') { e.preventDefault(); setIdx((i) => Math.min(results.length - 1, i + 1)) }
+              else if (e.key === 'ArrowUp') { e.preventDefault(); setIdx((i) => Math.max(0, i - 1)) }
+              else if (e.key === 'Enter') { e.preventDefault(); const t = results[idx]; if (t) { onSelect(t.id); setOpen(false) } }
+            }}
+            aria-label="Ara"
+          />
+          <kbd>ESC</kbd>
+        </div>
+        <ul className="admin-cmdk-list">
+          {results.length === 0 && <li className="admin-cmdk-empty">Sonuç yok</li>}
+          {results.map((t, i) => (
+            <li
+              key={t.id}
+              className={`admin-cmdk-item ${i === idx ? 'active' : ''}`}
+              onMouseEnter={() => setIdx(i)}
+              onClick={() => { onSelect(t.id); setOpen(false) }}
+            >
+              <t.icon size={16} /><span>{t.label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
 export default function Admin({ initialAuth = false, initialUser = null }) {
   const [auth, setAuth] = useState(initialAuth)
   const [user, setUser] = useState(initialUser || (() => {
@@ -1795,6 +1856,7 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
 
   return (
     <div className="admin-shell dark">
+      <AdminCommandPalette tabs={TABS} onSelect={setTab} />
       <button className="sidebar-toggle-mobile" onClick={() => setSidebarOpen(s => !s)} aria-label="Menü">
         {sidebarOpen ? <HiOutlineX size={22} /> : <HiOutlineMenuAlt3 size={22} />}
       </button>
