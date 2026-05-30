@@ -180,7 +180,15 @@ export default function BlogDetail() {
   const encodedUrl = encodeURIComponent(postUrl)
   const encodedTitle = encodeURIComponent(title)
 
-  const otherPosts = allPosts.filter((p) => p.slug !== slug).slice(0, 3)
+  // İlgili yazılar — önce aynı kategori, sonra diğerleriyle tamamla
+  const _rest = allPosts.filter((p) => p.slug !== slug)
+  const _sameCat = post ? _rest.filter((p) => p.category && p.category === post.category) : []
+  const otherPosts = [..._sameCat, ..._rest.filter((p) => !_sameCat.includes(p))].slice(0, 3)
+
+  // Önceki / sonraki yazı (liste sırasına göre)
+  const _idx = allPosts.findIndex((p) => p.slug === slug)
+  const prevPost = _idx > 0 ? allPosts[_idx - 1] : null
+  const nextPost = _idx >= 0 && _idx < allPosts.length - 1 ? allPosts[_idx + 1] : null
 
   return (
     <PageTransition>
@@ -376,6 +384,26 @@ export default function BlogDetail() {
               </div>
             </div>
           </FadeIn>
+
+          {/* Önceki / Sonraki yazı */}
+          {(prevPost || nextPost) && (
+            <FadeIn delay={0.19}>
+              <nav className="blog-prevnext" aria-label={lang === 'tr' ? 'Yazı gezinme' : 'Post navigation'}>
+                {prevPost ? (
+                  <Link to={`/blog/${prevPost.slug}`} className="blog-prevnext-link is-prev">
+                    <span className="blog-prevnext-dir"><HiOutlineArrowLeft size={14} /> {lang === 'tr' ? 'Önceki yazı' : 'Previous'}</span>
+                    <span className="blog-prevnext-title">{lang === 'tr' ? prevPost.titleTr : prevPost.titleEn}</span>
+                  </Link>
+                ) : <span />}
+                {nextPost ? (
+                  <Link to={`/blog/${nextPost.slug}`} className="blog-prevnext-link is-next">
+                    <span className="blog-prevnext-dir">{lang === 'tr' ? 'Sonraki yazı' : 'Next'} <HiOutlineArrowRight size={14} /></span>
+                    <span className="blog-prevnext-title">{lang === 'tr' ? nextPost.titleTr : nextPost.titleEn}</span>
+                  </Link>
+                ) : <span />}
+              </nav>
+            </FadeIn>
+          )}
 
           {/* More Posts */}
           {otherPosts.length > 0 && (

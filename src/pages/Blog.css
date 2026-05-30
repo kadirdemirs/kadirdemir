@@ -341,3 +341,51 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Önceki / Sonraki yazı navigasyonu ===== */
+.blog-prevnext {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 48px;
+}
+.blog-prevnext-link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  border: 1px solid var(--border-color, rgba(212, 148, 63, 0.15));
+  border-radius: 14px;
+  background: var(--glass-bg, rgba(33, 28, 22, 0.55));
+  text-decoration: none;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+.blog-prevnext-link:hover {
+  border-color: var(--amber, #d4943f);
+  transform: translateY(-3px);
+}
+.blog-prevnext-link.is-next { text-align: right; align-items: flex-end; }
+.blog-prevnext-dir {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber-soft, #e8b468);
+}
+.blog-prevnext-title {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-primary, #f6eee3);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (max-width: 600px) {
+  .blog-prevnext { grid-template-columns: 1fr; }
+  .blog-prevnext-link.is-next { text-align: left; align-items: flex-start; }
+}
