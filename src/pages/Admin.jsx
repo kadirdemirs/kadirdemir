@@ -27,6 +27,7 @@ import {
   getAdminCommentsApi, setCommentApprovalApi, deleteCommentApi,
   purgeLegacyDryRunApi, purgeLegacyApplyApi,
 } from '../api'
+import RichEditor from '../components/RichEditor'
 import {
   KadelinkHeroSection,
   KadelinkLinksSection,
@@ -832,8 +833,24 @@ function BlogEditor({ post, onSave, onCancel }) {
         <label>Slug (URL)<input value={data.slug || ''} onChange={e => upd('slug', e.target.value)} placeholder="otomatik oluşturulur" /></label>
         <label>Özet (TR)<textarea value={data.excerptTr || data.excerpt || ''} onChange={e => upd('excerptTr', e.target.value)} rows={2} /></label>
         <label>Özet (EN)<textarea value={data.excerptEn || ''} onChange={e => upd('excerptEn', e.target.value)} rows={2} /></label>
-        <label>İçerik (TR, HTML / Markdown)<textarea value={data.contentTr || data.content || ''} onChange={e => upd('contentTr', e.target.value)} rows={12} /></label>
-        <label>İçerik (EN, HTML / Markdown)<textarea value={data.contentEn || ''} onChange={e => upd('contentEn', e.target.value)} rows={12} /></label>
+        <label>
+          İçerik (TR)
+          <RichEditor
+            key={`tr-${data._id || 'new'}`}
+            value={data.contentTr || data.content || ''}
+            onChange={(v) => upd('contentTr', v)}
+            placeholder="Türkçe içeriği buraya yaz…"
+          />
+        </label>
+        <label>
+          İçerik (EN)
+          <RichEditor
+            key={`en-${data._id || 'new'}`}
+            value={data.contentEn || ''}
+            onChange={(v) => upd('contentEn', v)}
+            placeholder="Write English content here…"
+          />
+        </label>
         <label>Kapak Görseli URL<input value={data.image || data.coverImage || ''} onChange={e => upd('image', e.target.value)} /></label>
         <label>Kategori (TR)<input value={data.category || ''} onChange={e => upd('category', e.target.value)} /></label>
         <label>Kategori (EN)<input value={data.categoryEn || ''} onChange={e => upd('categoryEn', e.target.value)} /></label>
