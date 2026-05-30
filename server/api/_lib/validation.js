@@ -8,7 +8,7 @@ const querySchema = z.record(
 
 const allowedActions = new Set([
   'active-visitors', 'activity', 'ai-usage', 'admin', 'all', 'analytics',
-  'analyzer-lead', 'apply', 'ask', 'change-password', 'check', 'confirm',
+  'ask', 'change-password', 'check', 'confirm',
   'csrf', 'file', 'ga4', 'heartbeat', 'live', 'login', 'logout',
   'newsletter', 'notes', 'pageview', 'post-views', 'refresh', 'reply',
   'send-invite', 'send-newsletter', 'sitemap', 'smtp-test', 'submit', 'subscribers',
@@ -16,9 +16,9 @@ const allowedActions = new Set([
 ]);
 
 const allowedResources = new Set([
-  'backup', 'client-errors', 'customer-profiles', 'email-templates',
-  'invoices', 'onboarding', 'proposals', 'push', 'quotes',
-  'subscriptions', 'surveys', 'tasks', 'purge-legacy', 'audit-log',
+  // Ajans (kademedia.com.tr) kaynakları kaldırıldı: quotes, invoices,
+  // customer-profiles, email-templates, onboarding, proposals, subscriptions, surveys, tasks.
+  'backup', 'client-errors', 'push', 'purge-legacy', 'audit-log',
 ]);
 
 function first(value) {

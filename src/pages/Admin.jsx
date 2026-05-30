@@ -1624,6 +1624,8 @@ function PurgeLegacySection({ showToast }) {
             <li>İçerik bölümleri (hero/stats): <strong>{summary.content || 0}</strong></li>
             <li>Analiz lead'leri (ajans): <strong>{summary.analyzerLeads || 0}</strong></li>
             <li>İş başvuruları (ajans): <strong>{summary.applications || 0}</strong></li>
+            <li>Ajans CRM (teklif/abonelik/onboarding/şablon): <strong>{(summary.quotes || 0) + (summary.proposals || 0) + (summary.subscriptions || 0) + (summary.onboardingForms || 0) + (summary.emailTemplates || 0)}</strong></li>
+            <li style={{ color: '#fbbf24' }}>⚠️ Faturalar (silinmez — finansal kayıt): <strong>{summary.invoices || 0}</strong></li>
             <li>Site ayarları (düzeltilecek alan): <strong>{summary.settingsHits?.length || 0}</strong></li>
           </ul>
           {summary.settingsHits?.length > 0 && (
