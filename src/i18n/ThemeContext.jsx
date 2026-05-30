@@ -31,16 +31,6 @@ export function ThemeProvider({ children }) {
     }
   }, [theme])
 
-  // Kullanıcı henüz açık bir seçim yapmadıysa OS temasını canlı izle.
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return
-    if (readStoredTheme()) return // açık seçim var → OS'u izleme
-    const mq = window.matchMedia('(prefers-color-scheme: light)')
-    const onChange = () => { if (!readStoredTheme()) setThemeState(getSystemTheme()) }
-    mq.addEventListener?.('change', onChange)
-    return () => mq.removeEventListener?.('change', onChange)
-  }, [])
-
   // Açık seçim → kalıcı kaydet.
   const setTheme = (next) => {
     try { localStorage.setItem(LS_KEY, next) } catch { /* ignore */ }
