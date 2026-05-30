@@ -24,6 +24,7 @@ import BlogDetail from './pages/BlogDetail'
 import Videolar from './pages/Videolar'
 import Links from './pages/Links'
 import NotFound from './pages/NotFound'
+import Ara from './pages/Ara'
 
 const KVKK = lazy(() => import('./pages/KVKK'))
 const Gizlilik = lazy(() => import('./pages/Gizlilik'))
@@ -133,6 +134,7 @@ function App() {
             <Route path="/videolar" element={<PageTransition><Videolar /></PageTransition>} />
             <Route path="/links" element={<PageTransition><Links /></PageTransition>} />
             <Route path="/iletisim" element={<PageTransition><Contact /></PageTransition>} />
+            <Route path="/ara" element={<PageTransition><Ara /></PageTransition>} />
             <Route path="/setup" element={<Navigate to="/" replace />} />
             <Route path="/partnerler" element={<Navigate to="/" replace />} />
             <Route path="/kvkk" element={<LazyRoute><PageTransition><KVKK /></PageTransition></LazyRoute>} />

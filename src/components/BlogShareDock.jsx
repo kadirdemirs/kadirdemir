@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { HiOutlineLink, HiOutlineCheck, HiOutlineShare } from 'react-icons/hi'
-import { FaLinkedinIn, FaXTwitter } from 'react-icons/fa6'
-import { FaWhatsapp } from 'react-icons/fa'
+import { FaLinkedinIn, FaXTwitter, FaTelegram } from 'react-icons/fa6'
+import { FaWhatsapp, FaEnvelope } from 'react-icons/fa'
 import { useLanguage } from '../i18n/LanguageContext'
 import './BlogShareDock.css'
 
@@ -59,6 +59,22 @@ export default function BlogShareDock({ title, url }) {
         aria-label="WhatsApp"
       >
         <FaWhatsapp size={16} />
+      </a>
+      <a
+        href={`https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="kd-share-dock-btn"
+        aria-label="Telegram"
+      >
+        <FaTelegram size={16} />
+      </a>
+      <a
+        href={`mailto:?subject=${encodedTitle}&body=${encodedUrl}`}
+        className="kd-share-dock-btn"
+        aria-label="E-posta ile paylaş"
+      >
+        <FaEnvelope size={15} />
       </a>
       <button
         type="button"

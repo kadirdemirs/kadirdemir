@@ -87,7 +87,7 @@ export default function Navbar() {
             className="nv-icon"
             aria-label={`${t('nav.search')} (Ctrl+K)`}
             title="Ctrl+K"
-            onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
+            onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }))}
           >
             <HiOutlineSearch size={16} />
           </button>

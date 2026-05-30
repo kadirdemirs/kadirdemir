@@ -573,6 +573,29 @@ export async function getAMAApi() {
   return handleResponse(res);
 }
 
+export async function getAMAPendingApi() {
+  const res = await globalThis.fetch(`${API_BASE}/ama?action=pending`, { headers: getAuthHeaders() });
+  return handleResponse(res);
+}
+
+export async function answerAMAApi(id, answer) {
+  const res = await globalThis.fetch(`${API_BASE}/ama?action=answer`, {
+    method: 'POST',
+    headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, answer }),
+  });
+  return handleResponse(res);
+}
+
+export async function deleteAMAApi(id) {
+  const res = await globalThis.fetch(`${API_BASE}/ama?action=delete`, {
+    method: 'POST',
+    headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id }),
+  });
+  return handleResponse(res);
+}
+
 export async function askAMAApi(question, author) {
   const res = await globalThis.fetch(`${API_BASE}/ama?action=ask`, {
     method: 'POST',

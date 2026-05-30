@@ -8,10 +8,11 @@ import {
   HiOutlineBell, HiOutlinePhotograph, HiOutlineKey, HiOutlineDatabase,
   HiOutlineChatAlt2, HiOutlineCheck, HiOutlineLink, HiOutlineUser,
   HiOutlineColorSwatch, HiOutlineClipboardList, HiOutlineArrowUp,
-  HiOutlineArrowDown, HiOutlineSearch,
+  HiOutlineArrowDown, HiOutlineSearch, HiOutlineQuestionMarkCircle,
 } from 'react-icons/hi'
 import {
   loginApi, logoutApi, changePasswordApi,
+  getAMAPendingApi, answerAMAApi, deleteAMAApi,
   getBlogsApi, createBlogApi, updateBlogApi, deleteBlogApi,
   getMessagesApi, markMessageReadApi, deleteMessageApi, replyToMessageApi, updateMessageStatusApi,
   getUsersApi, createUserApi, updateUserApi, deleteUserApi,
@@ -855,6 +856,27 @@ function BlogEditor({ post, onSave, onCancel }) {
         <label>Kategori (TR)<input value={data.category || ''} onChange={e => upd('category', e.target.value)} /></label>
         <label>Kategori (EN)<input value={data.categoryEn || ''} onChange={e => upd('categoryEn', e.target.value)} /></label>
 
+        {/* OG Görüntü Önizleme */}
+        {(data.titleTr || data.title) && (
+          <div className="og-preview-wrap">
+            <span className="og-preview-label">🔗 Sosyal medyada böyle görünecek:</span>
+            <div className="og-preview-card">
+              <img
+                className="og-preview-img"
+                src={`/api/og?title=${encodeURIComponent((data.titleTr || data.title || '').slice(0, 100))}&subtitle=${encodeURIComponent((data.excerptTr || '').slice(0, 100))}${data.category ? `&tag=${encodeURIComponent(data.category)}` : ''}`}
+                alt="OG önizleme"
+                loading="lazy"
+                onError={(e) => { e.target.style.display = 'none' }}
+              />
+              <div className="og-preview-meta">
+                <span className="og-preview-site">kadirardademir.com</span>
+                <span className="og-preview-title">{data.titleTr || data.title}</span>
+                <span className="og-preview-desc">{(data.excerptTr || '').slice(0, 120)}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="blog-publish-row">
           <label className="checkbox-row" style={{ margin: 0 }}>
             <input type="checkbox" checked={!!data.published} onChange={e => upd('published', e.target.checked)} />
@@ -1258,6 +1280,15 @@ function SettingsSection({ showToast, onChangePassword }) {
           <label>Telefon<input value={s.phone || ''} onChange={e => upd('phone', e.target.value)} /></label>
           <label>Şehir<input value={s.address || ''} onChange={e => upd('address', e.target.value)} /></label>
           <label>Site Base URL<input value={s.baseUrl || ''} onChange={e => upd('baseUrl', e.target.value)} /></label>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          🎨 Accent Rengi
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <input type="color" value={s.accentColor || '#d4943f'} onChange={e => upd('accentColor', e.target.value)}
+              style={{ width: 44, height: 36, padding: 2, borderRadius: 8, border: '1px solid var(--border)', cursor: 'pointer', background: 'none' }} />
+            <input value={s.accentColor || ''} onChange={e => upd('accentColor', e.target.value)} placeholder="#d4943f (default amber)" style={{ flex: 1 }} />
+            {s.accentColor && <button type="button" className="btn btn-outline" style={{ padding: '6px 10px', fontSize: '.76rem' }} onClick={() => upd('accentColor', '')}>Sıfırla</button>}
+          </div>
+        </label>
         </div>
       </div>
 
@@ -1310,7 +1341,20 @@ function SettingsSection({ showToast, onChangePassword }) {
             📧 Ana sayfada bülten (e-posta) kutusunu göster
           </label>
         </div>
-        <p style={{ fontSize: '.78rem', color: 'var(--text-secondary)', margin: '10px 0 0' }}>
+      </div>
+
+      <div className="settings-section">
+        <h3>🔘 Floating CTA Butonu</h3>
+        <p style={{ fontSize: '.78rem', color: 'var(--text-secondary)', margin: '0 0 14px' }}>Sağ altta kayan "bana yaz" butonunu özelleştir. Boş bırakılırsa varsayılan iletişim metni ve /iletisim yolu kullanılır.</p>
+        <div className="form-grid">
+          <label>Buton metni (TR)<input value={s.floatingCtaLabelTr || ''} onChange={e => upd('floatingCtaLabelTr', e.target.value)} placeholder="İletişim" /></label>
+          <label>Buton metni (EN)<input value={s.floatingCtaLabelEn || ''} onChange={e => upd('floatingCtaLabelEn', e.target.value)} placeholder="Contact" /></label>
+          <label className="full">Yönlendir URL<input value={s.floatingCtaUrl || ''} onChange={e => upd('floatingCtaUrl', e.target.value)} placeholder="/iletisim" /></label>
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <p style={{ fontSize: '.78rem', color: 'var(--text-secondary)', margin: 0 }}>
           Video ID = YouTube linkindeki watch?v=<strong>BURASI</strong>. Sıradaki video başlığı boşsa o bölüm gizlenir.
         </p>
       </div>
@@ -1895,6 +1939,87 @@ function SEORow({ label, value, hint, status }) {
   )
 }
 
+// ───── AMA MODERASYONu ─────
+function AMASection({ showToast }) {
+  const [questions, setQuestions] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [tab, setTab] = useState('pending')
+  const [answerMap, setAnswerMap] = useState({})
+
+  const load = useCallback(() => {
+    setLoading(true)
+    getAMAPendingApi().then((d) => {
+      const all = Array.isArray(d) ? d : d?.questions || []
+      setQuestions(all)
+    }).catch(() => {}).finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  const answer = async (id) => {
+    const text = answerMap[id]?.trim()
+    if (!text) return showToast('Cevap boş olamaz', 'error')
+    try {
+      await answerAMAApi(id, text)
+      showToast('Cevap kaydedildi', 'success')
+      setAnswerMap((m) => { const n = { ...m }; delete n[id]; return n })
+      load()
+    } catch (e) { showToast(e.message, 'error') }
+  }
+
+  const remove = async (id) => {
+    if (!confirm('Soruyu sil?')) return
+    try { await deleteAMAApi(id); load(); showToast('Soru silindi', 'success') }
+    catch (e) { showToast(e.message, 'error') }
+  }
+
+  const pending = questions.filter((q) => !q.answer && !q.answeredAt)
+  const answered = questions.filter((q) => q.answer || q.answeredAt)
+  const display = tab === 'pending' ? pending : answered
+
+  return (
+    <div>
+      <div className="admin-page-header">
+        <div>
+          <h1>Sor Bana</h1>
+          <p>{pending.length} bekleyen · {answered.length} cevaplı</p>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className={`btn ${tab === 'pending' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setTab('pending')}>Bekleyenler ({pending.length})</button>
+          <button className={`btn ${tab === 'answered' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setTab('answered')}>Cevaplananlar</button>
+        </div>
+      </div>
+      {loading && <p>Yükleniyor…</p>}
+      {!loading && display.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>{tab === 'pending' ? 'Bekleyen soru yok.' : 'Henüz cevaplanmış soru yok.'}</p>}
+      {display.map((q) => (
+        <div key={q._id} className="ama-card">
+          <div className="ama-card-head">
+            <div>
+              <strong className="ama-card-author">{q.author || 'Anonim'}</strong>
+              <small style={{ color: 'var(--text-tertiary)', marginLeft: 8 }}>{q.askedAt ? new Date(q.askedAt).toLocaleDateString('tr-TR') : ''}</small>
+            </div>
+            <button className="btn-icon-danger" onClick={() => remove(q._id)}><HiOutlineTrash size={15} /></button>
+          </div>
+          <p className="ama-card-q">❓ {q.question}</p>
+          {q.answer ? (
+            <p className="ama-card-a">✅ {q.answer}</p>
+          ) : (
+            <div className="ama-card-reply">
+              <textarea
+                rows={3}
+                placeholder="Cevabını yaz…"
+                value={answerMap[q._id] || ''}
+                onChange={(e) => setAnswerMap((m) => ({ ...m, [q._id]: e.target.value }))}
+              />
+              <button className="btn btn-primary" onClick={() => answer(q._id)}>Cevapla</button>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ───── PUSH BİLDİRİM GÖNDERİCİ (admin) ─────
 function PushNotifySection({ showToast }) {
   const [form, setForm] = useState({ title: '', body: '', url: '/' })
@@ -1958,6 +2083,7 @@ const TABS = [
   { id: 'comments', label: 'Yorumlar', icon: HiOutlineChatAlt2 },
   { id: 'newsletter', label: 'Newsletter', icon: HiOutlineMail },
   { id: 'media', label: 'Medya', icon: HiOutlinePhotograph },
+  { id: 'ama', label: 'Sor Bana', icon: HiOutlineQuestionMarkCircle },
   { id: 'reminders', label: 'Hatırlatıcılar', icon: HiOutlineBell },
   { id: 'users', label: 'Kullanıcılar', icon: HiOutlineUsers },
   { id: 'backup', label: 'Yedekleme', icon: HiOutlineDatabase },
@@ -2146,6 +2272,7 @@ export default function Admin({ initialAuth = false, initialUser = null }) {
       case 'messages': node = <MessagesSection showToast={showToast} onCountChange={setUnreadCount} />; break
       case 'blog': node = <BlogSection showToast={showToast} />; break
       case 'comments': node = <CommentsSection showToast={showToast} />; break
+      case 'ama': node = <AMASection showToast={showToast} />; break
       case 'newsletter': node = <NewsletterSection showToast={showToast} />; break
       case 'media': node = <MediaSection showToast={showToast} />; break
       case 'reminders': node = <RemindersSection showToast={showToast} />; break

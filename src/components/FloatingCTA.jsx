@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { HiOutlineMail } from 'react-icons/hi'
 import { HiArrowUpRight } from 'react-icons/hi2'
 import { useLanguage } from '../i18n/LanguageContext'
+import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import './FloatingCTA.css'
 
 /**
@@ -14,8 +15,11 @@ import './FloatingCTA.css'
  */
 export default function FloatingCTA() {
   const location = useLocation()
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
+  const { settings } = useSiteSettings()
   const [show, setShow] = useState(false)
+  const ctaLabel = (lang === 'en' ? settings.floatingCtaLabelEn : settings.floatingCtaLabelTr) || t('common.contact')
+  const ctaUrl = settings.floatingCtaUrl || '/iletisim'
 
   const isHidden =
     location.pathname === '/iletisim' ||
@@ -41,15 +45,15 @@ export default function FloatingCTA() {
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
           <Link
-            to="/iletisim"
+            to={ctaUrl}
             className="kd-fab"
-            aria-label={t('common.contact')}
+            aria-label={ctaLabel}
             data-cursor="hover"
           >
             <span className="kd-fab-ring" aria-hidden="true" />
             <span className="kd-fab-icon"><HiOutlineMail size={20} /></span>
             <span className="kd-fab-label">
-              {t('common.contact')}
+              {ctaLabel}
               <HiArrowUpRight size={14} />
             </span>
           </Link>

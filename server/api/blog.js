@@ -97,6 +97,21 @@ export default async function handler(req, res) {
       });
 
       const result = await collection.insertOne(post);
+      // Yeni yayınlanan yazı Google + Bing sitemap ping'i
+      if (published !== false && !publishAt) {
+        const sitemapUrl = `https://kadirardademir.com/sitemap.xml`
+        const blogUrl = `https://kadirardademir.com/blog/${slug}`
+        Promise.all([
+          fetch(`https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`).catch(() => {}),
+          fetch(`https://www.bing.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`).catch(() => {}),
+          // IndexNow (Bing/Yandex/Seznam anlık ping)
+          process.env.INDEXNOW_KEY && fetch('https://api.indexnow.org/indexnow', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ host: 'kadirardademir.com', key: process.env.INDEXNOW_KEY, urlList: [blogUrl] }),
+          }).catch(() => {}),
+        ]).catch(() => {})
+      }
       logActivity(db, { action: 'Blog yazısı oluşturuldu', detail: `"${titleTr}"`, type: 'create', icon: '📝', user: user.username }).catch(() => {});
       import('./ops.js').then(({ writeAuditLog }) =>
         writeAuditLog(db, { actor: user.username, action: 'blog:create', target: slug, details: `"${titleTr}" yazısı oluşturuldu`, ip: req.ip || '' })

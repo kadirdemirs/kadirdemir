@@ -36,6 +36,14 @@ export const DEFAULT_SITE_SETTINGS = {
   statsTwitterFollowers: '',
   statsActiveYears: '14',
 
+  // Tema rengi
+  accentColor: '',   // boşsa default amber (#d4943f)
+
+  // Floating CTA
+  floatingCtaLabelTr: '',  // boşsa t('common.contact')
+  floatingCtaLabelEn: '',
+  floatingCtaUrl: '',      // boşsa /iletisim
+
   // SEO
   seoTitle: 'Kadir Demir | YouTube İçerik Üreticisi',
   seoDescription: "İstanbul'dan yayın yapan YouTube içerik üreticisi. Oyun, vlog ve eğlence videoları.",
@@ -155,6 +163,11 @@ export function SiteSettingsProvider({ children }) {
           setSettings(merged)
           if (merged.baseUrl && typeof window !== 'undefined') {
             window.__SITE_BASE_URL__ = merged.baseUrl
+          }
+          // Accent rengi CSS değişkenine uygula
+          if (merged.accentColor && typeof document !== 'undefined') {
+            document.documentElement.style.setProperty('--amber', merged.accentColor)
+            document.documentElement.style.setProperty('--primary', merged.accentColor)
           }
         }
       })
