@@ -181,3 +181,16 @@
     width: 100%;
   }
 }
+
+/* Push bildirim butonu */
+.kd-push-row { margin-top: 10px; }
+.kd-push-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; font-size: .8rem; font-weight: 600;
+  color: var(--amber-soft, #e8b468); background: transparent;
+  border: 1px solid rgba(212,148,63,.3); border-radius: 999px;
+  cursor: pointer; transition: border-color .2s, background .2s;
+}
+.kd-push-btn:hover { border-color: var(--amber,#d4943f); background: rgba(212,148,63,.06); }
+.kd-push-btn:disabled { opacity: .6; cursor: default; }
+.kd-push-ok { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; color: #34d399; }

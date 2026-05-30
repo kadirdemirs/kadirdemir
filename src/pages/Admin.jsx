@@ -1773,6 +1773,7 @@ function QuickToolsSection({ showToast }) {
         </div>
       </div>
 
+      <PushNotifySection showToast={showToast} />
       <PurgeLegacySection showToast={showToast} />
     </div>
   )
@@ -1890,6 +1891,54 @@ function SEORow({ label, value, hint, status }) {
         {value || '— EKSİK —'}
       </span>
       <span style={{ color: status === 'ok' ? '#34d399' : '#fbbf24', fontSize: '.78rem', fontWeight: 600 }}>{hint}</span>
+    </div>
+  )
+}
+
+// ───── PUSH BİLDİRİM GÖNDERİCİ (admin) ─────
+function PushNotifySection({ showToast }) {
+  const [form, setForm] = useState({ title: '', body: '', url: '/' })
+  const [loading, setLoading] = useState(false)
+  const [subCount, setSubCount] = useState(null)
+  const upd = (k, v) => setForm((f) => ({ ...f, [k]: v }))
+
+  useEffect(() => {
+    fetch('/api/ops?resource=push', { headers: { 'x-admin-token': sessionStorage.getItem('kade_admin_user') ? JSON.parse(sessionStorage.getItem('kade_admin_user') || '{}')?.token || '' : '' } })
+      .then((r) => r.json()).then((d) => Array.isArray(d) && setSubCount(d.length)).catch(() => {})
+  }, [])
+
+  const send = async () => {
+    if (!form.title.trim()) return showToast('Başlık gerekli', 'error')
+    setLoading(true)
+    try {
+      const res = await fetch('/api/ops?resource=push&action=send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const d = await res.json()
+      if (!res.ok) throw new Error(d.error || 'Hata')
+      showToast(`✅ ${d.sent} aboneye gönderildi (${d.failed || 0} başarısız)`, 'success')
+    } catch (e) { showToast(e.message, 'error') }
+    finally { setLoading(false) }
+  }
+
+  return (
+    <div className="settings-section">
+      <h3>🔔 Push Bildirimi Gönder</h3>
+      <p style={{ fontSize: '.8rem', color: 'var(--text-secondary)', margin: '0 0 14px' }}>
+        Siteye abone olan ziyaretçilere anlık bildirim gönder.
+        {subCount !== null && <> — <strong>{subCount}</strong> aktif abone</>}
+        {' '}<small style={{ color: 'var(--text-tertiary)' }}>(VAPID_PUBLIC_KEY + VAPID_PRIVATE_KEY env gerekli)</small>
+      </p>
+      <div className="form-grid">
+        <label>Başlık<input value={form.title} onChange={e => upd('title', e.target.value)} placeholder="Yeni video çıktı!" maxLength={80} /></label>
+        <label>Mesaj<input value={form.body} onChange={e => upd('body', e.target.value)} placeholder="İzlemek için tıkla →" maxLength={200} /></label>
+        <label className="full">Hedef URL<input value={form.url} onChange={e => upd('url', e.target.value)} placeholder="https://kadirardademir.com/videolar" /></label>
+      </div>
+      <button className="btn btn-primary" onClick={send} disabled={loading} style={{ marginTop: 12 }}>
+        {loading ? 'Gönderiliyor…' : '📤 Bildirim Gönder'}
+      </button>
     </div>
   )
 }

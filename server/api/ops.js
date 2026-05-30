@@ -3,6 +3,16 @@ import { getDb, isValidObjectId } from './_lib/mongodb.js'
 import { requireAuth } from './_lib/auth.js'
 import { cors } from './_lib/cors.js'
 import { rateLimitCheck } from './_lib/rateLimit.js'
+import webpush from 'web-push'
+
+// VAPID anahtarlarını env'den al (VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY)
+if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  webpush.setVapidDetails(
+    'mailto:' + (process.env.MAIL_TO || 'thekademedia@gmail.com'),
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  )
+}
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -73,16 +83,55 @@ async function handleClientErrors(req, res, db) {
 }
 
 async function handlePush(req, res, db) {
-  if (req.method !== 'POST') {
+  // GET — admin: abone listesi veya VAPID public key
+  if (req.method === 'GET') {
+    const { action } = req.query || {}
+    // public key herkes alabilir (subscribe için lazım)
+    if (action === 'vapid-public-key') {
+      return res.status(200).json({ key: process.env.VAPID_PUBLIC_KEY || null })
+    }
     const user = requireAdmin(req, res)
     if (!user) return
     const items = await db.collection('push_subscriptions').find({}).sort({ createdAt: -1 }).limit(200).toArray()
     return res.status(200).json(items)
   }
 
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+
+  const { action } = req.query || {}
+
+  // Admin: bildirim gönder
+  if (action === 'send') {
+    const user = requireAdmin(req, res)
+    if (!user) return
+    if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+      return res.status(400).json({ error: 'VAPID anahtarları tanımlı değil. .env dosyasına VAPID_PUBLIC_KEY ve VAPID_PRIVATE_KEY ekle.' })
+    }
+    const { title, body, url } = req.body || {}
+    if (!title) return res.status(400).json({ error: 'title gerekli' })
+    const subs = await db.collection('push_subscriptions').find({ endpoint: { $exists: true }, 'keys.p256dh': { $exists: true } }).toArray()
+    if (!subs.length) return res.status(200).json({ sent: 0, message: 'Abone yok' })
+    const payload = JSON.stringify({ title: clean(title, 80), body: clean(body, 200), url: clean(url, 500) || '/' })
+    let sent = 0, failed = 0
+    await Promise.all(subs.map(async (sub) => {
+      try {
+        await webpush.sendNotification({ endpoint: sub.endpoint, keys: sub.keys }, payload)
+        sent++
+      } catch (e) {
+        failed++
+        if (e.statusCode === 410 || e.statusCode === 404) {
+          await db.collection('push_subscriptions').deleteOne({ _id: sub._id }).catch(() => {})
+        }
+      }
+    }))
+    return res.status(200).json({ sent, failed, total: subs.length })
+  }
+
+  // Public: abone ol / güncelle
   const { endpoint, keys, permission } = req.body || {}
+  if (!endpoint) return res.status(400).json({ error: 'endpoint gerekli' })
   await db.collection('push_subscriptions').updateOne(
-    { endpoint: clean(endpoint, 800) || clean(req.headers['user-agent'], 300) },
+    { endpoint: clean(endpoint, 800) },
     {
       $set: {
         endpoint: clean(endpoint, 800),
