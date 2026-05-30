@@ -175,9 +175,9 @@ export default function BlogDetail() {
       </div>
     )
   }
-  if (!post) return <Navigate to="/blog" replace />
-
   const { isBookmarked, toggle: toggleBookmark } = useBookmarks()
+
+  if (!post) return <Navigate to="/blog" replace />
 
   const postUrl = `https://kadirardademir.com/blog/${slug}`
   const encodedUrl = encodeURIComponent(postUrl)
