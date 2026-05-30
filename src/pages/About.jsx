@@ -6,6 +6,7 @@ import {
 import { FaYoutube, FaInstagram, FaTiktok } from 'react-icons/fa'
 import ResponsivePortrait from '../components/ResponsivePortrait'
 import Reveal from '../components/Reveal'
+import { BreadcrumbSchema } from '../components/StructuredData'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
@@ -32,6 +33,10 @@ export default function About() {
 
   return (
     <div className="kd-about">
+      <BreadcrumbSchema items={[
+        { name: isEn ? 'Home' : 'Ana Sayfa', path: '/' },
+        { name: isEn ? 'About' : 'Hakkımda', path: '/hakkimda' },
+      ]} />
       <section className="kd-about-hero">
         <span className="kd-about-pill">
           <HiOutlineUser size={14} /> {t('about.pill')}

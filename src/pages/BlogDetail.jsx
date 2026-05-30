@@ -96,6 +96,10 @@ export default function BlogDetail() {
     path: `/blog/${slug}`,
     type: 'article',
     image: `https://kadirardademir.com/api/og?${ogImageParams}`,
+    imageAlt: title || undefined,
+    publishedTime: post?.date || post?.publishedAt || post?.createdAt,
+    modifiedTime: post?.updatedAt || post?.modifiedAt,
+    section: category || undefined,
   })
 
   useEffect(() => {

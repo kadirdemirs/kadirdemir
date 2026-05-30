@@ -28,6 +28,12 @@ function setMeta(name, content, property = false) {
   el.setAttribute('content', content)
 }
 
+function removeMeta(name, property = false) {
+  const attr = property ? 'property' : 'name'
+  const el = document.querySelector(`meta[${attr}="${name}"]`)
+  if (el) el.remove()
+}
+
 function setCanonical(url) {
   let el = document.querySelector('link[rel="canonical"]')
   if (!el) {
@@ -66,9 +72,16 @@ export function useSEO({
   keywords,
   path = '/',
   image,
+  imageAlt,
   type = 'website',
   noindex = false,
   twitterHandle = '@kadirardademir',
+  // Makale (blog) meta'ları — type === 'article' iken kullanılır
+  publishedTime,
+  modifiedTime,
+  author = 'Kadir Demir',
+  section,
+  tags = [],
 }) {
   const { lang } = useLanguage()
   useEffect(() => {
@@ -114,13 +127,35 @@ export function useSEO({
     setMeta('og:site_name', SITE_NAME, true)
     setMeta('og:locale', LOCALE_MAP[lang] || 'tr_TR', true)
 
+    setMeta('og:image:alt', imageAlt || fullTitle, true)
+    // Çift dilli site — diğer dili alternate olarak bildir
+    const altLocale = (LOCALE_MAP[lang] || 'tr_TR') === 'tr_TR' ? 'en_US' : 'tr_TR'
+    setMeta('og:locale:alternate', altLocale, true)
+
     setMeta('twitter:card', 'summary_large_image')
     setMeta('twitter:title', fullTitle)
     setMeta('twitter:description', description)
     setMeta('twitter:image', ogImage)
+    setMeta('twitter:image:alt', imageAlt || fullTitle)
     setMeta('twitter:site', twitterHandle)
+    setMeta('twitter:creator', twitterHandle)
+
+    // Makale meta'ları — yalnızca blog yazılarında; değilse temizle
+    if (type === 'article') {
+      setMeta('article:published_time', publishedTime, true)
+      setMeta('article:modified_time', modifiedTime || publishedTime, true)
+      setMeta('article:author', author, true)
+      if (section) setMeta('article:section', section, true)
+      removeMeta('article:tag', true)
+      if (Array.isArray(tags) && tags.length) {
+        setMeta('article:tag', tags.slice(0, 8).join(', '), true)
+      }
+    } else {
+      ;['article:published_time', 'article:modified_time', 'article:author', 'article:section', 'article:tag']
+        .forEach((m) => removeMeta(m, true))
+    }
 
     setCanonical(canonicalUrl)
     setHreflang(canonicalUrl)
-  }, [title, description, keywords, path, image, type, noindex, twitterHandle, lang])
+  }, [title, description, keywords, path, image, imageAlt, type, noindex, twitterHandle, lang, publishedTime, modifiedTime, author, section, tags])
 }
