@@ -389,3 +389,34 @@
   .blog-prevnext { grid-template-columns: 1fr; }
   .blog-prevnext-link.is-next { text-align: left; align-items: flex-start; }
 }
+
+/* ===== Yer imi / sonra oku ===== */
+.blog-detail-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.blog-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary, rgba(244, 235, 224, 0.72));
+  background: var(--glass-bg, rgba(33, 28, 22, 0.55));
+  border: 1px solid var(--border-color, rgba(212, 148, 63, 0.15));
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+.blog-save-btn:hover { color: var(--amber, #d4943f); border-color: var(--amber, #d4943f); }
+.blog-save-btn.is-saved {
+  color: #150e07;
+  background: var(--amber, #d4943f);
+  border-color: var(--amber, #d4943f);
+}
+.kd-chip-saved { display: inline-flex; align-items: center; gap: 6px; }

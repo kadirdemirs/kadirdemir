@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { HiOutlineClock, HiOutlineArrowLeft, HiOutlineArrowRight, HiOutlineShare, HiOutlineLink, HiOutlineCheck, HiOutlineEye } from 'react-icons/hi'
+import { HiOutlineClock, HiOutlineArrowLeft, HiOutlineArrowRight, HiOutlineShare, HiOutlineLink, HiOutlineCheck, HiOutlineEye, HiOutlineBookmark, HiBookmark } from 'react-icons/hi'
 import { FaLinkedinIn, FaXTwitter } from 'react-icons/fa6'
 import { FaWhatsapp } from 'react-icons/fa'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
+import { useBookmarks } from '../hooks/useBookmarks'
 import { blogPosts as staticBlogPosts } from '../data/content'
 import { getBlogsApi, getPostViewsApi } from '../api'
 import { getBlogImage, getBlogFallback } from '../utils/blogImage'
@@ -176,6 +177,8 @@ export default function BlogDetail() {
   }
   if (!post) return <Navigate to="/blog" replace />
 
+  const { isBookmarked, toggle: toggleBookmark } = useBookmarks()
+
   const postUrl = `https://kadirardademir.com/blog/${slug}`
   const encodedUrl = encodeURIComponent(postUrl)
   const encodedTitle = encodeURIComponent(title)
@@ -200,10 +203,22 @@ export default function BlogDetail() {
         <div className="glow-effect" style={{ top: '-150px', right: '-100px' }} />
         <div className="container">
           <FadeIn>
-            <Link to="/blog" className="partner-back" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '24px' }}>
-              <HiOutlineArrowLeft size={16} />
-              {lang === 'tr' ? 'Tüm Yazılar' : 'All Posts'}
-            </Link>
+            <div className="blog-detail-topbar">
+              <Link to="/blog" className="partner-back" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <HiOutlineArrowLeft size={16} />
+                {lang === 'tr' ? 'Tüm Yazılar' : 'All Posts'}
+              </Link>
+              <button
+                type="button"
+                className={`blog-save-btn ${isBookmarked(slug) ? 'is-saved' : ''}`}
+                onClick={() => toggleBookmark(slug)}
+                aria-pressed={isBookmarked(slug)}
+              >
+                {isBookmarked(slug)
+                  ? <><HiBookmark size={16} /> {lang === 'tr' ? 'Kaydedildi' : 'Saved'}</>
+                  : <><HiOutlineBookmark size={16} /> {lang === 'tr' ? 'Sonra oku' : 'Save'}</>}
+              </button>
+            </div>
           </FadeIn>
           <FadeIn delay={0.05}>
             <div className="blog-meta" style={{ justifyContent: 'center', marginBottom: '16px' }}>

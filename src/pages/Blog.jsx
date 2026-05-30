@@ -7,8 +7,10 @@ import {
   HiOutlineChevronDown,
   HiOutlineClock,
 } from 'react-icons/hi'
+import { HiOutlineBookmark } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
+import { useBookmarks } from '../hooks/useBookmarks'
 import { blogPosts as staticBlogPosts } from '../data/content'
 import { getBlogsApi } from '../api'
 import { getBlogImage } from '../utils/blogImage'
@@ -30,6 +32,7 @@ export default function Blog() {
   const [query, setQuery] = useState(searchParams.get('q') || '')
   const [activeTag, setActiveTag] = useState('all')
   const [showAll, setShowAll] = useState(false)
+  const { bookmarks } = useBookmarks()
 
   useEffect(() => {
     const current = searchParams.get('q') || ''
@@ -83,7 +86,11 @@ export default function Blog() {
       const cat = lang === 'en' ? (p.categoryEn || p.category) : (p.category || p.categoryEn)
       const title = pickField(p, 'title', lang)
       const excerpt = pickField(p, 'excerpt', lang)
-      const matchTag = activeTag === 'all' || cat === activeTag
+      const matchTag = activeTag === 'all'
+        ? true
+        : activeTag === '__saved'
+          ? bookmarks.includes(p.slug)
+          : cat === activeTag
       const matchQ =
         !q ||
         title.toLowerCase().includes(q) ||
@@ -91,7 +98,7 @@ export default function Blog() {
         (cat || '').toLowerCase().includes(q)
       return matchTag && matchQ
     })
-  }, [posts, query, activeTag, lang])
+  }, [posts, query, activeTag, lang, bookmarks])
 
   const featured = filtered.slice(0, 2)
   const others = filtered.slice(2)
@@ -161,6 +168,15 @@ export default function Blog() {
             {tag} <span className="kd-chip-count">{count}</span>
           </button>
         ))}
+        {bookmarks.length > 0 && (
+          <button
+            type="button"
+            className={`kd-chip kd-chip-saved ${activeTag === '__saved' ? 'active' : ''}`}
+            onClick={() => setActiveTag(activeTag === '__saved' ? 'all' : '__saved')}
+          >
+            <HiOutlineBookmark size={14} /> {lang === 'en' ? 'Saved' : 'Kaydedilenler'} <span className="kd-chip-count">{bookmarks.length}</span>
+          </button>
+        )}
       </div>
 
       {featured.length > 0 && (
