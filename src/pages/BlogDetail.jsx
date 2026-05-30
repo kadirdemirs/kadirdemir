@@ -49,6 +49,7 @@ export default function BlogDetail() {
   const [copyOk, setCopyOk] = useState(false)
   const [views, setViews] = useState(null)
   const articleRef = useRef(null)
+  const { isBookmarked, toggle: toggleBookmark } = useBookmarks()
 
   useEffect(() => {
     if (!slug) return
@@ -175,7 +176,6 @@ export default function BlogDetail() {
       </div>
     )
   }
-  const { isBookmarked, toggle: toggleBookmark } = useBookmarks()
 
   if (!post) return <Navigate to="/blog" replace />
 
