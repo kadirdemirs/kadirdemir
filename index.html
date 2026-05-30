@@ -2,12 +2,12 @@
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
-    <!-- Tema, React mount olmadan uygulanır (FOUC yok): kayıtlı seçim → yoksa varsayılan aydınlık -->
+    <!-- Tema, React mount olmadan uygulanır (FOUC yok): kayıtlı seçim → yoksa varsayılan koyu -->
     <script>
       (function () {
         try {
           var s = localStorage.getItem('theme');
-          var t = (s === 'light' || s === 'dark') ? s : 'light';
+          var t = (s === 'light' || s === 'dark') ? s : 'dark';
           document.documentElement.setAttribute('data-theme', t);
         } catch (e) {}
       })();
@@ -19,7 +19,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="alternate" type="application/rss+xml" title="Kadir Demir — Blog RSS" href="/api/rss" />
-    <meta name="theme-color" content="#f4ebd6" />
+    <meta name="theme-color" content="#0e0b08" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

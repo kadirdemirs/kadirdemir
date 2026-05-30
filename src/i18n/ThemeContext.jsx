@@ -13,11 +13,12 @@ function readStoredTheme() {
   return null
 }
 
-// Varsayılan AYDINLIK: site cansız/mezarlık görünmesin diye açık tema ile açılır.
-// Kullanıcı toggle'a basınca seçimi kalıcılaşır (dark da seçebilir).
+// Varsayılan KOYU: ana site admin ile aynı koyu dilde olsun (kullanıcı tercihi).
+// index.css kalibrasyonu sayesinde "anıt mezar" değil, yükseltilmiş canlı koyu.
+// Kullanıcı toggle'a basınca seçimi kalıcılaşır (light da seçebilir).
 function readInitialTheme() {
-  if (typeof window === 'undefined') return 'light'
-  return readStoredTheme() || 'light'
+  if (typeof window === 'undefined') return 'dark'
+  return readStoredTheme() || 'dark'
 }
 
 export function ThemeProvider({ children }) {
