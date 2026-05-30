@@ -17,7 +17,7 @@ import {
 } from 'react-icons/hi'
 import { FaYoutube, FaInstagram, FaTiktok } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
-import { getBlogsApi } from '../api'
+import { getBlogsApi, getYouTubeVideosApi } from '../api'
 import './CommandPalette.css'
 
 const PAGES = [
@@ -46,6 +46,7 @@ export default function CommandPalette() {
   const [query, setQuery] = useState('')
   const [activeIdx, setActiveIdx] = useState(0)
   const [blogs, setBlogs] = useState([])
+  const [videos, setVideos] = useState([])
   const inputRef = useRef(null)
   const listRef = useRef(null)
   const navigate = useNavigate()
@@ -68,16 +69,23 @@ export default function CommandPalette() {
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
-  // Lazy-load blog list once palette is opened
+  // Lazy-load blog + video list once palette is opened
   useEffect(() => {
-    if (!open || blogs.length > 0) return
-    getBlogsApi()
-      .then((data) => {
-        const list = Array.isArray(data) ? data : Array.isArray(data?.blogs) ? data.blogs : []
-        setBlogs(list)
-      })
-      .catch(() => {})
-  }, [open, blogs.length])
+    if (!open) return
+    if (blogs.length === 0) {
+      getBlogsApi()
+        .then((data) => {
+          const list = Array.isArray(data) ? data : Array.isArray(data?.blogs) ? data.blogs : []
+          setBlogs(list)
+        })
+        .catch(() => {})
+    }
+    if (videos.length === 0) {
+      getYouTubeVideosApi()
+        .then((res) => { if (Array.isArray(res?.videos)) setVideos(res.videos) })
+        .catch(() => {})
+    }
+  }, [open, blogs.length, videos.length])
 
   useEffect(() => {
     if (open) {
@@ -96,20 +104,31 @@ export default function CommandPalette() {
 
   const items = useMemo(() => {
     const q = normalize(query.trim())
-    const blogEntries = blogs.slice(0, 30).map((b) => ({
+    const blogEntries = blogs.slice(0, 50).map((b) => ({
       id: `blog-${b.slug}`,
       title: b.titleTr || b.title || b.slug,
       path: `/blog/${b.slug}`,
       icon: HiOutlineDocumentText,
       kind: 'Yazı',
+      search: normalize([b.titleTr, b.titleEn, b.excerptTr, b.excerptEn, b.category].filter(Boolean).join(' ')),
     }))
+    const videoEntries = videos.slice(0, 50)
+      .filter((v) => v?.youtubeId && v?.title)
+      .map((v) => ({
+        id: `video-${v.youtubeId}`,
+        title: v.title,
+        href: `https://www.youtube.com/watch?v=${v.youtubeId}`,
+        icon: HiOutlineVideoCamera,
+        kind: 'Video',
+        search: normalize(v.title),
+      }))
 
-    const all = [...PAGES, ...blogEntries, ...socials]
+    const all = [...PAGES, ...blogEntries, ...videoEntries, ...socials]
     if (!q) return all.slice(0, 12)
     return all
-      .filter((it) => normalize(it.title).includes(q) || normalize(it.kind).includes(q))
-      .slice(0, 16)
-  }, [query, blogs, socials])
+      .filter((it) => normalize(it.title).includes(q) || normalize(it.kind).includes(q) || (it.search && it.search.includes(q)))
+      .slice(0, 20)
+  }, [query, blogs, videos, socials])
 
   useEffect(() => {
     if (activeIdx >= items.length) setActiveIdx(0)
@@ -161,7 +180,7 @@ export default function CommandPalette() {
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Bir sayfa, yazı veya sosyal medya ara…"
+                placeholder="Sayfa, yazı, video veya sosyal medya ara…"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}
