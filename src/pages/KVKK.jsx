@@ -42,9 +42,9 @@ export default function KVKK() {
               <h2>3. Kişisel Verilerin İşlenme Amaçları</h2>
               <p>Kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:</p>
               <ul>
-                <li>Tarafınızca gönderilen teklif ve bilgi taleplerine yanıt vermek</li>
-                <li>Hizmetlerimiz hakkında bilgilendirme yapmak</li>
-                <li>Müşteri ilişkileri yönetimi</li>
+                <li>İletişim formu veya e-posta yoluyla ilettiğiniz mesaj ve taleplere yanıt vermek</li>
+                <li>İş birliği, sponsorluk ve içerik taleplerini değerlendirmek</li>
+                <li>Onay vermeniz hâlinde bülten ve duyurular hakkında bilgilendirme yapmak</li>
                 <li>Yasal yükümlülüklerin yerine getirilmesi</li>
               </ul>
 
