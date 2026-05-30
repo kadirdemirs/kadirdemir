@@ -121,6 +121,7 @@ function formatBigNumber(n) {
 
 function DashboardSection({ stats, onNavigate, settings, ytChannel }) {
   const [liveVisitors, setLiveVisitors] = useState(null)
+  const [trafficData, setTrafficData] = useState(null)
 
   useEffect(() => {
     const fetchVisitors = async () => {
@@ -134,6 +135,10 @@ function DashboardSection({ stats, onNavigate, settings, ytChannel }) {
     fetchVisitors()
     const i = setInterval(fetchVisitors, 10000)
     return () => clearInterval(i)
+  }, [])
+
+  useEffect(() => {
+    getAnalyticsApi('week').then(setTrafficData).catch(() => {})
   }, [])
 
   const greeting = (() => {
@@ -246,6 +251,31 @@ function DashboardSection({ stats, onNavigate, settings, ytChannel }) {
         </div>
       </div>
       <style>{`@keyframes kade-pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.35);opacity:.7} }`}</style>
+
+      {/* ── 7 Günlük Trafik Grafiği ── */}
+      {trafficData?.dailyData?.length > 0 && (
+        <div className="dash-chart-card">
+          <div className="dash-chart-header">
+            <span>Son 7 Gün — Sayfa Görüntülemesi</span>
+            <strong>{trafficData.totalVisits ?? 0} görüntüleme</strong>
+          </div>
+          <BarChart data={trafficData.dailyData} height={90} color="var(--accent)" />
+          {trafficData.topPages?.length > 0 && (
+            <div className="dash-top-pages">
+              <span style={{ fontSize: '.72rem', color: 'var(--text-tertiary)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '.08em' }}>En çok görüntülenen sayfalar</span>
+              {trafficData.topPages.slice(0, 5).map((p, i) => (
+                <div key={i} className="dash-page-row">
+                  <span className="dash-page-path">{p.path || p._id}</span>
+                  <div className="dash-page-bar">
+                    <div className="dash-page-fill" style={{ width: `${Math.round((p.count / (trafficData.topPages[0]?.count || 1)) * 100)}%` }} />
+                  </div>
+                  <span className="dash-page-count">{p.count}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -455,29 +485,71 @@ function AnalyticsSection() {
         </select>
       </div>
 
-      {loading ? <p>Yükleniyor…</p> : !data ? <p>Analitik verisi yok.</p> : (
-        <div className="admin-stats-grid">
-          <div className="admin-stat-card">
-            <div className="stat-icon">👥</div>
-            <div className="stat-number">{data.totalUsers ?? data.users ?? 0}</div>
-            <div className="stat-label">Toplam Ziyaretçi</div>
+      {loading ? <p>Yükleniyor…</p> : !data ? <p>Analitik verisi yok. GA4 veya kendi pageview verisi bekleniyor.</p> : (
+        <>
+          <div className="admin-stats-grid" style={{ marginBottom: 24 }}>
+            <div className="admin-stat-card">
+              <div className="stat-icon">👥</div>
+              <div className="stat-number">{(data.totalUsers ?? data.users ?? 0).toLocaleString('tr-TR')}</div>
+              <div className="stat-label">Toplam Ziyaretçi</div>
+            </div>
+            <div className="admin-stat-card">
+              <div className="stat-icon">📄</div>
+              <div className="stat-number">{(data.pageViews ?? data.totalVisits ?? 0).toLocaleString('tr-TR')}</div>
+              <div className="stat-label">Sayfa Görüntüleme</div>
+            </div>
+            <div className="admin-stat-card">
+              <div className="stat-icon">⏱️</div>
+              <div className="stat-number">{data.avgSessionDuration ?? '—'}</div>
+              <div className="stat-label">Ort. Oturum Süresi</div>
+            </div>
+            <div className="admin-stat-card">
+              <div className="stat-icon">🔥</div>
+              <div className="stat-number">{data.bounceRate ?? '—'}</div>
+              <div className="stat-label">Hemen Çıkma Oranı</div>
+            </div>
           </div>
-          <div className="admin-stat-card">
-            <div className="stat-icon">📄</div>
-            <div className="stat-number">{data.pageViews ?? 0}</div>
-            <div className="stat-label">Sayfa Görüntüleme</div>
-          </div>
-          <div className="admin-stat-card">
-            <div className="stat-icon">⏱️</div>
-            <div className="stat-number">{data.avgSessionDuration ?? '—'}</div>
-            <div className="stat-label">Ort. Oturum Süresi</div>
-          </div>
-          <div className="admin-stat-card">
-            <div className="stat-icon">🔥</div>
-            <div className="stat-number">{data.bounceRate ?? '—'}</div>
-            <div className="stat-label">Hemen Çıkma Oranı</div>
-          </div>
-        </div>
+
+          {data.dailyData?.length > 0 && (
+            <div className="dash-chart-card" style={{ marginBottom: 24 }}>
+              <div className="dash-chart-header">
+                <span>Günlük Sayfa Görüntülemesi</span>
+                <strong>{(data.totalVisits ?? 0).toLocaleString('tr-TR')} toplam</strong>
+              </div>
+              <BarChart data={data.dailyData} height={110} color="var(--accent)" />
+            </div>
+          )}
+
+          {data.topPages?.length > 0 && (
+            <div className="dash-chart-card" style={{ marginBottom: 24 }}>
+              <div className="dash-chart-header"><span>En Çok Ziyaret Edilen Sayfalar</span></div>
+              {data.topPages.map((p, i) => (
+                <div key={i} className="dash-page-row">
+                  <span className="dash-page-path">{p.path || p._id}</span>
+                  <div className="dash-page-bar">
+                    <div className="dash-page-fill" style={{ width: `${Math.round((p.count / (data.topPages[0]?.count || 1)) * 100)}%` }} />
+                  </div>
+                  <span className="dash-page-count">{p.count}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {data.trafficSources?.length > 0 && (
+            <div className="dash-chart-card">
+              <div className="dash-chart-header"><span>Trafik Kaynakları</span></div>
+              {data.trafficSources.map((s, i) => (
+                <div key={i} className="dash-page-row">
+                  <span className="dash-page-path">{s.source}{s.detail ? ` (${s.detail})` : ''}</span>
+                  <div className="dash-page-bar">
+                    <div className="dash-page-fill" style={{ width: `${Math.round((s.count / (data.trafficSources[0]?.count || 1)) * 100)}%` }} />
+                  </div>
+                  <span className="dash-page-count">{s.count}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -676,7 +748,13 @@ function BlogSection({ showToast }) {
       <div className="blog-grid">
         {posts.map(p => (
           <div key={p._id} className="blog-card">
-            <div className="blog-card-status">{p.published ? '🟢 Yayında' : '⚪ Taslak'}</div>
+            <div className="blog-card-status">
+              {p.published
+                ? '🟢 Yayında'
+                : p.publishAt && new Date(p.publishAt) > new Date()
+                  ? `⏰ Zamanlı — ${new Date(p.publishAt).toLocaleString('tr-TR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`
+                  : '⚪ Taslak'}
+            </div>
             <h3>{p.titleTr || p.title}</h3>
             <p>{p.excerptTr || p.excerpt}</p>
             <div className="blog-card-actions">
@@ -690,17 +768,61 @@ function BlogSection({ showToast }) {
   )
 }
 
+const DRAFT_KEY = (id) => `kade_blog_draft_${id || 'new'}`
+
 function BlogEditor({ post, onSave, onCancel }) {
-  const [data, setData] = useState(post)
+  const draftKey = DRAFT_KEY(post?._id)
+  const [data, setData] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(draftKey) || 'null')
+      if (saved && saved._draftTs && Date.now() - saved._draftTs < 24 * 3600 * 1000) {
+        return { ...post, ...saved }
+      }
+    } catch { /* ignore */ }
+    return post
+  })
+  const [draftMsg, setDraftMsg] = useState(null)
   const upd = (k, v) => setData(d => ({ ...d, [k]: v }))
+
+  // Otomatik taslak: 20 saniyede bir localStorage'a kaydet
+  useEffect(() => {
+    const t = setInterval(() => {
+      try {
+        localStorage.setItem(draftKey, JSON.stringify({ ...data, _draftTs: Date.now() }))
+        setDraftMsg('Taslak otomatik kaydedildi · ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }))
+      } catch { /* ignore */ }
+    }, 20000)
+    return () => clearInterval(t)
+  }, [data, draftKey])
+
+  const clearDraft = () => { try { localStorage.removeItem(draftKey) } catch { /* ignore */ } }
+
+  const handleSave = (pub) => {
+    clearDraft()
+    onSave({ ...data, published: pub })
+  }
+
+  // publishAt datetime-local formatı
+  const publishAtLocal = data.publishAt
+    ? (typeof data.publishAt === 'string'
+        ? data.publishAt.slice(0, 16)
+        : new Date(data.publishAt).toISOString().slice(0, 16))
+    : ''
+
   return (
     <div>
       <div className="admin-page-header">
-        <h1>{data._id ? 'Yazıyı Düzenle' : 'Yeni Yazı'}</h1>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div>
+          <h1>{data._id ? 'Yazıyı Düzenle' : 'Yeni Yazı'}</h1>
+          {draftMsg && <p style={{ fontSize: '.75rem', color: 'var(--text-tertiary)', margin: '2px 0 0' }}>{draftMsg}</p>}
+        </div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button className="btn btn-outline" onClick={onCancel}>İptal</button>
-          <button className="btn btn-primary" onClick={() => onSave(data)}>
-            <HiOutlineSave size={18} /> Kaydet
+          <button className="btn btn-outline" onClick={() => handleSave(false)}>
+            <HiOutlineSave size={16} /> Taslak Kaydet
+          </button>
+          <button className="btn btn-primary" onClick={() => handleSave(true)}>
+            <HiOutlineSave size={18} /> Yayınla
           </button>
         </div>
       </div>
@@ -715,10 +837,29 @@ function BlogEditor({ post, onSave, onCancel }) {
         <label>Kapak Görseli URL<input value={data.image || data.coverImage || ''} onChange={e => upd('image', e.target.value)} /></label>
         <label>Kategori (TR)<input value={data.category || ''} onChange={e => upd('category', e.target.value)} /></label>
         <label>Kategori (EN)<input value={data.categoryEn || ''} onChange={e => upd('categoryEn', e.target.value)} /></label>
-        <label className="checkbox-row">
-          <input type="checkbox" checked={!!data.published} onChange={e => upd('published', e.target.checked)} />
-          Yayında
-        </label>
+
+        <div className="blog-publish-row">
+          <label className="checkbox-row" style={{ margin: 0 }}>
+            <input type="checkbox" checked={!!data.published} onChange={e => upd('published', e.target.checked)} />
+            Hemen yayınla
+          </label>
+          <label style={{ margin: 0, flex: 1 }}>
+            <span style={{ fontSize: '.8rem', color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>
+              ⏰ Zamanlı yayın (boşsa: hemen)
+            </span>
+            <input
+              type="datetime-local"
+              value={publishAtLocal}
+              onChange={e => upd('publishAt', e.target.value || null)}
+              style={{ width: '100%' }}
+            />
+          </label>
+        </div>
+        {data.publishAt && !data.published && (
+          <p style={{ fontSize: '.78rem', color: 'var(--accent)', margin: '-4px 0 8px' }}>
+            ⏰ Bu yazı <strong>{new Date(data.publishAt).toLocaleString('tr-TR')}</strong> tarihinde otomatik yayınlanacak.
+          </p>
+        )}
       </div>
     </div>
   )
@@ -1756,6 +1897,62 @@ const TABS = [
   { id: 'backup', label: 'Yedekleme', icon: HiOutlineDatabase },
   { id: 'settings', label: 'Ayarlar', icon: HiOutlineCog },
 ]
+
+// ───── SVG SPARKLINE (harici kütüphane yok) ─────
+function Sparkline({ data = [], color = '#c98a3b', height = 56, fillOpacity = 0.15 }) {
+  if (!data.length) return null
+  const max = Math.max(...data, 1)
+  const W = 300, H = height
+  const pts = data.map((v, i) => {
+    const x = (i / (data.length - 1 || 1)) * W
+    const y = H - (v / max) * (H - 4) - 2
+    return `${x},${y}`
+  })
+  const polyline = pts.join(' ')
+  const area = `0,${H} ${polyline} ${W},${H}`
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height }} aria-hidden="true">
+      <defs>
+        <linearGradient id="spkfill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity={fillOpacity * 2} />
+          <stop offset="100%" stopColor={color} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <polygon points={area} fill="url(#spkfill)" />
+      <polyline points={polyline} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function BarChart({ data = [], color = '#c98a3b', height = 80 }) {
+  if (!data.length) return null
+  const max = Math.max(...data.map(d => d.count), 1)
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height, padding: '0 2px' }}>
+      {data.map((d, i) => (
+        <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, height: '100%', justifyContent: 'flex-end' }}>
+          <div
+            title={`${d.date}: ${d.count}`}
+            style={{
+              width: '100%',
+              height: `${Math.max(4, (d.count / max) * (height - 14))}px`,
+              background: color,
+              borderRadius: '3px 3px 0 0',
+              opacity: 0.8,
+              transition: 'opacity .2s',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '1' }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = '.8' }}
+          />
+          <span style={{ fontSize: '.56rem', color: 'var(--text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'clip', maxWidth: '100%', textAlign: 'center' }}>
+            {d.date?.slice(5)}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 // ───── ADMIN COMMAND PALETTE (Ctrl+K — sekmeye hızlı git) ─────
 function AdminCommandPalette({ tabs, onSelect }) {

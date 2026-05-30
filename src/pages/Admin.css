@@ -1940,3 +1940,47 @@
 .bulk-del:hover { background: #dc2626; }
 .message-pick { margin-right: 8px; accent-color: var(--accent); cursor: pointer; }
 .message-item.picked { background: var(--accent-alpha); }
+
+/* ===== Dashboard / Analytics grafikleri ===== */
+.dash-chart-card {
+  background: var(--card-bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+.dash-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: .84rem;
+  color: var(--text-secondary);
+}
+.dash-chart-header strong { color: var(--text-primary); font-size: .95rem; }
+.dash-top-pages { margin-top: 16px; }
+.dash-page-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.dash-page-row:last-child { border-bottom: none; }
+.dash-page-path { font-size: .82rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dash-page-bar { height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; }
+.dash-page-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .4s ease; }
+.dash-page-count { font-size: .8rem; color: var(--accent); font-weight: 700; text-align: right; }
+
+/* ===== Blog Editor: yayın satırı ===== */
+.blog-publish-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  background: var(--card-bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
