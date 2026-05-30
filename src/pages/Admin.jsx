@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, Component } from 'react'
+import { useState, useEffect, useCallback, useRef, Component } from 'react'
 import { motion } from 'framer-motion'
 import {
   HiOutlineLogin, HiOutlineLogout, HiOutlineHome, HiOutlineNewspaper,
