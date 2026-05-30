@@ -1912,3 +1912,31 @@
 }
 .admin-cmdk-item.active { background: var(--accent-alpha); color: var(--accent); }
 .admin-cmdk-empty { padding: 16px; text-align: center; color: var(--text-tertiary); font-size: .86rem; }
+
+/* ===== Toplu işlemler (mesajlar) ===== */
+.bulk-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: var(--card-bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.bulk-checkall {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .84rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.bulk-actions { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bulk-count { font-size: .82rem; font-weight: 600; color: var(--accent); }
+.btn-sm { padding: 6px 12px !important; font-size: .8rem !important; display: inline-flex; align-items: center; gap: 5px; }
+.bulk-del { background: #ef4444; border: 1px solid #ef4444; color: #fff; border-radius: 8px; }
+.bulk-del:hover { background: #dc2626; }
+.message-pick { margin-right: 8px; accent-color: var(--accent); cursor: pointer; }
+.message-item.picked { background: var(--accent-alpha); }

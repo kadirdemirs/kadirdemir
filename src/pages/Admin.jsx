@@ -489,6 +489,7 @@ function MessagesSection({ onCountChange, showToast }) {
   const [selected, setSelected] = useState(null)
   const [replyText, setReplyText] = useState('')
   const [filter, setFilter] = useState('all')
+  const [picked, setPicked] = useState(new Set())
 
   const load = useCallback(() => {
     getMessagesApi().then(d => {
@@ -525,6 +526,28 @@ function MessagesSection({ onCountChange, showToast }) {
 
   const filtered = messages.filter(m => filter === 'all' || (filter === 'unread' ? !m.read : m.read))
 
+  const togglePick = (id, e) => {
+    e.stopPropagation()
+    setPicked(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+  }
+  const allPicked = filtered.length > 0 && filtered.every(m => picked.has(m._id))
+  const toggleAll = () => setPicked(prev => (filtered.every(m => prev.has(m._id)) ? new Set() : new Set(filtered.map(m => m._id))))
+  const clearPicked = () => setPicked(new Set())
+  const bulkDelete = async () => {
+    if (!picked.size || !confirm(`${picked.size} mesajı silmek istediğine emin misin?`)) return
+    try {
+      await Promise.all([...picked].map(id => deleteMessageApi(id)))
+      showToast(`${picked.size} mesaj silindi`, 'success'); clearPicked(); setSelected(null); load()
+    } catch (e) { showToast(e.message, 'error') }
+  }
+  const bulkRead = async () => {
+    if (!picked.size) return
+    try {
+      await Promise.all([...picked].map(id => markMessageReadApi(id)))
+      showToast(`${picked.size} mesaj okundu işaretlendi`, 'success'); clearPicked(); load()
+    } catch (e) { showToast(e.message, 'error') }
+  }
+
   return (
     <div>
       <div className="admin-page-header">
@@ -539,11 +562,28 @@ function MessagesSection({ onCountChange, showToast }) {
         </select>
       </div>
 
+      <div className="bulk-toolbar">
+        <label className="bulk-checkall">
+          <input type="checkbox" checked={allPicked} onChange={toggleAll} />
+          Tümünü seç
+        </label>
+        {picked.size > 0 && (
+          <div className="bulk-actions">
+            <span className="bulk-count">{picked.size} seçili</span>
+            <button className="btn btn-outline btn-sm" onClick={bulkRead}><HiOutlineCheck size={15} /> Okundu</button>
+            <button className="btn btn-sm bulk-del" onClick={bulkDelete}><HiOutlineTrash size={15} /> Sil</button>
+            <button className="btn btn-outline btn-sm" onClick={clearPicked}>Temizle</button>
+          </div>
+        )}
+      </div>
+
       <div className="messages-layout">
         <div className="messages-list">
           {filtered.length === 0 ? <p style={{ padding: 20 }}>Mesaj bulunamadı.</p> : filtered.map(m => (
-            <div key={m._id} className={`message-item ${!m.read ? 'unread' : ''} ${selected?._id === m._id ? 'active' : ''}`}
+            <div key={m._id} className={`message-item ${!m.read ? 'unread' : ''} ${selected?._id === m._id ? 'active' : ''} ${picked.has(m._id) ? 'picked' : ''}`}
               onClick={() => handleOpen(m)}>
+              <input type="checkbox" className="message-pick" checked={picked.has(m._id)}
+                onChange={(e) => togglePick(m._id, e)} onClick={(e) => e.stopPropagation()} aria-label="Seç" />
               <div className="message-from">{m.name} {!m.read && <span className="dot" />}</div>
               <div className="message-subject">{m.subject || '(konu yok)'}</div>
               <div className="message-preview">{(m.message || '').slice(0, 60)}…</div>
