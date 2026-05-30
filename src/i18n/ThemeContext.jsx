@@ -4,7 +4,7 @@ const ThemeContext = createContext()
 
 const LS_KEY = 'theme'
 
-// Kullanıcının kayıtlı açık tercihi (varsa). Yoksa null → "auto" demektir.
+// Kullanıcının kayıtlı açık tercihi (varsa). Yoksa null → varsayılan kullanılır.
 function readStoredTheme() {
   try {
     const stored = localStorage.getItem(LS_KEY)
@@ -13,17 +13,11 @@ function readStoredTheme() {
   return null
 }
 
-// İşletim sistemi tercihi — "auto" modunun temeli.
-function getSystemTheme() {
-  try {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light'
-  } catch { /* ignore */ }
-  return 'dark'
-}
-
+// Varsayılan AYDINLIK: site cansız/mezarlık görünmesin diye açık tema ile açılır.
+// Kullanıcı toggle'a basınca seçimi kalıcılaşır (dark da seçebilir).
 function readInitialTheme() {
-  if (typeof window === 'undefined') return 'dark'
-  return readStoredTheme() || getSystemTheme()
+  if (typeof window === 'undefined') return 'light'
+  return readStoredTheme() || 'light'
 }
 
 export function ThemeProvider({ children }) {
