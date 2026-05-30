@@ -1622,6 +1622,8 @@ function PurgeLegacySection({ showToast }) {
             <li>Partner kayıtları: <strong>{summary.partners}</strong></li>
             <li>Eski mesajlar: <strong>{summary.messages}</strong></li>
             <li>İçerik bölümleri (hero/stats): <strong>{summary.content || 0}</strong></li>
+            <li>Analiz lead'leri (ajans): <strong>{summary.analyzerLeads || 0}</strong></li>
+            <li>İş başvuruları (ajans): <strong>{summary.applications || 0}</strong></li>
             <li>Site ayarları (düzeltilecek alan): <strong>{summary.settingsHits?.length || 0}</strong></li>
           </ul>
           {summary.settingsHits?.length > 0 && (

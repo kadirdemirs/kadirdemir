@@ -140,15 +140,17 @@ export function SiteSettingsProvider({ children }) {
           if (!merged.businessName || merged.businessName === 'Kadir') {
             merged.businessName = 'Kadir Demir'
           }
-          // Sosyal medya: DB'deki eski/yanlış handle'lar (kadirdemir, kadirdemirs vb.)
-          // güvenilmez. Doğru hesapları her zaman koddaki default'tan zorla.
-          // Discord yok — DB'de dolu gelse bile gizle.
+          // Sosyal medya: admin'den kaydedilen değer KULLANILIR; alan boşsa koddaki
+          // doğru default'a düşülür. (Önceden tüm handle'lar zorla default'a sabitleniyordu;
+          // bu yüzden admin → Site Ayarları'ndan girilen sosyal hesaplar siteye HİÇ
+          // yansımıyordu. Artık admin gerçekten senkron oluyor.)
           const SOCIAL_KEYS = ['youtube', 'youtubeHandle', 'instagram', 'instagramHandle',
-            'tiktok', 'tiktokHandle', 'twitter', 'twitterHandle', 'linkedin']
+            'tiktok', 'tiktokHandle', 'twitter', 'twitterHandle', 'linkedin', 'discord', 'whatsapp']
           for (const key of SOCIAL_KEYS) {
-            merged[key] = DEFAULT_SITE_SETTINGS[key]
+            if (typeof merged[key] !== 'string' || !merged[key].trim()) {
+              merged[key] = DEFAULT_SITE_SETTINGS[key] || ''
+            }
           }
-          merged.discord = ''
           setSettings(merged)
           if (merged.baseUrl && typeof window !== 'undefined') {
             window.__SITE_BASE_URL__ = merged.baseUrl

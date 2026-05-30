@@ -469,8 +469,16 @@ async function handlePurgeLegacy(req, res, db) {
     ],
   }
 
-  // 3) messages — eski "Kade Media" konulu lead mesajları (varsa)
-  const messagesQuery = { $or: [{ subject: legacyRegex }, { service: legacyRegex }] }
+  // 3) messages — eski "Kade Media" lead mesajları + ajans dönemi "Sosyal Medya
+  //    Analiz" aracı lead'leri (service/source) — bunlar artık özellik değil, kalıntı
+  const messagesQuery = {
+    $or: [
+      { subject: legacyRegex },
+      { service: legacyRegex },
+      { service: /sosyal\s*medya\s*analiz/i },
+      { source: 'analyzer' },
+    ],
+  }
 
   // 3b) content — eski "ajans" hero/stats section'ları (stats section komple ajans verisi)
   const contentQuery = {
@@ -494,11 +502,14 @@ async function handlePurgeLegacy(req, res, db) {
     }
   }
 
+  // Orphan ajans koleksiyonları (uçları kaldırıldı; eski veri kalmış olabilir)
   const summary = {
     blogs: await db.collection('blogs').countDocuments(blogsQuery),
     partners: await db.collection('partners').countDocuments(partnersQuery),
     messages: await db.collection('messages').countDocuments(messagesQuery),
     content: await db.collection('siteContent').countDocuments(contentQuery),
+    analyzerLeads: await db.collection('analyzer_leads').countDocuments({}),
+    applications: await db.collection('applications').countDocuments({}),
     settingsHits,
     dryRun,
   }
@@ -513,6 +524,8 @@ async function handlePurgeLegacy(req, res, db) {
     partners: (await db.collection('partners').deleteMany(partnersQuery)).deletedCount,
     messages: (await db.collection('messages').deleteMany(messagesQuery)).deletedCount,
     content: (await db.collection('siteContent').deleteMany(contentQuery)).deletedCount,
+    analyzerLeads: (await db.collection('analyzer_leads').deleteMany({})).deletedCount,
+    applications: (await db.collection('applications').deleteMany({})).deletedCount,
   }
 
   // site-settings: brand metinleri + DOĞRU sosyal medya hesapları (data.* alanları)
