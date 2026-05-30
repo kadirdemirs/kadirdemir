@@ -4,24 +4,53 @@ const ThemeContext = createContext()
 
 const LS_KEY = 'theme'
 
-function readInitialTheme() {
-  if (typeof window === 'undefined') return 'dark'
+// Kullanıcının kayıtlı açık tercihi (varsa). Yoksa null → "auto" demektir.
+function readStoredTheme() {
   try {
     const stored = localStorage.getItem(LS_KEY)
     if (stored === 'light' || stored === 'dark') return stored
   } catch { /* private mode / storage disabled */ }
+  return null
+}
+
+// İşletim sistemi tercihi — "auto" modunun temeli.
+function getSystemTheme() {
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light'
+  } catch { /* ignore */ }
   return 'dark'
 }
 
-export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(readInitialTheme)
+function readInitialTheme() {
+  if (typeof window === 'undefined') return 'dark'
+  return readStoredTheme() || getSystemTheme()
+}
 
+export function ThemeProvider({ children }) {
+  const [theme, setThemeState] = useState(readInitialTheme)
+
+  // DOM'a uygula (otomatik persist YOK — auto modunu bozmamak için).
   useEffect(() => {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme)
     }
-    try { localStorage.setItem(LS_KEY, theme) } catch { /* ignore */ }
   }, [theme])
+
+  // Kullanıcı henüz açık bir seçim yapmadıysa OS temasını canlı izle.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return
+    if (readStoredTheme()) return // açık seçim var → OS'u izleme
+    const mq = window.matchMedia('(prefers-color-scheme: light)')
+    const onChange = () => { if (!readStoredTheme()) setThemeState(getSystemTheme()) }
+    mq.addEventListener?.('change', onChange)
+    return () => mq.removeEventListener?.('change', onChange)
+  }, [])
+
+  // Açık seçim → kalıcı kaydet.
+  const setTheme = (next) => {
+    try { localStorage.setItem(LS_KEY, next) } catch { /* ignore */ }
+    setThemeState(next)
+  }
 
   const toggleTheme = (e) => {
     const next = theme === 'dark' ? 'light' : 'dark'

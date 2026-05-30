@@ -19,6 +19,7 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
 import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../components/StructuredData'
 import CountUp from '../components/reactbits/CountUpRB'
+import ResponsivePortrait from '../components/ResponsivePortrait'
 import NewsletterForm from '../components/NewsletterForm'
 import GradientText from '../components/reactbits/GradientText'
 import LogoLoop from '../components/reactbits/LogoLoop'
@@ -276,6 +277,12 @@ export default function Home() {
       <section className="g-hero" id="home">
         <div className="g-hero-veil" />
         <div className="g-hero-inner">
+          <ResponsivePortrait
+            className="g-hero-portrait"
+            alt={brandName}
+            loading="eager"
+            sizes="(max-width: 600px) 120px, 168px"
+          />
           <span className="g-hero-mark">
             {isEn ? 'Content creator · Istanbul' : 'İçerik üreticisi · İstanbul'}
           </span>

@@ -6,10 +6,12 @@
 
 :root {
   /* ─── Core Palette ─── */
-  --bg-base: #080706;
-  --bg-deep: #040302;
-  --bg-elevated: #110f0d;
-  --bg-elevated-2: #191613;
+  /* v3 calibration — "premium dark" yerine "siyah delik" hissini kır:
+     zeminleri belirgin biçimde yükselt, sıcak tonu koru. */
+  --bg-base: #15110c;
+  --bg-deep: #0e0b08;
+  --bg-elevated: #211c16;
+  --bg-elevated-2: #2b251c;
 
   --amber: #d4943f;
   --amber-soft: #e8b468;
@@ -17,10 +19,10 @@
   --amber-glow: rgba(212, 148, 63, 0.3);
   --amber-glow-strong: rgba(212, 148, 63, 0.5);
 
-  --cream: #f4ebe0;
-  --cream-dim: rgba(244, 235, 224, 0.72);
-  --cream-mute: rgba(244, 235, 224, 0.48);
-  --cream-faint: rgba(244, 235, 224, 0.24);
+  --cream: #f6eee3;
+  --cream-dim: rgba(246, 238, 227, 0.78);
+  --cream-mute: rgba(246, 238, 227, 0.58);
+  --cream-faint: rgba(246, 238, 227, 0.34);
 
   /* ─── Semantic Aliases ─── */
   --primary: var(--amber);
@@ -51,8 +53,8 @@
   --dark-gray: var(--bg-elevated-2);
   --gray: #252019;
   --bg-primary: var(--bg-deep);
-  --bg-secondary: rgba(244, 235, 224, 0.02);
-  --card-bg: rgba(17, 15, 13, 0.65);
+  --bg-secondary: rgba(244, 235, 224, 0.03);
+  --card-bg: rgba(33, 28, 22, 0.7);
 
   /* ─── Text Scale ─── */
   --text-primary: var(--cream);
@@ -64,10 +66,10 @@
   --white-dim: var(--cream-dim);
 
   /* ─── Glass System (warm-tinted obsidian) ─── */
-  --glass-bg: rgba(17, 15, 13, 0.6);
-  --glass-bg-strong: rgba(32, 26, 20, 0.78);
-  --glass-bg-soft: rgba(17, 15, 13, 0.35);
-  --glass-border: rgba(212, 148, 63, 0.15);
+  --glass-bg: rgba(33, 28, 22, 0.58);
+  --glass-bg-strong: rgba(46, 38, 29, 0.8);
+  --glass-bg-soft: rgba(33, 28, 22, 0.34);
+  --glass-border: rgba(212, 148, 63, 0.2);
   --glass-border-strong: rgba(212, 148, 63, 0.4);
   --glass-highlight: rgba(244, 235, 224, 0.06);
   --glass-blur: 20px;
@@ -149,7 +151,7 @@
 
 @supports not (backdrop-filter: blur(1px)) {
   .glass, .glass-strong, .glass-soft {
-    background: rgba(17, 15, 13, 0.95);
+    background: rgba(33, 28, 22, 0.95);
   }
 }
 
@@ -190,9 +192,9 @@ html {
   -webkit-overflow-scrolling: touch;
   background-color: var(--bg-deep);
   background-image:
-    radial-gradient(ellipse 55% 45% at 15% 8%, rgba(212, 148, 63, 0.18), transparent 55%),
-    radial-gradient(ellipse 45% 35% at 85% 92%, rgba(212, 148, 63, 0.12), transparent 55%),
-    radial-gradient(ellipse 30% 30% at 55% 50%, rgba(212, 148, 63, 0.05), transparent 50%),
+    radial-gradient(ellipse 55% 45% at 15% 8%, rgba(212, 148, 63, 0.22), transparent 58%),
+    radial-gradient(ellipse 45% 35% at 85% 92%, rgba(232, 180, 104, 0.16), transparent 58%),
+    radial-gradient(ellipse 38% 36% at 55% 45%, rgba(212, 148, 63, 0.08), transparent 55%),
     radial-gradient(ellipse at center, var(--bg-base) 0%, var(--bg-deep) 100%);
   background-attachment: fixed;
 }
@@ -464,7 +466,7 @@ input, textarea, select {
 }
 
 @supports not (backdrop-filter: blur(1px)) {
-  .glass-card { background: rgba(17, 15, 13, 0.95); }
+  .glass-card { background: rgba(33, 28, 22, 0.95); }
 }
 
 .package-price-note {
