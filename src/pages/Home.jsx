@@ -120,6 +120,7 @@ export default function Home() {
     { value: yt?.views || settings.statsTotalViews, label: isEn ? 'Total views' : 'Toplam izlenme' },
     { value: ig?.followers || settings.statsInstagramFollowers, label: isEn ? 'Instagram followers' : 'Instagram takipçi' },
     { value: tt?.followers || settings.statsTiktokFollowers, label: isEn ? 'TikTok followers' : 'TikTok takipçi' },
+    { value: settings.statsTwitterFollowers, label: isEn ? 'X followers' : 'X takipçi' },
   ].filter((s) => s && s.value && s.value !== '—' && String(s.value).trim() !== '' && Number(String(s.value).replace(/[^\d.]/g, '')) > 0)
 
   const aboutText = settings.description || (isEn
@@ -263,7 +264,7 @@ export default function Home() {
     settings.tiktok && { name: 'TikTok', icon: FaTiktok, url: settings.tiktok, color: '#00F2EA', stat: tt?.followers || settings.statsTiktokFollowers, statLabel: isEn ? 'followers' : 'takipçi' },
     settings.discord && { name: 'Discord', icon: FaDiscord, url: settings.discord, color: '#5865F2' },
     settings.linkedin && { name: 'LinkedIn', icon: FaLinkedin, url: settings.linkedin, color: '#0A66C2' },
-    settings.twitter && { name: 'X', icon: FaXTwitter, url: settings.twitter, color: '#ffffff' },
+    settings.twitter && { name: 'X', icon: FaXTwitter, url: settings.twitter, color: '#ffffff', stat: settings.statsTwitterFollowers, statLabel: isEn ? 'followers' : 'takipçi' },
   ].filter(Boolean)
 
   return (

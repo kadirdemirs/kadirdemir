@@ -33,6 +33,7 @@ export const DEFAULT_SITE_SETTINGS = {
   statsTiktokFollowers: '',
   statsTiktokLikes: '',
   statsInstagramPosts: '',
+  statsTwitterFollowers: '',
   statsActiveYears: '14',
 
   // SEO

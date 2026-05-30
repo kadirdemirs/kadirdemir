@@ -1822,3 +1822,36 @@
 .modal-content h3 { margin: 0 0 16px; }
 .modal-content label { display: flex; flex-direction: column; gap: 6px; font-size: .84rem; margin-bottom: 12px; }
 .modal-content input { background: var(--bg-primary); border: 1px solid rgba(255,255,255,.1); color: var(--text-primary); padding: 10px 12px; border-radius: 8px; }
+
+/* ===== Site Ayarları — yapışkan hızlı gezinme çubuğu ===== */
+.settings-quicknav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+  margin-bottom: 8px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+}
+.settings-quicknav-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--card-bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+.settings-quicknav-chip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}

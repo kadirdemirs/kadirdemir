@@ -1025,6 +1025,30 @@ function SettingsSection({ showToast, onChangePassword }) {
         </div>
       </div>
 
+      <div className="settings-quicknav">
+        {[
+          ['👤 Kimlik', 'Kimlik'],
+          ['🌐 Sosyal', 'Sosyal Medya'],
+          ['📊 İstatistik', 'İstatistikler'],
+          ['⭐ Ana Sayfa', 'Öne Çıkan'],
+          ['🔍 SEO', 'SEO'],
+          ['📸 Instagram', 'Instagram Post'],
+          ['🧹 Temizlik', 'Veri Temizliği'],
+        ].map(([label, match]) => (
+          <button
+            key={label}
+            type="button"
+            className="settings-quicknav-chip"
+            onClick={() => {
+              const h = [...document.querySelectorAll('.admin-shell h3')].find((el) => el.textContent.includes(match))
+              h?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       <div className="settings-section">
         <h3>Kimlik</h3>
         <div className="form-grid">
@@ -1069,6 +1093,7 @@ function SettingsSection({ showToast, onChangePassword }) {
           <label>📸 Instagram Post<input value={s.statsInstagramPosts || ''} onChange={e => upd('statsInstagramPosts', e.target.value)} placeholder="420" /></label>
           <label>🎵 TikTok Takipçi<input value={s.statsTiktokFollowers || ''} onChange={e => upd('statsTiktokFollowers', e.target.value)} placeholder="1.8M" /></label>
           <label>🎵 TikTok Beğeni<input value={s.statsTiktokLikes || ''} onChange={e => upd('statsTiktokLikes', e.target.value)} placeholder="24.5M" /></label>
+          <label>𝕏 X (Twitter) Takipçi<input value={s.statsTwitterFollowers || ''} onChange={e => upd('statsTwitterFollowers', e.target.value)} placeholder="120K" /></label>
           <label>📅 Aktif Yıl<input value={s.statsActiveYears || ''} onChange={e => upd('statsActiveYears', e.target.value)} placeholder="14" /></label>
         </div>
       </div>
