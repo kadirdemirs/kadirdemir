@@ -21,6 +21,10 @@ import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../componen
 import CountUp from '../components/reactbits/CountUpRB'
 import NewsletterForm from '../components/NewsletterForm'
 import GradientText from '../components/reactbits/GradientText'
+import BlurText from '../components/reactbits/BlurText'
+import ScrollVelocity from '../components/reactbits/ScrollVelocity'
+import SpotlightCard from '../components/reactbits/SpotlightCard'
+import TiltedCard from '../components/reactbits/TiltedCard'
 import LogoLoop from '../components/reactbits/LogoLoop'
 import BorderGlow from '../components/reactbits/BorderGlow'
 import {
@@ -290,11 +294,15 @@ export default function Home() {
             </GradientText>
             <span className="g-hero-title-accent">.</span>
           </h1>
-          <p className="g-hero-lede">
-            {isEn
+          <BlurText
+            text={isEn
               ? `${yearsActive} years on YouTube. Vlogs, gaming and live streams.`
               : `${yearsActive} yıldır YouTube'dayım. Vlog, oyun ve canlı yayın.`}
-          </p>
+            className="g-hero-lede"
+            animateBy="words"
+            delay={80}
+            stepDuration={0.4}
+          />
           <div className="g-hero-actions">
             <a href="#about" className="g-hero-cta g-hero-cta--primary">
               {isEn ? 'About me' : 'Beni tanı'}
@@ -304,6 +312,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
+        <a href="#about" className="g-hero-scroll-hint" aria-label="Kaydır">
+          <span className="g-hero-scroll-dot" />
+        </a>
       </section>
 
       <section className="g-section g-about" id="about">
@@ -342,6 +353,18 @@ export default function Home() {
         </section>
       )}
 
+      <div className="g-velocity-strip">
+        <ScrollVelocity
+          texts={[
+            isEn ? 'VLOG • GAMING • LIVE STREAMS • ISTANBUL • 14 YEARS •' : 'VLOG • OYUN • CANLI YAYIN • İSTANBUL • 14 YIL •',
+            isEn ? 'YOUTUBE • CONTENT CREATOR • KADIR DEMİR •' : 'YOUTUBE • İÇERİK ÜRETİCİSİ • KADİR DEMİR •',
+          ]}
+          velocity={60}
+          className="g-velocity-text"
+          numCopies={4}
+        />
+      </div>
+
       <section className="g-section g-focus">
         <GiantSectionHead
           eyebrow={isEn ? 'WHAT I DO' : 'NE YAPIYORUM'}
@@ -350,19 +373,15 @@ export default function Home() {
         />
         <div className="g-focus-grid">
           {focusCards.map((card) => (
-            <article
+            <SpotlightCard
               key={card.n}
               className="g-focus-card"
-              onMouseMove={(e) => {
-                const r = e.currentTarget.getBoundingClientRect()
-                e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`)
-                e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`)
-              }}
+              spotlightColor="rgba(212,148,63,0.14)"
             >
               <span>{card.n}</span>
               <h3>{card.title}</h3>
               <p>{card.body}</p>
-            </article>
+            </SpotlightCard>
           ))}
         </div>
 
@@ -440,25 +459,26 @@ export default function Home() {
         {videos.length > 0 ? (
           <div className="g-works-grid">
             {videos.slice(featuredVideo ? 1 : 0, featuredVideo ? 7 : 6).map((v, i) => (
-              <a
-                key={v.youtubeId || i}
-                href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="g-work"
-              >
-                {v.thumbnail ? (
-                  <img src={v.thumbnail} alt={v.title} loading="lazy" />
-                ) : (
-                  <div className="g-work-fallback">{String(i + 1).padStart(2, '0')}</div>
-                )}
-                <div className="g-work-overlay">
-                  <span className="g-work-cat">YouTube</span>
-                  <h4 className="g-work-title">{v.title}</h4>
-                  <span className="g-work-cta">{isEn ? 'WATCH' : 'İZLE'}</span>
-                  {v.views && <span className="g-work-views">{formatViews(v.views)} {isEn ? 'views' : 'izlenme'}</span>}
-                </div>
-              </a>
+              <TiltedCard key={v.youtubeId || i} rotateAmplitude={8} scaleOnHover={1.04} className="g-work-tilt">
+                <a
+                  href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="g-work"
+                >
+                  {v.thumbnail ? (
+                    <img src={v.thumbnail} alt={v.title} loading="lazy" />
+                  ) : (
+                    <div className="g-work-fallback">{String(i + 1).padStart(2, '0')}</div>
+                  )}
+                  <div className="g-work-overlay">
+                    <span className="g-work-cat">YouTube</span>
+                    <h4 className="g-work-title">{v.title}</h4>
+                    <span className="g-work-cta">{isEn ? 'WATCH' : 'İZLE'}</span>
+                    {v.views && <span className="g-work-views">{formatViews(v.views)} {isEn ? 'views' : 'izlenme'}</span>}
+                  </div>
+                </a>
+              </TiltedCard>
             ))}
           </div>
         ) : (

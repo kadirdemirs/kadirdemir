@@ -1753,6 +1753,61 @@ html[data-theme="light"] .g-contact-grid {
   background: rgba(255, 255, 255, 0.68);
 }
 
+/* ── Hero scroll hint ── */
+.g-hero-scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  animation: g-scroll-bounce 2s ease-in-out infinite;
+}
+.g-hero-scroll-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--g-amber);
+  opacity: 0.7;
+  box-shadow: 0 0 8px var(--g-amber-glow);
+}
+.g-hero-scroll-hint::before {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, transparent, var(--g-amber));
+  opacity: 0.5;
+}
+@keyframes g-scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+  50%       { transform: translateX(-50%) translateY(8px); opacity: 1; }
+}
+@media (max-width: 600px) { .g-hero-scroll-hint { display: none; } }
+
+/* ── TiltedCard video wrapper ── */
+.g-work-tilt { display: block; }
+
+/* ── ScrollVelocity şeridi ── */
+.g-velocity-strip {
+  overflow: hidden;
+  padding: 18px 0;
+  border-top: 1px solid var(--g-rule-soft);
+  border-bottom: 1px solid var(--g-rule-soft);
+  margin: 0 0 0;
+}
+.g-velocity-text {
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .2em;
+  color: var(--g-amber);
+  opacity: 0.6;
+}
+
 /* ══════════════════════════════════════════════════════════════
    INSTAGRAM GRID — admin'den girilen post'lar (g-instagram)
    ══════════════════════════════════════════════════════════════ */
