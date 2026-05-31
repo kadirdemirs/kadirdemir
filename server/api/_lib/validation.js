@@ -11,8 +11,9 @@ const allowedActions = new Set([
   'ask', 'change-password', 'check', 'confirm',
   'csrf', 'file', 'ga4', 'heartbeat', 'live', 'login', 'logout',
   'newsletter', 'notes', 'pageview', 'post-views', 'refresh', 'reply',
-  'send-invite', 'send-newsletter', 'sitemap', 'smtp-test', 'submit', 'subscribers',
-  'session', 'unsubscribe', 'vote',
+  'send', 'send-invite', 'send-newsletter', 'sitemap', 'smtp-test', 'submit', 'subscribers',
+  'session', 'unsubscribe', 'vapid-public-key', 'vote',
+  'answer', 'delete', 'pending',
 ]);
 
 const allowedResources = new Set([
