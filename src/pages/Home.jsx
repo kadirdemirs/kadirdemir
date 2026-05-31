@@ -25,6 +25,9 @@ import BlurText from '../components/reactbits/BlurText'
 import ScrollVelocity from '../components/reactbits/ScrollVelocity'
 import SpotlightCard from '../components/reactbits/SpotlightCard'
 import TiltedCard from '../components/reactbits/TiltedCard'
+import GlareHover from '../components/reactbits/GlareHover'
+import DecryptedText from '../components/reactbits/DecryptedText'
+import Particles from '../components/reactbits/Particles'
 import LogoLoop from '../components/reactbits/LogoLoop'
 import BorderGlow from '../components/reactbits/BorderGlow'
 import {
@@ -60,7 +63,18 @@ function GiantEyebrow({ children }) {
   return (
     <span className="g-eyebrow">
       <span className="g-eyebrow-rule" />
-      <span className="g-eyebrow-label">{children}</span>
+      <span className="g-eyebrow-label">
+        <DecryptedText
+          text={String(children)}
+          speed={40}
+          maxIterations={10}
+          sequential
+          revealDirection="start"
+          characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ•"
+          className=""
+          encryptedClassName="g-eyebrow-decrypting"
+        />
+      </span>
       <span className="g-eyebrow-rule" />
     </span>
   )
@@ -280,6 +294,15 @@ export default function Home() {
 
       <section className="g-hero" id="home">
         <div className="g-hero-veil" />
+        <Particles
+          particleColors={['#d4943f', '#e8b468', '#f4ebe0']}
+          particleCount={40}
+          particleBaseSize={70}
+          alphaParticles
+          moveParticlesOnHover
+          particleHoverFactor={0.3}
+          className="g-hero-particles"
+        />
         <div className="g-hero-inner">
           <span className="g-hero-mark">
             {isEn ? 'Content creator · Istanbul' : 'İçerik üreticisi · İstanbul'}
@@ -341,12 +364,19 @@ export default function Home() {
             {liveStats.map((s, i, arr) => {
               const parsed = parseStat(s.value)
               return (
-                <div key={s.label} className="g-stat" style={{ '--g-stat-i': i, '--g-stat-n': arr.length }}>
+                <GlareHover
+                  key={s.label}
+                  className="g-stat"
+                  style={{ '--g-stat-i': i, '--g-stat-n': arr.length }}
+                  glareColor="rgba(212,148,63,0.25)"
+                  glareSize={200}
+                  glareOpacity={0.5}
+                >
                   <span className="g-stat-value">
                     {parsed ? <><CountUp to={parsed.num} duration={2} separator="," />{parsed.suffix}</> : s.value}
                   </span>
                   <span className="g-stat-label">{s.label}</span>
-                </div>
+                </GlareHover>
               )
             })}
           </div>

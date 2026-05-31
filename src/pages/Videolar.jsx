@@ -195,13 +195,20 @@ export default function Videolar() {
               className="kd-video-tile-link"
               style={{ textAlign: 'left', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', color: 'inherit' }}
             >
-              <article className="kd-video-tile">
+              <article className="kd-video-tile kd-video-tile-hoverable">
                 <div className="kd-video-tile-thumb" style={{ backgroundImage: `url(${v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                   {idx === 0 && sort === 'newest' && <span className="kd-video-badge">{t('videos.badgeNew')}</span>}
                   {parseDuration(v.duration) && (
                     <span className="kd-video-duration-tile">{parseDuration(v.duration)}</span>
                   )}
-                  <span className="kd-video-hover-play-tile"><HiOutlinePlay size={28} /></span>
+                  <div className="kd-video-hover-overlay">
+                    <span className="kd-video-hover-play-tile"><HiOutlinePlay size={32} /></span>
+                    {v.views && (
+                      <span className="kd-video-hover-views">
+                        👁 {formatViews(v.views)}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <h4 className="kd-video-tile-title">{v.title}</h4>
                 {v.views && <div className="kd-video-tile-meta">{formatViews(v.views)} {t('home.platformsSub_views').toLowerCase()}</div>}

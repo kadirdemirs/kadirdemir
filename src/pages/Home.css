@@ -46,6 +46,10 @@
 .g-eyebrow-label {
   white-space: nowrap;
 }
+.g-eyebrow-decrypting {
+  color: var(--g-amber-deep);
+  opacity: 0.5;
+}
 
 .g-eyebrow-light .g-eyebrow-label { color: var(--g-cream); }
 .g-eyebrow-light .g-eyebrow-rule {
@@ -1752,6 +1756,16 @@ html[data-theme="light"] .g-contact-veil {
 html[data-theme="light"] .g-contact-grid {
   background: rgba(255, 255, 255, 0.68);
 }
+
+/* ── Hero particles canvas ── */
+.g-hero-particles {
+  position: absolute !important;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+}
+.g-hero-inner { position: relative; z-index: 1; }
 
 /* ── Hero scroll hint ── */
 .g-hero-scroll-hint {

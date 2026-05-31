@@ -261,18 +261,43 @@
   font-weight: 800;
 }
 
-.kd-video-hover-play-tile {
+/* Hover overlay — play + views */
+.kd-video-hover-overlay {
   position: absolute;
   inset: 0;
   z-index: 2;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(to top, rgba(10,8,6,0.55) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.kd-video-tile:hover .kd-video-hover-overlay { opacity: 1; }
+.kd-video-hover-views {
+  font-size: .76rem;
+  font-weight: 700;
+  color: rgba(244,235,224,.9);
+  letter-spacing: .04em;
+  background: rgba(10,8,6,.5);
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+.kd-video-hover-play-tile {
+  position: relative;
+  z-index: 3;
+  display: flex;
   align-items: center;
   justify-content: center;
   color: #0d0a06;
-  opacity: 0;
   transform: scale(0.9);
-  transition: opacity var(--transition-normal), transform var(--transition-normal);
+  transition: transform 0.3s ease;
 }
+.kd-video-hover-overlay:hover .kd-video-hover-play-tile,
+.kd-video-tile:hover .kd-video-hover-play-tile { transform: scale(1); }
 
 .kd-video-hover-play-tile::before {
   content: '';
@@ -290,10 +315,7 @@
   margin-left: 3px;
 }
 
-.kd-video-tile:hover .kd-video-hover-play-tile {
-  opacity: 1;
-  transform: scale(1);
-}
+/* eski stili kaldırdık — yeni .kd-video-hover-overlay kullanıyoruz */
 
 .kd-video-tile-title {
   padding: 15px 16px 7px;
