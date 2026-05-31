@@ -1467,6 +1467,10 @@
   overflow: hidden;
   --logoloop-fadeColor: var(--g-bg-deep);
 }
+@media (max-width: 480px) {
+  .g-types-loop { margin-top: 28px; padding: 10px 0; }
+  .g-type-node { font-size: .82rem; gap: 7px; }
+}
 
 .g-type-node {
   display: inline-flex;
@@ -1765,8 +1769,9 @@
   /* Works grid — tek sütun */
   .g-works-grid { grid-template-columns: 1fr; }
 
-  /* Platform kartları — tek sütun */
-  .g-platforms-grid { grid-template-columns: 1fr; }
+  /* Platform kartları — 2 sütun; tek kalan kart tam genişlik */
+  .g-platforms-grid { grid-template-columns: repeat(2, 1fr); }
+  .g-platforms-grid > *:last-child:nth-child(odd) { grid-column: 1 / -1; }
 
   /* Story timeline — offset kaldır */
   .g-story-row.is-right { flex-direction: column; }
