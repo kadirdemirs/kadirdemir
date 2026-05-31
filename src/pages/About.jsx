@@ -82,12 +82,17 @@ export default function About() {
           <p>{t('about.p4')}</p>
           <p>{t('about.p5')}</p>
         </div>
-        <div className="kd-about-media kd-media-frame">
+        <div className="kd-about-media kd-media-frame kd-about-media-alt">
           <ResponsivePortrait
-            alt={`${brandName} — behind the scenes`}
+            alt={`${brandName} — studio`}
             className="kd-about-img kd-about-img-alt"
             sizes="(max-width: 820px) 100vw, 520px"
+            style={{ filter: 'grayscale(30%) contrast(1.05) brightness(0.9)' }}
           />
+          <div className="kd-about-img-overlay">
+            <span>{isEn ? '📍 İstanbul' : '📍 İstanbul'}</span>
+            <span>{isEn ? '14 years of content' : '14 yıl içerik'}</span>
+          </div>
         </div>
       </Reveal>
 

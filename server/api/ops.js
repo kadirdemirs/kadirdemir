@@ -3,15 +3,24 @@ import { getDb, isValidObjectId } from './_lib/mongodb.js'
 import { requireAuth } from './_lib/auth.js'
 import { cors } from './_lib/cors.js'
 import { rateLimitCheck } from './_lib/rateLimit.js'
-import webpush from 'web-push'
-
-// VAPID anahtarlarını env'den al (VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY)
-if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
-  webpush.setVapidDetails(
-    'mailto:' + (process.env.MAIL_TO || 'thekademedia@gmail.com'),
-    process.env.VAPID_PUBLIC_KEY,
-    process.env.VAPID_PRIVATE_KEY
-  )
+// web-push dinamik olarak yükleniyor — Vercel serverless ES module uyumu için
+let _webpush = null
+async function getWebPush() {
+  if (_webpush) return _webpush
+  try {
+    const mod = await import('web-push')
+    _webpush = mod.default || mod
+    if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+      _webpush.setVapidDetails(
+        'mailto:' + (process.env.MAIL_TO || 'thekademedia@gmail.com'),
+        process.env.VAPID_PUBLIC_KEY,
+        process.env.VAPID_PRIVATE_KEY
+      )
+    }
+  } catch (e) {
+    console.error('web-push yüklenemedi:', e.message)
+  }
+  return _webpush
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -105,8 +114,10 @@ async function handlePush(req, res, db) {
     const user = requireAdmin(req, res)
     if (!user) return
     if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
-      return res.status(400).json({ error: 'VAPID anahtarları tanımlı değil. .env dosyasına VAPID_PUBLIC_KEY ve VAPID_PRIVATE_KEY ekle.' })
+      return res.status(400).json({ error: 'VAPID anahtarları tanımlı değil. Vercel env\'e VAPID_PUBLIC_KEY ve VAPID_PRIVATE_KEY ekle.' })
     }
+    const wp = await getWebPush()
+    if (!wp) return res.status(500).json({ error: 'web-push modülü yüklenemedi' })
     const { title, body, url } = req.body || {}
     if (!title) return res.status(400).json({ error: 'title gerekli' })
     const subs = await db.collection('push_subscriptions').find({ endpoint: { $exists: true }, 'keys.p256dh': { $exists: true } }).toArray()
@@ -115,7 +126,7 @@ async function handlePush(req, res, db) {
     let sent = 0, failed = 0
     await Promise.all(subs.map(async (sub) => {
       try {
-        await webpush.sendNotification({ endpoint: sub.endpoint, keys: sub.keys }, payload)
+        await wp.sendNotification({ endpoint: sub.endpoint, keys: sub.keys }, payload)
         sent++
       } catch (e) {
         failed++

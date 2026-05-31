@@ -140,12 +140,11 @@
 .kd-mediakit-stack-card,
 .kd-mediakit-principles,
 .kd-mediakit-cta {
-  background:
-    linear-gradient(135deg, rgba(244, 235, 224, 0.04), rgba(244, 235, 224, 0.01)),
-    rgba(17, 15, 13, 0.62);
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
 }
 
 .kd-mediakit-stat-card {

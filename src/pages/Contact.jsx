@@ -116,26 +116,30 @@ export default function Contact() {
           </h1>
           <p>{t('contact.heroSub')}</p>
 
-          {settings.email && (
+          {/* Tek e-posta göster: iş e-postası varsa onu, yoksa genel */}
+          {(settings.businessEmail || settings.email) && (
             <div className="kd-contact-card">
               <span className="kd-contact-card-icon">
                 <HiOutlineMail size={20} />
               </span>
               <div>
-                <div className="kd-contact-card-kind">{t('contact.email')}</div>
-                <a href={`mailto:${settings.email}`}>{settings.email}</a>
+                <div className="kd-contact-card-kind">{t('contact.business')}</div>
+                <a href={`mailto:${settings.businessEmail || settings.email}`}>
+                  {settings.businessEmail || settings.email}
+                </a>
               </div>
             </div>
           )}
 
-          {settings.businessEmail && (
+          {/* İkinci kart: sadece iş + genel e-posta FARKLI ise göster */}
+          {settings.email && settings.businessEmail && settings.email !== settings.businessEmail && (
             <div className="kd-contact-card">
               <span className="kd-contact-card-icon">
                 <HiOutlinePhone size={20} />
               </span>
               <div>
-                <div className="kd-contact-card-kind">{t('contact.business')}</div>
-                <a href={`mailto:${settings.businessEmail}`}>{settings.businessEmail}</a>
+                <div className="kd-contact-card-kind">{t('contact.email')}</div>
+                <a href={`mailto:${settings.email}`}>{settings.email}</a>
               </div>
             </div>
           )}

@@ -33,6 +33,7 @@ export default function Footer() {
     { name: t('footer.collab'), path: '/sponsor' },
     { name: t('footer.mediaKit'), path: '/medya-kit' },
     { name: t('footer.askMe'), path: '/sor' },
+    { name: t('nav.search') || 'Arama', path: '/ara' },
   ]
 
   const LEGAL = [
