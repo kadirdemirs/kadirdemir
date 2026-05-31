@@ -324,7 +324,7 @@ export default function Home() {
             className="g-hero-lede"
             animateBy="words"
             delay={80}
-            stepDuration={0.4}
+            stepDuration={0.35}
           />
           <div className="g-hero-actions">
             <a href="#about" className="g-hero-cta g-hero-cta--primary">

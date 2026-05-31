@@ -307,6 +307,11 @@ input, textarea, select {
   outline: none;
 }
 
+@media (max-width: 768px) {
+  /* iOS zoom önleme — input focus'ta page zoom olmasın */
+  input, textarea, select { font-size: max(16px, 1em); }
+}
+
 /* ═══════════ LAYOUT ═══════════ */
 .container {
   max-width: var(--container-width);

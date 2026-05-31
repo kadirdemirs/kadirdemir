@@ -79,4 +79,6 @@
 @media (max-width: 600px) {
   .ara-grid { grid-template-columns: 1fr; }
   .ara-video-grid { grid-template-columns: 1fr 1fr; }
+  .ara-input { font-size: 16px; }
+  .ara-hero h1 { font-size: 1.8rem; }
 }
