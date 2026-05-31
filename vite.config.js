@@ -37,6 +37,10 @@ export default defineConfig({
       external: [/^api\//],
       output: {
         manualChunks(id) {
+          // TipTap + ProseMirror — sadece Admin/editor kullanır, ayrı chunk
+          if (id.includes('node_modules/@tiptap') || id.includes('node_modules/prosemirror') || id.includes('node_modules/@lezer')) {
+            return 'vendor-tiptap';
+          }
           if (id.includes('node_modules/framer-motion')) {
             return 'vendor-motion';
           }
@@ -45,6 +49,10 @@ export default defineConfig({
           }
           if (id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
             return 'vendor-react';
+          }
+          // three.js / ogl — ağır WebGL kütüphaneleri
+          if (id.includes('node_modules/three') || id.includes('node_modules/ogl')) {
+            return 'vendor-3d';
           }
         },
       },
