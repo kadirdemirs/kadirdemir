@@ -23,7 +23,7 @@ export default function NewsletterForm({ variant = 'default', lang = 'tr' }) {
           type="email"
           inputMode="email"
           autoComplete="email"
-          placeholder="senin@e-posta.com"
+          placeholder={isEn ? 'your@email.com' : 'senin@e-posta.com'}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={submitting}

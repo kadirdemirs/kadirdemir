@@ -90,7 +90,7 @@ export default function About() {
             style={{ filter: 'grayscale(30%) contrast(1.05) brightness(0.9)' }}
           />
           <div className="kd-about-img-overlay">
-            <span>{isEn ? '📍 İstanbul' : '📍 İstanbul'}</span>
+            <span>📍 İstanbul</span>
             <span>{isEn ? '14 years of content' : '14 yıl içerik'}</span>
           </div>
         </div>

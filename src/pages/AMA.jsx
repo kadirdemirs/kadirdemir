@@ -70,7 +70,7 @@ export default function AMA() {
       setStatus({ state: 'success', error: null })
       setForm({ question: '', author: '' })
     } catch (err) {
-      setStatus({ state: 'error', error: err.message || 'Hata' })
+      setStatus({ state: 'error', error: err.message || (lang === 'en' ? 'An error occurred.' : 'Bir hata oluştu.') })
     }
   }
 
@@ -192,7 +192,7 @@ export default function AMA() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.74rem', fontWeight: 700, color: '#f59e0b', letterSpacing: '0.1em', marginBottom: 6 }}>
-                  <HiOutlineChatAlt2 size={14} /> {lang === 'en' ? 'KADIR' : 'KADIR'}
+                  <HiOutlineChatAlt2 size={14} /> KADIR
                 </div>
                 <p style={{ color: 'var(--gray-lighter, #cbd5e1)', lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>
                   {it.answer}

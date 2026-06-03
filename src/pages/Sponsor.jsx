@@ -67,7 +67,7 @@ export default function Sponsor() {
       await submitSponsorApi(form)
       setStatus({ state: 'success', error: null })
     } catch (err) {
-      setStatus({ state: 'error', error: err.message || 'Hata' })
+      setStatus({ state: 'error', error: err.message || (lang === 'en' ? 'An error occurred.' : 'Bir hata oluştu.') })
     }
   }
 

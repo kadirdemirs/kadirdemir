@@ -22,7 +22,8 @@ import './MediaKit.css'
 
 export default function MediaKit() {
   const { settings } = useSiteSettings()
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
+  const isEn = lang === 'en'
   const audienceBreakdown = Array.isArray(settings.mediaKitAudience) ? settings.mediaKitAudience : []
   const topRegions = Array.isArray(settings.mediaKitRegions) ? settings.mediaKitRegions : []
   const kpis = Array.isArray(settings.mediaKitKpis) ? settings.mediaKitKpis : []
@@ -66,6 +67,7 @@ export default function MediaKit() {
   }
 
   const businessEmail = settings.businessEmail || 'thekademedia@gmail.com'
+  const updatedDate = new Date().toLocaleDateString(isEn ? 'en-US' : 'tr-TR')
 
   return (
     <div className="kd-mediakit">
@@ -86,7 +88,7 @@ export default function MediaKit() {
             <HiOutlineDownload size={16} />
             {t('mediakit.downloadPdf')}
           </button>
-          <a href={`mailto:${businessEmail}?subject=Sponsorluk%20Talebi`} className="kd-mediakit-btn kd-mediakit-btn-primary">
+          <a href={`mailto:${businessEmail}?subject=${isEn ? 'Sponsorship%20Inquiry' : 'Sponsorluk%20Talebi'}`} className="kd-mediakit-btn kd-mediakit-btn-primary">
             <HiOutlineMail size={16} />
             {t('mediakit.contactDirect')}
           </a>
@@ -211,8 +213,10 @@ export default function MediaKit() {
           </div>
         )}
         <p className="kd-mediakit-note">
-          Bütçe aralığı kampanya formatına ve süresine göre değişir. Konuşmaya{' '}
-          <Link to="/sponsor">sponsor formundan</Link> başlayabilirsin.
+          {isEn
+            ? <>Budget varies by format and duration. Start the conversation via the <Link to="/sponsor">sponsor form</Link>.</>
+            : <>Bütçe aralığı kampanya formatına ve süresine göre değişir. Konuşmaya{' '}<Link to="/sponsor">sponsor formundan</Link> başlayabilirsin.</>
+          }
         </p>
       </section>
 
@@ -248,9 +252,10 @@ export default function MediaKit() {
 
       <footer className="kd-mediakit-footer">
         <small>
-          Tüm rakamlar son 90 gün ortalamasıdır ve resmi YouTube Studio + Meta + TikTok
-          Analytics dashboard’larından alınmıştır. Bu sayfa {new Date().toLocaleDateString('tr-TR')}{' '}
-          tarihinde güncellendi.
+          {isEn
+            ? `All figures are 90-day averages from official YouTube Studio, Meta and TikTok Analytics dashboards. Last updated ${updatedDate}.`
+            : `Tüm rakamlar son 90 gün ortalamasıdır ve resmi YouTube Studio + Meta + TikTok Analytics dashboard’larından alınmıştır. Bu sayfa ${updatedDate} tarihinde güncellendi.`
+          }
         </small>
       </footer>
     </div>

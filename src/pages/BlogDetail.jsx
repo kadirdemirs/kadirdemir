@@ -12,7 +12,6 @@ import { getBlogsApi, getPostViewsApi } from '../api'
 import { getBlogImage, getBlogFallback } from '../utils/blogImage'
 import DOMPurify from 'dompurify'
 import { analytics } from '../utils/analytics'
-import PageTransition from '../components/PageTransition'
 import { FadeIn } from '../components/Animations'
 import PageBgAnimation from '../components/PageBgAnimation'
 import ReadingProgress from '../components/ReadingProgress'
@@ -54,7 +53,7 @@ export default function BlogDetail() {
   useEffect(() => {
     if (!slug) return
     let cancelled = false
-    getPostViewsApi(slug).then((v) => { if (!cancelled) setViews(v) })
+    getPostViewsApi(slug).then((v) => { if (!cancelled) setViews(v) }).catch(() => {})
     return () => { cancelled = true }
   }, [slug])
 
@@ -81,10 +80,10 @@ export default function BlogDetail() {
 
   const post = allPosts.find((p) => p.slug === slug)
 
-  const title = post ? (lang === 'tr' ? post.titleTr : post.titleEn) : ''
-  const excerpt = post ? (lang === 'tr' ? post.excerptTr : post.excerptEn) : ''
-  const content = post ? (lang === 'tr' ? post.contentTr : post.contentEn) : ''
-  const category = post ? (lang === 'tr' ? post.category : post.categoryEn) : ''
+  const title = post ? (lang === 'tr' ? post.titleTr || post.titleEn : post.titleEn || post.titleTr) || '' : ''
+  const excerpt = post ? (lang === 'tr' ? post.excerptTr || post.excerptEn : post.excerptEn || post.excerptTr) || '' : ''
+  const content = post ? (lang === 'tr' ? post.contentTr || post.contentEn : post.contentEn || post.contentTr) || '' : ''
+  const category = post ? (lang === 'tr' ? post.category || post.categoryEn : post.categoryEn || post.category) || '' : ''
 
   const ogImageParams = new URLSearchParams({
     title: title || 'Kadir Demir',
@@ -148,7 +147,7 @@ export default function BlogDetail() {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: 'https://kadirardademir.com' },
+        { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Ana Sayfa', item: 'https://kadirardademir.com' },
         { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://kadirardademir.com/blog' },
         { '@type': 'ListItem', position: 3, name: title, item: `https://kadirardademir.com/blog/${slug}` },
       ],
@@ -194,7 +193,7 @@ export default function BlogDetail() {
   const nextPost = _idx >= 0 && _idx < allPosts.length - 1 ? allPosts[_idx + 1] : null
 
   return (
-    <PageTransition>
+    <>
       <ReadingProgress targetRef={articleRef} />
       {/* Hero */}
       <section className="blog-hero">
@@ -434,7 +433,7 @@ export default function BlogDetail() {
                         <div className="blog-card-image" style={{ background: `${p.color}15` }}>
                           <img
                             src={getBlogImage(p)}
-                            alt={p.titleTr || ''}
+                            alt={(lang === 'tr' ? p.titleTr || p.titleEn : p.titleEn || p.titleTr) || ''}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             onError={e => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = getBlogFallback(p) } }}
                             loading="lazy"
@@ -468,6 +467,6 @@ export default function BlogDetail() {
           )}
         </div>
       </section>
-    </PageTransition>
+    </>
   )
 }

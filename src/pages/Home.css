@@ -92,6 +92,11 @@
   line-height: 1.7;
 }
 
+/* ── Anchor hedefleri sabit navbar'ın arkasına gizlenmesin ── */
+.g-hero, .g-section, .g-contact, .g-stats, .g-velocity-strip {
+  scroll-margin-top: 80px;
+}
+
 /* ══════════════════════════════════════════════════════════════
    1 · HERO — fullscreen image w/ giant mark + title + taglines
    ══════════════════════════════════════════════════════════════ */
@@ -575,8 +580,15 @@
 
 @media (max-width: 700px) {
   .g-stats-row { grid-template-columns: repeat(2, 1fr); padding: 28px 0; }
-  .g-stat:nth-child(2) { border-right: none; }
-  .g-stat:nth-child(-n+2) { border-bottom: 1px solid var(--g-rule); padding-bottom: 24px; }
+  /* Sağ sütun (çift sıralı) — sağ kenarlık kaldır */
+  .g-stat:nth-child(even) { border-right: none; }
+  /* Tüm statlara alt kenarlık + padding */
+  .g-stat { border-bottom: 1px solid var(--g-rule); padding-bottom: 24px; }
+  /* Son item — alt kenarlık yok */
+  .g-stat:last-child { border-bottom: none; padding-bottom: 0; }
+  /* Son satırın sol elemanı (tek kalan) — alt kenarlık yok */
+  .g-stat:nth-last-child(2):nth-child(odd) { border-bottom: none; padding-bottom: 0; }
+  /* 3. statdan itibaren üst padding */
   .g-stat:nth-child(n+3) { padding-top: 24px; }
 }
 
@@ -1746,6 +1758,8 @@
 
 @media (max-width: 600px) {
   .g-platforms-grid { grid-template-columns: repeat(2, 1fr); }
+  /* Son tek kart tam genişlik — 2 sütunlu grid'de geri kalan kart */
+  .g-platforms-grid > *:last-child:nth-child(odd) { grid-column: 1 / -1; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1769,9 +1783,8 @@
   /* Works grid — tek sütun */
   .g-works-grid { grid-template-columns: 1fr; }
 
-  /* Platform kartları — 2 sütun; tek kalan kart tam genişlik */
+  /* Platform kartları — 600px'de zaten 2 sütun ve full-width rule tanımlı */
   .g-platforms-grid { grid-template-columns: repeat(2, 1fr); }
-  .g-platforms-grid > *:last-child:nth-child(odd) { grid-column: 1 / -1; }
 
   /* Story timeline — offset kaldır */
   .g-story-row.is-right { flex-direction: column; }

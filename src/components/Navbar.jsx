@@ -74,7 +74,12 @@ export default function Navbar() {
             <Link
               key={l.path}
               to={l.path}
-              className={`nv-link ${location.pathname === l.path ? 'is-active' : ''}`}
+              className={`nv-link ${
+                (l.path === '/'
+                  ? location.pathname === '/'
+                  : location.pathname === l.path || location.pathname.startsWith(l.path + '/'))
+                  ? 'is-active' : ''
+              }`}
             >
               {l.name}
             </Link>
@@ -175,7 +180,12 @@ export default function Navbar() {
             <Link
               key={l.path}
               to={l.path}
-              className={`nv-drawer-link ${location.pathname === l.path ? 'is-active' : ''}`}
+              className={`nv-drawer-link ${
+                (l.path === '/'
+                  ? location.pathname === '/'
+                  : location.pathname === l.path || location.pathname.startsWith(l.path + '/'))
+                  ? 'is-active' : ''
+              }`}
             >
               <span className="nv-drawer-num">{String(i + 1).padStart(2, '0')}</span>
               {l.name}

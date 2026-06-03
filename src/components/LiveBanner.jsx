@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FaYoutube } from 'react-icons/fa'
+import { FaYoutube } from 'react-icons/fa6'
 import { HiX } from 'react-icons/hi'
 import { getYouTubeLiveApi } from '../api'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -141,22 +141,6 @@ export default function LiveBanner() {
       >
         <HiX size={16} aria-hidden="true" />
       </button>
-      <style>{`
-        @keyframes kd-live-pulse {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.3); opacity: 0.7; }
-        }
-        @keyframes kd-live-shimmer {
-          0% { background-position: 0% 0%; }
-          100% { background-position: 200% 0%; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          [role="region"][aria-label*="live" i],
-          [role="region"][aria-label*="yayın" i] {
-            animation: none !important;
-          }
-        }
-      `}</style>
     </div>
   )
 }

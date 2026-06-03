@@ -96,7 +96,7 @@ export default function Ara() {
                   <span className="ara-card-cat">{isEn ? (p.categoryEn || p.category) : (p.category || p.categoryEn)}</span>
                   <h3>{isEn ? (p.titleEn || p.titleTr) : (p.titleTr || p.titleEn)}</h3>
                   <p>{isEn ? (p.excerptEn || p.excerptTr) : (p.excerptTr || p.excerptEn)}</p>
-                  {p.readTime && <span className="ara-card-meta"><HiOutlineClock size={13} /> {p.readTime} dk</span>}
+                  {p.readTime && <span className="ara-card-meta"><HiOutlineClock size={13} /> {p.readTime} {isEn ? 'min' : 'dk'}</span>}
                 </div>
               </Link>
             ))}

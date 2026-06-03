@@ -72,7 +72,7 @@ export default function CookieBanner() {
               <button type="button" className="kd-cookie-btn kd-cookie-btn-primary" onClick={accept}>
                 {t('cookie.accept')}
               </button>
-              <button type="button" className="kd-cookie-close" aria-label="dismiss" onClick={decline}>
+              <button type="button" className="kd-cookie-close" aria-label="dismiss" onClick={() => setVisible(false)}>
                 <HiOutlineX size={16} />
               </button>
             </div>

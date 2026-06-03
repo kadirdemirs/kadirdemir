@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { HiOutlineHome, HiOutlineArrowRight, HiOutlineSearch } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
-import PageTransition from '../components/PageTransition'
 import CatcherGame from '../components/CatcherGame'
 import './NotFound.css'
 
@@ -28,7 +27,7 @@ function routeFromQuery(query) {
   if (/(iletiş|iletis|contact|mail)/.test(q)) return '/iletisim'
   if (/(sponsor|işbirliği|isbirligi|brand)/.test(q)) return '/sponsor'
   if (/(sor|ama|ask|soru)/.test(q)) return '/sor'
-  if (/(partner|sponsor)/.test(q)) return '/partnerler'
+  if (/(partner|sponsor)/.test(q)) return '/sponsor'
   return null
 }
 
@@ -58,8 +57,7 @@ export default function NotFound() {
   }
 
   return (
-    <PageTransition>
-      <section className="notfound-section">
+    <section className="notfound-section">
         <div className="grid-bg" />
         <div className="glow-effect" style={{ top: '-150px', right: '-100px' }} />
         <div className="container notfound-container">
@@ -157,6 +155,5 @@ export default function NotFound() {
           </motion.div>
         </div>
       </section>
-    </PageTransition>
   )
 }
