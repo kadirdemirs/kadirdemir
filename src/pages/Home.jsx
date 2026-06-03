@@ -257,7 +257,12 @@ export default function Home() {
       const picked = withId.find((v) => v.youtubeId === settings.featuredVideoId)
       if (picked) return picked
     }
-    return [...withId].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))[0]
+    // Admin seçimi yoksa → her zaman en yeni video öne çıkar
+    return [...withId].sort((a, b) => {
+      const da = new Date(a.publishedAt || a.date || 0).getTime()
+      const db = new Date(b.publishedAt || b.date || 0).getTime()
+      return db - da
+    })[0]
   }, [videos, settings.featuredVideoId])
 
   const platformCards = [

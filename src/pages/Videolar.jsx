@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { FaYoutube } from 'react-icons/fa'
+import { FaYoutube, FaInstagram, FaTiktok } from 'react-icons/fa6'
 import {
   HiOutlineSearch,
   HiOutlineSparkles,
@@ -9,6 +9,7 @@ import {
   HiOutlineFire,
   HiOutlineX,
   HiOutlineExternalLink,
+  HiOutlineFilm,
 } from 'react-icons/hi'
 import { getYouTubeVideosApi } from '../api'
 import { useSEO } from '../hooks/useSEO'
@@ -29,6 +30,18 @@ function formatViews(n) {
   return String(num)
 }
 
+function durationSecs(iso) {
+  if (!iso) return null
+  const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
+  if (!m) return null
+  return Number(m[1] || 0) * 3600 + Number(m[2] || 0) * 60 + Number(m[3] || 0)
+}
+
+function isShort(video) {
+  const s = durationSecs(video.duration)
+  return s !== null && s <= 62
+}
+
 function parseDuration(iso) {
   if (!iso) return ''
   const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
@@ -47,8 +60,19 @@ export default function Videolar() {
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState('newest')
+  const [typeFilter, setTypeFilter] = useState('all')
   const [visibleCount, setVisibleCount] = useState(12)
   const [activeVideo, setActiveVideo] = useState(null)
+
+  const isEn = settings.lang === 'en'
+
+  const TYPE_TABS = [
+    { key: 'all',       label: isEn ? 'All' : 'Tümü',       icon: null },
+    { key: 'yatay',     label: isEn ? 'Videos' : 'Yatay',   icon: <HiOutlineFilm size={14} /> },
+    { key: 'shorts',    label: 'Shorts',                      icon: <span style={{ fontSize: '0.7rem', fontWeight: 800 }}>▮</span> },
+    { key: 'tiktok',    label: 'TikTok',                      icon: <FaTiktok size={13} /> },
+    { key: 'instagram', label: 'Instagram',                   icon: <FaInstagram size={13} /> },
+  ]
 
   useSEO({
     title: `${t('videos.titleA')} ${t('videos.titleB')}`,
@@ -64,18 +88,22 @@ export default function Videolar() {
   }, [])
 
   const filtered = useMemo(() => {
+    if (typeFilter === 'tiktok' || typeFilter === 'instagram') return []
     const q = query.trim().toLowerCase()
-    const arr = videos.filter((v) => !q || (v.title || '').toLowerCase().includes(q))
+    const arr = videos.filter((v) => {
+      if (q && !(v.title || '').toLowerCase().includes(q)) return false
+      if (typeFilter === 'shorts') return isShort(v)
+      if (typeFilter === 'yatay') return !isShort(v)
+      return true
+    })
     arr.sort((a, b) => {
-      if (sort === 'popular') {
-        return (Number(b.views) || 0) - (Number(a.views) || 0)
-      }
+      if (sort === 'popular') return (Number(b.views) || 0) - (Number(a.views) || 0)
       const da = new Date(a.publishedAt || 0).getTime()
       const db = new Date(b.publishedAt || 0).getTime()
       return sort === 'newest' ? db - da : da - db
     })
     return arr
-  }, [query, sort, videos])
+  }, [query, sort, videos, typeFilter])
 
   useEffect(() => {
     if (!activeVideo) return
@@ -137,40 +165,87 @@ export default function Videolar() {
         </section>
       )}
 
-      <div className="kd-videos-toolbar">
-        <div className="kd-videos-search">
-          <HiOutlineSearch size={18} />
-          <input
-            type="search"
-            placeholder={t('videos.searchPlaceholder')}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </div>
-        <div className="kd-videos-sort">
+      {/* Tür sekmeleri */}
+      <div className="kd-videos-type-tabs">
+        {TYPE_TABS.map((tab) => (
           <button
+            key={tab.key}
             type="button"
-            className={`kd-sort-btn ${sort === 'newest' ? 'active' : ''}`}
-            onClick={() => setSort('newest')}
+            className={`kd-type-tab ${typeFilter === tab.key ? 'active' : ''}`}
+            onClick={() => { setTypeFilter(tab.key); setVisibleCount(12) }}
           >
-            <HiOutlineSparkles size={16} /> {t('videos.sortNewest')}
+            {tab.icon} {tab.label}
           </button>
-          <button
-            type="button"
-            className={`kd-sort-btn ${sort === 'popular' ? 'active' : ''}`}
-            onClick={() => setSort('popular')}
-          >
-            <HiOutlineFire size={16} /> {t('videos.sortPopular')}
-          </button>
-          <button
-            type="button"
-            className={`kd-sort-btn ${sort === 'oldest' ? 'active' : ''}`}
-            onClick={() => setSort('oldest')}
-          >
-            <HiOutlineCalendar size={16} /> {t('videos.sortOldest')}
-          </button>
-        </div>
+        ))}
       </div>
+
+      {/* Sıralama + arama — dış platformlarda gizle */}
+      {typeFilter !== 'tiktok' && typeFilter !== 'instagram' && (
+        <div className="kd-videos-toolbar">
+          <div className="kd-videos-search">
+            <HiOutlineSearch size={18} />
+            <input
+              type="search"
+              placeholder={t('videos.searchPlaceholder')}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+          <div className="kd-videos-sort">
+            <button
+              type="button"
+              className={`kd-sort-btn ${sort === 'newest' ? 'active' : ''}`}
+              onClick={() => setSort('newest')}
+            >
+              <HiOutlineSparkles size={16} /> {t('videos.sortNewest')}
+            </button>
+            <button
+              type="button"
+              className={`kd-sort-btn ${sort === 'popular' ? 'active' : ''}`}
+              onClick={() => setSort('popular')}
+            >
+              <HiOutlineFire size={16} /> {t('videos.sortPopular')}
+            </button>
+            <button
+              type="button"
+              className={`kd-sort-btn ${sort === 'oldest' ? 'active' : ''}`}
+              onClick={() => setSort('oldest')}
+            >
+              <HiOutlineCalendar size={16} /> {t('videos.sortOldest')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* TikTok & Instagram — dış platform CTA */}
+      {typeFilter === 'tiktok' && (
+        <div className="kd-videos-platform-cta">
+          <FaTiktok size={48} />
+          <h3>TikTok</h3>
+          <p>{isEn ? 'Short clips, quick moments.' : 'Kısa klipler, anlık anlar.'}</p>
+          {settings.tiktok ? (
+            <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" className="kd-sort-btn active">
+              {isEn ? 'Open TikTok profile' : 'TikTok profilini aç'} <HiOutlineExternalLink size={14} />
+            </a>
+          ) : (
+            <p className="kd-videos-platform-note">{isEn ? 'TikTok link not set in admin.' : 'TikTok linki admin\'den girilmemiş.'}</p>
+          )}
+        </div>
+      )}
+      {typeFilter === 'instagram' && (
+        <div className="kd-videos-platform-cta">
+          <FaInstagram size={48} />
+          <h3>Instagram</h3>
+          <p>{isEn ? 'Posts, stories and reels.' : 'Gönderiler, hikayeler ve reels.'}</p>
+          {settings.instagram ? (
+            <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="kd-sort-btn active">
+              {isEn ? 'Open Instagram profile' : 'Instagram profilini aç'} <HiOutlineExternalLink size={14} />
+            </a>
+          ) : (
+            <p className="kd-videos-platform-note">{isEn ? 'Instagram link not set in admin.' : 'Instagram linki admin\'den girilmemiş.'}</p>
+          )}
+        </div>
+      )}
 
       {loading && <SkeletonGrid count={9} kind="video" />}
 
@@ -186,7 +261,7 @@ export default function Videolar() {
       )}
 
       {!loading && videos.length > 0 && (
-        <div className="kd-videos-grid">
+        <div className={`kd-videos-grid ${typeFilter === 'shorts' ? 'kd-videos-grid--shorts' : ''}`}>
           {visible.map((v, idx) => (
             <button
               key={v.youtubeId || idx}

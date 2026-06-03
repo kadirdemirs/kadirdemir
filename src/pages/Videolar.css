@@ -106,6 +106,83 @@
   background: radial-gradient(ellipse at center, transparent 44%, rgba(0, 0, 0, 0.34));
 }
 
+/* ── Tür sekmeleri ── */
+.kd-videos-type-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.kd-type-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(244, 235, 224, 0.04);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.kd-type-tab:hover {
+  border-color: rgba(212, 148, 63, 0.35);
+  color: var(--amber-soft);
+}
+
+.kd-type-tab.active {
+  background: rgba(212, 148, 63, 0.12);
+  border-color: rgba(212, 148, 63, 0.5);
+  color: var(--amber-soft);
+}
+
+/* ── Platform CTA (TikTok / Instagram) ── */
+.kd-videos-platform-cta {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  padding: 48px 32px;
+  border-radius: 24px;
+  background: rgba(17, 15, 13, 0.55);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+}
+
+.kd-videos-platform-cta svg { color: var(--amber); opacity: 0.8; }
+.kd-videos-platform-cta h3 { font-size: 1.6rem; color: var(--text-primary); margin: 0; }
+.kd-videos-platform-cta p { margin: 0; font-size: 1rem; }
+.kd-videos-platform-note { font-size: 0.84rem; opacity: 0.6; }
+
+/* ── Shorts grid — dikey kart ── */
+.kd-videos-grid--shorts {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.kd-videos-grid--shorts .kd-video-tile-thumb {
+  aspect-ratio: 9 / 16;
+}
+
+@media (max-width: 1100px) {
+  .kd-videos-grid--shorts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  .kd-videos-grid--shorts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .kd-videos-grid--shorts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 .kd-videos-toolbar {
   display: flex;
   gap: 12px;
