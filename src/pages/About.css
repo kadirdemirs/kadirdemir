@@ -55,6 +55,44 @@
   line-height: 1.75;
 }
 
+/* ── Stats satırı ── */
+.kd-about-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(38px, 7vw, 72px);
+}
+
+.kd-about-stat {
+  flex: 1;
+  min-width: 130px;
+  padding: 22px 20px;
+  border-radius: 20px;
+  background: rgba(17, 15, 13, 0.58);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+}
+
+.kd-about-stat-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: var(--amber-soft);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.kd-about-stat-label {
+  display: block;
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
 .kd-about-split {
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
@@ -237,7 +275,10 @@
 [data-theme="light"] .kd-about::before { opacity: 0.65; }
 [data-theme="light"] .kd-about-media,
 [data-theme="light"] .kd-about-cta,
-[data-theme="light"] .kd-cta-link {
+[data-theme="light"] .kd-cta-link,
+[data-theme="light"] .kd-about-stat,
+[data-theme="light"] .kd-about-philosophy,
+[data-theme="light"] .kd-about-philosophy-list li {
   background: rgba(255, 255, 255, 0.7);
 }
 
@@ -254,7 +295,8 @@
   }
 
   .kd-about-split-reverse .kd-about-text { order: 2; }
-  .kd-about-split-reverse .kd-about-media { order: 1; }
+  .kd-about-split-reverse .kd-about-media,
+  .kd-about-split-reverse .kd-about-philosophy { order: 1; }
 }
 
 @media (max-width: 560px) {
@@ -276,20 +318,68 @@
   }
 }
 
-/* İkinci fotoğraf — grayscale + overlay etiketi */
-.kd-about-media-alt { position: relative; }
-.kd-about-img-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+/* ── Felsefe / ilkeler kartı ── */
+.kd-about-philosophy {
+  padding: clamp(26px, 4vw, 44px);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at 90% 8%, rgba(212, 148, 63, 0.14), transparent 44%),
+    rgba(17, 15, 13, 0.62);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  justify-content: center;
+}
+
+.kd-about-philosophy-quote {
+  font-size: clamp(1.1rem, 2.4vw, 1.55rem);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.kd-about-philosophy-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kd-about-philosophy-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(244, 235, 224, 0.035);
+  border: 1px solid var(--glass-border);
+}
+
+.kd-about-philosophy-list li::before {
+  content: '→';
+  color: var(--amber);
+  flex-shrink: 0;
+  font-weight: 800;
+}
+
+.kd-about-philosophy-footer {
   display: flex;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: linear-gradient(to top, rgba(10,8,6,.8) 0%, transparent 100%);
-  border-radius: 0 0 18px 18px;
-  font-size: .78rem;
-  font-weight: 600;
-  letter-spacing: .05em;
-  color: rgba(244,235,224,.85);
+  padding-top: 14px;
+  border-top: 1px solid var(--glass-border);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
 }

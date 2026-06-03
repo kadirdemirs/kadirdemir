@@ -47,6 +47,31 @@ export default function About() {
         <p>{t('about.heroSub')}</p>
       </section>
 
+      <Reveal as="div" className="kd-about-stats">
+        <div className="kd-about-stat">
+          <span className="kd-about-stat-num">{settings.statsActiveYears || '14'}</span>
+          <span className="kd-about-stat-label">{isEn ? 'Years active' : 'Yıl aktif'}</span>
+        </div>
+        {settings.statsTotalVideos && (
+          <div className="kd-about-stat">
+            <span className="kd-about-stat-num">{settings.statsTotalVideos}+</span>
+            <span className="kd-about-stat-label">{isEn ? 'Videos' : 'Video'}</span>
+          </div>
+        )}
+        {settings.statsYoutubeSubs && (
+          <div className="kd-about-stat">
+            <span className="kd-about-stat-num">{settings.statsYoutubeSubs}</span>
+            <span className="kd-about-stat-label">{isEn ? 'Subscribers' : 'Abone'}</span>
+          </div>
+        )}
+        {settings.statsTotalViews && (
+          <div className="kd-about-stat">
+            <span className="kd-about-stat-num">{settings.statsTotalViews}</span>
+            <span className="kd-about-stat-label">{isEn ? 'Total views' : 'İzlenme'}</span>
+          </div>
+        )}
+      </Reveal>
+
       <Reveal as="section" className="kd-about-split">
         <div className="kd-about-media kd-media-frame">
           <span className="kd-about-tag">
@@ -82,16 +107,19 @@ export default function About() {
           <p>{t('about.p4')}</p>
           <p>{t('about.p5')}</p>
         </div>
-        <div className="kd-about-media kd-media-frame kd-about-media-alt">
-          <ResponsivePortrait
-            alt={`${brandName} — studio`}
-            className="kd-about-img kd-about-img-alt"
-            sizes="(max-width: 820px) 100vw, 520px"
-            style={{ filter: 'grayscale(30%) contrast(1.05) brightness(0.9)' }}
-          />
-          <div className="kd-about-img-overlay">
+        <div className="kd-about-philosophy">
+          <blockquote className="kd-about-philosophy-quote">
+            {t('home.aboutQuote')}
+          </blockquote>
+          <ul className="kd-about-philosophy-list">
+            <li>{isEn ? 'Honest, authentic content' : 'Dürüst, özgün içerik'}</li>
+            <li>{isEn ? "Respect for the viewer's time" : 'İzleyici zamanına saygı'}</li>
+            <li>{isEn ? 'Creativity beyond format limits' : 'Format sınırlarını aşan yaratıcılık'}</li>
+            <li>{isEn ? '14 years on both sides of the camera' : '14 yıl kameranın iki tarafında'}</li>
+          </ul>
+          <div className="kd-about-philosophy-footer">
             <span>📍 İstanbul</span>
-            <span>{isEn ? '14 years of content' : '14 yıl içerik'}</span>
+            <span>{isEn ? 'Since 2011' : '2011\'den beri'}</span>
           </div>
         </div>
       </Reveal>

@@ -17,7 +17,6 @@ import { BreadcrumbSchema, VideoSchema } from '../components/StructuredData'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
 import { useLanguage } from '../i18n/LanguageContext'
 import { SkeletonGrid } from '../components/Skeleton'
-import CircularGallery from '../components/reactbits/CircularGallery'
 import './Videolar.css'
 
 function formatViews(n) {
@@ -118,15 +117,11 @@ export default function Videolar() {
 
   const visible = filtered.slice(0, visibleCount)
 
-  const galleryItems = useMemo(() => {
-    return [...videos]
-      .filter((v) => v.youtubeId)
-      .sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))
-      .slice(0, 10)
-      .map((v) => ({
-        image: v.thumbnail || `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`,
-        text: (v.title || '').slice(0, 40),
-      }))
+  const featuredVideo = useMemo(() => {
+    if (!videos.length) return null
+    return [...videos].sort(
+      (a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime()
+    )[0]
   }, [videos])
 
   return (
@@ -152,36 +147,92 @@ export default function Videolar() {
         </div>
       </header>
 
-      {galleryItems.length >= 3 && (
-        <section className="kd-videos-gallery" aria-label={`${t('home.topViewedTitle')} — ${t('nav.videos')}`}>
-          <CircularGallery
-            items={galleryItems}
-            bend={2}
-            textColor="#ffffff"
-            borderRadius={0.05}
-            scrollEase={0.04}
-            scrollSpeed={2}
-          />
+      {/* Öne çıkan — en yeni video */}
+      {!loading && featuredVideo && typeFilter === 'all' && (
+        <section className="kd-videos-featured">
+          <p className="kd-videos-featured-eyebrow">
+            <HiOutlineSparkles size={13} /> {isEn ? 'Latest video' : 'Son video'}
+          </p>
+          <button
+            type="button"
+            className="kd-featured-card"
+            onClick={() => setActiveVideo(featuredVideo)}
+          >
+            <div
+              className="kd-featured-thumb"
+              style={{ backgroundImage: `url(${featuredVideo.thumbnail || `https://i.ytimg.com/vi/${featuredVideo.youtubeId}/hqdefault.jpg`})` }}
+            >
+              <span className="kd-video-badge">{t('videos.badgeNew')}</span>
+              {parseDuration(featuredVideo.duration) && (
+                <span className="kd-video-duration-tile">{parseDuration(featuredVideo.duration)}</span>
+              )}
+              <div className="kd-featured-play-wrap">
+                <span className="kd-video-hover-play-tile"><HiOutlinePlay size={36} /></span>
+              </div>
+            </div>
+            <div className="kd-featured-info">
+              <h3>{featuredVideo.title}</h3>
+              {featuredVideo.views && (
+                <div className="kd-featured-meta">
+                  <span>👁 {formatViews(featuredVideo.views)} {t('home.platformsSub_views').toLowerCase()}</span>
+                </div>
+              )}
+              <a
+                href={`https://www.youtube.com/watch?v=${featuredVideo.youtubeId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="kd-sort-btn"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FaYoutube size={14} /> {t('videos.open')} <HiOutlineExternalLink size={12} />
+              </a>
+            </div>
+          </button>
         </section>
       )}
 
-      {/* Tür sekmeleri */}
-      <div className="kd-videos-type-tabs">
-        {TYPE_TABS.map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            className={`kd-type-tab ${typeFilter === tab.key ? 'active' : ''}`}
-            onClick={() => { setTypeFilter(tab.key); setVisibleCount(12) }}
-          >
-            {tab.icon} {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Sıralama + arama — dış platformlarda gizle */}
-      {typeFilter !== 'tiktok' && typeFilter !== 'instagram' && (
-        <div className="kd-videos-toolbar">
+      {/* Birleşik filtre paneli */}
+      <div className="kd-videos-filters">
+        <div className="kd-videos-filters-row">
+          <div className="kd-videos-type-tabs">
+            {TYPE_TABS.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                className={`kd-type-tab ${typeFilter === tab.key ? 'active' : ''}`}
+                onClick={() => { setTypeFilter(tab.key); setVisibleCount(12) }}
+              >
+                {tab.icon} {tab.label}
+              </button>
+            ))}
+          </div>
+          {typeFilter !== 'tiktok' && typeFilter !== 'instagram' && (
+            <div className="kd-videos-sort">
+              <button
+                type="button"
+                className={`kd-sort-btn ${sort === 'newest' ? 'active' : ''}`}
+                onClick={() => setSort('newest')}
+              >
+                <HiOutlineSparkles size={16} /> {t('videos.sortNewest')}
+              </button>
+              <button
+                type="button"
+                className={`kd-sort-btn ${sort === 'popular' ? 'active' : ''}`}
+                onClick={() => setSort('popular')}
+              >
+                <HiOutlineFire size={16} /> {t('videos.sortPopular')}
+              </button>
+              <button
+                type="button"
+                className={`kd-sort-btn ${sort === 'oldest' ? 'active' : ''}`}
+                onClick={() => setSort('oldest')}
+              >
+                <HiOutlineCalendar size={16} /> {t('videos.sortOldest')}
+              </button>
+            </div>
+          )}
+        </div>
+        {typeFilter !== 'tiktok' && typeFilter !== 'instagram' && (
           <div className="kd-videos-search">
             <HiOutlineSearch size={18} />
             <input
@@ -191,31 +242,8 @@ export default function Videolar() {
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
-          <div className="kd-videos-sort">
-            <button
-              type="button"
-              className={`kd-sort-btn ${sort === 'newest' ? 'active' : ''}`}
-              onClick={() => setSort('newest')}
-            >
-              <HiOutlineSparkles size={16} /> {t('videos.sortNewest')}
-            </button>
-            <button
-              type="button"
-              className={`kd-sort-btn ${sort === 'popular' ? 'active' : ''}`}
-              onClick={() => setSort('popular')}
-            >
-              <HiOutlineFire size={16} /> {t('videos.sortPopular')}
-            </button>
-            <button
-              type="button"
-              className={`kd-sort-btn ${sort === 'oldest' ? 'active' : ''}`}
-              onClick={() => setSort('oldest')}
-            >
-              <HiOutlineCalendar size={16} /> {t('videos.sortOldest')}
-            </button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* TikTok & Instagram — dış platform CTA */}
       {typeFilter === 'tiktok' && (
