@@ -1884,9 +1884,6 @@ html[data-theme="light"] .g-contact-grid {
 }
 @media (max-width: 600px) { .g-hero-scroll-hint { display: none; } }
 
-/* ── TiltedCard video wrapper — grid item olarak davransın ── */
-.g-work-tilt { display: contents; }
-.g-work-tilt > * { display: block; width: 100%; }
 
 /* ── SpotlightCard focus kartlarında fazla stil sıfırla ── */
 .g-focus-grid .spotlight-card {

@@ -21,12 +21,8 @@ import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../componen
 import CountUp from '../components/reactbits/CountUpRB'
 import NewsletterForm from '../components/NewsletterForm'
 import GradientText from '../components/reactbits/GradientText'
-import BlurText from '../components/reactbits/BlurText'
 import SpotlightCard from '../components/reactbits/SpotlightCard'
-import TiltedCard from '../components/reactbits/TiltedCard'
 import GlareHover from '../components/reactbits/GlareHover'
-import DecryptedText from '../components/reactbits/DecryptedText'
-import Particles from '../components/reactbits/Particles'
 import LogoLoop from '../components/reactbits/LogoLoop'
 import BorderGlow from '../components/reactbits/BorderGlow'
 import {
@@ -62,18 +58,7 @@ function GiantEyebrow({ children }) {
   return (
     <span className="g-eyebrow">
       <span className="g-eyebrow-rule" />
-      <span className="g-eyebrow-label">
-        <DecryptedText
-          text={String(children)}
-          speed={40}
-          maxIterations={10}
-          sequential
-          revealDirection="start"
-          characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ•"
-          className=""
-          encryptedClassName="g-eyebrow-decrypting"
-        />
-      </span>
+      <span className="g-eyebrow-label">{children}</span>
       <span className="g-eyebrow-rule" />
     </span>
   )
@@ -293,15 +278,6 @@ export default function Home() {
 
       <section className="g-hero" id="home">
         <div className="g-hero-veil" />
-        <Particles
-          particleColors={['#d4943f', '#e8b468', '#f4ebe0']}
-          particleCount={40}
-          particleBaseSize={70}
-          alphaParticles
-          moveParticlesOnHover
-          particleHoverFactor={0.3}
-          className="g-hero-particles"
-        />
         <div className="g-hero-inner">
           <span className="g-hero-mark">
             {isEn ? 'Content creator · Istanbul' : 'İçerik üreticisi · İstanbul'}
@@ -316,15 +292,11 @@ export default function Home() {
             </GradientText>
             <span className="g-hero-title-accent">.</span>
           </h1>
-          <BlurText
-            text={isEn
+          <p className="g-hero-lede">
+            {isEn
               ? `${yearsActive} years in. Still making videos, still enjoying it.`
               : `${yearsActive} yıldır video çekiyorum. Hâlâ devam ediyorum, hâlâ zevk alıyorum.`}
-            className="g-hero-lede"
-            animateBy="words"
-            delay={80}
-            stepDuration={0.35}
-          />
+          </p>
           <div className="g-hero-actions">
             <a href="#about" className="g-hero-cta g-hero-cta--primary">
               {isEn ? 'About me' : 'Beni tanı'}
@@ -476,26 +448,25 @@ export default function Home() {
         {videos.length > 0 ? (
           <div className="g-works-grid">
             {videos.slice(featuredVideo ? 1 : 0, featuredVideo ? 7 : 6).map((v, i) => (
-              <TiltedCard key={v.youtubeId || i} rotateAmplitude={8} scaleOnHover={1.04} className="g-work-tilt">
-                <a
-                  href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="g-work"
-                >
-                  {v.thumbnail ? (
-                    <img src={v.thumbnail} alt={v.title} loading="lazy" />
-                  ) : (
-                    <div className="g-work-fallback">{String(i + 1).padStart(2, '0')}</div>
-                  )}
-                  <div className="g-work-overlay">
-                    <span className="g-work-cat">YouTube</span>
-                    <h4 className="g-work-title">{v.title}</h4>
-                    <span className="g-work-cta">{isEn ? 'WATCH' : 'İZLE'}</span>
-                    {v.views && <span className="g-work-views">{formatViews(v.views)} {isEn ? 'views' : 'izlenme'}</span>}
-                  </div>
-                </a>
-              </TiltedCard>
+              <a
+                key={v.youtubeId || i}
+                href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="g-work"
+              >
+                {v.thumbnail ? (
+                  <img src={v.thumbnail} alt={v.title} loading="lazy" />
+                ) : (
+                  <div className="g-work-fallback">{String(i + 1).padStart(2, '0')}</div>
+                )}
+                <div className="g-work-overlay">
+                  <span className="g-work-cat">YouTube</span>
+                  <h4 className="g-work-title">{v.title}</h4>
+                  <span className="g-work-cta">{isEn ? 'WATCH' : 'İZLE'}</span>
+                  {v.views && <span className="g-work-views">{formatViews(v.views)} {isEn ? 'views' : 'izlenme'}</span>}
+                </div>
+              </a>
             ))}
           </div>
         ) : (
