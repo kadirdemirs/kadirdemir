@@ -787,7 +787,8 @@
    ══════════════════════════════════════════════════════════════ */
 .g-works-wrap { padding-left: 0; padding-right: 0; max-width: none; }
 
-.g-works-wrap > .g-section-head { padding: 0 32px; }
+/* Section head'i grid ile hizala — clamp padding ile tutarlı olsun */
+.g-works-wrap > .g-section-head { padding: 0 clamp(24px, 6vw, 80px); }
 
 .g-works-grid {
   display: grid;
@@ -930,7 +931,15 @@
   bottom: 0;
   left: 50%;
   width: 1px;
-  background: linear-gradient(180deg, transparent, var(--g-rule), transparent);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--g-amber) 8%,
+    rgba(212, 148, 63, 0.45) 50%,
+    var(--g-amber) 92%,
+    transparent 100%
+  );
+  opacity: 0.7;
 }
 
 .g-story-row {
@@ -1662,9 +1671,10 @@
    ══════════════════════════════════════════════════════════════ */
 .g-platforms-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 18px;
-  max-width: 1080px;
+  /* 160px minimum → daha fazla kart tek satıra sığar; taşma payı için max-width artırıldı */
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  max-width: 1160px;
   margin: 0 auto;
 }
 
