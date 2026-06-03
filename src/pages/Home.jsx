@@ -22,7 +22,6 @@ import CountUp from '../components/reactbits/CountUpRB'
 import NewsletterForm from '../components/NewsletterForm'
 import GradientText from '../components/reactbits/GradientText'
 import BlurText from '../components/reactbits/BlurText'
-import ScrollVelocity from '../components/reactbits/ScrollVelocity'
 import SpotlightCard from '../components/reactbits/SpotlightCard'
 import TiltedCard from '../components/reactbits/TiltedCard'
 import GlareHover from '../components/reactbits/GlareHover'
@@ -142,27 +141,27 @@ export default function Home() {
   ].filter((s) => s && s.value && s.value !== '—' && String(s.value).trim() !== '' && Number(String(s.value).replace(/[^\d.]/g, '')) > 0)
 
   const aboutText = settings.description || (isEn
-    ? "Lifelong content guy — 14 years and counting. I make videos, stream, and mostly just film whatever I'm into that week. Everything I do ends up here."
-    : '14 senedir bu işteyim, hâlâ bırakamadım. Video çekiyorum, yayın açıyorum, o hafta neye taktıysam onu paylaşıyorum. Ne yapıyorsam burada toplanıyor.')
+    ? "Started in 2011 with a laptop and zero followers. Still here, 14 years later — same curiosity, better gear. I make stuff I actually want to watch. It all lands here."
+    : '2011\'de bir laptopla başladım, sıfır takipçiyle. 14 yıl sonra hâlâ aynı yerdeyim. Aynı merak, biraz daha iyi ekipman. İzlemeye değer bulmadığım şeyi çekmiyorum. Her şey buraya geliyor.')
 
   const defaultFocus = [
     {
       title: isEn ? 'Long-form videos' : 'Uzun videolar',
       body: isEn
-        ? "The stuff I'd actually rewatch. No filler, no fake 'you won't believe this'."
-        : 'Geri dönüp ben de izlerim dediğim videolar. Doldurma yok, "buna inanamayacaksınız" muhabbeti hiç yok.',
+        ? "Videos I'd actually sit and rewatch. No padding, no clickbait energy — just stuff worth your time."
+        : 'Oturup yeniden izleyebileceğim şeyler. Dolgu yok, tıklama tuzağı yok — sadece vaktine değer içerik.',
     },
     {
-      title: isEn ? 'Gaming & live' : 'Oyun & canlı yayın',
+      title: isEn ? 'Gaming & live streams' : 'Oyun & canlı yayın',
       body: isEn
-        ? "Streams where the chat runs the show. We play, we lose, we laugh about it."
-        : 'Sohbetin işi yönettiği yayınlar. Oynuyoruz, yeniliyoruz, gülüp geçiyoruz.',
+        ? "Chat makes the show, not me. We win sometimes, lose more often, always good fun."
+        : 'Şovu ben değil sohbet yönetiyor. Bazen kazanıyoruz, çoğunlukla yeniliyoruz, her zaman iyi vakit.',
     },
     {
-      title: isEn ? 'Brand work' : 'Marka işleri',
+      title: isEn ? 'Brand collabs' : 'Marka işleri',
       body: isEn
-        ? "I only push stuff I'd use myself. Doesn't fit the channel? Then it's a no, simple."
-        : 'Sadece kendi kullanacağım şeyleri öne çıkarırım. Kanala uymuyorsa, yok — bu kadar basit.',
+        ? "Only things I'd genuinely buy. If it doesn't fit how I make content, I pass — no exceptions."
+        : 'Gerçekten satın alacağım şeyler. İçerik tarzıma uymuyorsa geçiyorum — istisna yok.',
     },
   ]
   // Admin'den girilen focus varsa onu kullan, yoksa default
@@ -186,29 +185,29 @@ export default function Home() {
       period: '2011',
       role: isEn ? 'First upload' : 'İlk video',
       body: isEn
-        ? "I hit publish on my first video. No plan, no gear — just a laptop camera and curiosity."
-        : 'İlk videoyu yükledim. Plan yok, ekipman yok — sadece laptop kamerası ve merak.',
+        ? "Pressed publish on my first video. Phone camera, zero script, no idea what I was doing. Best decision I ever made."
+        : 'Telefon kamerasıyla ilk videoyu yükledim. Senaryo yok, plan yok, ne yaptığımı bilmiyordum. Hayatımın en iyi kararı.',
     },
     {
       period: '2015',
       role: isEn ? 'Gaming era' : 'Oyun dönemi',
       body: isEn
-        ? "Gaming videos took off. The community started to feel like a real place."
-        : 'Oyun videoları tuttu. Topluluk gerçek bir yer gibi hissettirmeye başladı.',
+        ? "Found my people through gaming. The comment section stopped being just comments — it became a proper community."
+        : 'Oyun üzerinden gerçek insanlarla bağlantı kurdum. Yorum bölümü artık sadece yorum değil, gerçek bir topluluktu.',
     },
     {
       period: '2020',
       role: isEn ? 'Going full-time' : 'Tam zamanlı',
       body: isEn
-        ? "Started treating this like an actual job. Better gear, better edits, longer videos."
-        : 'Bunu gerçek bir iş gibi görmeye başladım. Daha iyi ekipman, daha iyi kurgu, daha uzun videolar.',
+        ? "Took the jump. Quit the day job, went all in. Scary as hell, best thing I did."
+        : 'Atladım. Günlük işi bıraktım, tamamen buraya döndüm. Korkunçtu ama yaptığım en iyi şeydi.',
     },
     {
-      period: isEn ? 'Today' : 'Bugün',
+      period: isEn ? 'Now' : 'Şimdi',
       role: isEn ? '14 years in' : '14. yıl',
       body: isEn
-        ? "Still showing up, still trying new stuff. Vlogs, streams, the occasional weird experiment."
-        : 'Hâlâ devam ediyorum, hâlâ yeni şeyler deniyorum. Vloglar, yayınlar, ara sıra acayip deneyler.',
+        ? "Still at it, still figuring things out. New formats, random experiments, same audience that somehow stuck around."
+        : 'Hâlâ buradayım, hâlâ bir şeyler deniyorum. Yeni formatlar, gelişigüzel deneyler, bir şekilde hâlâ burada olan izleyici kitlesi.',
     },
   ]
   const story = Array.isArray(settings.homeStory) && settings.homeStory.length > 0
@@ -221,13 +220,13 @@ export default function Home() {
       return settings.homeFaq.filter((f) => f && f.q && f.a)
     }
     return isEn ? [
-      { q: 'How often do you upload?', a: 'Usually 1-2 videos a week. You can follow the schedule on YouTube and my socials.' },
-      { q: 'Are you open to collabs?', a: 'Yes. For brands and ideas that fit the channel, write me through the contact form below.' },
-      { q: 'Where are all your links?', a: 'All my links are in one place on the links page.', link: '/links', linkText: 'Open links page →' },
+      { q: 'How often do you post?', a: '1-2 times a week most weeks. Some weeks more, some less — I\'d rather take extra time and make it worth watching.' },
+      { q: 'Up for collabs?', a: 'Yeah, but only if it actually fits. I don\'t take every offer — drop me a message below and let\'s see.' },
+      { q: 'Where can I find everything?', a: 'Links page has it all — socials, contact, everything in one spot.', link: '/links', linkText: 'Go to links →' },
     ] : [
-      { q: 'Yeni video ne sıklıkla geliyor?', a: 'Genelde haftada 1-2 video. Takvimi YouTube ve sosyal hesaplardan takip edebilirsin.' },
-      { q: 'İş birliğine açık mısın?', a: 'Evet. Kanala uyan marka ve fikirler için aşağıdaki formdan yazabilirsin.' },
-      { q: 'Tüm bağlantılar nerede?', a: 'Hepsi tek sayfada — links sayfasına göz at.', link: '/links', linkText: 'Linkler sayfasını aç →' },
+      { q: 'Yeni video ne zaman çıkıyor?', a: 'Haftada 1-2, genelde öyle. Bazen daha fazla, bazen daha az — izlemeye değmeyecekse geciktirmeyi tercih ederim.' },
+      { q: 'İş birliği yapıyor musun?', a: 'Yapıyorum ama her teklifi almıyorum. Uyanı alıyorum, uymayan geçiyorum. Yazmaktan çekinme, bakarız.' },
+      { q: 'Linkler nerede?', a: 'Hepsi links sayfasında — sosyal medya, iletişim, her şey tek yerde.', link: '/links', linkText: 'Linkler sayfasına git →' },
     ]
   }, [isEn, settings.homeFaq])
 
@@ -319,8 +318,8 @@ export default function Home() {
           </h1>
           <BlurText
             text={isEn
-              ? `${yearsActive} years on YouTube. Vlogs, gaming and live streams.`
-              : `${yearsActive} yıldır YouTube'dayım. Vlog, oyun ve canlı yayın.`}
+              ? `${yearsActive} years in. Still making videos, still enjoying it.`
+              : `${yearsActive} yıldır video çekiyorum. Hâlâ devam ediyorum, hâlâ zevk alıyorum.`}
             className="g-hero-lede"
             animateBy="words"
             delay={80}
@@ -382,18 +381,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      <div className="g-velocity-strip">
-        <ScrollVelocity
-          texts={[
-            isEn ? 'VLOG • GAMING • LIVE STREAMS • ISTANBUL • 14 YEARS •' : 'VLOG • OYUN • CANLI YAYIN • İSTANBUL • 14 YIL •',
-            isEn ? 'YOUTUBE • CONTENT CREATOR • KADIR DEMİR •' : 'YOUTUBE • İÇERİK ÜRETİCİSİ • KADİR DEMİR •',
-          ]}
-          velocity={60}
-          className="g-velocity-text"
-          numCopies={4}
-        />
-      </div>
 
       <section className="g-section g-focus">
         <GiantSectionHead
@@ -638,11 +625,11 @@ export default function Home() {
             <span className="g-eyebrow-label">{isEn ? 'CONTACT' : 'İLETİŞİM'}</span>
             <span className="g-eyebrow-rule" />
           </span>
-          <h2 className="g-contact-title">{isEn ? 'Got an idea? Just write.' : 'Aklında bir şey mi var? Yaz yeter.'}</h2>
+          <h2 className="g-contact-title">{isEn ? 'Say hello.' : 'Bir şey söylemek istiyorsan yaz.'}</h2>
           <p className="g-contact-copy">
             {isEn
-              ? 'Brand collabs, video ideas, podcast invites or just a quick hello — all fair game.'
-              : 'Marka iş birlikleri, video fikirleri, podcast davetleri ya da kısaca selam — hepsi olur.'}
+              ? 'Collab pitch, random video idea, podcast invite, or just saying hi — I actually read all of them.'
+              : 'Sponsorluk teklifi, video fikri, podcast daveti ya da sadece selam — hepsini okuyorum, gerçekten.'}
           </p>
           <div className="g-contact-grid">
             <div className="g-contact-cell">
@@ -707,8 +694,8 @@ export default function Home() {
       <section className="g-section g-touch">
         <GiantSectionHead
           eyebrow={isEn ? 'WRITE ME' : 'BANA YAZ'}
-          title={isEn ? 'Drop a line.' : 'Bir iki satır yaz.'}
-          sub={isEn ? 'Short hello or full brief — both land in the same inbox.' : 'Kısa selam ya da uzun brief — ikisi de aynı gelen kutusuna düşüyor.'}
+          title={isEn ? 'Let\'s talk.' : 'Konuşalım.'}
+          sub={isEn ? 'Two lines or a full brief — doesn\'t matter, I\'ll write back.' : 'İki satır da olur, sayfalarca da — fark etmez, dönerim.'}
         />
         <form className="g-touch-form" onSubmit={submitTouch}>
           <div className="g-touch-row">

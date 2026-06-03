@@ -16,11 +16,12 @@ export function useLenis({ enabled = true } = {}) {
     if (reduceMotion) return
 
     const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 1.4,
+      easing: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
       smoothWheel: true,
-      touchMultiplier: 1.4,
-      wheelMultiplier: 1,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.8,
+      infinite: false,
     })
 
     let rafId

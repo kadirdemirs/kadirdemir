@@ -8,7 +8,6 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import ErrorTracker from './components/ErrorTracker'
-import CustomCursor from './components/CustomCursor'
 import ClickSpark from './components/reactbits/ClickSpark'
 import TopProgressBar from './components/TopProgressBar'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -121,7 +120,6 @@ function App() {
   return (
     <>
       <TopProgressBar />
-      <CustomCursor />
       <ClickSpark sparkColor="var(--amber, #d4943f)" sparkCount={7} sparkRadius={22} duration={500} />
       <ErrorTracker />
       <a href="#main-content" className="skip-to-content">İçeriğe geç</a>

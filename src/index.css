@@ -92,9 +92,9 @@
   --gradient-aurora: linear-gradient(135deg, var(--amber-soft) 0%, var(--amber) 50%, var(--amber-deep) 100%);
 
   /* ─── Typography ─── */
-  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-primary: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-secondary: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-primary: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-secondary: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* ─── Layout ─── */
   --section-padding: 128px 0;
