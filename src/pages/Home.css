@@ -129,12 +129,12 @@
   isolation: isolate;
 }
 
-/* Global kd-aurora-bg grid'i hero'da görünsün; sadece hafif bir merkez glow */
+/* Hero veil — Wibify: temiz, sıfır dekorasyon */
 .g-hero-veil {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(212, 148, 63, 0.06), transparent 70%);
+  background: none;
 }
 
 .g-hero-inner {
@@ -454,7 +454,7 @@
   margin: 0 auto;
   border-top: 1px solid var(--g-rule);
   border-bottom: 1px solid var(--g-rule);
-  background: radial-gradient(ellipse 80% 100% at 50% 50%, rgba(212,148,63,0.04), transparent 70%);
+  background: none;
 }
 
 .g-stats-wrap {
@@ -553,76 +553,78 @@
   opacity: 0.78;
 }
 
+/* ── Focus / What I do — Wibify row stili ── */
 .g-focus-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  max-width: 1120px;
+  display: flex;
+  flex-direction: column;
+  max-width: 1080px;
   margin: 0 auto;
-  background: var(--g-rule-soft);
-  border: 1px solid var(--g-rule-soft);
-  border-radius: 14px;
-  overflow: hidden;
+  background: none;
+  border: none;
+  border-radius: 0;
+  gap: 0;
+  overflow: visible;
 }
 
 .g-focus-card {
-  padding: 36px 28px;
-  background: var(--g-bg-deep);
-  border-right: none;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 32px;
+  align-items: start;
+  padding: 40px 0;
+  background: none;
+  border-top: 1px solid var(--g-rule-soft);
+  border-radius: 0;
   position: relative;
-  overflow: hidden;
-  transition: background 0.5s var(--ease-out-expo);
-  isolation: isolate;
+  transition: background 0.3s ease;
 }
 
-.g-focus-card::before {
+.g-focus-card:last-child { border-bottom: 1px solid var(--g-rule-soft); }
+
+.g-focus-card::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    420px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(212, 148, 63, 0.14),
-    transparent 55%
-  );
+  background: linear-gradient(90deg, rgba(212,148,63,0.04), transparent 50%);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.3s;
   pointer-events: none;
-  z-index: -1;
 }
 
-.g-focus-card:hover::before { opacity: 1; }
+.g-focus-card:hover::after { opacity: 1; }
 
-.g-focus-card:last-child { border-right: none; }
-
-.g-focus-card span {
-  display: inline-block;
-  margin-bottom: 16px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
+.g-focus-num {
+  font-size: 0.66rem;
+  font-weight: 700;
   letter-spacing: 0.16em;
   color: var(--g-amber);
+  opacity: 0.45;
+  padding-top: 6px;
+  flex-shrink: 0;
 }
 
-.g-focus-card h3 {
+.g-focus-body h3 {
   margin: 0 0 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
   color: var(--g-cream);
+  transition: color 0.25s;
 }
 
-.g-focus-card p {
+.g-focus-card:hover .g-focus-body h3 { color: var(--g-amber-soft); }
+
+.g-focus-body p {
   margin: 0;
-  color: var(--g-cream-dim);
-  line-height: 1.65;
-  font-size: 0.94rem;
+  color: var(--g-cream-mute);
+  line-height: 1.7;
+  font-size: 0.96rem;
+  max-width: 560px;
 }
 
-@media (max-width: 860px) {
-  .g-focus-grid { grid-template-columns: 1fr; }
-  .g-focus-card { border-right: none; border-bottom: 1px solid var(--g-rule); }
-  .g-focus-card:last-child { border-bottom: none; }
+@media (max-width: 600px) {
+  .g-focus-card { grid-template-columns: 48px 1fr; gap: 16px; padding: 28px 0; }
 }
 
 @media (max-width: 700px) {
@@ -1195,15 +1197,10 @@
   isolation: isolate;
   border-top: 1px solid var(--g-rule);
   border-bottom: 1px solid var(--g-rule);
+  background: none;
 }
 
-.g-contact-veil {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse 90% 65% at 50% 50%, rgba(4,3,2,0.62), rgba(4,3,2,0.96));
-}
+.g-contact-veil { display: none; }
 
 .g-contact-inner {
   position: relative;
@@ -1239,9 +1236,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
   width: 100%;
-  border: 1px solid var(--g-rule);
-  background: rgba(17, 15, 13, 0.55);
-  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--g-rule-soft);
+  background: none;
 }
 
 .g-contact-cell {
@@ -1801,40 +1797,81 @@
 /* ══════════════════════════════════════════════════════════════
    Platform kartları
    ══════════════════════════════════════════════════════════════ */
+/* ── Platforms — Wibify row stili ── */
 .g-platforms-grid {
-  display: grid;
-  /* 160px minimum → daha fazla kart tek satıra sığar; taşma payı için max-width artırıldı */
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 16px;
-  max-width: 1160px;
-  margin: 0 auto;
-}
-
-.g-platform-glow { height: 100%; }
-
-.g-platform {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 26px 24px;
-  border-radius: 14px;
+  max-width: 1080px;
+  margin: 0 auto;
+  gap: 0;
+}
+
+.g-platform {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  border-top: 1px solid var(--g-rule-soft);
   text-decoration: none;
   color: var(--g-cream);
   position: relative;
-  height: 100%;
-  box-sizing: border-box;
+  transition: background 0.3s ease;
 }
 
-.g-platform-icon { color: var(--pc, var(--g-amber)); }
-.g-platform-name { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
-.g-platform-stat { font-size: 0.84rem; color: var(--g-cream-mute); }
-.g-platform-go {
-  margin-top: 6px;
-  font-size: 0.74rem;
+.g-platform:last-child { border-bottom: 1px solid var(--g-rule-soft); }
+
+.g-platform::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(212,148,63,0.04), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.g-platform:hover::after { opacity: 1; }
+
+.g-platform-icon {
+  color: var(--pc, var(--g-amber));
+  display: flex;
+  align-items: center;
+}
+
+.g-platform-name {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  transition: color 0.25s;
+}
+
+.g-platform:hover .g-platform-name { color: var(--g-amber-soft); }
+
+.g-platform-stat {
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
+  color: var(--g-cream-mute);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.g-platform-go {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--g-amber);
+  white-space: nowrap;
+  transition: letter-spacing 0.25s;
+}
+
+.g-platform:hover .g-platform-go { letter-spacing: 0.14em; }
+
+@media (max-width: 600px) {
+  .g-platform { grid-template-columns: 34px 1fr auto; gap: 12px; }
+  .g-platform-stat { display: none; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -2018,14 +2055,7 @@ html[data-theme="light"] .g-contact-grid {
 @media (max-width: 600px) { .g-hero-scroll-hint { display: none; } }
 
 
-/* ── SpotlightCard focus kartlarında fazla stil sıfırla ── */
-.g-focus-grid .spotlight-card {
-  border-radius: 0;
-  border: none;
-  background: var(--g-bg-deep);
-  transform: none !important;
-}
-.g-focus-grid .spotlight-card:hover { transform: none !important; }
+/* focus grid artık plain div — override gerekmez */
 
 /* ── Particles — touch cihazlarda pointer-events kapat ── */
 @media (pointer: coarse) {

@@ -22,11 +22,7 @@ import { PersonSchema, FAQSchema, VideoSchema, WebSiteSchema } from '../componen
 import CountUp from '../components/reactbits/CountUpRB'
 import NewsletterForm from '../components/NewsletterForm'
 import GradientText from '../components/reactbits/GradientText'
-import SpotlightCard from '../components/reactbits/SpotlightCard'
-import GlareHover from '../components/reactbits/GlareHover'
 import LogoLoop from '../components/reactbits/LogoLoop'
-import BorderGlow from '../components/reactbits/BorderGlow'
-import TiltedCard from '../components/reactbits/TiltedCard'
 import PollWidget from '../components/PollWidget'
 import MilestoneTracker from '../components/MilestoneTracker'
 import {
@@ -417,22 +413,15 @@ export default function Home() {
             {isEn ? <>Results<em className="g-em">.</em></> : <>Sonuçlar<em className="g-em">.</em></>}
           </motion.h2>
           <motion.div variants={vStagger} className="g-stats-row">
-            {liveStats.map((s, i, arr) => {
+            {liveStats.map((s, i) => {
               const parsed = parseStat(s.value)
               return (
-                <GlareHover
-                  key={s.label}
-                  className="g-stat"
-                  style={{ '--g-stat-i': i, '--g-stat-n': arr.length }}
-                  glareColor="rgba(212,148,63,0.25)"
-                  glareSize={200}
-                  glareOpacity={0.5}
-                >
+                <motion.div key={s.label} variants={vFadeUp} className="g-stat">
                   <span className="g-stat-value">
                     {parsed ? <><CountUp to={parsed.num} duration={2} separator="," />{parsed.suffix}</> : s.value}
                   </span>
                   <span className="g-stat-label">{s.label}</span>
-                </GlareHover>
+                </motion.div>
               )
             })}
           </motion.div>
@@ -495,17 +484,15 @@ export default function Home() {
           sub={isEn ? 'Less talk, more actual content.' : 'Az laf, çok iş.'}
           />
         </motion.div>
-        <motion.div variants={vFadeUp} className="g-focus-grid">
+        <motion.div variants={vStagger} className="g-focus-grid">
           {focusCards.map((card) => (
-            <SpotlightCard
-              key={card.n}
-              className="g-focus-card"
-              spotlightColor="rgba(212,148,63,0.14)"
-            >
-              <span>{card.n}</span>
-              <h3>{card.title}</h3>
-              <p>{card.body}</p>
-            </SpotlightCard>
+            <motion.div key={card.n} variants={vFadeUp} className="g-focus-card">
+              <span className="g-focus-num">{card.n}</span>
+              <div className="g-focus-body">
+                <h3>{card.title}</h3>
+                <p>{card.body}</p>
+              </div>
+            </motion.div>
           ))}
         </motion.div>
 
@@ -727,24 +714,20 @@ export default function Home() {
         </motion.div>
         <motion.div variants={vStagger} className="g-platforms-grid">
           {platformCards.map((p) => (
-            <motion.div key={p.name} variants={vFadeUp}>
-              <BorderGlow
-                className="g-platform-glow"
-                borderRadius={14}
-                glowColor="38 75 55"
-                backgroundColor="rgba(10,9,7,0.6)"
-                colors={['#e8b468', '#d4943f', '#a67428']}
-                edgeSensitivity={35}
-                glowRadius={32}
-              >
-                <a href={p.url} target="_blank" rel="noopener noreferrer" className="g-platform" style={{ '--pc': p.color }}>
-                  <span className="g-platform-icon"><p.icon size={26} /></span>
-                  <span className="g-platform-name">{p.name}</span>
-                  {p.stat && <span className="g-platform-stat">{formatViews(p.stat)} {p.statLabel}</span>}
-                  <span className="g-platform-go">{isEn ? 'Follow' : 'Takip et'} →</span>
-                </a>
-              </BorderGlow>
-            </motion.div>
+            <motion.a
+              key={p.name}
+              variants={vFadeUp}
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="g-platform"
+              style={{ '--pc': p.color }}
+            >
+              <span className="g-platform-icon"><p.icon size={22} /></span>
+              <span className="g-platform-name">{p.name}</span>
+              {p.stat && <span className="g-platform-stat">{formatViews(p.stat)} {p.statLabel}</span>}
+              <span className="g-platform-go">{isEn ? 'Follow' : 'Takip et'} ↗</span>
+            </motion.a>
           ))}
         </motion.div>
       </motion.section>
