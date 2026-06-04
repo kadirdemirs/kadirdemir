@@ -241,19 +241,20 @@
 /* Dekoratif arka plan yıl sayısı */
 .g-hero-deco {
   position: absolute;
-  right: clamp(-20px, -2vw, 0px);
+  right: clamp(-40px, -2vw, 0px);
   top: 50%;
-  transform: translateY(-54%);
+  transform: translateY(-52%);
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(18rem, 38vw, 38rem);
+  font-size: clamp(16rem, 36vw, 36rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.06em;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(212, 148, 63, 0.09);
+  -webkit-text-stroke: 1px rgba(212, 148, 63, 0.07);
   pointer-events: none;
   user-select: none;
   z-index: 0;
+  animation: g-fade-up 1.8s cubic-bezier(0.16, 1, 0.3, 1) both 0.3s;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -2098,6 +2099,136 @@ html[data-theme="light"] .g-contact-grid {
 @media (prefers-reduced-motion: reduce) {
   .g-ig-tile img,
   .g-ig-tile:hover img { transition: none; transform: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PROCESS — Fikirden yayına (Wibify "From briefly to launch")
+   ══════════════════════════════════════════════════════════════ */
+.g-process-rows {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.g-process-row {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 32px;
+  padding: 40px 0;
+  border-top: 1px solid var(--g-rule-soft);
+  align-items: start;
+  position: relative;
+  transition: background 0.35s ease;
+}
+
+.g-process-row:last-child { border-bottom: 1px solid var(--g-rule-soft); }
+
+.g-process-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(212,148,63,0.04), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.g-process-row:hover::after { opacity: 1; }
+
+.g-process-num {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--g-amber);
+  opacity: 0.45;
+  padding-top: 8px;
+  flex-shrink: 0;
+}
+
+.g-process-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.g-process-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--g-cream);
+  margin: 0;
+  transition: color 0.25s;
+}
+
+.g-process-row:hover .g-process-title { color: var(--g-amber-soft); }
+
+.g-process-body {
+  font-size: 0.96rem;
+  line-height: 1.72;
+  color: var(--g-cream-mute);
+  max-width: 580px;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .g-process-row { grid-template-columns: 48px 1fr; gap: 16px; padding: 28px 0; }
+  .g-process-title { font-size: clamp(1.2rem, 6vw, 1.8rem); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LOCATION — İstanbul'dan üretiyorum
+   ══════════════════════════════════════════════════════════════ */
+.g-location {
+  position: relative;
+  padding: clamp(80px, 14vw, 140px) clamp(24px, 6vw, 80px);
+  overflow: hidden;
+  border-top: 1px solid var(--g-rule);
+  border-bottom: 1px solid var(--g-rule);
+  background:
+    radial-gradient(ellipse 55% 70% at 20% 50%, rgba(212,148,63,0.09), transparent 60%),
+    radial-gradient(ellipse 40% 60% at 80% 50%, rgba(212,148,63,0.05), transparent 60%),
+    var(--g-bg-deep);
+  isolation: isolate;
+}
+
+.g-location::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212,148,63,0.03), transparent 50%);
+  pointer-events: none;
+}
+
+.g-location-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.g-location-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--g-amber);
+}
+
+.g-location-title {
+  font-size: clamp(3rem, 7.5vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+  color: var(--g-cream);
+  margin: 0;
+}
+
+.g-location-sub {
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  color: var(--g-cream-mute);
+  line-height: 1.65;
+  margin: 0;
 }
 
 /* ══════════════════════════════════════════════════════════════

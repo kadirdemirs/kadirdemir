@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { motion, useMotionValue, useSpring } from 'framer-motion'
 import {
   FaYoutube,
   FaInstagram,
@@ -55,6 +56,52 @@ function formatViews(n) {
   const parsed = parseStat(n)
   if (!parsed) return n || null
   return `${parsed.num}${parsed.suffix}`
+}
+
+// ── Animation variants ──────────────────────────────────────────
+const vFadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] } },
+}
+const vStagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }
+const vFadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.6 } },
+}
+
+// ── Magnetic CTA butonu ──────────────────────────────────────────
+function MagneticCTA({ children, className, href, to, onClick, target, rel, type }) {
+  const ref = useRef(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const sx = useSpring(x, { stiffness: 220, damping: 22 })
+  const sy = useSpring(y, { stiffness: 220, damping: 22 })
+
+  const onMove = (e) => {
+    const el = ref.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    x.set((e.clientX - r.left - r.width / 2) * 0.32)
+    y.set((e.clientY - r.top - r.height / 2) * 0.32)
+  }
+  const onLeave = () => { x.set(0); y.set(0) }
+
+  if (to) {
+    return (
+      <motion.div ref={ref} style={{ x: sx, y: sy, display: 'inline-block' }}
+        onMouseMove={onMove} onMouseLeave={onLeave}>
+        <Link className={className} to={to} onClick={onClick}>{children}</Link>
+      </motion.div>
+    )
+  }
+  const El = href ? motion.a : motion.button
+  return (
+    <El ref={ref} className={className} href={href} onClick={onClick}
+      target={target} rel={rel} type={type}
+      style={{ x: sx, y: sy }} onMouseMove={onMove} onMouseLeave={onLeave}>
+      {children}
+    </El>
+  )
 }
 
 function GiantEyebrow({ children, num }) {
@@ -287,11 +334,17 @@ export default function Home() {
 
       <section className="g-hero" id="home">
         <div className="g-hero-veil" />
-        <div className="g-hero-inner">
-          <span className="g-hero-mark">
+        <div className="g-hero-deco" aria-hidden="true">{yearsActive}</div>
+        <motion.div
+          className="g-hero-inner"
+          initial="hidden"
+          animate="visible"
+          variants={vStagger}
+        >
+          <motion.span variants={vFadeUp} className="g-hero-mark">
             {isEn ? 'Content creator · Istanbul' : 'İçerik üreticisi · İstanbul'}
-          </span>
-          <h1 className="g-hero-title">
+          </motion.span>
+          <motion.h1 variants={vFadeUp} className="g-hero-title">
             <GradientText
               colors={['#f4ebe0', '#e8b468', '#d4943f', '#e8b468', '#f4ebe0']}
               animationSpeed={9}
@@ -300,37 +353,44 @@ export default function Home() {
               {brandName}
             </GradientText>
             <span className="g-hero-title-accent">.</span>
-          </h1>
-          <p className="g-hero-lede">
+          </motion.h1>
+          <motion.p variants={vFadeUp} className="g-hero-lede">
             {isEn ? (
               <>{yearsActive} years in. <em className="g-em">Still</em> making videos, <em className="g-em">still</em> enjoying it.</>
             ) : (
               <>{yearsActive} yıldır <em className="g-em">video</em> çekiyorum. <em className="g-em">Hâlâ</em> devam ediyorum.</>
             )}
-          </p>
-          <div className="g-hero-actions">
-            <a href="#about" className="g-hero-cta g-hero-cta--primary">
+          </motion.p>
+          <motion.div variants={vFadeUp} className="g-hero-actions">
+            <MagneticCTA href="#about" className="g-hero-cta g-hero-cta--primary">
               {isEn ? 'About me' : 'Beni tanı'}
-            </a>
-            <Link to="/iletisim" className="g-hero-cta g-hero-cta--ghost">
+            </MagneticCTA>
+            <MagneticCTA to="/iletisim" className="g-hero-cta g-hero-cta--ghost">
               {isEn ? 'Write me' : 'Bana yaz'}
-            </Link>
-          </div>
-        </div>
+            </MagneticCTA>
+          </motion.div>
+        </motion.div>
         <a href="#about" className="g-hero-scroll-hint" aria-label="Kaydır">
           <span className="g-hero-scroll-dot" />
         </a>
       </section>
 
-      <section className="g-section g-about" id="about">
-        <GiantSectionHead
-          eyebrow={isEn ? 'ABOUT' : 'HAKKIMDA'}
-          num={1}
-          title={isEn
-            ? <>{yearsActive} years. <em className="g-em">Still here.</em></>
-            : <>{yearsActive} yıl. <em className="g-em">Hâlâ devam.</em></>}
-        />
-        <div className="g-about-grid">
+      <motion.section
+        className="g-section g-about" id="about"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'ABOUT' : 'HAKKIMDA'}
+            num={1}
+            title={isEn
+              ? <>{yearsActive} years. <em className="g-em">Still here.</em></>
+              : <>{yearsActive} yıl. <em className="g-em">Hâlâ devam.</em></>}
+          />
+        </motion.div>
+        <motion.div variants={vFadeUp} className="g-about-grid">
           <div className="g-about-num">
             <span className="g-about-num-frame">
               <strong>{yearsActive}</strong>
@@ -343,15 +403,20 @@ export default function Home() {
             <span className="g-quote g-quote-close">"</span>
             <p className="g-about-sign">— {brandName}</p>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {liveStats.length > 0 && (
-        <section className="g-section g-stats">
-          <h2 className="g-results-title">
+        <motion.section
+          className="g-section g-stats"
+          initial="hidden" whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={vStagger}
+        >
+          <motion.h2 variants={vFadeUp} className="g-results-title">
             {isEn ? <>Results<em className="g-em">.</em></> : <>Sonuçlar<em className="g-em">.</em></>}
-          </h2>
-          <div className="g-stats-row">
+          </motion.h2>
+          <motion.div variants={vStagger} className="g-stats-row">
             {liveStats.map((s, i, arr) => {
               const parsed = parseStat(s.value)
               return (
@@ -370,8 +435,8 @@ export default function Home() {
                 </GlareHover>
               )
             })}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
       )}
 
       {/* Milestone tracker */}
@@ -414,16 +479,23 @@ export default function Home() {
         </section>
       )}
 
-      <section className="g-section g-focus">
-        <GiantSectionHead
-          eyebrow={isEn ? 'WHAT I DO' : 'NE YAPIYORUM'}
-          num={2}
+      <motion.section
+        className="g-section g-focus"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'WHAT I DO' : 'NE YAPIYORUM'}
+            num={2}
           title={isEn
             ? <>Three things, <em className="g-em">done properly.</em></>
             : <>Üç şey, <em className="g-em">doğru düzgün.</em></>}
           sub={isEn ? 'Less talk, more actual content.' : 'Az laf, çok iş.'}
-        />
-        <div className="g-focus-grid">
+          />
+        </motion.div>
+        <motion.div variants={vFadeUp} className="g-focus-grid">
           {focusCards.map((card) => (
             <SpotlightCard
               key={card.n}
@@ -435,9 +507,9 @@ export default function Home() {
               <p>{card.body}</p>
             </SpotlightCard>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="g-types-loop">
+        <motion.div variants={vFadeIn} className="g-types-loop">
           <LogoLoop
             logos={contentTypes.map((c) => ({
               node: (
@@ -457,19 +529,26 @@ export default function Home() {
             scaleOnHover
             ariaLabel={isEn ? 'Content types' : 'İçerik türleri'}
           />
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Öne çıkan video — varsa ilk video, yoksa kanal CTA */}
-      <section className="g-section g-feature">
-        <GiantSectionHead
-          eyebrow={isEn ? 'FEATURED' : 'ÖNE ÇIKAN'}
-          num={3}
-          title={featuredVideo
-            ? <><em className="g-em">{isEn ? 'Latest' : 'Son'}</em> video.</>
-            : (isEn ? 'On the channel.' : 'Kanalda.')}
-        />
-        <div className="g-feature-frame">
+      <motion.section
+        className="g-section g-feature"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'FEATURED' : 'ÖNE ÇIKAN'}
+            num={3}
+            title={featuredVideo
+              ? <><em className="g-em">{isEn ? 'Latest' : 'Son'}</em> video.</>
+              : (isEn ? 'On the channel.' : 'Kanalda.')}
+          />
+        </motion.div>
+        <motion.div variants={vFadeUp} className="g-feature-frame">
           {featuredVideo ? (
             <iframe
               src={`https://www.youtube-nocookie.com/embed/${featuredVideo.youtubeId}`}
@@ -485,8 +564,8 @@ export default function Home() {
               <small>{isEn ? 'New videos every week' : 'Her hafta yeni video'}</small>
             </a>
           )}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Sırada ne var — admin'den girilirse göster */}
       {settings.nextVideoTitle && (
@@ -516,14 +595,20 @@ export default function Home() {
           sub={videos.length === 0 ? (isEn ? 'Head to the channel for the latest uploads.' : 'En yeni videolar için kanala göz at.') : undefined}
         />
         {videos.length > 0 ? (
-          <div className="g-works-list">
+          <motion.div
+            className="g-works-list"
+            initial="hidden" whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+            variants={vStagger}
+          >
             {videos.slice(featuredVideo ? 1 : 0, featuredVideo ? 9 : 8).map((v, i) => (
-              <a
+              <motion.a
                 key={v.youtubeId || i}
                 href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="g-work-row"
+                variants={vFadeUp}
               >
                 <span className="g-work-row-num">{String(i + 1).padStart(2, '0')}</span>
                 <span className="g-work-row-title">{v.title}</span>
@@ -531,9 +616,9 @@ export default function Home() {
                   {v.views ? `${formatViews(v.views)} ${isEn ? 'views' : 'izlenme'}` : 'YouTube'}
                 </span>
                 <span className="g-work-row-arrow">↗</span>
-              </a>
+              </motion.a>
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="g-works-empty">
             <a className="g-hero-cta g-hero-cta--primary" href={settings.youtube || 'https://youtube.com/@kadirdemir'} target="_blank" rel="noopener noreferrer">
@@ -546,47 +631,140 @@ export default function Home() {
         )}
       </section>
 
-      {/* Platform kartları */}
-      <section className="g-section g-platforms">
-        <GiantSectionHead
-          eyebrow={isEn ? 'FIND ME' : 'BENİ BUL'}
-          num={5}
-          title={isEn
-            ? <>Everywhere, <em className="g-em">one me.</em></>
-            : <>Her yerde, <em className="g-em">tek ben.</em></>}
-        />
-        <div className="g-platforms-grid">
-          {platformCards.map((p) => (
-            <BorderGlow
-              key={p.name}
-              className="g-platform-glow"
-              borderRadius={14}
-              glowColor="38 75 55"
-              backgroundColor="rgba(10,9,7,0.6)"
-              colors={['#e8b468', '#d4943f', '#a67428']}
-              edgeSensitivity={35}
-              glowRadius={32}
-            >
-              <a href={p.url} target="_blank" rel="noopener noreferrer" className="g-platform" style={{ '--pc': p.color }}>
-                <span className="g-platform-icon"><p.icon size={26} /></span>
-                <span className="g-platform-name">{p.name}</span>
-                {p.stat && <span className="g-platform-stat">{formatViews(p.stat)} {p.statLabel}</span>}
-                <span className="g-platform-go">{isEn ? 'Follow' : 'Takip et'} →</span>
-              </a>
-            </BorderGlow>
+      {/* Process — İçerik nasıl doğuyor (Wibify "From briefly to launch") */}
+      <motion.section
+        className="g-section g-process"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'PROCESS' : 'SÜREÇ'}
+            num={5}
+            title={isEn
+              ? <>From <em className="g-em">idea</em> to publish.</>
+              : <>Fikirden <em className="g-em">yayına.</em></>}
+          />
+        </motion.div>
+        <div className="g-process-rows">
+          {[
+            {
+              num: '01',
+              title: isEn ? 'Idea' : 'Fikir',
+              body: isEn
+                ? "Everything starts with a question worth asking. I don't press record unless I have something to say."
+                : "Her şey sorulmaya değer bir soruyla başlar. Söyleyecek bir şeyim yoksa kayıt başlamaz.",
+            },
+            {
+              num: '02',
+              title: isEn ? 'Production' : 'Çekim',
+              body: isEn
+                ? "Camera, mic, location. Capturing real moments that actually happened."
+                : "Kamera, mikrofon, mekan. Gerçekten yaşanan anları yakalama işi.",
+            },
+            {
+              num: '03',
+              title: isEn ? 'Edit' : 'Kurgu',
+              body: isEn
+                ? "Where the story is actually made. Cutting, pacing, adding what makes you stay."
+                : "Hikayenin gerçekten yazıldığı yer. Kesme, tempo, seni bağlayan detayları ekleme.",
+            },
+            {
+              num: '04',
+              title: isEn ? 'Publish' : 'Yayın',
+              body: isEn
+                ? "Thumbnail, title, description. Then the best part: reading the first comments."
+                : "Thumbnail, başlık, açıklama. Sonra en iyi kısım: ilk yorumları okumak.",
+            },
+          ].map((step) => (
+            <motion.div key={step.num} className="g-process-row" variants={vFadeUp}>
+              <span className="g-process-num">{step.num}</span>
+              <div className="g-process-content">
+                <h3 className="g-process-title">{step.title}</h3>
+                <p className="g-process-body">{step.body}</p>
+              </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
+
+      {/* Location — İstanbul'dan üretiyorum */}
+      <motion.section
+        className="g-location"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={vStagger}
+      >
+        <div className="g-location-inner">
+          <motion.span variants={vFadeUp} className="g-location-tag">📍 Istanbul, TR</motion.span>
+          <motion.h2 variants={vFadeUp} className="g-location-title">
+            {isEn
+              ? <>Creating from <em className="g-em">Istanbul.</em></>
+              : <>İstanbul'dan <em className="g-em">üretiyorum.</em></>}
+          </motion.h2>
+          <motion.p variants={vFadeUp} className="g-location-sub">
+            {isEn ? `${yearsActive} years, one city, one channel.` : `${yearsActive} yıl, bir şehir, bir kanal.`}
+          </motion.p>
+        </div>
+      </motion.section>
+
+      {/* Platform kartları */}
+      <motion.section
+        className="g-section g-platforms"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'FIND ME' : 'BENİ BUL'}
+            num={6}
+            title={isEn
+              ? <>Everywhere, <em className="g-em">one me.</em></>
+              : <>Her yerde, <em className="g-em">tek ben.</em></>}
+          />
+        </motion.div>
+        <motion.div variants={vStagger} className="g-platforms-grid">
+          {platformCards.map((p) => (
+            <motion.div key={p.name} variants={vFadeUp}>
+              <BorderGlow
+                className="g-platform-glow"
+                borderRadius={14}
+                glowColor="38 75 55"
+                backgroundColor="rgba(10,9,7,0.6)"
+                colors={['#e8b468', '#d4943f', '#a67428']}
+                edgeSensitivity={35}
+                glowRadius={32}
+              >
+                <a href={p.url} target="_blank" rel="noopener noreferrer" className="g-platform" style={{ '--pc': p.color }}>
+                  <span className="g-platform-icon"><p.icon size={26} /></span>
+                  <span className="g-platform-name">{p.name}</span>
+                  {p.stat && <span className="g-platform-stat">{formatViews(p.stat)} {p.statLabel}</span>}
+                  <span className="g-platform-go">{isEn ? 'Follow' : 'Takip et'} →</span>
+                </a>
+              </BorderGlow>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.section>
 
       {/* Topluluk anketi */}
-      <section className="g-section g-poll">
-        <GiantSectionHead
-          eyebrow={isEn ? 'COMMUNITY' : 'TOPLULUK'}
-          title={isEn ? 'Your vote matters.' : 'Senin oyun önemli.'}
-          sub={isEn ? 'Help decide what comes next.' : 'Sıradakine sen karar ver.'}
-        />
-        <PollWidget isEn={isEn} />
-      </section>
+      <motion.section
+        className="g-section g-poll"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'COMMUNITY' : 'TOPLULUK'}
+            title={isEn ? <>Your vote <em className="g-em">matters.</em></> : <>Senin oyun <em className="g-em">önemli.</em></>}
+            sub={isEn ? 'Help decide what comes next.' : 'Sıradakine sen karar ver.'}
+          />
+        </motion.div>
+        <motion.div variants={vFadeUp}><PollWidget isEn={isEn} /></motion.div>
+      </motion.section>
 
       {/* İçerik takvimi */}
       {Array.isArray(settings.contentCalendar) && settings.contentCalendar.length > 0 && (
@@ -645,17 +823,24 @@ export default function Home() {
         </section>
       )}
 
-      <section className="g-section g-story">
-        <GiantSectionHead
-          eyebrow={isEn ? 'THE TIMELINE' : 'YOLCULUK'}
-          num={6}
+      <motion.section
+        className="g-section g-story"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'THE TIMELINE' : 'YOLCULUK'}
+            num={7}
           title={isEn
             ? <>The <em className="g-em">story.</em></>
             : <>Kameranın <em className="g-em">iki tarafında.</em></>}
-        />
-        <div className="g-story-list">
+          />
+        </motion.div>
+        <motion.div variants={vStagger} className="g-story-list">
           {story.map((s, i) => (
-            <article key={s.period} className={`g-story-row ${i % 2 ? 'is-right' : 'is-left'}`}>
+            <motion.article key={s.period} variants={vFadeUp} className={`g-story-row ${i % 2 ? 'is-right' : 'is-left'}`}>
               <div className="g-story-meta">
                 <span className="g-story-period">{s.period}</span>
               </div>
@@ -666,20 +851,27 @@ export default function Home() {
               <div className="g-story-portrait" aria-hidden="true">
                 <span>{String(i + 1).padStart(2, '0')}</span>
               </div>
-            </article>
+            </motion.article>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {partners.length > 0 && (
-        <section className="g-section g-partners">
-          <GiantSectionHead
-            eyebrow={isEn ? 'WORKED WITH' : 'BİRLİKTE ÇALIŞTIKLARIM'}
-            title={isEn
-              ? <>Brands I&apos;ve <em className="g-em">worked with.</em></>
-              : <>Birlikte <em className="g-em">ürettiklerim.</em></>}
-            sub={isEn ? "Brands and people I've actually built things with." : 'Gerçekten bir şeyler ürettiğim markalar ve insanlar.'}
-          />
+        <motion.section
+          className="g-section g-partners"
+          initial="hidden" whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={vStagger}
+        >
+          <motion.div variants={vFadeUp}>
+            <GiantSectionHead
+              eyebrow={isEn ? 'WORKED WITH' : 'BİRLİKTE ÇALIŞTIKLARIM'}
+              title={isEn
+                ? <>Brands I&apos;ve <em className="g-em">worked with.</em></>
+                : <>Birlikte <em className="g-em">ürettiklerim.</em></>}
+              sub={isEn ? "Brands and people I've actually built things with." : 'Gerçekten bir şeyler ürettiğim markalar ve insanlar.'}
+            />
+          </motion.div>
           <div className="g-partners-grid">
             {partners.map((p, i) => (
               <a
@@ -698,10 +890,15 @@ export default function Home() {
               </a>
             ))}
           </div>
-        </section>
+        </motion.section>
       )}
 
-      <section className="g-contact" id="contact">
+      <motion.section
+        className="g-contact" id="contact"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={vStagger}
+      >
         <div className="g-contact-veil" />
         <div className="g-contact-inner">
           <span className="g-eyebrow g-eyebrow-light">
@@ -741,17 +938,24 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="g-section g-faq">
-        <GiantSectionHead
-          eyebrow={isEn ? 'FAQ' : 'SIKÇA SORULANLAR'}
-          num={7}
+      <motion.section
+        className="g-section g-faq"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'FAQ' : 'SIKÇA SORULANLAR'}
+            num={8}
           title={isEn
             ? <><em className="g-em">Quick</em> answers.</>
             : <><em className="g-em">Kısa</em> cevaplar.</>}
-        />
-        <div className="g-faq-list">
+          />
+        </motion.div>
+        <motion.div variants={vFadeUp} className="g-faq-list">
           {localizedFaqs.map((f, i) => (
             <details key={i} className="g-faq-item">
               <summary>
@@ -764,8 +968,8 @@ export default function Home() {
               </p>
             </details>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {settings.newsletterEnabled && (
         <section className="g-section g-newsletter">
@@ -780,28 +984,35 @@ export default function Home() {
         </section>
       )}
 
-      <section className="g-section g-touch">
-        <GiantSectionHead
-          eyebrow={isEn ? 'WRITE ME' : 'BANA YAZ'}
-          num={8}
+      <motion.section
+        className="g-section g-touch"
+        initial="hidden" whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        variants={vStagger}
+      >
+        <motion.div variants={vFadeUp}>
+          <GiantSectionHead
+            eyebrow={isEn ? 'WRITE ME' : 'BANA YAZ'}
+            num={9}
           title={isEn
             ? <>Let's <em className="g-em">talk.</em></>
             : <>Konuşa<em className="g-em">lım.</em></>}
-          sub={isEn ? 'Two lines or a full brief — doesn\'t matter, I\'ll write back.' : 'İki satır da olur, sayfalarca da — fark etmez, dönerim.'}
-        />
-        <form className="g-touch-form" onSubmit={submitTouch}>
+          sub={isEn ? "Two lines or a full brief — doesn't matter, I'll write back." : 'İki satır da olur, sayfalarca da — fark etmez, dönerim.'}
+          />
+        </motion.div>
+        <motion.form variants={vFadeUp} className="g-touch-form" onSubmit={submitTouch}>
           <div className="g-touch-row">
             <label><span>{isEn ? 'NAME' : 'AD'}</span><input type="text" value={touchForm.name} onChange={updateTouch('name')} required /></label>
             <label><span>EMAIL</span><input type="email" value={touchForm.email} onChange={updateTouch('email')} required /></label>
             <label><span>{isEn ? 'TOPIC' : 'KONU'}</span><input type="text" value={touchForm.topic} onChange={updateTouch('topic')} /></label>
           </div>
           <label className="g-touch-message"><span>{isEn ? 'MESSAGE' : 'MESAJ'}</span><textarea rows={4} value={touchForm.message} onChange={updateTouch('message')} required minLength={10} /></label>
-          <button type="submit" className="g-touch-submit" disabled={touchSubmitting}>
+          <MagneticCTA type="submit" className="g-touch-submit" onClick={undefined}>
             {touchSubmitting ? (isEn ? 'SENDING...' : 'GÖNDERİLİYOR...') : (isEn ? 'SEND' : 'GÖNDER')}
-          </button>
+          </MagneticCTA>
           {touchStatus && <p className={`g-touch-status is-${touchStatus.type}`}>{touchStatus.text}</p>}
-        </form>
-      </section>
+        </motion.form>
+      </motion.section>
 
     </div>
   )
