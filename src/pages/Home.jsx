@@ -329,10 +329,8 @@ export default function Home() {
       {videos.length > 0 && <VideoSchema videos={videos.slice(0, 8)} />}
 
       <section className="g-hero" id="home">
-        <div className="g-hero-veil" />
-        <div className="g-hero-deco" aria-hidden="true">{yearsActive}</div>
         <motion.div
-          className="g-hero-inner"
+          className="g-hero-left"
           initial="hidden"
           animate="visible"
           variants={vStagger}
@@ -358,15 +356,47 @@ export default function Home() {
             )}
           </motion.p>
           <motion.div variants={vFadeUp} className="g-hero-actions">
-            <MagneticCTA href="#about" className="g-hero-cta g-hero-cta--primary">
-              {isEn ? 'About me' : 'Beni tanı'}
+            <MagneticCTA href="#works" className="g-hero-cta g-hero-cta--primary">
+              {isEn ? 'See videos' : 'Videoları gör'}
             </MagneticCTA>
             <MagneticCTA to="/iletisim" className="g-hero-cta g-hero-cta--ghost">
               {isEn ? 'Write me' : 'Bana yaz'}
             </MagneticCTA>
           </motion.div>
         </motion.div>
-        <a href="#about" className="g-hero-scroll-hint" aria-label="Kaydır">
+
+        <motion.div
+          className="g-hero-right"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {featuredVideo ? (
+            <button
+              type="button"
+              className="g-hero-visual"
+              onClick={() => window.open(`https://www.youtube.com/watch?v=${featuredVideo.youtubeId}`, '_blank')}
+              aria-label={featuredVideo.title}
+            >
+              <img
+                src={featuredVideo.thumbnail || `https://i.ytimg.com/vi/${featuredVideo.youtubeId}/maxresdefault.jpg`}
+                alt={featuredVideo.title}
+                className="g-hero-visual-img"
+              />
+              <div className="g-hero-visual-overlay">
+                <span className="g-hero-visual-play">▶</span>
+              </div>
+              <span className="g-hero-visual-label">{featuredVideo.title}</span>
+            </button>
+          ) : (
+            <div className="g-hero-visual g-hero-visual--empty" aria-hidden="true">
+              <span>{yearsActive}</span>
+              <em>{isEn ? 'years of content' : 'yıl içerik'}</em>
+            </div>
+          )}
+        </motion.div>
+
+        <a href="#works" className="g-hero-scroll-hint" aria-label="Kaydır">
           <span className="g-hero-scroll-dot" />
         </a>
       </section>
@@ -572,7 +602,7 @@ export default function Home() {
       )}
 
       {/* Son videolar — yatay liste */}
-      <section className="g-section g-works-wrap">
+      <section className="g-section g-works-wrap" id="works">
         <GiantSectionHead
           eyebrow={isEn ? 'LATEST VIDEOS' : 'SON VİDEOLAR'}
           num={4}
