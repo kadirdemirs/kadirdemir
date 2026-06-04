@@ -283,25 +283,19 @@ export default function Home() {
 
       <section className="g-hero" id="home">
         <div className="g-hero-veil" />
-        <div className="g-hero-deco" aria-hidden="true">{yearsActive}</div>
         <div className="g-hero-inner">
           <span className="g-hero-mark">
             {isEn ? 'Content creator · Istanbul' : 'İçerik üreticisi · İstanbul'}
           </span>
           <h1 className="g-hero-title">
-            <span>
-              <GradientText
-                colors={['#f4ebe0', '#e8b468', '#d4943f', '#e8b468', '#f4ebe0']}
-                animationSpeed={9}
-                direction="horizontal"
-              >
-                {brandName.split(' ')[0]}
-              </GradientText>
-            </span>
-            <span>
-              {brandName.split(' ').slice(1).join(' ')}
-              <span className="g-hero-title-accent">.</span>
-            </span>
+            <GradientText
+              colors={['#f4ebe0', '#e8b468', '#d4943f', '#e8b468', '#f4ebe0']}
+              animationSpeed={9}
+              direction="horizontal"
+            >
+              {brandName}
+            </GradientText>
+            <span className="g-hero-title-accent">.</span>
           </h1>
           <p className="g-hero-lede">
             {isEn
