@@ -57,9 +57,10 @@ function formatViews(n) {
   return `${parsed.num}${parsed.suffix}`
 }
 
-function GiantEyebrow({ children }) {
+function GiantEyebrow({ children, num }) {
   return (
     <span className="g-eyebrow">
+      {num != null && <span className="g-eyebrow-num">[{String(num).padStart(2, '0')}]</span>}
       <span className="g-eyebrow-rule" />
       <span className="g-eyebrow-label">{children}</span>
       <span className="g-eyebrow-rule" />
@@ -67,10 +68,10 @@ function GiantEyebrow({ children }) {
   )
 }
 
-function GiantSectionHead({ eyebrow, title, sub }) {
+function GiantSectionHead({ eyebrow, title, sub, num }) {
   return (
     <header className="g-section-head">
-      <GiantEyebrow>{eyebrow}</GiantEyebrow>
+      <GiantEyebrow num={num}>{eyebrow}</GiantEyebrow>
       {title && <h2 className="g-section-title">{title}</h2>}
       {sub && <p className="g-section-sub">{sub}</p>}
     </header>
@@ -301,9 +302,11 @@ export default function Home() {
             <span className="g-hero-title-accent">.</span>
           </h1>
           <p className="g-hero-lede">
-            {isEn
-              ? `${yearsActive} years in. Still making videos, still enjoying it.`
-              : `${yearsActive} yıldır video çekiyorum. Hâlâ devam ediyorum, hâlâ zevk alıyorum.`}
+            {isEn ? (
+              <>{yearsActive} years in. <em className="g-em">Still</em> making videos, <em className="g-em">still</em> enjoying it.</>
+            ) : (
+              <>{yearsActive} yıldır <em className="g-em">video</em> çekiyorum. <em className="g-em">Hâlâ</em> devam ediyorum.</>
+            )}
           </p>
           <div className="g-hero-actions">
             <a href="#about" className="g-hero-cta g-hero-cta--primary">
@@ -320,7 +323,13 @@ export default function Home() {
       </section>
 
       <section className="g-section g-about" id="about">
-        <GiantSectionHead eyebrow={isEn ? 'ABOUT' : 'HAKKIMDA'} />
+        <GiantSectionHead
+          eyebrow={isEn ? 'ABOUT' : 'HAKKIMDA'}
+          num={1}
+          title={isEn
+            ? <>{yearsActive} years. <em className="g-em">Still here.</em></>
+            : <>{yearsActive} yıl. <em className="g-em">Hâlâ devam.</em></>}
+        />
         <div className="g-about-grid">
           <div className="g-about-num">
             <span className="g-about-num-frame">
@@ -329,9 +338,9 @@ export default function Home() {
             </span>
           </div>
           <div className="g-about-body">
-            <span className="g-quote g-quote-open">“</span>
+            <span className="g-quote g-quote-open">"</span>
             <p>{aboutText}</p>
-            <span className="g-quote g-quote-close">”</span>
+            <span className="g-quote g-quote-close">"</span>
             <p className="g-about-sign">— {brandName}</p>
           </div>
         </div>
@@ -339,6 +348,9 @@ export default function Home() {
 
       {liveStats.length > 0 && (
         <section className="g-section g-stats">
+          <h2 className="g-results-title">
+            {isEn ? <>Results<em className="g-em">.</em></> : <>Sonuçlar<em className="g-em">.</em></>}
+          </h2>
           <div className="g-stats-row">
             {liveStats.map((s, i, arr) => {
               const parsed = parseStat(s.value)
@@ -405,7 +417,10 @@ export default function Home() {
       <section className="g-section g-focus">
         <GiantSectionHead
           eyebrow={isEn ? 'WHAT I DO' : 'NE YAPIYORUM'}
-          title={isEn ? 'Three things, done properly.' : 'Üç şey, doğru düzgün.'}
+          num={2}
+          title={isEn
+            ? <>Three things, <em className="g-em">done properly.</em></>
+            : <>Üç şey, <em className="g-em">doğru düzgün.</em></>}
           sub={isEn ? 'Less talk, more actual content.' : 'Az laf, çok iş.'}
         />
         <div className="g-focus-grid">
@@ -449,7 +464,10 @@ export default function Home() {
       <section className="g-section g-feature">
         <GiantSectionHead
           eyebrow={isEn ? 'FEATURED' : 'ÖNE ÇIKAN'}
-          title={featuredVideo ? featuredVideo.title : (isEn ? 'On the channel' : 'Kanalda')}
+          num={3}
+          title={featuredVideo
+            ? <><em className="g-em">{isEn ? 'Latest' : 'Son'}</em> video.</>
+            : (isEn ? 'On the channel.' : 'Kanalda.')}
         />
         <div className="g-feature-frame">
           {featuredVideo ? (
@@ -487,33 +505,32 @@ export default function Home() {
         </section>
       )}
 
-      {/* Son videolar — varsa grid, yoksa kanal daveti */}
+      {/* Son videolar — yatay liste */}
       <section className="g-section g-works-wrap">
         <GiantSectionHead
           eyebrow={isEn ? 'LATEST VIDEOS' : 'SON VİDEOLAR'}
+          num={4}
+          title={isEn
+            ? <>What I've <em className="g-em">made.</em></>
+            : <>Son <em className="g-em">videolarım.</em></>}
           sub={videos.length === 0 ? (isEn ? 'Head to the channel for the latest uploads.' : 'En yeni videolar için kanala göz at.') : undefined}
         />
         {videos.length > 0 ? (
-          <div className="g-works-grid">
-            {videos.slice(featuredVideo ? 1 : 0, featuredVideo ? 7 : 6).map((v, i) => (
+          <div className="g-works-list">
+            {videos.slice(featuredVideo ? 1 : 0, featuredVideo ? 9 : 8).map((v, i) => (
               <a
                 key={v.youtubeId || i}
                 href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="g-work"
+                className="g-work-row"
               >
-                {v.thumbnail ? (
-                  <img src={v.thumbnail} alt={v.title} loading="lazy" />
-                ) : (
-                  <div className="g-work-fallback">{String(i + 1).padStart(2, '0')}</div>
-                )}
-                <div className="g-work-overlay">
-                  <span className="g-work-cat">YouTube</span>
-                  <h4 className="g-work-title">{v.title}</h4>
-                  <span className="g-work-cta">{isEn ? 'WATCH' : 'İZLE'}</span>
-                  {v.views && <span className="g-work-views">{formatViews(v.views)} {isEn ? 'views' : 'izlenme'}</span>}
-                </div>
+                <span className="g-work-row-num">{String(i + 1).padStart(2, '0')}</span>
+                <span className="g-work-row-title">{v.title}</span>
+                <span className="g-work-row-meta">
+                  {v.views ? `${formatViews(v.views)} ${isEn ? 'views' : 'izlenme'}` : 'YouTube'}
+                </span>
+                <span className="g-work-row-arrow">↗</span>
               </a>
             ))}
           </div>
@@ -533,7 +550,10 @@ export default function Home() {
       <section className="g-section g-platforms">
         <GiantSectionHead
           eyebrow={isEn ? 'FIND ME' : 'BENİ BUL'}
-          title={isEn ? 'Everywhere, one me.' : 'Her yerde, tek ben.'}
+          num={5}
+          title={isEn
+            ? <>Everywhere, <em className="g-em">one me.</em></>
+            : <>Her yerde, <em className="g-em">tek ben.</em></>}
         />
         <div className="g-platforms-grid">
           {platformCards.map((p) => (
@@ -626,7 +646,13 @@ export default function Home() {
       )}
 
       <section className="g-section g-story">
-        <GiantSectionHead eyebrow={isEn ? 'THE TIMELINE' : 'YOLCULUK'} />
+        <GiantSectionHead
+          eyebrow={isEn ? 'THE TIMELINE' : 'YOLCULUK'}
+          num={6}
+          title={isEn
+            ? <>The <em className="g-em">story.</em></>
+            : <>Kameranın <em className="g-em">iki tarafında.</em></>}
+        />
         <div className="g-story-list">
           {story.map((s, i) => (
             <article key={s.period} className={`g-story-row ${i % 2 ? 'is-right' : 'is-left'}`}>
@@ -649,7 +675,10 @@ export default function Home() {
         <section className="g-section g-partners">
           <GiantSectionHead
             eyebrow={isEn ? 'WORKED WITH' : 'BİRLİKTE ÇALIŞTIKLARIM'}
-            sub={isEn ? 'Brands and people I’ve actually built things with.' : 'Gerçekten bir şeyler ürettiğim markalar ve insanlar.'}
+            title={isEn
+              ? <>Brands I&apos;ve <em className="g-em">worked with.</em></>
+              : <>Birlikte <em className="g-em">ürettiklerim.</em></>}
+            sub={isEn ? "Brands and people I've actually built things with." : 'Gerçekten bir şeyler ürettiğim markalar ve insanlar.'}
           />
           <div className="g-partners-grid">
             {partners.map((p, i) => (
@@ -680,7 +709,9 @@ export default function Home() {
             <span className="g-eyebrow-label">{isEn ? 'CONTACT' : 'İLETİŞİM'}</span>
             <span className="g-eyebrow-rule" />
           </span>
-          <h2 className="g-contact-title">{isEn ? 'Say hello.' : 'Bir şey söylemek istiyorsan yaz.'}</h2>
+          <h2 className="g-contact-title">
+            {isEn ? <>Say <em className="g-em">hello.</em></> : <>Bir şey <em className="g-em">söyle.</em></>}
+          </h2>
           <p className="g-contact-copy">
             {isEn
               ? 'Collab pitch, random video idea, podcast invite, or just saying hi — I actually read all of them.'
@@ -715,7 +746,10 @@ export default function Home() {
       <section className="g-section g-faq">
         <GiantSectionHead
           eyebrow={isEn ? 'FAQ' : 'SIKÇA SORULANLAR'}
-          title={isEn ? 'Quick answers.' : 'Kısa cevaplar.'}
+          num={7}
+          title={isEn
+            ? <><em className="g-em">Quick</em> answers.</>
+            : <><em className="g-em">Kısa</em> cevaplar.</>}
         />
         <div className="g-faq-list">
           {localizedFaqs.map((f, i) => (
@@ -749,7 +783,10 @@ export default function Home() {
       <section className="g-section g-touch">
         <GiantSectionHead
           eyebrow={isEn ? 'WRITE ME' : 'BANA YAZ'}
-          title={isEn ? 'Let\'s talk.' : 'Konuşalım.'}
+          num={8}
+          title={isEn
+            ? <>Let's <em className="g-em">talk.</em></>
+            : <>Konuşa<em className="g-em">lım.</em></>}
           sub={isEn ? 'Two lines or a full brief — doesn\'t matter, I\'ll write back.' : 'İki satır da olur, sayfalarca da — fark etmez, dönerim.'}
         />
         <form className="g-touch-form" onSubmit={submitTouch}>
