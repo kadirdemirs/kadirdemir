@@ -77,11 +77,14 @@ function App() {
   const location = useLocation()
   const isAdmin = location.pathname === '/admin'
   const isLinks = location.pathname === '/links'
+  const isLanding = location.pathname === '/'
   const isStandalone = isAdmin || isLinks
+  // The landing page ships its own nav, footer and styling — render it bare.
+  const hideChrome = isStandalone || isLanding
   const prevPath = useRef(null)
 
-  // Site-wide smooth scroll (admin & reduced-motion hariç)
-  useLenis({ enabled: !isStandalone })
+  // Site-wide smooth scroll (admin, landing & reduced-motion hariç)
+  useLenis({ enabled: !isStandalone && !isLanding })
 
   useEffect(() => {
     if (isStandalone) return
@@ -119,18 +122,18 @@ function App() {
 
   return (
     <>
-      <TopProgressBar />
-      <ClickSpark sparkColor="var(--amber, #d4943f)" sparkCount={7} sparkRadius={22} duration={500} />
+      {!hideChrome && <TopProgressBar />}
+      {!hideChrome && <ClickSpark sparkColor="var(--amber, #d4943f)" sparkCount={7} sparkRadius={22} duration={500} />}
       <ErrorTracker />
       <a href="#main-content" className="skip-to-content">İçeriğe geç</a>
       <ScrollToTop />
-      {!isStandalone && <div aria-hidden="true" className="kd-aurora-bg" />}
-      {!isStandalone && <LiveBanner />}
-      {!isStandalone && <Navbar />}
+      {!hideChrome && <div aria-hidden="true" className="kd-aurora-bg" />}
+      {!hideChrome && <LiveBanner />}
+      {!hideChrome && <Navbar />}
       <main id="main-content">
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+            <Route path="/" element={<Home />} />
             <Route path="/hakkimda" element={<PageTransition><About /></PageTransition>} />
             <Route path="/hakkimizda" element={<Navigate to="/hakkimda" replace />} />
             <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
@@ -152,11 +155,11 @@ function App() {
           </Routes>
         </AnimatePresence>
       </main>
-      {!isStandalone && <Footer />}
-      {!isStandalone && <InstallPrompt />}
-      {!isStandalone && <CommandPalette />}
-      {!isStandalone && <FloatingCTA />}
-      {!isStandalone && <CookieBanner />}
+      {!hideChrome && <Footer />}
+      {!hideChrome && <InstallPrompt />}
+      {!hideChrome && <CommandPalette />}
+      {!hideChrome && <FloatingCTA />}
+      {!hideChrome && <CookieBanner />}
     </>
   )
 }
