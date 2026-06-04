@@ -104,6 +104,17 @@ export const DEFAULT_SITE_SETTINGS = {
   nextVideoNote: '',
   // Newsletter bölümü ana sayfada gösterilsin mi
   newsletterEnabled: false,
+
+  // "Şu an" bölümü — boşsa gizlenir
+  currentlyWatching: '',   // örn. "Severance S2"
+  currentlyPlaying: '',    // örn. "Elden Ring"
+  currentlyNote: '',       // opsiyonel not
+
+  // Milestone — bir sonraki hedef; boşsa otomatik hesaplanır
+  milestoneTarget: '',     // örn. "500000"
+
+  // İçerik takvimi — [{title, date, type:'video'|'live'|'short', note}]
+  contentCalendar: [],
 }
 
 const SiteSettingsContext = createContext({

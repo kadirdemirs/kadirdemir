@@ -605,6 +605,14 @@ export async function askAMAApi(question, author) {
   return handleResponse(res);
 }
 
+export async function upvoteAMAApi(id) {
+  const res = await globalThis.fetch(`${API_BASE}/ama?action=upvote&id=${id}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return handleResponse(res);
+}
+
 // ───── Polls ─────
 export async function getActivePollApi() {
   const res = await globalThis.fetch(`${API_BASE}/polls?action=active`, { credentials: 'include' });

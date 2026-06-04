@@ -25,6 +25,9 @@ import SpotlightCard from '../components/reactbits/SpotlightCard'
 import GlareHover from '../components/reactbits/GlareHover'
 import LogoLoop from '../components/reactbits/LogoLoop'
 import BorderGlow from '../components/reactbits/BorderGlow'
+import TiltedCard from '../components/reactbits/TiltedCard'
+import PollWidget from '../components/PollWidget'
+import MilestoneTracker from '../components/MilestoneTracker'
 import {
   getYouTubeVideosApi, getSocialStatsApi, sendContactApi,
   getPartnersApi,
@@ -359,6 +362,46 @@ export default function Home() {
         </section>
       )}
 
+      {/* Milestone tracker */}
+      {(liveStats.some((s) => s.label.toLowerCase().includes('abone') || s.label.toLowerCase().includes('subscriber')) || settings.statsYoutubeSubs) && (
+        <section className="g-section g-milestone">
+          <GiantSectionHead
+            eyebrow={isEn ? 'NEXT GOAL' : 'SONRAKI HEDEF'}
+            title={isEn ? 'We\'re getting there.' : 'Yavaş yavaş gidiyoruz.'}
+          />
+          <MilestoneTracker
+            subs={liveStats.find((s) => s.label.toLowerCase().includes('abone') || s.label.toLowerCase().includes('subscriber'))?.value || settings.statsYoutubeSubs}
+            targetOverride={settings.milestoneTarget}
+            isEn={isEn}
+          />
+        </section>
+      )}
+
+      {/* Şu an ne izliyorum / ne oynuyorum */}
+      {(settings.currentlyWatching || settings.currentlyPlaying) && (
+        <section className="g-section g-now">
+          <GiantSectionHead
+            eyebrow={isEn ? 'RIGHT NOW' : 'ŞU AN'}
+            title={isEn ? 'What I\'m into.' : 'Şu sıralar bunlarla vakit geçiriyorum.'}
+          />
+          <div className="g-now-grid">
+            {settings.currentlyWatching && (
+              <div className="g-now-card">
+                <span className="g-now-type">{isEn ? '📺 WATCHING' : '📺 İZLİYORUM'}</span>
+                <h3>{settings.currentlyWatching}</h3>
+                {settings.currentlyNote && <p>{settings.currentlyNote}</p>}
+              </div>
+            )}
+            {settings.currentlyPlaying && (
+              <div className="g-now-card">
+                <span className="g-now-type">{isEn ? '🎮 PLAYING' : '🎮 OYNUYORUM'}</span>
+                <h3>{settings.currentlyPlaying}</h3>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       <section className="g-section g-focus">
         <GiantSectionHead
           eyebrow={isEn ? 'WHAT I DO' : 'NE YAPIYORUM'}
@@ -514,6 +557,42 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Topluluk anketi */}
+      <section className="g-section g-poll">
+        <GiantSectionHead
+          eyebrow={isEn ? 'COMMUNITY' : 'TOPLULUK'}
+          title={isEn ? 'Your vote matters.' : 'Senin oyun önemli.'}
+          sub={isEn ? 'Help decide what comes next.' : 'Sıradakine sen karar ver.'}
+        />
+        <PollWidget isEn={isEn} />
+      </section>
+
+      {/* İçerik takvimi */}
+      {Array.isArray(settings.contentCalendar) && settings.contentCalendar.length > 0 && (
+        <section className="g-section g-calendar">
+          <GiantSectionHead
+            eyebrow={isEn ? 'SCHEDULE' : 'TAKVİM'}
+            title={isEn ? 'What\'s coming.' : 'Yakında ne geliyor.'}
+          />
+          <div className="g-cal-list">
+            {settings.contentCalendar.slice(0, 5).map((item, i) => (
+              <div key={i} className="g-cal-item">
+                <div className="g-cal-meta">
+                  <span className="g-cal-type g-cal-type--{item.type || 'video'}">{
+                    item.type === 'live' ? '🔴' : item.type === 'short' ? '▮' : '▶'
+                  }</span>
+                  {item.date && <span className="g-cal-date">{item.date}</span>}
+                </div>
+                <div className="g-cal-body">
+                  <strong>{item.title}</strong>
+                  {item.note && <span>{item.note}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {Array.isArray(settings.instagramPosts) && settings.instagramPosts.filter((p) => p?.thumbnail).length > 0 && (
         <section className="g-section g-instagram">

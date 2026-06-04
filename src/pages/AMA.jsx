@@ -2,7 +2,7 @@
 import { HiOutlineQuestionMarkCircle, HiOutlineChatAlt2, HiOutlineCheck, HiOutlineUser } from 'react-icons/hi'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useSEO } from '../hooks/useSEO'
-import { getAMAApi, askAMAApi } from '../api'
+import { getAMAApi, askAMAApi, upvoteAMAApi } from '../api'
 import { BreadcrumbSchema } from '../components/StructuredData'
 
 function relative(date, lang) {
@@ -35,6 +35,9 @@ export default function AMA() {
   const [loading, setLoading] = useState(true)
   const [form, setForm] = useState({ question: '', author: '' })
   const [status, setStatus] = useState({ state: 'idle', error: null })
+  const [upvoted, setUpvoted] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ama_upvoted') || '[]') } catch { return [] }
+  })
 
   const refresh = () => {
     setLoading(true)
@@ -61,6 +64,17 @@ export default function AMA() {
     emptyT:    { tr: 'Henüz yanıtlanmış soru yok', en: 'No answered questions yet', de: 'Noch keine beantworteten Fragen' },
     emptyM:    { tr: 'İlk soruyu sen sor.', en: 'Be the first to ask.', de: 'Sei die erste Person, die fragt.' },
   }[k]?.[lang] || k)
+
+  const handleUpvote = async (id) => {
+    if (upvoted.includes(id)) return
+    try {
+      const res = await upvoteAMAApi(id)
+      setItems((prev) => prev.map((it) => it._id === id ? { ...it, upvotes: res.upvotes } : it))
+      const next = [...upvoted, id]
+      setUpvoted(next)
+      try { localStorage.setItem('ama_upvoted', JSON.stringify(next)) } catch {}
+    } catch {}
+  }
 
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -178,6 +192,28 @@ export default function AMA() {
                 <HiOutlineUser size={14} />
                 <strong style={{ color: 'var(--white, #fff)' }}>{it.author}</strong>
                 <span style={{ opacity: 0.6 }}>· {relative(it.askedAt, lang)}</span>
+                <button
+                  type="button"
+                  onClick={() => handleUpvote(it._id)}
+                  style={{
+                    marginLeft: 'auto',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 5,
+                    padding: '4px 10px',
+                    background: upvoted.includes(it._id) ? 'rgba(212,148,63,0.15)' : 'rgba(255,255,255,0.04)',
+                    border: `1px solid ${upvoted.includes(it._id) ? 'rgba(212,148,63,0.45)' : 'rgba(255,255,255,0.08)'}`,
+                    borderRadius: 999,
+                    color: upvoted.includes(it._id) ? '#e8b468' : 'var(--gray-light, #94a3b8)',
+                    cursor: upvoted.includes(it._id) ? 'default' : 'pointer',
+                    fontSize: '0.74rem',
+                    fontWeight: 700,
+                    fontFamily: 'inherit',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  ▲ {it.upvotes || 0}
+                </button>
               </div>
               <p style={{ fontSize: '1.05rem', color: 'var(--white, #fff)', marginBottom: 14, lineHeight: 1.6 }}>
                 {it.question}

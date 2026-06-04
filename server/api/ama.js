@@ -37,13 +37,27 @@ export default async function handler(req, res) {
       question: q.question,
       author: q.author || 'Anonim',
       answer: q.answer,
+      upvotes: q.upvotes || 0,
       askedAt: q.createdAt,
       answeredAt: q.answeredAt,
     })));
   }
 
-  // POST — public ask OR admin answer
+  // POST — public ask OR upvote OR admin answer
   if (req.method === 'POST') {
+    if (action === 'upvote') {
+      const rl = await rateLimitCheck(req, { namespace: 'ama-upvote', maxRequests: 30 });
+      if (!rl.allowed) return res.status(429).json({ error: 'Too many requests' });
+      const id = req.query?.id;
+      if (!id) return res.status(400).json({ error: 'id required' });
+      const { ObjectId } = await import('mongodb');
+      let objId;
+      try { objId = new ObjectId(id); } catch { return res.status(400).json({ error: 'Invalid id' }); }
+      await col.updateOne({ _id: objId }, { $inc: { upvotes: 1 } });
+      const doc = await col.findOne({ _id: objId });
+      return res.status(200).json({ upvotes: doc?.upvotes || 0 });
+    }
+
     if (action === 'ask') {
       const rl = await rateLimitCheck(req, { namespace: 'ama-ask', maxRequests: 5 });
       if (!rl.allowed) return res.status(429).json({ error: 'Çok fazla istek. Birazdan tekrar dene.' });

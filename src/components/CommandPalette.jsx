@@ -52,22 +52,36 @@ export default function CommandPalette() {
   const navigate = useNavigate()
   const { settings } = useSiteSettings()
 
-  // Global Cmd-K / Ctrl-K hotkey
+  // Global Cmd-K / Ctrl-K + tek tuş kısayolları
   useEffect(() => {
+    const shortcuts = {
+      'g': '/',
+      'h': '/hakkimda',
+      'v': '/videolar',
+      'b': '/blog',
+      'i': '/iletisim',
+      's': '/sor',
+      'l': '/links',
+    }
     const onKey = (e) => {
+      const tag = document.activeElement?.tagName
+      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) || document.activeElement?.isContentEditable
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
         setOpen((v) => !v)
-      } else if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+      } else if (e.key === '/' && !isInput) {
         e.preventDefault()
         setOpen(true)
       } else if (e.key === 'Escape' && open) {
         setOpen(false)
+      } else if (!isInput && !e.metaKey && !e.ctrlKey && !e.altKey && !open) {
+        const dest = shortcuts[e.key.toLowerCase()]
+        if (dest) { e.preventDefault(); navigate(dest) }
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open])
+  }, [open, navigate])
 
   // Lazy-load blog + video list once palette is opened
   useEffect(() => {
