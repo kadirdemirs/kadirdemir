@@ -10,15 +10,14 @@ function relative(date, lang) {
   const d = new Date(date)
   const diff = Date.now() - d.getTime()
   const day = 1000 * 60 * 60 * 24
-  const todayMap = { tr: 'bugün', en: 'today', de: 'heute' }
-  const ydayMap = { tr: 'dün', en: 'yesterday', de: 'gestern' }
-  const ago = (n) => ({ tr: `${n} gün önce`, en: `${n} days ago`, de: `vor ${n} Tagen` }[lang] || `${n} d`)
+  const todayMap = { tr: 'bugün', en: 'today' }
+  const ydayMap = { tr: 'dün', en: 'yesterday' }
+  const ago = (n) => (lang === 'en' ? `${n} days ago` : `${n} gün önce`)
   if (diff < day) return todayMap[lang] || todayMap.tr
   if (diff < day * 2) return ydayMap[lang] || ydayMap.tr
   const days = Math.floor(diff / day)
   if (days < 30) return ago(days)
-  const localeMap = { tr: 'tr-TR', en: 'en-US', de: 'de-DE' }
-  return d.toLocaleDateString(localeMap[lang] || 'tr-TR')
+  return d.toLocaleDateString(lang === 'en' ? 'en-US' : 'tr-TR')
 }
 
 export default function AMA() {
@@ -49,21 +48,22 @@ export default function AMA() {
 
   useEffect(() => { refresh() }, [])
 
-  const t = (k) => ({
-    pill:      { tr: 'Sor Bana', en: 'Ask Me Anything', de: 'Frag mich was' },
-    head1:     { tr: 'Aklındaki ', en: 'Got ', de: 'Hast du ' },
-    headHi:    { tr: 'her şeyi sor', en: 'a question?', de: 'eine Frage?' },
-    sub:       { tr: 'Soruları okuyup cevaplayacağım. İsimsiz de gönderebilirsin.', en: 'I\'ll read and answer. You can stay anonymous.', de: 'Ich lese und beantworte alles. Anonym geht auch.' },
-    qLabel:    { tr: 'Sorun', en: 'Your question', de: 'Deine Frage' },
-    nameLabel: { tr: 'İsim (opsiyonel)', en: 'Name (optional)', de: 'Name (optional)' },
-    submit:    { tr: 'Gönder', en: 'Submit', de: 'Senden' },
-    sending:   { tr: 'Gönderiliyor...', en: 'Sending...', de: 'Wird gesendet...' },
-    successT:  { tr: 'Soru alındı!', en: 'Question received!', de: 'Frage erhalten!' },
-    successM:  { tr: 'Cevaplandığında bu sayfada görünür.', en: 'Once answered it will appear on this page.', de: 'Sobald beantwortet, erscheint sie auf dieser Seite.' },
-    askMore:   { tr: 'Başka bir soru sor', en: 'Ask another', de: 'Noch eine Frage' },
-    emptyT:    { tr: 'Henüz yanıtlanmış soru yok', en: 'No answered questions yet', de: 'Noch keine beantworteten Fragen' },
-    emptyM:    { tr: 'İlk soruyu sen sor.', en: 'Be the first to ask.', de: 'Sei die erste Person, die fragt.' },
-  }[k]?.[lang] || k)
+  const AMA_STRINGS = {
+    pill:      { tr: 'Sor Bana', en: 'Ask Me Anything' },
+    head1:     { tr: 'Aklındaki ', en: 'Got ' },
+    headHi:    { tr: 'her şeyi sor', en: 'a question?' },
+    sub:       { tr: 'Soruları okuyup cevaplayacağım. İsimsiz de gönderebilirsin.', en: 'I\'ll read and answer. You can stay anonymous.' },
+    qLabel:    { tr: 'Sorun', en: 'Your question' },
+    nameLabel: { tr: 'İsim (opsiyonel)', en: 'Name (optional)' },
+    submit:    { tr: 'Gönder', en: 'Submit' },
+    sending:   { tr: 'Gönderiliyor...', en: 'Sending...' },
+    successT:  { tr: 'Soru alındı!', en: 'Question received!' },
+    successM:  { tr: 'Cevaplandığında bu sayfada görünür.', en: 'Once answered it will appear on this page.' },
+    askMore:   { tr: 'Başka bir soru sor', en: 'Ask another' },
+    emptyT:    { tr: 'Henüz yanıtlanmış soru yok', en: 'No answered questions yet' },
+    emptyM:    { tr: 'İlk soruyu sen sor.', en: 'Be the first to ask.' },
+  }
+  const t = (k) => AMA_STRINGS[k]?.[lang] || AMA_STRINGS[k]?.tr || k
 
   const handleUpvote = async (id) => {
     if (upvoted.includes(id)) return
@@ -190,7 +190,7 @@ export default function AMA() {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, color: 'var(--gray-light, #94a3b8)', fontSize: '0.78rem' }}>
                 <HiOutlineUser size={14} />
-                <strong style={{ color: 'var(--white, #fff)' }}>{it.author}</strong>
+                <strong style={{ color: 'var(--white, #fff)' }}>{it.author || (lang === 'en' ? 'Anonymous' : 'Anonim')}</strong>
                 <span style={{ opacity: 0.6 }}>· {relative(it.askedAt, lang)}</span>
                 <button
                   type="button"

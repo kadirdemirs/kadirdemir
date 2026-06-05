@@ -12,9 +12,10 @@ export default function BlogAuthorBio() {
   const { lang } = useLanguage()
   const brandName = settings.businessName || 'Kadir Demir'
 
-  const bioLine = lang === 'en'
-    ? 'YouTube creator broadcasting from Istanbul. Sharing stories about gaming, vlogs and the creative process.'
-    : "İstanbul'dan yayın yapan YouTube içerik üreticisi. Oyun, vlog ve yaratıcı süreç üzerine yazıyor."
+  const bioLine = settings.description ||
+    (lang === 'en'
+      ? 'YouTube creator broadcasting from Istanbul. Sharing stories about gaming, vlogs and the creative process.'
+      : "İstanbul'dan yayın yapan YouTube içerik üreticisi. Oyun, vlog ve yaratıcı süreç üzerine yazıyor.")
 
   const aboutCta = lang === 'en' ? 'Read more about me' : 'Hakkımda daha fazlası'
 

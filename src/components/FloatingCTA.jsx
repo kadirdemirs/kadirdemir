@@ -20,9 +20,10 @@ export default function FloatingCTA() {
   const [show, setShow] = useState(false)
   const ctaLabel = (lang === 'en' ? settings.floatingCtaLabelEn : settings.floatingCtaLabelTr) || t('common.contact')
   const ctaUrl = settings.floatingCtaUrl || '/iletisim'
+  const contactPath = '/iletisim'
 
   const isHidden =
-    location.pathname === '/iletisim' ||
+    location.pathname === contactPath ||
     location.pathname === '/admin' ||
     location.pathname.startsWith('/admin/')
 

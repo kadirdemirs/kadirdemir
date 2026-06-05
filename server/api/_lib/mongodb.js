@@ -36,12 +36,22 @@ function getClientPromise() {
       serverSelectionTimeoutMS: 15000,
     });
 
-    clientPromise = client.connect().catch((err) => {
-      console.error('❌ MongoDB bağlantı hatası:', err.message);
-      client = null;
-      clientPromise = null;
-      throw err;
-    });
+    clientPromise = (async () => {
+      const MAX_RETRIES = 3;
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+          return await client.connect();
+        } catch (err) {
+          console.error(`❌ MongoDB bağlantı hatası (deneme ${attempt}/${MAX_RETRIES}):`, err.message);
+          if (attempt === MAX_RETRIES) {
+            client = null;
+            clientPromise = null;
+            throw err;
+          }
+          await new Promise((r) => setTimeout(r, 1000 * attempt));
+        }
+      }
+    })();
   }
 
   return clientPromise;
@@ -49,9 +59,7 @@ function getClientPromise() {
 
 export async function getDb() {
   const connectedClient = await getClientPromise();
-  // DB ismi env'den gelir; eski kayıtlarla uyumluluk için 'kademedia'
-  // varsayılan kalır — yeni kurulumlarda MONGODB_DB=kadirdemir tercih edilir.
-  const dbName = process.env.MONGODB_DB || 'kademedia';
+  const dbName = process.env.MONGODB_DB || 'kadirdemir';
   return connectedClient.db(dbName);
 }
 

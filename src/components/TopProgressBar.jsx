@@ -11,12 +11,9 @@ export default function TopProgressBar() {
     setProgress(30)
     const t1 = setTimeout(() => setProgress(65), 100)
     const t2 = setTimeout(() => setProgress(90), 300)
-    const t3 = setTimeout(() => {
-      setProgress(100)
-      const t4 = setTimeout(() => { setVisible(false); setProgress(0) }, 300)
-      return () => clearTimeout(t4)
-    }, 600)
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
+    const t3 = setTimeout(() => setProgress(100), 600)
+    const t4 = setTimeout(() => { setVisible(false); setProgress(0) }, 900)
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
   }, [location.pathname])
 
   if (!visible) return null

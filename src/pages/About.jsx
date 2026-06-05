@@ -16,11 +16,11 @@ export default function About() {
   const { settings } = useSiteSettings()
   const { t, lang } = useLanguage()
   const isEn = lang === 'en'
-  const youtubeUrl = settings.youtube || 'https://youtube.com/@kadirardademirr'
-  const instagramUrl = settings.instagram || 'https://instagram.com/kadirardademir'
-  const tiktokUrl = settings.tiktok || 'https://tiktok.com/@kadirardademir'
-  const emailAddr = settings.businessEmail || settings.email || 'thekademedia@gmail.com'
-  const brandName = settings.businessName || 'Kadir Demir'
+  const youtubeUrl = settings.youtube
+  const instagramUrl = settings.instagram
+  const tiktokUrl = settings.tiktok
+  const emailAddr = settings.businessEmail || settings.email
+  const brandName = settings.businessName
 
   useSEO({
     title: isEn ? `About ${brandName}` : `Hakkımda — ${brandName}`,

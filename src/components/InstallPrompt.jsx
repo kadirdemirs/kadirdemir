@@ -157,7 +157,7 @@ export default function InstallPrompt() {
       <button
         type="button"
         onClick={dismiss}
-        aria-label="Kapat"
+        aria-label={lang === 'en' ? 'Close' : 'Kapat'}
         style={{
           background: 'transparent',
           border: 'none',

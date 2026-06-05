@@ -1,4 +1,5 @@
 import { useSEO } from '../hooks/useSEO'
+import { useSiteSettings } from '../hooks/useSiteSettings'
 import PageTransition from '../components/PageTransition'
 import { FadeIn } from '../components/Animations'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -6,6 +7,9 @@ import './Legal.css'
 
 export default function Gizlilik() {
   const { t } = useLanguage()
+  const { settings } = useSiteSettings()
+  const contactEmail = settings?.email || settings?.businessEmail || 'thekademedia@gmail.com'
+  const siteHostname = settings?.baseUrl ? new URL(settings.baseUrl).hostname : 'kadirardademir.com'
   useSEO({
     title: t('legal.privacyTitle'),
     description: `${t('legal.privacyTitle')} — Kadir Demir`,
@@ -25,7 +29,7 @@ export default function Gizlilik() {
               <h2>1. Genel Bilgi</h2>
               <p>
                 Kadir Demir olarak kişisel verilerinizin güvenliğine büyük önem veriyoruz. Bu Gizlilik
-                Politikası, web sitemizi (<strong>kadirardademir.com</strong>) kullanırken hangi verilerin
+                Politikası, web sitemizi (<strong>{siteHostname}</strong>) kullanırken hangi verilerin
                 toplandığını ve bu verilerin nasıl kullanıldığını açıklamaktadır.
               </p>
 
@@ -78,8 +82,8 @@ export default function Gizlilik() {
               <h2>8. İletişim</h2>
               <p>
                 Gizlilik politikamızla ilgili sorularınız için:{' '}
-                <a href="mailto:thekademedia@gmail.com" style={{ color: 'var(--primary)' }}>
-                  thekademedia@gmail.com
+                <a href={`mailto:${contactEmail}`} style={{ color: 'var(--primary)' }}>
+                  {contactEmail}
                 </a>
               </p>
             </div>

@@ -25,35 +25,37 @@ export default function DecryptedText({
     if (!animating) return
     const pool = useOriginalCharsOnly ? Array.from(new Set(text.split(''))) : characters.split('')
     let frame = 0
-    const interval = setInterval(() => {
-      frame++
-      setDisplay(() => {
-        const chars = text.split('').map((ch, i) => {
-          if (revealed.has(i) || ch === ' ') return ch
-          return pool[Math.floor(Math.random() * pool.length)]
-        })
-        return chars.join('')
-      })
+    let lastTime = null
+    let rafId
 
-      if (sequential) {
-        const totalToReveal = Math.min(frame, text.length)
-        const nextRevealed = new Set(revealed)
-        for (let i = 0; i < totalToReveal; i++) {
-          const idx = revealDirection === 'end' ? text.length - 1 - i : revealDirection === 'center' ? Math.floor(text.length / 2) + (i % 2 === 0 ? i / 2 : -(Math.ceil(i / 2))) : i
-          if (idx >= 0 && idx < text.length) nextRevealed.add(idx)
+    const tick = (timestamp) => {
+      if (lastTime === null) lastTime = timestamp
+      if (timestamp - lastTime >= speed) {
+        lastTime = timestamp
+        frame++
+        setDisplay(() => text.split('').map((ch, i) =>
+          revealed.has(i) || ch === ' ' ? ch : pool[Math.floor(Math.random() * pool.length)]
+        ).join(''))
+
+        if (sequential) {
+          const nextRevealed = new Set(revealed)
+          for (let i = 0; i < Math.min(frame, text.length); i++) {
+            const idx = revealDirection === 'end' ? text.length - 1 - i
+              : revealDirection === 'center' ? Math.floor(text.length / 2) + (i % 2 === 0 ? i / 2 : -(Math.ceil(i / 2)))
+              : i
+            if (idx >= 0 && idx < text.length) nextRevealed.add(idx)
+          }
+          setRevealed(nextRevealed)
+          if (nextRevealed.size >= text.length) { setAnimating(false); setDisplay(text); return }
+        } else if (frame >= maxIterations) {
+          setAnimating(false); setDisplay(text); return
         }
-        setRevealed(nextRevealed)
-        if (nextRevealed.size >= text.length) {
-          setAnimating(false)
-          setDisplay(text)
-        }
-      } else if (frame >= maxIterations) {
-        setAnimating(false)
-        setDisplay(text)
       }
-    }, speed)
+      rafId = requestAnimationFrame(tick)
+    }
 
-    return () => clearInterval(interval)
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animating, text])
 

@@ -75,12 +75,20 @@ export default function RichEditor({ value = '', onChange, placeholder = 'Yazmay
   const insertLink = () => {
     const url = window.prompt('Link URL:')
     if (!url) return
+    if (!/^https?:\/\//i.test(url) && !/^mailto:/i.test(url)) {
+      alert('Geçersiz URL. https:// veya mailto: ile başlamalı.')
+      return
+    }
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }
 
   const insertImage = () => {
     const url = window.prompt('Görsel URL:')
     if (!url) return
+    if (!/^https?:\/\//i.test(url) && !url.startsWith('data:image/')) {
+      alert('Geçersiz görsel URL. https:// ile başlamalı.')
+      return
+    }
     editor.chain().focus().setImage({ src: url }).run()
   }
 

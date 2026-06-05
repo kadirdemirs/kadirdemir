@@ -3,7 +3,7 @@ import { getDb, isValidObjectId } from './_lib/mongodb.js';
 import { requireAuth } from './_lib/auth.js';
 import { cors } from './_lib/cors.js';
 
-const MAX_BASE64_SIZE = 2 * 1024 * 1024; // 2MB base64 limit
+const MAX_BASE64_SIZE = (parseInt(process.env.MAX_UPLOAD_SIZE_MB) || 2) * 1024 * 1024;
 
 export default async function handler(req, res) {
   if (cors(req, res)) return;

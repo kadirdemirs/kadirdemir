@@ -8,12 +8,16 @@ const LOCALE_MAP = {
 }
 
 const DEFAULT_BASE_URL = 'https://kadirardademir.com'
-const SITE_NAME = 'Kadir Demir'
-const DEFAULT_TITLE = 'Kadir Demir | YouTube İçerik Üreticisi'
+const DEFAULT_SITE_NAME = 'Kadir Demir'
 
 function getBaseUrl() {
   if (typeof window !== 'undefined' && window.__SITE_BASE_URL__) return window.__SITE_BASE_URL__
   return DEFAULT_BASE_URL
+}
+
+function getSiteName() {
+  if (typeof window !== 'undefined' && window.__SITE_NAME__) return window.__SITE_NAME__
+  return DEFAULT_SITE_NAME
 }
 
 function setMeta(name, content, property = false) {
@@ -75,25 +79,28 @@ export function useSEO({
   imageAlt,
   type = 'website',
   noindex = false,
-  twitterHandle = '@kadirardademir',
+  twitterHandle,
   // Makale (blog) meta'ları — type === 'article' iken kullanılır
   publishedTime,
   modifiedTime,
-  author = 'Kadir Demir',
+  author,
   section,
   tags = [],
 }) {
   const { lang } = useLanguage()
   useEffect(() => {
     const baseUrl = getBaseUrl()
+    const siteName = getSiteName()
+    const resolvedHandle = twitterHandle || (typeof window !== 'undefined' && window.__TWITTER_HANDLE__) || '@kadirardademir'
+    const resolvedAuthor = author || siteName
 
     let fullTitle
     if (!title) {
-      fullTitle = DEFAULT_TITLE
-    } else if (title.includes(SITE_NAME)) {
+      fullTitle = `${siteName} | YouTube İçerik Üreticisi`
+    } else if (title.includes(siteName)) {
       fullTitle = title
     } else {
-      fullTitle = `${title} | ${SITE_NAME}`
+      fullTitle = `${title} | ${siteName}`
     }
 
     const canonicalUrl = `${baseUrl}${path}`
@@ -117,14 +124,14 @@ export function useSEO({
     setMeta('description', description)
     if (keywords) setMeta('keywords', keywords)
     setMeta('robots', noindex ? 'noindex, nofollow' : 'index, follow')
-    setMeta('author', SITE_NAME)
+    setMeta('author', siteName)
 
     setMeta('og:title', fullTitle, true)
     setMeta('og:description', description, true)
     setMeta('og:url', canonicalUrl, true)
     setMeta('og:image', ogImage, true)
     setMeta('og:type', type, true)
-    setMeta('og:site_name', SITE_NAME, true)
+    setMeta('og:site_name', siteName, true)
     setMeta('og:locale', LOCALE_MAP[lang] || 'tr_TR', true)
 
     setMeta('og:image:alt', imageAlt || fullTitle, true)
@@ -137,14 +144,14 @@ export function useSEO({
     setMeta('twitter:description', description)
     setMeta('twitter:image', ogImage)
     setMeta('twitter:image:alt', imageAlt || fullTitle)
-    setMeta('twitter:site', twitterHandle)
-    setMeta('twitter:creator', twitterHandle)
+    setMeta('twitter:site', resolvedHandle)
+    setMeta('twitter:creator', resolvedHandle)
 
     // Makale meta'ları — yalnızca blog yazılarında; değilse temizle
     if (type === 'article') {
       setMeta('article:published_time', publishedTime, true)
       setMeta('article:modified_time', modifiedTime || publishedTime, true)
-      setMeta('article:author', author, true)
+      setMeta('article:author', resolvedAuthor, true)
       if (section) setMeta('article:section', section, true)
       removeMeta('article:tag', true)
       if (Array.isArray(tags) && tags.length) {
@@ -157,5 +164,5 @@ export function useSEO({
 
     setCanonical(canonicalUrl)
     setHreflang(canonicalUrl)
-  }, [title, description, keywords, path, image, imageAlt, type, noindex, twitterHandle, lang, publishedTime, modifiedTime, author, section, tags])
+  }, [title, description, keywords, path, image, imageAlt, type, noindex, twitterHandle, lang, publishedTime, modifiedTime, author, section, tags]) // eslint-disable-line react-hooks/exhaustive-deps
 }

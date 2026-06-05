@@ -1,8 +1,6 @@
 import { getDb } from './_lib/mongodb.js';
 
 const BASE = (process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '');
-const SITE_TITLE = 'Kadir Demir';
-const SITE_DESC = 'İstanbul\'dan yayın yapan YouTube içerik üreticisi. Oyun, vlog ve eğlence videoları, blog yazıları.';
 
 function escapeXml(s) {
   return String(s || '')
@@ -49,8 +47,13 @@ export default async function handler(req, res) {
 
   try {
     let posts = [];
+    let siteTitle = process.env.SITE_BUSINESS_NAME || 'Kadir Demir';
+    let siteDesc = 'YouTube içerik üreticisi — blog yazıları ve videolar.';
     try {
       const db = await getDb();
+      const settingsDoc = await db.collection('siteContent').findOne({ section: 'site-settings' });
+      if (settingsDoc?.data?.businessName) siteTitle = settingsDoc.data.businessName;
+      if (settingsDoc?.data?.description) siteDesc = settingsDoc.data.description;
       const now = new Date();
       posts = await db.collection('blogs').find({
         $or: [
@@ -70,9 +73,9 @@ export default async function handler(req, res) {
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${escapeXml(SITE_TITLE)}</title>
+    <title>${escapeXml(siteTitle)}</title>
     <link>${escapeXml(BASE)}</link>
-    <description>${escapeXml(SITE_DESC)}</description>
+    <description>${escapeXml(siteDesc)}</description>
     <language>tr-TR</language>
     <lastBuildDate>${lastBuild}</lastBuildDate>
     <atom:link href="${escapeXml(BASE + '/api/rss')}" rel="self" type="application/rss+xml" />

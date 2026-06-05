@@ -25,8 +25,10 @@ export default function ClickSpark({
       canvas.style.height = `${window.innerHeight}px`
     }
     resize()
-    window.addEventListener('resize', resize)
-    return () => window.removeEventListener('resize', resize)
+    let resizeTimer
+    const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 100) }
+    window.addEventListener('resize', onResize)
+    return () => { window.removeEventListener('resize', onResize); clearTimeout(resizeTimer) }
   }, [])
 
   useEffect(() => {

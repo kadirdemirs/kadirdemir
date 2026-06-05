@@ -351,8 +351,12 @@ export default async function handler(req, res) {
 
       return res.status(200).json({ configured: true, source: 'google_analytics', dailyData, totalVisits, growth, pages, sources, activeUsers, period });
     } catch (err) {
-      console.error('GA4 error:', err);
-      return res.status(500).json({ error: 'GA4 verisi alınamadı.' });
+      console.error('GA4 error:', err.message);
+      const isAuthError = err.message?.includes('401') || err.message?.includes('403') || err.message?.toLowerCase().includes('credentials');
+      if (isAuthError) {
+        return res.status(200).json({ configured: false, error: 'GA4 kimlik doğrulama hatası. Service account izinlerini kontrol edin.' });
+      }
+      return res.status(200).json({ configured: false, error: 'GA4 verisi alınamadı: ' + err.message });
     }
   }
 

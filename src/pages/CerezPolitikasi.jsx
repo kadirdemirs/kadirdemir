@@ -1,4 +1,5 @@
 import { useSEO } from '../hooks/useSEO'
+import { useSiteSettings } from '../hooks/useSiteSettings'
 import PageTransition from '../components/PageTransition'
 import { FadeIn } from '../components/Animations'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -6,6 +7,8 @@ import './Legal.css'
 
 export default function CerezPolitikasi() {
   const { t } = useLanguage()
+  const { settings } = useSiteSettings()
+  const contactEmail = settings?.email || settings?.businessEmail || 'thekademedia@gmail.com'
   useSEO({
     title: t('legal.cookieTitle'),
     description: `${t('legal.cookieTitle')} — Kadir Demir`,
@@ -73,8 +76,8 @@ export default function CerezPolitikasi() {
               <h2>5. İletişim</h2>
               <p>
                 Çerez politikamızla ilgili sorularınız için:{' '}
-                <a href="mailto:thekademedia@gmail.com" style={{ color: 'var(--primary)' }}>
-                  thekademedia@gmail.com
+                <a href={`mailto:${contactEmail}`} style={{ color: 'var(--primary)' }}>
+                  {contactEmail}
                 </a>
               </p>
             </div>

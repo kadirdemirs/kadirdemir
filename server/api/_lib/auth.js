@@ -61,7 +61,7 @@ function shouldUseSecureCookie(req) {
   if (forwardedProto) return forwardedProto === 'https';
 
   const host = String(req.headers?.host || '').split(':')[0].toLowerCase();
-  if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return false;
+  if (host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '[::1]') return false;
 
   return process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
 }

@@ -38,7 +38,7 @@ export default function Comments({ postSlug }) {
     setLoading(true)
     getCommentsApi(postSlug)
       .then((d) => Array.isArray(d) && setList(d))
-      .catch(() => {})
+      .catch((err) => console.error('Failed to load comments:', err))
       .finally(() => setLoading(false))
   }, [postSlug])
 

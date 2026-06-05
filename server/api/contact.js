@@ -120,15 +120,17 @@ export default async function handler(req, res) {
       let sent = 0;
       const errors = [];
 
+      const siteBaseUrl = (process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '');
+      const siteBusinessName = process.env.SITE_BUSINESS_NAME || 'Kadir Demir';
       for (const sub of subscribers) {
         try {
           const unsubToken = generateUnsubToken(sub.email);
-          const unsubLink = `https://kadirardademir.com/api/contact?action=unsubscribe&email=${encodeURIComponent(sub.email)}${unsubToken ? `&token=${unsubToken}` : ''}`;
+          const unsubLink = `${siteBaseUrl}/api/contact?action=unsubscribe&email=${encodeURIComponent(sub.email)}${unsubToken ? `&token=${unsubToken}` : ''}`;
           const safeHtml = sanitizedHtml + `<div style="margin-top:32px;padding-top:16px;border-top:1px solid #333;text-align:center;font-size:12px;color:#888;">
             <a href="${unsubLink}" style="color:#888;">Abonelikten çık</a>
           </div>`;
           await transporter.sendMail({
-            from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
+            from: `"${siteBusinessName}" <${process.env.SMTP_USER}>`,
             to: sub.email,
             subject: escapeHtml(subject),
             html: safeHtml,
@@ -180,7 +182,8 @@ export default async function handler(req, res) {
         { email: email.toLowerCase() },
         { $set: { status: 'unsubscribed', unsubscribedAt: new Date() } }
       );
-      return res.status(200).send('<html><body style="font-family:Arial;text-align:center;padding:60px;background:#0a0a0a;color:#fff"><h2 style="color:#eac321">Aboneliğiniz iptal edildi.</h2><p style="color:#888">Kadir Demir bülteninden başarıyla çıktınız.</p></body></html>');
+      const unsubBizName = process.env.SITE_BUSINESS_NAME || 'Kadir Demir';
+      return res.status(200).send(`<html><body style="font-family:Arial;text-align:center;padding:60px;background:#0a0a0a;color:#fff"><h2 style="color:#eac321">Aboneliğiniz iptal edildi.</h2><p style="color:#888">${escapeHtml(unsubBizName)} bülteninden başarıyla çıktınız.</p></body></html>`);
     } catch {
       return res.status(500).send('<html><body style="font-family:Arial;text-align:center;padding:60px;background:#0a0a0a;color:#fff"><h2>Bir hata oluştu, lütfen tekrar deneyin.</h2></body></html>');
     }
@@ -268,14 +271,16 @@ export default async function handler(req, res) {
 
     if (transporter) {
       try {
-        await transporter.sendMail({
-          from: `"Kadir Demir Website" <${process.env.SMTP_USER}>`,
+        const businessName = process.env.SITE_BUSINESS_NAME || 'Kadir Demir';
+      const contactFooterEmail = process.env.MAIL_TO || process.env.SMTP_USER || 'thekademedia@gmail.com';
+      await transporter.sendMail({
+          from: `"${businessName} Website" <${process.env.SMTP_USER}>`,
           to: mailTo,
           subject: `🔔 Yeni Lead: ${escapeHtml(name)} — ${serviceValue || 'Genel'}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#0a0a0a;color:#fff;border-radius:12px;">
               <div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;">
-                <h1 style="color:#eac321;margin:0;">⚡ Kadir Demir</h1>
+                <h1 style="color:#eac321;margin:0;">⚡ ${escapeHtml(businessName)}</h1>
                 <p style="color:#888;margin:8px 0 0">Yeni Lead Bildirimi</p>
               </div>
               <div style="padding:30px 20px;">
@@ -303,19 +308,19 @@ export default async function handler(req, res) {
       // Thank you email
       try {
         await transporter.sendMail({
-          from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
+          from: `"${businessName}" <${process.env.SMTP_USER}>`,
           to: email,
-          subject: 'Mesajınız Alındı — Kadir Demir',
+          subject: `Mesajınız Alındı — ${businessName}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;">
               <div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;">
-                <h1 style="color:#eac321;margin:0;">Kadir Demir</h1>
+                <h1 style="color:#eac321;margin:0;">${escapeHtml(businessName)}</h1>
               </div>
               <div style="padding:30px 20px;">
                 <h2 style="color:#fff;">Merhaba ${escapeHtml(name)},</h2>
                 <p style="color:#ccc;line-height:1.8;">Mesajın bana ulaştı. En kısa sürede dönüş yapacağım — genellikle 1-2 gün içinde.</p>
                 <hr style="border:none;border-top:1px solid #333;margin:24px 0;" />
-                <p style="color:#888;font-size:13px;">Kadir Demir · İstanbul<br/>thekademedia@gmail.com</p>
+                <p style="color:#888;font-size:13px;">${escapeHtml(businessName)} · İstanbul<br/>${escapeHtml(contactFooterEmail)}</p>
               </div>
             </div>
           `,
@@ -420,8 +425,9 @@ async function handleNewsletter(req, res) {
     const transporter = makeTransporter();
     if (transporter) {
       try {
+        const nlBusinessName = process.env.SITE_BUSINESS_NAME || 'Kadir Demir';
         await transporter.sendMail({
-          from: `"Kadir Demir" <${process.env.SMTP_USER}>`,
+          from: `"${nlBusinessName}" <${process.env.SMTP_USER}>`,
           to: emailLower,
           subject: 'Aboneliğini onayla',
           html: `

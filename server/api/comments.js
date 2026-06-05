@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { getDb } from './_lib/mongodb.js';
 import { requireAuth } from './_lib/auth.js';
 import { cors } from './_lib/cors.js';
@@ -15,7 +16,8 @@ const createSchema = z.object({
 function visitorKey(req) {
   const ip = (req.headers?.['x-forwarded-for'] || req.headers?.['x-real-ip'] || '').toString().split(',')[0].trim();
   const ua = (req.headers?.['user-agent'] || '').toString().slice(0, 80);
-  return `${ip}::${ua}`.slice(0, 200);
+  // KVKK/GDPR: IP + UA ham olarak saklanmaz, tek-yönlü hash ile anonimleştirilir.
+  return crypto.createHash('sha256').update(`${ip}::${ua}`).digest('hex').slice(0, 32);
 }
 
 export default async function handler(req, res) {

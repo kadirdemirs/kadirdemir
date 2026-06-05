@@ -96,7 +96,7 @@ export async function rateLimitCheck(req, options = {}) {
       }
     }
   } else if (isProductionRuntime()) {
-    console.warn('UPSTASH_REDIS not configured — falling back to in-memory rate limiting');
+    console.warn('UPSTASH_REDIS not configured — falling back to in-memory rate limiting. Set UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN for persistent rate limiting across serverless instances.');
   }
 
   return inMemoryRateLimit(key, windowMs, maxRequests);

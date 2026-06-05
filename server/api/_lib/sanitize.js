@@ -65,7 +65,7 @@ export function sanitizeNewsletterHtml(value) {
         'line-height': [/^\d+(\.\d+)?(px|em|rem|%)?$/i],
         margin: [/^[\d\s.%-]+(px|em|rem|%)?$/i],
         padding: [/^[\d\s.%-]+(px|em|rem|%)?$/i],
-        border: [/^[#\w\s().,%-]+$/i],
+        border: [/^\d+(\.\d+)?(px|em|rem)\s+(solid|dashed|dotted|double|groove|ridge|inset|outset|none)\s+(#[0-9a-f]{3,8}|[a-z]+|rgba?\(\d+,\s*\d+,\s*\d+(,\s*[\d.]+)?\))$/i, /^none$/i],
         'border-radius': [/^\d+(\.\d+)?(px|em|rem|%)$/i],
         display: [/^(block|inline|inline-block|table|table-row|table-cell)$/i],
         width: [/^\d+(\.\d+)?(px|em|rem|%)$/i],

@@ -54,7 +54,7 @@ export default function Footer() {
       <div className="ft-grid">
         <div className="ft-col ft-col-brand">
           <Link to="/" className="ft-brand">
-            <span className="ft-brand-mark">KD</span>
+            <span className="ft-brand-mark">{brandName.split(/\s+/).map(w => w[0]).join('').slice(0, 3).toUpperCase()}</span>
             <span>{brandName}</span>
           </Link>
           <p className="ft-tagline">

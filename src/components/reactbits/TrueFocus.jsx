@@ -20,7 +20,8 @@ export default function TrueFocus({
   const [focusRect, setFocusRect] = useState({ x: 0, y: 0, width: 0, height: 0 })
 
   useEffect(() => {
-    if (!manualMode) {
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (!manualMode && !reduce) {
       const interval = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % words.length)
       }, (animationDuration + pauseBetweenAnimations) * 1000)

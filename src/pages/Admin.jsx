@@ -27,6 +27,7 @@ import {
   getBackupSummaryApi, createBackupApi,
   getAdminCommentsApi, setCommentApprovalApi, deleteCommentApi,
   purgeLegacyDryRunApi, purgeLegacyApplyApi,
+  apiFetch,
 } from '../api'
 import RichEditor from '../components/RichEditor'
 import {
@@ -869,7 +870,7 @@ function BlogEditor({ post, onSave, onCancel }) {
                 onError={(e) => { e.target.style.display = 'none' }}
               />
               <div className="og-preview-meta">
-                <span className="og-preview-site">kadirardademir.com</span>
+                <span className="og-preview-site">{window.location.hostname}</span>
                 <span className="og-preview-title">{data.titleTr || data.title}</span>
                 <span className="og-preview-desc">{(data.excerptTr || '').slice(0, 120)}</span>
               </div>
@@ -1575,7 +1576,8 @@ function RemindersSection({ showToast }) {
               <td>{r.date}</td>
               <td>
                 <button onClick={() => handleToggle(r)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.1rem' }}
-                  title={r.completed ? 'Yapılmadı olarak işaretle' : 'Tamamlandı olarak işaretle'}>
+                  title={r.completed ? 'Yapılmadı olarak işaretle' : 'Tamamlandı olarak işaretle'}
+                  aria-label={r.completed ? 'Yapılmadı olarak işaretle' : 'Tamamlandı olarak işaretle'}>
                   {r.completed ? '✅' : '⏳'}
                 </button>
               </td>
@@ -2028,7 +2030,7 @@ function PushNotifySection({ showToast }) {
   const upd = (k, v) => setForm((f) => ({ ...f, [k]: v }))
 
   useEffect(() => {
-    fetch('/api/ops?resource=push', { headers: { 'x-admin-token': sessionStorage.getItem('kade_admin_user') ? JSON.parse(sessionStorage.getItem('kade_admin_user') || '{}')?.token || '' : '' } })
+    apiFetch('/api/ops?resource=push')
       .then((r) => r.json()).then((d) => Array.isArray(d) && setSubCount(d.length)).catch(() => {})
   }, [])
 
@@ -2036,7 +2038,7 @@ function PushNotifySection({ showToast }) {
     if (!form.title.trim()) return showToast('Başlık gerekli', 'error')
     setLoading(true)
     try {
-      const res = await fetch('/api/ops?resource=push&action=send', {
+      const res = await apiFetch('/api/ops?resource=push&action=send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -2059,7 +2061,7 @@ function PushNotifySection({ showToast }) {
       <div className="form-grid">
         <label>Başlık<input value={form.title} onChange={e => upd('title', e.target.value)} placeholder="Yeni video çıktı!" maxLength={80} /></label>
         <label>Mesaj<input value={form.body} onChange={e => upd('body', e.target.value)} placeholder="İzlemek için tıkla →" maxLength={200} /></label>
-        <label className="full">Hedef URL<input value={form.url} onChange={e => upd('url', e.target.value)} placeholder="https://kadirardademir.com/videolar" /></label>
+        <label className="full">Hedef URL<input value={form.url} onChange={e => upd('url', e.target.value)} placeholder="/videolar" /></label>
       </div>
       <button className="btn btn-primary" onClick={send} disabled={loading} style={{ marginTop: 12 }}>
         {loading ? 'Gönderiliyor…' : '📤 Bildirim Gönder'}
@@ -2089,32 +2091,6 @@ const TABS = [
   { id: 'backup', label: 'Yedekleme', icon: HiOutlineDatabase },
   { id: 'settings', label: 'Ayarlar', icon: HiOutlineCog },
 ]
-
-// ───── SVG SPARKLINE (harici kütüphane yok) ─────
-function Sparkline({ data = [], color = '#d4943f', height = 56, fillOpacity = 0.15 }) {
-  if (!data.length) return null
-  const max = Math.max(...data, 1)
-  const W = 300, H = height
-  const pts = data.map((v, i) => {
-    const x = (i / (data.length - 1 || 1)) * W
-    const y = H - (v / max) * (H - 4) - 2
-    return `${x},${y}`
-  })
-  const polyline = pts.join(' ')
-  const area = `0,${H} ${polyline} ${W},${H}`
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height }} aria-hidden="true">
-      <defs>
-        <linearGradient id="spkfill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity={fillOpacity * 2} />
-          <stop offset="100%" stopColor={color} stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      <polygon points={area} fill="url(#spkfill)" />
-      <polyline points={polyline} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
-    </svg>
-  )
-}
 
 function BarChart({ data = [], color = '#d4943f', height = 80 }) {
   if (!data.length) return null

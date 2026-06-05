@@ -25,7 +25,7 @@ function generateICS({ title, description, date, time, duration = 60 }) {
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Kadir Demir//Calendar//TR',
+    `PRODID:-//${process.env.SITE_BUSINESS_NAME || 'Kadir Demir'}//Calendar//TR`,
     'CALSCALE:GREGORIAN',
     'METHOD:REQUEST',
     'BEGIN:VTIMEZONE',
@@ -41,8 +41,8 @@ function generateICS({ title, description, date, time, duration = 60 }) {
     `DTEND;TZID=Europe/Istanbul:${endFmt}`,
     `SUMMARY:${title}`,
     `DESCRIPTION:${(description || '').replace(/\n/g, '\\n')}`,
-    'ORGANIZER;CN=Kadir Demir:mailto:thekademedia@gmail.com',
-    `UID:${Date.now()}@kadirardademir.com`,
+    `ORGANIZER;CN=${process.env.SITE_BUSINESS_NAME || 'Kadir Demir'}:mailto:${process.env.MAIL_TO || process.env.SMTP_USER || 'thekademedia@gmail.com'}`,
+    `UID:${Date.now()}@${new URL(process.env.SITE_BASE_URL || 'https://kadirardademir.com').hostname}`,
     'STATUS:CONFIRMED',
     'END:VEVENT',
     'END:VCALENDAR',
@@ -134,7 +134,7 @@ export default async function handler(req, res) {
     const emailBody = `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px;">
         <div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;">
-          <h1 style="color:#eac321;margin:0;">Kadir Demir</h1>
+          <h1 style="color:#eac321;margin:0;">${escapeHtml(process.env.SITE_BUSINESS_NAME || 'Kadir Demir')}</h1>
           <p style="color:#aaa;margin:5px 0 0;">İçerik Takvimi Daveti</p>
         </div>
         <div style="padding:20px 0;">
@@ -149,7 +149,7 @@ export default async function handler(req, res) {
           ${event.description ? `<div style="padding:16px;background:#16213e;border-radius:8px;margin-top:12px;"><p style="color:#eac321;font-weight:bold;margin:0 0 8px;">Açıklama:</p><p style="color:#fff;line-height:1.6;margin:0;">${escapeHtml(event.description)}</p></div>` : ''}
         </div>
         <div style="text-align:center;padding:15px 0;border-top:1px solid #333;color:#666;font-size:12px;">
-          Kadir Demir İçerik Takvimi
+          ${escapeHtml(process.env.SITE_BUSINESS_NAME || 'Kadir Demir')} İçerik Takvimi
         </div>
       </div>
     `;
@@ -160,7 +160,7 @@ export default async function handler(req, res) {
     for (const email of emails) {
       try {
         await transporter.sendMail({
-          from: `"Kadir Demir Takvim" <${smtpUser}>`,
+          from: `"${process.env.SITE_BUSINESS_NAME || 'Kadir Demir'} Takvim" <${smtpUser}>`,
           to: email,
           subject: `📅 ${event.title} — ${event.date} ${event.time || ''}`,
           html: emailBody,

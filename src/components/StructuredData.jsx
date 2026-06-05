@@ -1,10 +1,16 @@
 import { useEffect } from 'react'
 
 const DEFAULT_BASE_URL = 'https://kadirardademir.com'
+const DEFAULT_SITE_NAME = 'Kadir Demir'
 
 function baseUrl() {
   if (typeof window !== 'undefined' && window.__SITE_BASE_URL__) return window.__SITE_BASE_URL__
   return DEFAULT_BASE_URL
+}
+
+function siteName() {
+  if (typeof window !== 'undefined' && window.__SITE_NAME__) return window.__SITE_NAME__
+  return DEFAULT_SITE_NAME
 }
 
 function injectSchema(id, schema) {
@@ -46,11 +52,11 @@ export function PersonSchema({ socials }) {
     injectSchema('schema-person', {
       '@context': 'https://schema.org',
       '@type': 'Person',
-      name: 'Kadir Demir',
+      name: siteName(),
       url,
       image: `${url}/favicon.png`,
-      jobTitle: 'YouTube İçerik Üreticisi',
-      description: "İstanbul'dan yayın yapan bir YouTuber. Oyun, vlog ve eğlence içerikleri üretiyor.",
+      jobTitle: socials?.tagline || 'YouTube İçerik Üreticisi',
+      description: socials?.description || "İstanbul'dan yayın yapan bir YouTuber. Oyun, vlog ve eğlence içerikleri üretiyor.",
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'İstanbul',
@@ -122,11 +128,11 @@ export function ArticleSchema({ title, description, image, datePublished, dateMo
       dateModified: dateModified || datePublished,
       author: {
         '@type': 'Person',
-        name: author || 'Kadir Demir',
+        name: author || siteName(),
       },
       publisher: {
         '@type': 'Person',
-        name: 'Kadir Demir',
+        name: siteName(),
         logo: { '@type': 'ImageObject', url: `${url}/logo.png` },
       },
     })
@@ -168,8 +174,8 @@ export function WebSiteSchema() {
     injectSchema('schema-website', {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Kadir Demir',
-      alternateName: 'kadirdemir',
+      name: siteName(),
+      alternateName: siteName().toLowerCase().replace(/\s+/g, ''),
       url,
       inLanguage: ['tr-TR', 'en-US'],
       potentialAction: {

@@ -7,7 +7,7 @@ import { rateLimitCheck } from './_lib/rateLimit.js';
 import { logActivity } from './notifications.js';
 
 // Varsayılan admin bilgileri — .env'den alınır
-const DEFAULT_ADMIN_USERNAME = 'kade';
+const DEFAULT_ADMIN_USERNAME = process.env.SEED_ADMIN_USERNAME || 'kade';
 const DEFAULT_ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD;
 
 // Brute-force koruması: IP başına login denemesi sınırı

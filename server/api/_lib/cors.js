@@ -16,7 +16,11 @@ function getAllowedOrigins() {
   if (process.env.ALLOWED_ORIGINS) {
     return process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean);
   }
-  return isProductionRuntime() ? PRODUCTION_ORIGINS : LOCAL_ORIGINS;
+  if (isProductionRuntime()) {
+    console.warn('ALLOWED_ORIGINS env var not set — using hardcoded production origin fallback');
+    return PRODUCTION_ORIGINS;
+  }
+  return LOCAL_ORIGINS;
 }
 
 function isSameOrigin(req, origin) {

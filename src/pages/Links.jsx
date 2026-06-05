@@ -71,10 +71,7 @@ const MODAL_CONTENT = {
     tr: { title: 'Çerez Tercihleri', body: 'Bu site analitik amaçlı yalnızca temel çerezleri kullanır. Üçüncü taraf izleyici yoktur.' },
     en: { title: 'Cookie Preferences', body: 'This site uses only essential cookies for analytics. No third-party trackers.' },
   },
-  report: {
-    tr: { title: 'Bildir', body: 'Bir sorun mu var? Bana ulaş: thekademedia@gmail.com' },
-    en: { title: 'Report', body: 'Is there an issue? Reach out: thekademedia@gmail.com' },
-  },
+  report: null, // dinamik — settings.email kullanılır
   privacy: {
     tr: { title: 'Gizlilik', body: 'Kişisel veri toplanmaz. Tıkladığın bağlantılar ilgili platformlara yönlendirir.' },
     en: { title: 'Privacy', body: 'No personal data is collected. Links you click go to the relevant platforms.' },
@@ -192,7 +189,15 @@ export default function Links() {
   const openModal = (key) => setModal(key)
   const closeModal = () => setModal(null)
 
-  const modalData = modal ? MODAL_CONTENT[modal]?.[lang] || MODAL_CONTENT[modal]?.tr : null
+  const reportEmail = settings?.email || settings?.businessEmail || 'thekademedia@gmail.com'
+  const dynamicModal = {
+    ...MODAL_CONTENT,
+    report: {
+      tr: { title: 'Bildir', body: `Bir sorun mu var? Bana ulaş: ${reportEmail}` },
+      en: { title: 'Report', body: `Is there an issue? Reach out: ${reportEmail}` },
+    },
+  }
+  const modalData = modal ? dynamicModal[modal]?.[lang] || dynamicModal[modal]?.tr : null
 
   return (
     <div className="kdl-page">

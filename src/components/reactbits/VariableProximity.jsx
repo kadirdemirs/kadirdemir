@@ -20,6 +20,7 @@ export default function VariableProximity({
   const wrapRef = useRef(null)
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
     const parsed = (s) => {
       const m = s.match(/'(\w+)'\s+([\d.]+)/g) || []
       return m.map((x) => {

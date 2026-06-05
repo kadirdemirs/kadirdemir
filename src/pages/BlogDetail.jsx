@@ -91,12 +91,13 @@ export default function BlogDetail() {
     ...(category ? { tag: category } : {}),
   }).toString()
 
+  const siteBase = (typeof window !== 'undefined' && window.__SITE_BASE_URL__) || 'https://kadirardademir.com'
   useSEO({
-    title: title || 'Blog | Kadir Demir',
+    title: title || 'Blog',
     description: excerpt || '',
     path: `/blog/${slug}`,
     type: 'article',
-    image: `https://kadirardademir.com/api/og?${ogImageParams}`,
+    image: `${siteBase}/api/og?${ogImageParams}`,
     imageAlt: title || undefined,
     publishedTime: post?.date || post?.publishedAt || post?.createdAt,
     modifiedTime: post?.updatedAt || post?.modifiedAt,
@@ -123,14 +124,14 @@ export default function BlogDetail() {
       description: excerpt,
       ...(published ? { datePublished: published } : {}),
       ...(modified ? { dateModified: modified } : {}),
-      author: { '@type': 'Person', name: 'Kadir Demir', url: 'https://kadirardademir.com' },
+      author: { '@type': 'Person', name: window.__SITE_NAME__ || 'Kadir Demir', url: siteBase },
       publisher: {
         '@type': 'Organization',
-        name: 'Kadir Demir',
-        logo: { '@type': 'ImageObject', url: 'https://kadirardademir.com/favicon.png' },
+        name: window.__SITE_NAME__ || 'Kadir Demir',
+        logo: { '@type': 'ImageObject', url: `${siteBase}/favicon.png` },
       },
-      url: `https://kadirardademir.com/blog/${slug}`,
-      mainEntityOfPage: { '@type': 'WebPage', '@id': `https://kadirardademir.com/blog/${slug}` },
+      url: `${siteBase}/blog/${slug}`,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteBase}/blog/${slug}` },
       inLanguage: lang === 'en' ? 'en-US' : 'tr-TR',
       ...(post.coverImage && /^https?:\/\//.test(post.coverImage) ? { image: post.coverImage } : (post.image && /^https?:\/\//.test(post.image) ? { image: post.image } : {})),
     }
@@ -147,9 +148,9 @@ export default function BlogDetail() {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Ana Sayfa', item: 'https://kadirardademir.com' },
-        { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://kadirardademir.com/blog' },
-        { '@type': 'ListItem', position: 3, name: title, item: `https://kadirardademir.com/blog/${slug}` },
+        { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Ana Sayfa', item: siteBase },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteBase}/blog` },
+        { '@type': 'ListItem', position: 3, name: title, item: `${siteBase}/blog/${slug}` },
       ],
     }
     let bcEl = document.getElementById('jsonld-breadcrumb')
@@ -178,7 +179,7 @@ export default function BlogDetail() {
 
   if (!post) return <Navigate to="/blog" replace />
 
-  const postUrl = `https://kadirardademir.com/blog/${slug}`
+  const postUrl = `${siteBase}/blog/${slug}`
   const encodedUrl = encodeURIComponent(postUrl)
   const encodedTitle = encodeURIComponent(title)
 

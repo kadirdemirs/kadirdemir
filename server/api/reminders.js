@@ -108,14 +108,14 @@ export default async function handler(req, res) {
             const label = priorityLabels[reminder.priority] || 'Orta';
 
             await transporter.sendMail({
-              from: `"Kadir Demir Hatırlatıcı" <${process.env.SMTP_USER}>`,
+              from: `"${process.env.SITE_BUSINESS_NAME || 'Kadir Demir'} Hatırlatıcı" <${process.env.SMTP_USER}>`,
               to: emails.join(', '),
               subject: `⏰ Hatırlatıcı: ${reminder.title}`,
               html: `
                 <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#0a0a0a;color:#fff;border-radius:12px;">
                   <div style="text-align:center;padding:20px 0;border-bottom:1px solid #333;">
                     <h1 style="color:#eac321;margin:0;">⏰ Hatırlatıcı</h1>
-                    <p style="color:#888;margin:8px 0 0">Kadir Demir Admin</p>
+                    <p style="color:#888;margin:8px 0 0">${process.env.SITE_BUSINESS_NAME || 'Kadir Demir'} Admin</p>
                   </div>
                   <div style="padding:30px 20px;">
                     <h2 style="color:#fff;margin:0 0 16px;">${escapeHtml(reminder.title)}</h2>
@@ -126,11 +126,11 @@ export default async function handler(req, res) {
                       ${reminder.category ? `<tr><td style="padding:8px 0;color:#888;">Kategori</td><td style="padding:8px 0;color:#fff;">${escapeHtml(reminder.category)}</td></tr>` : ''}
                     </table>
                     <div style="text-align:center;margin:24px 0;">
-                      <a href="https://kadirardademir.com/admin" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">Admin Paneline Git</a>
+                      <a href="${(process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '')}/admin" style="display:inline-block;padding:14px 32px;background:#eac321;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;">Admin Paneline Git</a>
                     </div>
                   </div>
                   <div style="text-align:center;padding:16px;border-top:1px solid #333;">
-                    <p style="color:#666;font-size:12px;margin:0;">Bu e-posta Kadir Demir hatırlatıcı sistemi tarafından gönderilmiştir.</p>
+                    <p style="color:#666;font-size:12px;margin:0;">Bu e-posta ${process.env.SITE_BUSINESS_NAME || 'Kadir Demir'} hatırlatıcı sistemi tarafından gönderilmiştir.</p>
                   </div>
                 </div>
               `,
@@ -313,11 +313,12 @@ export default async function handler(req, res) {
     const port2 = parseInt(process.env.SMTP_PORT) || 587;
     const transporter2 = nodemailer.createTransport({ host: smtpHost, port: port2, secure: port2 === 465, auth: { user: smtpUser, pass: smtpPass }, ...(port2 === 587 ? { requireTLS: true } : {}), tls: { rejectUnauthorized: true, minVersion: 'TLSv1.2' }, connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000 });
     const icsContent = generateICS(event);
-    const emailBody = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px"><div style="text-align:center;padding:20px 0;border-bottom:1px solid #333"><h1 style="color:#eac321;margin:0">Kadir Demir</h1><p style="color:#aaa;margin:5px 0 0">İçerik Takvimi Daveti</p></div><div style="padding:20px 0"><h2 style="color:#fff;margin:0 0 16px">${escapeHtml(event.title)}</h2><p style="color:#eac321">Tarih: ${escapeHtml(event.date)} ${escapeHtml(event.time || '10:00')}</p>${message ? `<p style="color:#fff">${escapeHtml(message)}</p>` : ''}${event.description ? `<p style="color:#fff">${escapeHtml(event.description)}</p>` : ''}</div></div>`;
+    const calBizName = process.env.SITE_BUSINESS_NAME || 'Kadir Demir';
+    const emailBody = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#1a1a2e;color:#fff;border-radius:12px"><div style="text-align:center;padding:20px 0;border-bottom:1px solid #333"><h1 style="color:#eac321;margin:0">${escapeHtml(calBizName)}</h1><p style="color:#aaa;margin:5px 0 0">İçerik Takvimi Daveti</p></div><div style="padding:20px 0"><h2 style="color:#fff;margin:0 0 16px">${escapeHtml(event.title)}</h2><p style="color:#eac321">Tarih: ${escapeHtml(event.date)} ${escapeHtml(event.time || '10:00')}</p>${message ? `<p style="color:#fff">${escapeHtml(message)}</p>` : ''}${event.description ? `<p style="color:#fff">${escapeHtml(event.description)}</p>` : ''}</div></div>`;
 
     let sent = 0; let failed = 0;
     for (const email of emails) {
-      try { await transporter2.sendMail({ from: `"Kadir Demir Takvim" <${smtpUser}>`, to: email, subject: `📅 ${event.title} — ${event.date}`, html: emailBody, icalEvent: { method: 'REQUEST', content: icsContent } }); sent++; }
+      try { await transporter2.sendMail({ from: `"${calBizName} Takvim" <${smtpUser}>`, to: email, subject: `📅 ${event.title} — ${event.date}`, html: emailBody, icalEvent: { method: 'REQUEST', content: icsContent } }); sent++; }
       catch (err) { console.error(`Davet hatası ${email}:`, err.message); failed++; }
     }
     return res.status(200).json({ message: `${sent} kişiye davet gönderildi${failed > 0 ? `, ${failed} başarısız` : ''}`, sent, failed });

@@ -66,7 +66,7 @@ export default function MediaKit() {
     if (typeof window !== 'undefined') window.print()
   }
 
-  const businessEmail = settings.businessEmail || 'thekademedia@gmail.com'
+  const businessEmail = settings.businessEmail || settings.email || ''
   const updatedDate = new Date().toLocaleDateString(isEn ? 'en-US' : 'tr-TR')
 
   return (

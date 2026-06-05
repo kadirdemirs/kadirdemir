@@ -1,4 +1,5 @@
 import { useSEO } from '../hooks/useSEO'
+import { useSiteSettings } from '../hooks/useSiteSettings'
 import PageTransition from '../components/PageTransition'
 import { FadeIn } from '../components/Animations'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -6,6 +7,8 @@ import './Legal.css'
 
 export default function KVKK() {
   const { t } = useLanguage()
+  const { settings } = useSiteSettings()
+  const contactEmail = settings?.email || settings?.businessEmail || 'thekademedia@gmail.com'
   useSEO({
     title: t('legal.kvkkTitle'),
     description: t('legal.kvkkTitle') + ' — Kadir Demir',
@@ -78,7 +81,7 @@ export default function KVKK() {
 
               <h2>7. İletişim</h2>
               <p>
-                Haklarınıza ilişkin taleplerinizi <strong>thekademedia@gmail.com</strong> adresine
+                Haklarınıza ilişkin taleplerinizi <strong><a href={`mailto:${contactEmail}`} style={{ color: 'var(--primary)' }}>{contactEmail}</a></strong> adresine
                 e-posta göndererek iletebilirsiniz.
               </p>
             </div>

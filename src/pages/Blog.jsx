@@ -43,12 +43,13 @@ export default function Blog() {
     }
   }, [query, searchParams, setSearchParams])
 
+  const siteName = (typeof window !== 'undefined' && window.__SITE_NAME__) || 'Kadir Demir'
   useSEO({
-    title: 'Blog | Kadir Demir',
+    title: `Blog | ${siteName}`,
     description:
       lang === 'en'
-        ? 'Articles, notes and behind-the-scenes from Kadir Demir.'
-        : "Kadir Demir'in yazıları, notları ve kulis gözlemleri.",
+        ? `Articles, notes and behind-the-scenes from ${siteName}.`
+        : `${siteName}'in yazıları, notları ve kulis gözlemleri.`,
     path: '/blog',
   })
 

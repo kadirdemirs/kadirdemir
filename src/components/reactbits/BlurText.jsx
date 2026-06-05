@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 const buildKeyframes = (from, steps) => {
   const keys = new Set([...Object.keys(from), ...steps.flatMap((s) => Object.keys(s))])
@@ -29,6 +29,7 @@ export default function BlurText({
     return text.split('')
   }, [text, animateBy])
 
+  const reduce = useReducedMotion()
   const [inView, setInView] = useState(false)
   const ref = useRef(null)
 
@@ -78,7 +79,7 @@ export default function BlurText({
           <motion.span
             key={index}
             initial={fromSnapshot}
-            animate={inView ? animateKeyframes : fromSnapshot}
+            animate={reduce ? { filter: 'blur(0px)', opacity: 1, y: 0 } : (inView ? animateKeyframes : fromSnapshot)}
             transition={spanTransition}
             onAnimationComplete={
               index === elements.length - 1 ? onAnimationComplete : undefined

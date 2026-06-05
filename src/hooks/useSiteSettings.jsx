@@ -198,8 +198,10 @@ export function SiteSettingsProvider({ children }) {
             }
           }
           setSettings(merged)
-          if (merged.baseUrl && typeof window !== 'undefined') {
-            window.__SITE_BASE_URL__ = merged.baseUrl
+          if (typeof window !== 'undefined') {
+            if (merged.baseUrl) window.__SITE_BASE_URL__ = merged.baseUrl
+            if (merged.businessName) window.__SITE_NAME__ = merged.businessName
+            if (merged.twitterHandle) window.__TWITTER_HANDLE__ = merged.twitterHandle.startsWith('@') ? merged.twitterHandle : '@' + merged.twitterHandle
           }
           applySitePalette(merged.accentColor)
         } else {

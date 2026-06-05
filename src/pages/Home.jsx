@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useMotionValue, useSpring, useInView } from 'framer-motion'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { useSEO } from '../hooks/useSEO.js'
 import { getYouTubeVideosApi, getSocialStatsApi, sendContactApi } from '../api'
 import './Home.css'
 
@@ -107,6 +108,13 @@ export default function Home() {
   const rootRef = useRef(null)
   const { settings } = useSiteSettings()
   const [videos, setVideos] = useState([])
+
+  useSEO({
+    title: settings?.seoTitle || null,
+    description: settings?.seoDescription || settings?.description,
+    keywords: settings?.seoKeywords,
+    path: '/',
+  })
   const [socialStats, setSocialStats] = useState(null)
   const [form, setForm] = useState({ name: '', email: '', topic: '', message: '' })
   const [status, setStatus] = useState(null)
@@ -245,8 +253,6 @@ export default function Home() {
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    document.title = 'Kadir Demir — İçerik Üreticisi'
-
     const nav = root.querySelector('#nav')
     const onScroll = () => nav && nav.classList.toggle('scrolled', window.scrollY > 30)
     window.addEventListener('scroll', onScroll)
@@ -479,10 +485,10 @@ export default function Home() {
             <div className="eyebrow" style={{ marginBottom: '22px' }}>İletişim</div>
             <h2>Bana <span className="serif">yaz.</span></h2>
             <p style={{ color: 'var(--ink2)', fontSize: '15px', margin: '18px 0 30px', maxWidth: '340px' }}>İş birliği, soru ya da sadece selam — ne olursa yaz. Genelde bir iş günü içinde dönüş yapıyorum.</p>
-            <div className="line"><b>E-posta</b> {settings.email || 'thekademedia@gmail.com'}</div>
-            <div className="line"><b>Konum</b> {settings.address || 'İstanbul, TR'}</div>
-            <div className="line"><b>YouTube</b> {settings.youtubeHandle || '@kadirardademirr'}</div>
-            <div className="line" style={{ borderBottom: '1px solid var(--line)' }}><b>Instagram</b> {settings.instagramHandle || '@kadirardademir'}</div>
+            <div className="line"><b>E-posta</b> {settings.email}</div>
+            <div className="line"><b>Konum</b> {settings.address}</div>
+            <div className="line"><b>YouTube</b> {settings.youtubeHandle}</div>
+            <div className="line" style={{ borderBottom: '1px solid var(--line)' }}><b>Instagram</b> {settings.instagramHandle}</div>
           </div>
           <form className="form reveal" onSubmit={submit}>
             <div className="two">

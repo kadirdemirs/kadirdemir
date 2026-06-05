@@ -41,7 +41,6 @@
 
   --neon-glow: 0 0 20px var(--amber-glow), 0 0 60px rgba(212, 148, 63, 0.12);
   --gradient-cyber: linear-gradient(135deg, var(--amber-soft) 0%, var(--amber) 50%, var(--amber-deep) 100%);
-  --gradient-electric: linear-gradient(90deg, var(--amber-soft) 0%, var(--amber) 50%, var(--amber-deep) 100%);
 
   /* ─── Surface Scale ─── */
   --bg-0: var(--bg-deep);

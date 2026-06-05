@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     return res.status(200).json(list.map((q) => ({
       _id: String(q._id),
       question: q.question,
-      author: q.author || 'Anonim',
+      author: q.author || null,
       answer: q.answer,
       upvotes: q.upvotes || 0,
       askedAt: q.createdAt,

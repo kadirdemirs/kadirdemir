@@ -99,8 +99,9 @@ export default async function handler(req, res) {
       const result = await collection.insertOne(post);
       // Yeni yayınlanan yazı Google + Bing sitemap ping'i
       if (published !== false && !publishAt) {
-        const sitemapUrl = `https://kadirardademir.com/sitemap.xml`
-        const blogUrl = `https://kadirardademir.com/blog/${slug}`
+        const baseUrl = (process.env.SITE_BASE_URL || 'https://kadirardademir.com').replace(/\/$/, '')
+        const sitemapUrl = `${baseUrl}/sitemap.xml`
+        const blogUrl = `${baseUrl}/blog/${slug}`
         Promise.all([
           fetch(`https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`).catch(() => {}),
           fetch(`https://www.bing.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`).catch(() => {}),
@@ -108,7 +109,7 @@ export default async function handler(req, res) {
           process.env.INDEXNOW_KEY && fetch('https://api.indexnow.org/indexnow', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ host: 'kadirardademir.com', key: process.env.INDEXNOW_KEY, urlList: [blogUrl] }),
+            body: JSON.stringify({ host: new URL(baseUrl).hostname, key: process.env.INDEXNOW_KEY, urlList: [blogUrl] }),
           }).catch(() => {}),
         ]).catch(() => {})
       }

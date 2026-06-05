@@ -1,9 +1,19 @@
 // Analytics utility — wraps gtag with graceful fallback
 // Replace G-XXXXXXXXXX with your actual GA4 Measurement ID in index.html
 
+const CONSENT_KEY = 'kade_cookie_consent_v1'
+
+function hasAnalyticsConsent() {
+  try {
+    const raw = localStorage.getItem(CONSENT_KEY)
+    if (!raw) return false
+    const parsed = JSON.parse(raw)
+    return parsed?.value === 'accept'
+  } catch { return false }
+}
+
 export function trackEvent(eventName, params = {}) {
-  const consent = localStorage.getItem('cookie_consent')
-  if (consent !== 'accepted') return
+  if (!hasAnalyticsConsent()) return
   if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
     window.gtag('event', eventName, params);
   }

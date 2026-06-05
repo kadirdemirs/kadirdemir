@@ -55,7 +55,7 @@ export default function Contact() {
     settings.tiktok && {
       icon: FaTiktok,
       name: 'TikTok',
-      desc: t('contact.followDescYoutube'),
+      desc: t('contact.followDescTikTok'),
       url: settings.tiktok,
     },
     settings.discord && {

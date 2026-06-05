@@ -17,18 +17,30 @@ import {
 } from 'react-icons/hi'
 import { FaYoutube, FaInstagram, FaTiktok } from 'react-icons/fa6'
 import { useSiteSettings } from '../hooks/useSiteSettings.jsx'
+import { useLanguage } from '../i18n/LanguageContext'
 import { getBlogsApi, getYouTubeVideosApi } from '../api'
 import './CommandPalette.css'
 
-const PAGES = [
-  { id: 'home', title: 'Ana Sayfa', path: '/', icon: HiOutlineHome, kind: 'Sayfa' },
-  { id: 'about', title: 'Hakkımda', path: '/hakkimda', icon: HiOutlineUser, kind: 'Sayfa' },
-  { id: 'blog', title: 'Blog', path: '/blog', icon: HiOutlineDocumentText, kind: 'Sayfa' },
-  { id: 'videos', title: 'Videolar', path: '/videolar', icon: HiOutlineVideoCamera, kind: 'Sayfa' },
-  { id: 'contact', title: 'İletişim', path: '/iletisim', icon: HiOutlineMail, kind: 'Sayfa' },
-  { id: 'sponsor', title: 'Sponsorluk Başvurusu', path: '/sponsor', icon: HiOutlineSparkles, kind: 'Sayfa' },
-  { id: 'mediakit', title: 'Medya Kit', path: '/medya-kit', icon: HiOutlineDownload, kind: 'Sayfa' },
-  { id: 'ama', title: 'Sor Bana', path: '/sor', icon: HiOutlineQuestionMarkCircle, kind: 'Sayfa' },
+const PAGES_TR = [
+  { id: 'home', title: 'Ana Sayfa', path: '/', icon: HiOutlineHome },
+  { id: 'about', title: 'Hakkımda', path: '/hakkimda', icon: HiOutlineUser },
+  { id: 'blog', title: 'Blog', path: '/blog', icon: HiOutlineDocumentText },
+  { id: 'videos', title: 'Videolar', path: '/videolar', icon: HiOutlineVideoCamera },
+  { id: 'contact', title: 'İletişim', path: '/iletisim', icon: HiOutlineMail },
+  { id: 'sponsor', title: 'Sponsorluk Başvurusu', path: '/sponsor', icon: HiOutlineSparkles },
+  { id: 'mediakit', title: 'Medya Kit', path: '/medya-kit', icon: HiOutlineDownload },
+  { id: 'ama', title: 'Sor Bana', path: '/sor', icon: HiOutlineQuestionMarkCircle },
+]
+
+const PAGES_EN = [
+  { id: 'home', title: 'Home', path: '/', icon: HiOutlineHome },
+  { id: 'about', title: 'About', path: '/hakkimda', icon: HiOutlineUser },
+  { id: 'blog', title: 'Blog', path: '/blog', icon: HiOutlineDocumentText },
+  { id: 'videos', title: 'Videos', path: '/videolar', icon: HiOutlineVideoCamera },
+  { id: 'contact', title: 'Contact', path: '/iletisim', icon: HiOutlineMail },
+  { id: 'sponsor', title: 'Sponsorship', path: '/sponsor', icon: HiOutlineSparkles },
+  { id: 'mediakit', title: 'Media Kit', path: '/medya-kit', icon: HiOutlineDownload },
+  { id: 'ama', title: 'Ask Me Anything', path: '/sor', icon: HiOutlineQuestionMarkCircle },
 ]
 
 function normalize(s) {
@@ -51,6 +63,13 @@ export default function CommandPalette() {
   const listRef = useRef(null)
   const navigate = useNavigate()
   const { settings } = useSiteSettings()
+  const { lang } = useLanguage()
+  const isEn = lang === 'en'
+  const PAGES = isEn ? PAGES_EN : PAGES_TR
+  const kindPage = isEn ? 'Page' : 'Sayfa'
+  const kindPost = isEn ? 'Post' : 'Yazı'
+  const kindVideo = isEn ? 'Video' : 'Video'
+  const kindSocial = isEn ? 'Social' : 'Sosyal'
 
   // Global Cmd-K / Ctrl-K + tek tuş kısayolları
   useEffect(() => {
@@ -111,10 +130,10 @@ export default function CommandPalette() {
   }, [open])
 
   const socials = useMemo(() => ([
-    settings.youtube && { id: 'yt', title: `YouTube — ${settings.youtubeHandle || '@kadirardademirr'}`, href: settings.youtube, icon: FaYoutube, kind: 'Sosyal' },
-    settings.instagram && { id: 'ig', title: `Instagram — ${settings.instagramHandle || ''}`, href: settings.instagram, icon: FaInstagram, kind: 'Sosyal' },
-    settings.tiktok && { id: 'tt', title: `TikTok — ${settings.tiktokHandle || ''}`, href: settings.tiktok, icon: FaTiktok, kind: 'Sosyal' },
-  ].filter(Boolean)), [settings])
+    settings.youtube && { id: 'yt', title: `YouTube — ${settings.youtubeHandle || ''}`, href: settings.youtube, icon: FaYoutube, kind: kindSocial },
+    settings.instagram && { id: 'ig', title: `Instagram — ${settings.instagramHandle || ''}`, href: settings.instagram, icon: FaInstagram, kind: kindSocial },
+    settings.tiktok && { id: 'tt', title: `TikTok — ${settings.tiktokHandle || ''}`, href: settings.tiktok, icon: FaTiktok, kind: kindSocial },
+  ].filter(Boolean)), [settings, kindSocial])
 
   const items = useMemo(() => {
     const q = normalize(query.trim())
@@ -137,12 +156,15 @@ export default function CommandPalette() {
         search: normalize(v.title),
       }))
 
-    const all = [...PAGES, ...blogEntries, ...videoEntries, ...socials]
+    const pagesWithKind = PAGES.map(p => ({ ...p, kind: kindPage }))
+    const blogWithKind = blogEntries.map(b => ({ ...b, kind: kindPost }))
+    const videoWithKind = videoEntries.map(v => ({ ...v, kind: kindVideo }))
+    const all = [...pagesWithKind, ...blogWithKind, ...videoWithKind, ...socials]
     if (!q) return all.slice(0, 12)
     return all
       .filter((it) => normalize(it.title).includes(q) || normalize(it.kind).includes(q) || (it.search && it.search.includes(q)))
       .slice(0, 20)
-  }, [query, blogs, videos, socials])
+  }, [query, blogs, videos, socials, PAGES, kindPage, kindPost, kindVideo])
 
   useEffect(() => {
     if (activeIdx >= items.length) setActiveIdx(0)
@@ -182,7 +204,7 @@ export default function CommandPalette() {
           <motion.div
             className="kd-cmdk"
             role="dialog"
-            aria-label="Site içi arama"
+            aria-label={isEn ? 'Site search' : 'Site içi arama'}
             initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.98 }}
@@ -194,11 +216,11 @@ export default function CommandPalette() {
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Sayfa, yazı, video veya sosyal medya ara…"
+                placeholder={isEn ? 'Search pages, posts, videos…' : 'Sayfa, yazı, video veya sosyal medya ara…'}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}
-                aria-label="Arama"
+                aria-label={isEn ? 'Search' : 'Arama'}
                 autoComplete="off"
               />
               <kbd>ESC</kbd>
@@ -206,14 +228,14 @@ export default function CommandPalette() {
                 type="button"
                 className="kd-cmdk-close"
                 onClick={() => setOpen(false)}
-                aria-label="Kapat"
+                aria-label={isEn ? 'Close' : 'Kapat'}
               >
                 <HiOutlineX size={16} />
               </button>
             </div>
             <ul ref={listRef} className="kd-cmdk-list" role="listbox">
               {items.length === 0 && (
-                <li className="kd-cmdk-empty">Sonuç yok. Başka bir kelime dene.</li>
+                <li className="kd-cmdk-empty">{isEn ? 'No results. Try another term.' : 'Sonuç yok. Başka bir kelime dene.'}</li>
               )}
               {items.map((it, idx) => {
                 const Icon = it.icon

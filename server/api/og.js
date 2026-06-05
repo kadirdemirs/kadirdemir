@@ -32,7 +32,7 @@ function wrapLines(text, maxLen = 28, maxLines = 3) {
 export default function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).end();
 
-  const title = String(req.query?.title || 'Kadir Demir').slice(0, 120);
+  const title = String(req.query?.title || process.env.SITE_BUSINESS_NAME || 'Kadir Demir').slice(0, 120);
   const subtitle = String(req.query?.subtitle || req.query?.sub || 'YouTube içerik üreticisi').slice(0, 80);
   const tag = String(req.query?.tag || '').slice(0, 30);
 
@@ -65,7 +65,7 @@ export default function handler(req, res) {
 
   <g transform="translate(80,80)">
     <circle cx="22" cy="22" r="22" fill="url(#accent)"/>
-    <text x="60" y="30" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700" fill="#ffffff" letter-spacing="0.04em">KADIR DEMIR</text>
+    <text x="60" y="30" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700" fill="#ffffff" letter-spacing="0.04em">${escapeXml((process.env.SITE_BUSINESS_NAME || 'Kadir Demir').toUpperCase())}</text>
   </g>
 
   ${tag ? `<g transform="translate(80,180)">
@@ -79,7 +79,7 @@ export default function handler(req, res) {
 
   <g transform="translate(80,580)">
     <rect width="80" height="3" rx="2" fill="url(#accent)"/>
-    <text x="100" y="3" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#64748b" letter-spacing="0.1em">KADIRDEMIR-NU.VERCEL.APP</text>
+    <text x="100" y="3" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#64748b" letter-spacing="0.1em">${escapeXml(new URL(process.env.SITE_BASE_URL || 'https://kadirardademir.com').hostname.toUpperCase())}</text>
   </g>
 </svg>`;
 

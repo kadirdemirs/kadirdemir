@@ -1,4 +1,4 @@
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useRef, useEffect, useCallback } from 'react'
 
 const defaultVariants = {
@@ -16,6 +16,7 @@ const defaultVariants = {
 export function FadeIn({ children, delay = 0, direction = 'up', className, style }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-50px' })
+  const reduce = useReducedMotion()
 
   const directionMap = {
     up: { y: 40 },
@@ -29,8 +30,8 @@ export function FadeIn({ children, delay = 0, direction = 'up', className, style
       ref={ref}
       className={className}
       style={style}
-      initial={{ opacity: 0, ...directionMap[direction] }}
-      animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
+      initial={reduce ? false : { opacity: 0, ...directionMap[direction] }}
+      animate={reduce ? {} : (isInView ? { opacity: 1, x: 0, y: 0 } : {})}
       transition={{
         duration: 0.45,
         delay,

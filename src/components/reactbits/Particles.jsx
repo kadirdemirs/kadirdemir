@@ -90,12 +90,13 @@ export default function Particles({
           }
         }
 
+        const glow = p.size > 2
+        if (glow) { ctx.shadowBlur = 8; ctx.shadowColor = `rgba(${p.r}, ${p.g}, ${p.b}, 0.4)` }
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(${p.r}, ${p.g}, ${p.b}, ${a})`
-        ctx.shadowBlur = 8
-        ctx.shadowColor = `rgba(${p.r}, ${p.g}, ${p.b}, 0.4)`
         ctx.fill()
+        if (glow) ctx.shadowBlur = 0
       })
       ctx.shadowBlur = 0
       animRef.current = requestAnimationFrame(draw)

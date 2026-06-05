@@ -9,7 +9,7 @@ import './BlogShareDock.css'
  * Sticky floating share dock — left side, desktop only.
  */
 export default function BlogShareDock({ title, url }) {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [copied, setCopied] = useState(false)
 
   const encodedTitle = encodeURIComponent(title || '')
@@ -72,7 +72,7 @@ export default function BlogShareDock({ title, url }) {
       <a
         href={`mailto:?subject=${encodedTitle}&body=${encodedUrl}`}
         className="kd-share-dock-btn"
-        aria-label="E-posta ile paylaş"
+        aria-label={lang === 'en' ? 'Share via email' : 'E-posta ile paylaş'}
       >
         <FaEnvelope size={15} />
       </a>

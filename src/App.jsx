@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import PageTransition from './components/PageTransition'
 import { trackPageviewApi, heartbeatApi, getSessionApi } from './api'
 import { useLenis } from './hooks/useLenis'
+import { useLanguage } from './i18n/LanguageContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
@@ -75,6 +76,7 @@ function ProtectedAdminRoute() {
 
 function App() {
   const location = useLocation()
+  const { lang } = useLanguage()
   const isAdmin = location.pathname === '/admin'
   const isLinks = location.pathname === '/links'
   const isLanding = location.pathname === '/'
@@ -125,7 +127,7 @@ function App() {
       {!hideChrome && <TopProgressBar />}
       {!hideChrome && <ClickSpark sparkColor="var(--amber, #d4943f)" sparkCount={7} sparkRadius={22} duration={500} />}
       <ErrorTracker />
-      <a href="#main-content" className="skip-to-content">İçeriğe geç</a>
+      <a href="#main-content" className="skip-to-content">{lang === 'en' ? 'Skip to content' : 'İçeriğe geç'}</a>
       <ScrollToTop />
       {!hideChrome && <div aria-hidden="true" className="kd-aurora-bg" />}
       {!hideChrome && <LiveBanner />}

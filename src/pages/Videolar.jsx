@@ -54,7 +54,7 @@ function parseDuration(iso) {
 
 export default function Videolar() {
   const { settings } = useSiteSettings()
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
@@ -63,7 +63,7 @@ export default function Videolar() {
   const [visibleCount, setVisibleCount] = useState(12)
   const [activeVideo, setActiveVideo] = useState(null)
 
-  const isEn = settings.lang === 'en'
+  const isEn = lang === 'en'
 
   const TYPE_TABS = [
     { key: 'all',       label: isEn ? 'All' : 'Tümü',       icon: null },

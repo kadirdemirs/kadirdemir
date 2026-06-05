@@ -12,7 +12,7 @@ async function getWebPush() {
     _webpush = mod.default || mod
     if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
       _webpush.setVapidDetails(
-        'mailto:' + (process.env.MAIL_TO || 'thekademedia@gmail.com'),
+        'mailto:' + (process.env.MAIL_TO || process.env.SMTP_USER || 'thekademedia@gmail.com'),
         process.env.VAPID_PUBLIC_KEY,
         process.env.VAPID_PRIVATE_KEY
       )
