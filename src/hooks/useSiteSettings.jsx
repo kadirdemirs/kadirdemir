@@ -1,6 +1,31 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { getSiteSettingsApi } from '../api'
 
+const LINK_PALETTE = {
+  amber: '#d4943f',
+  amberSoft: '#e8b468',
+  amberDeep: '#a67428',
+  amberGlow: 'rgba(212, 148, 63, 0.3)',
+  amberGlowStrong: 'rgba(212, 148, 63, 0.5)',
+}
+
+const LEGACY_ACCENTS = new Set(['#c98a3b', '#C98A3B'])
+
+function applySitePalette(accentColor) {
+  if (typeof document === 'undefined') return
+  const accent = LEGACY_ACCENTS.has(accentColor) ? '' : accentColor
+  const amber = accent || LINK_PALETTE.amber
+
+  document.documentElement.style.setProperty('--amber', amber)
+  document.documentElement.style.setProperty('--amber-soft', LINK_PALETTE.amberSoft)
+  document.documentElement.style.setProperty('--amber-deep', LINK_PALETTE.amberDeep)
+  document.documentElement.style.setProperty('--amber-glow', LINK_PALETTE.amberGlow)
+  document.documentElement.style.setProperty('--amber-glow-strong', LINK_PALETTE.amberGlowStrong)
+  document.documentElement.style.setProperty('--primary', amber)
+  document.documentElement.style.setProperty('--primary-light', LINK_PALETTE.amberSoft)
+  document.documentElement.style.setProperty('--primary-dark', LINK_PALETTE.amberDeep)
+}
+
 export const DEFAULT_SITE_SETTINGS = {
   businessName: 'Kadir Demir',
   tagline: 'YouTube İçerik Üreticisi',
@@ -37,7 +62,7 @@ export const DEFAULT_SITE_SETTINGS = {
   statsActiveYears: '14',
 
   // Tema rengi
-  accentColor: '',   // boşsa default amber (#d4943f)
+  accentColor: '',   // boşsa /links paleti (#d4943f)
 
   // Floating CTA
   floatingCtaLabelTr: '',  // boşsa t('common.contact')
@@ -129,6 +154,7 @@ export function SiteSettingsProvider({ children }) {
 
   const refresh = () => {
     setLoading(true)
+    applySitePalette('')
     return getSiteSettingsApi()
       .then((res) => {
         if (res?.data) {
@@ -175,14 +201,12 @@ export function SiteSettingsProvider({ children }) {
           if (merged.baseUrl && typeof window !== 'undefined') {
             window.__SITE_BASE_URL__ = merged.baseUrl
           }
-          // Accent rengi CSS değişkenine uygula
-          if (merged.accentColor && typeof document !== 'undefined') {
-            document.documentElement.style.setProperty('--amber', merged.accentColor)
-            document.documentElement.style.setProperty('--primary', merged.accentColor)
-          }
+          applySitePalette(merged.accentColor)
+        } else {
+          applySitePalette('')
         }
       })
-      .catch(() => { /* fall back to defaults */ })
+      .catch(() => { applySitePalette('') })
       .finally(() => setLoading(false))
   }
 

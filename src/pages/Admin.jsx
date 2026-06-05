@@ -2091,7 +2091,7 @@ const TABS = [
 ]
 
 // ───── SVG SPARKLINE (harici kütüphane yok) ─────
-function Sparkline({ data = [], color = '#c98a3b', height = 56, fillOpacity = 0.15 }) {
+function Sparkline({ data = [], color = '#d4943f', height = 56, fillOpacity = 0.15 }) {
   if (!data.length) return null
   const max = Math.max(...data, 1)
   const W = 300, H = height
@@ -2116,7 +2116,7 @@ function Sparkline({ data = [], color = '#c98a3b', height = 56, fillOpacity = 0.
   )
 }
 
-function BarChart({ data = [], color = '#c98a3b', height = 80 }) {
+function BarChart({ data = [], color = '#d4943f', height = 80 }) {
   if (!data.length) return null
   const max = Math.max(...data.map(d => d.count), 1)
   return (
