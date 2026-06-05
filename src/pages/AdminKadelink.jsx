@@ -379,9 +379,9 @@ export function KadelinkLinksSection({ showToast }) {
    ───────────────────────────────────────────────────────────────── */
 const DEFAULT_THEME = {
   defaultMode: 'dark',
-  accent: '#c98a3b',
-  accentLight: '#e0a661',
-  accentDeep: '#a06d2a',
+  accent: '#d4943f',
+  accentLight: '#e8b468',
+  accentDeep: '#a67428',
   enableLightSwitch: true,
 }
 

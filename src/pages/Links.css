@@ -294,7 +294,9 @@
   filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.7));
   cursor: default;
   margin: 0;
-  line-height: 1;
+  line-height: 1.14;
+  padding-bottom: 0.08em;
+  overflow: visible;
   user-select: none;
 }
 
