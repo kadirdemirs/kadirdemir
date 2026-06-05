@@ -431,10 +431,10 @@ export default function Home() {
           </div>
           <div className="proc">
             {[
-              <svg className="wire" viewBox="0 0 100 100" fill="none" stroke="rgba(190,205,140,.55)" strokeWidth=".6" key="s1"><circle cx="50" cy="50" r="34"></circle><path d="M16 50h68M50 16v68M26 26l48 48M74 26L26 74"></path><circle cx="50" cy="50" r="14" stroke="rgba(190,205,140,.9)"></circle></svg>,
-              <svg className="wire" viewBox="0 0 100 100" fill="none" stroke="rgba(190,205,140,.55)" strokeWidth=".6" key="s2"><path d="M50 8L78 78H22Z"></path><path d="M50 8v70M30 56h40M36 68h28"></path><circle cx="50" cy="34" r="7" stroke="rgba(190,205,140,.9)"></circle></svg>,
-              <svg className="wire" viewBox="0 0 100 100" fill="none" stroke="rgba(190,205,140,.55)" strokeWidth=".6" key="s3"><path d="M50 14L82 32v36L50 86 18 68V32Z"></path><path d="M50 14v36l32-18M50 50L18 32M50 50v36"></path></svg>,
-              <svg className="wire" viewBox="0 0 100 100" fill="none" stroke="rgba(190,205,140,.55)" strokeWidth=".6" key="s4"><path d="M50 8c12 8 18 22 18 38 0 10-4 18-18 30-14-12-18-20-18-30 0-16 6-30 18-38Z"></path><circle cx="50" cy="40" r="8" stroke="rgba(190,205,140,.9)"></circle><path d="M38 78l-8 14M62 78l8 14M50 84v12"></path></svg>,
+              <svg className="wire" viewBox="0 0 100 100" fill="none" stroke="rgba(212,148,63,.55)" strokeWidth=".6" key="s1"><circle cx="50" cy="50" r="34"></circle><path d="M16 50h68M50 16v68M26 26l48 48M74 26L26 74"></path><circle cx="50" cy="50" r="14" stroke="rgba(232,180,104,.9)"></circle></svg>,
+              <svg className="wire" viewBox="0 0 100 100" fill="none" stroke="rgba(212,148,63,.55)" strokeWidth=".6" key="s2"><path d="M50 8L78 78H22Z"></path><path d="M50 8v70M30 56h40M36 68h28"></path><circle cx="50" cy="34" r="7" stroke="rgba(232,180,104,.9)"></circle></svg>,
+              <svg className="wire" viewBox="0 0 100 100" fill="none" stroke="rgba(212,148,63,.55)" strokeWidth=".6" key="s3"><path d="M50 14L82 32v36L50 86 18 68V32Z"></path><path d="M50 14v36l32-18M50 50L18 32M50 50v36"></path></svg>,
+              <svg className="wire" viewBox="0 0 100 100" fill="none" stroke="rgba(212,148,63,.55)" strokeWidth=".6" key="s4"><path d="M50 8c12 8 18 22 18 38 0 10-4 18-18 30-14-12-18-20-18-30 0-16 6-30 18-38Z"></path><circle cx="50" cy="40" r="8" stroke="rgba(232,180,104,.9)"></circle><path d="M38 78l-8 14M62 78l8 14M50 84v12"></path></svg>,
             ].map((svg, i) => (
               <div className="proc-row reveal" key={i}>
                 <div className="proc-vis">{svg}</div>
@@ -549,9 +549,9 @@ export default function Home() {
             <div className="res-card reveal">
               <h4>Aylık büyüme</h4>
               <svg viewBox="0 0 320 110" style={{ width: '100%', height: 'auto' }} fill="none">
-                <line x1="0" y1="100" x2="320" y2="100" stroke="rgba(190,205,140,.18)"></line>
+                <line x1="0" y1="100" x2="320" y2="100" stroke="rgba(212,148,63,.18)"></line>
                 <polyline points="0,96 50,84 100,70 150,58 200,40 260,24 320,8" stroke="var(--acc)" strokeWidth="2"></polyline>
-                <polygon points="0,96 50,84 100,70 150,58 200,40 260,24 320,8 320,100 0,100" fill="oklch(0.86 0.17 112 / .08)"></polygon>
+                <polygon points="0,96 50,84 100,70 150,58 200,40 260,24 320,8 320,100 0,100" fill="rgba(212,148,63,.08)"></polygon>
               </svg>
             </div>
             <div className="res-card reveal">
